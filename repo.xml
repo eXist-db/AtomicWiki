@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repo:meta xmlns="http://exist-db.org/xquery/repo" xmlns:repo="http://exist-db.org/xquery/repo">
+    <repo:description>Redesign of AtomicWiki</repo:description>
+    <repo:author>Wolfgang Meier</repo:author>
+    <repo:website>http://atomic.exist-db.org</repo:website>
+    <repo:status>alpha</repo:status>
+    <repo:license>GNU-LGPL</repo:license>
+    <repo:copyright>true</repo:copyright>
+    <repo:type>application</repo:type>
+    <repo:target>/db/wiki</repo:target>
+    <repo:prepare>pre-install.xql</repo:prepare>
+    <repo:finish/>
+</repo:meta>
