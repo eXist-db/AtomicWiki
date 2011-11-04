@@ -288,3 +288,39 @@ form { margin: 20px 0; }
     display: inline;
     padding: 0 4px 0 0;
 }
+
+.editrow {
+    margin: 0 0 10px 0;
+    width: 100%;
+}
+
+.editrow label {
+    color: tomato;
+    font-size: 85%;
+    margin-left: 20px;
+}
+
+.editrow input {
+    width: 420px;
+}
+
+.editrow textarea {
+    width: 100%;
+    min-height: 300px;
+}
+
+.edit .title input {
+    font-size: 125%;
+}
+
+#editor {
+    height: 400px;
+}
+
+.ace_markup-heading {
+    font-weight: bold;
+}
+
+.ace_markup-em {
+    font-style: italic;
+}

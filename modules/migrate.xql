@@ -12,7 +12,7 @@ declare function atom:transform($node as node()) {
             let $href := substring-before($node/text(), "|")
             let $text := substring-after($node/text(), "|")
             return
-                <a href="{$href}">{$text}</a>
+                <xhtml:a href="{$href}">{$text}</xhtml:a>
         case element(wiki:macro) return
             let $params := 
                 string-join(
@@ -21,19 +21,19 @@ declare function atom:transform($node as node()) {
                 )
             let $paramStr := if ($params) then concat("?", $params) else ()
             return
-                <div class="ext:{$node/@name}{$paramStr}">{$node/string()}</div>
+                <xhtml:div class="ext:{$node/@name}{$paramStr}">{$node/string()}</xhtml:div>
         case element(wiki:extension) return
             switch ($node/@name)
                 case "image" return
                     let $width := $node//wiki:param[@name = 'width']/@value
                     let $height := $node//wiki:param[@name = 'height']/@value
                     return
-                        <img src="{$node//wiki:param[@name = 'src']/@value}">
+                        <xhtml:img src="{$node//wiki:param[@name = 'src']/@value}">
                         { if ($width) then attribute width { $width } else () }
                         { if ($height) then attribute width { $height } else () }
-                        </img>
+                        </xhtml:img>
                 default return
-                    <p>Unknown extension: {$node/@name/string()}</p>
+                    <xhtml:p>Unknown extension: {$node/@name/string()}</xhtml:p>
         case element() return
             element { node-name($node) } {
                 $node/@*, for $child in $node/node() return atom:transform($child)
@@ -53,4 +53,4 @@ declare function atom:transform-collection($collection) {
         atom:transform-collection(concat($collection, "/", $child))
 };
 
-atom:transform-collection("/db/wiki/data/blogs/eXist/")
+atom:transform-collection("/db/wiki/data/eXist/")

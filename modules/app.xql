@@ -5,8 +5,10 @@ module namespace app="http://exist-db.org/xquery/app";
 import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace date="http://exist-db.org/xquery/datetime" at "java:org.exist.xquery.modules.datetime.DateTimeModule";
+import module namespace html2wiki="http://atomic.exist-db.org/xquery/html2wiki" at "html2wiki.xql";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
+declare namespace wiki="http://exist-db.org/xquery/wiki";
 
 declare variable $app:months := ('January', 'February', 'March', 'April', 'May', 'June', 'July', 
     'August', 'September', 'October', 'November', 'December');
@@ -94,6 +96,18 @@ declare function app:process-content($content as element()?, $model as item()*) 
 
 declare function app:toolbar-edit($node as node(), $params as element(parameters)?, $model as item()*) {
     <a href="?id={$model[1]/atom:id}&amp;action=edit">{ $node/@*[local-name(.) != 'href'], $node/node() }</a>
+};
+
+declare function app:edit-title($node as node(), $params as element(parameters)?, $model as item()*) {
+    <input type="text" value="{$model[1]/atom:title}"/>
+};
+
+declare function app:edit-id($node as node(), $params as element(parameters)?, $model as item()*) {
+    <input type="text" value="{$model[1]/wiki:id}"/>
+};
+
+declare function app:edit-content($node as node(), $params as element(parameters)?, $model as item()*) {
+    <div id="editor">{html2wiki:html2wiki($model[1]/atom:content/*)}</div>
 };
 
 (:~

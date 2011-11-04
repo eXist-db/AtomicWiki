@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="templates:surround?with=templates/edit.html&amp;at=content">
+    <div class="app:feed">
+        <h2 class="app:title"/>
+        <div class="app:entries entries">
+            <div class="edit">
+                <form action="modules/store.xql" method="POST">
+                    <div class="editrow title">
+                        <input class="app:edit-title" name="title"/>
+                        <label for="title">Title</label>
+                    </div>
+                    <div class="editrow">
+                        <input class="app:edit-id" name="id"/>
+                        <label for="id">Short Name</label>
+                    </div>
+                    <div class="editrow">
+                        Content:<br/>
+                        <textarea id="editor" name="content" class="app:edit-content"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

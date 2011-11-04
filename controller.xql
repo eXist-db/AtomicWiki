@@ -1,4 +1,4 @@
-xquery version "1.0";
+xquery version "3.0";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "modules/config.xqm";
 
@@ -22,18 +22,31 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
     let $relPath := local:extract-feed()
     let $feed := config:resolve-feed($relPath[1])
     let $setAttr := request:set-attribute("feed", $feed)
+    let $action := request:get-parameter("action", "view")
     let $log := util:log("WARN", ("feed: ", $relPath))
     return
         if ($feed) then
-            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                <forward url="{$exist:controller}/feed.html"/>
-                <view>
-                    <forward url="{$exist:controller}/modules/view.xql" absolute="no">
-                        <add-parameter name="feed" value="{$relPath[1]}"/>
-                        <add-parameter name="entry" value="{$relPath[2]}"/>
-                    </forward>
-                </view>
-            </dispatch>
+            switch ($action)
+                case "edit" return
+                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                        <forward url="{$exist:controller}/edit.html"/>
+                        <view>
+                            <forward url="{$exist:controller}/modules/view.xql" absolute="no">
+                                <add-parameter name="feed" value="{$relPath[1]}"/>
+                                <add-parameter name="entry" value="{$relPath[2]}"/>
+                            </forward>
+                        </view>
+                    </dispatch>
+                default return
+                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                        <forward url="{$exist:controller}/feed.html"/>
+                        <view>
+                            <forward url="{$exist:controller}/modules/view.xql" absolute="no">
+                                <add-parameter name="feed" value="{$relPath[1]}"/>
+                                <add-parameter name="entry" value="{$relPath[2]}"/>
+                            </forward>
+                        </view>
+                    </dispatch>
         else
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward url="{$exist:controller}/unknown-feed.html"/>
@@ -51,6 +64,10 @@ else if (contains($exist:path, "/resources/")) then
                 <cache-control cache="yes"/>
             </forward>
         </dispatch>
+else if (contains($exist:path, "/libs/")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="/{substring-after($exist:path, '/libs/')}" absolute="yes"/>
+    </dispatch>
 else
     (: everything else is passed through :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
