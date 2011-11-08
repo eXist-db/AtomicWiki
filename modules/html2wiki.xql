@@ -23,7 +23,7 @@ declare function html2wiki:transform($nodes as node()*) {
             case element(html:h4) return
                 <t>===={html2wiki:transform($node/node())}====&#10;</t>
             case element(html:h5) return
-                <t>==={html2wiki:transform($node/node())}===&#10;</t>
+                <t>====={html2wiki:transform($node/node())}=====&#10;</t>
             case element(html:p) return
                 <t>{html2wiki:transform($node/node())}&#10;&#10;</t>
             case element(html:em) return
@@ -51,7 +51,24 @@ declare function html2wiki:transform($nodes as node()*) {
                         let $paramStr := substring-after($class, "?")
                         let $params := html2wiki:macro-parameters($paramStr)
                         return
-                            <t>{{{$name, $params}}}{$node/string()}{{/{$name}}}&#10;&#10;</t>
+                            if ($node/node()) then
+                                <t>{{{$name, $params}}}{$node/string()}{{/{$name}}}&#10;&#10;</t>
+                            else
+                                <t>${$name}({$params})&#10;&#10;</t>
+                    else
+                        html2wiki:transform($node/node())
+            case element(html:span) return
+                let $class := $node/@class/string()
+                return
+                    if (matches($class, "^\s*ext:.*")) then
+                        let $name := replace($class, "ext:([^\?]+).*$", "$1")
+                        let $paramStr := substring-after($class, "?")
+                        let $params := html2wiki:macro-parameters($paramStr)
+                        return
+                            if ($node/node()) then
+                                <t>{{{$name, $params}}}{$node/string()}{{/{$name}}}</t>
+                            else
+                                <t>${$name}({$params})</t>
                     else
                         html2wiki:transform($node/node())
             case element() return

@@ -10,6 +10,8 @@
         <script type="text/javascript" src="resources/scripts/shBrushXQuery.js"/>
         <script type="text/javascript" src="resources/scripts/shBrushXml.js"/>
         <script type="text/javascript" src="resources/scripts/shBrushPlain.js"/>
+        <script type="text/javascript" src="libs/scripts/jquery/jquery-1.6.2.min.js"/>
+        <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
     </head>
     <body>
         <div id="grey-top">
@@ -24,18 +26,7 @@
                     <div id="main">
                         <!-- Page content will be injected into the div below -->
                         <div id="content"/>
-                        <div id="right">
-                            <div id="r-top">
-                                <div id="r-bot">
-                                    <h2>Links</h2>
-                                    <ol>
-                                        <li>
-                                            <a href="index.html">Entry page</a>
-                                        </li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="templates:include?path=templates/menu.html"/>
                     </div>
                 </div>
             </div>

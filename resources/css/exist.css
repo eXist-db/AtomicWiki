@@ -55,7 +55,7 @@ body { font: 12px/20px Verdana, Arial, Helvetica, sans-serif; color: #222; backg
 
 #right { width: 240px; float: right; background: url(../images/grey-box-rpt.gif) repeat-y;  }
 #r-top { width: 240px; float: right; background: url(../images/grey-box-top.gif) no-repeat;  }
-#r-bot { width: 240px; float: right; background: url(../images/grey-box-bot.gif) no-repeat 0 100%; min-height: 300px;  }
+#r-bot { width: 240px; float: right; background: url(../images/grey-box-bot.gif) no-repeat 0 100%; min-height: 180px;  }
 
 #right h2, #bluebox h2 { text-align: center; color: #FFF; font-size: 12px; padding: 20px 0 0; }
 #right p, #bluebox p { text-align: center; color: #FFF; font-size: 10px; padding: 20px 0 5px; }
@@ -89,10 +89,6 @@ body { font: 12px/20px Verdana, Arial, Helvetica, sans-serif; color: #222; backg
 
 
 /* ---------------------------------------- TYPE ---------------------------------------- */
-
-#main ul { padding: 0 10px; }
-#main ul li { list-style-type: disc; padding: 0 5px; margin: 5px 20px; }
-#main ul li ul li { list-style-type: circle; padding: 0 5px; margin: 5px 20px; }
 
 #right ol { padding: 0 0 20px 30px; color: #FFF; }
 #right ol li { list-style-type: decimal-leading-zero; padding: 0; margin: 5px 20px; }
@@ -304,19 +300,23 @@ form { margin: 20px 0; }
     width: 420px;
 }
 
-.editrow textarea {
-    width: 100%;
-    min-height: 300px;
-}
-
 .edit .title input {
     font-size: 125%;
 }
 
-#editor {
+.edit .content-editor {
+    position: relative;
     height: 400px;
+    width: 100%;
 }
 
+.edit .summary-editor {
+    position: relative;
+    height: 180px;
+    width: 100%;
+}
+
+/* Styles for wiki editor */
 .ace_markup-heading {
     font-weight: bold;
 }
@@ -324,3 +324,13 @@ form { margin: 20px 0; }
 .ace_markup-em {
     font-style: italic;
 }
+
+/* Login form */
+.login {
+    position: relative;
+    margin: 16px 20px;
+}
+
+.login div {position:relative; height:24px; width:192px; background-color:#eee; border:1px solid #333;margin:4px 0 4px 0}
+.login label {position:absolute;top:0;left:0;color:#666;z-index:0;padding:4px}
+.login input {position:absolute;top:0;left:0;border:none;outline:none;background:transparent;padding:4px;width:186px;z-index:1}
