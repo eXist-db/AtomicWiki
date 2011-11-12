@@ -21,7 +21,15 @@
     </path>
     <target name="xar" depends="jar,ace">
         <mkdir dir="${build.dir}"/>
-        <zip basedir="." destfile="${build.dir}/atomicwiki-0.1.xar" excludes="${build.dir}/*"/>
+        <zip destfile="${build.dir}/atomicwiki-0.1.xar">
+			<fileset dir=".">
+				<include name="*.*"/>
+				<include name="modules/**"/>
+				<include name="resources/**"/>
+				<include name="templates/**"/>
+				<exclude name=".git*"/>
+			</fileset>
+		</zip>
     </target>
     <target name="prepare">
         <mkdir dir="${java.classes}"/>
