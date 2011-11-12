@@ -12,7 +12,17 @@ declare namespace atom="http://www.w3.org/2005/Atom";
 
 declare variable $app:months := ('January', 'February', 'March', 'April', 'May', 'June', 'July', 
     'August', 'September', 'October', 'November', 'December');
-    
+
+declare function app:create-entry() {
+    <atom:entry>
+        <atom:id>{util:uuid()}</atom:id>
+        <atom:published>{ current-dateTime() }</atom:published>
+        <atom:author><atom:name>{ xmldb:get-current-user() }</atom:name></atom:author>
+        <atom:title></atom:title>
+        <atom:content type="xhtml"></atom:content>
+    </atom:entry>
+};
+
 declare function app:feed($node as node(), $params as element(parameters)?, $model as item()*) {
     let $feed := request:get-attribute("feed")
     return
@@ -41,9 +51,10 @@ declare function app:create-entry($node as node(), $params as element(parameters
 
 declare function app:entries($node as node(), $params as element(parameters)?, $feed as element(atom:feed)) {
     let $id := request:get-parameter("id", ())
+    let $wikiId := request:get-parameter("wiki-id", ())
     let $start := request:get-parameter("start", 1)
     let $entries :=
-        for $entry in config:get-entries($feed, $id)
+        for $entry in config:get-entries($feed, $id, $wikiId)
         order by xs:dateTime($entry/atom:published) descending
         return
             $entry
@@ -56,10 +67,33 @@ declare function app:entries($node as node(), $params as element(parameters)?, $
         }
 };
 
+declare function app:get-or-create-entry($node as node(), $params as element(parameters)?, $feed as element(atom:feed)) {
+    let $id := request:get-parameter("id", ())
+    let $wikiId := request:get-parameter("wiki-id", ())
+    return
+        element { node-name($node) } {
+            $node/@*,
+            if ($id or $wikiId) then
+                let $entry := config:get-entries($feed, $id, $wikiId)
+                return
+                    templates:process($node/node(), ($entry, false()))
+            else
+                templates:process($node/node(), (app:create-entry(), false()))
+        }
+};
+
 declare function app:title($node as node(), $params as element(parameters)?, $model as item()*) {
-    element { node-name($node) } {
-        $node/@*, <a href="?id={$model[1]/atom:id}">{$model[1]/atom:title/string()}</a>
-    }
+    let $link :=
+        if ($model[1] instance of element(atom:feed)) then
+            "."
+        else if ($model[1]/wiki:id) then
+            $model[1]/wiki:id/string()
+        else
+            concat("?id=", $model[1]/atom:id)
+    return
+        element { node-name($node) } {
+            $node/@*, <a href="{$link}">{$model[1]/atom:title/string()}</a>
+        }
 };
 
 declare function app:author($node as node(), $params as element(parameters)?, $model as item()*) {
@@ -114,11 +148,15 @@ declare function app:process-content($content as element()?, $model as item()*) 
             $content/string()
 };
 
-declare function app:toolbar-edit($node as node(), $params as element(parameters)?, $model as item()*) {
-    if (session:get-attribute("wiki.user")) then
-        <a href="?id={$model[1]/atom:id}&amp;action=edit">{ $node/@*[local-name(.) != 'href'], $node/node() }</a>
-    else
-        ()
+declare function app:edit-link($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $addParams := string-join(
+        for $param in $params/param
+        return
+            concat($param/@name, "=", $param/@value),
+        "&amp;"
+    )
+    return
+        <a href="?id={$model[1]/atom:id}&amp;{$addParams}">{ $node/@*[local-name(.) != 'href'], $node/node() }</a>
 };
 
 declare function app:edit-title($node as node(), $params as element(parameters)?, $model as item()*) {
@@ -167,7 +205,7 @@ declare function app:edit-id($node as node(), $params as element(parameters)?, $
 declare function app:edit-collection($node as node(), $params as element(parameters)?, $model as item()*) {
     element { node-name($node) } {
         $node/@*,
-        attribute value { util:collection-name($model[1]) }
+        attribute value { concat(util:collection-name(request:get-attribute("feed")), "/.feed.entry") }
     }
 };
 

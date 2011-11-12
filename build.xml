@@ -1,41 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xdb="http://exist-db.org/ant" default="xar" name="AtomicWiki">
-	<property file="build.properties"/>
-	<property name="java.src" value="java/src"/>
+    <property file="build.properties"/>
+    <property name="java.src" value="java/src"/>
     <property name="java.classes" value="java/classes"/>
     <property name="java.libs" value="java/lib"/>
     <property name="build.dir" value="build"/>
-
-	<path id="classpath">
-		<fileset dir="${exist.dir}">
-			<include name="*.jar"/>
-		</fileset>
-		<fileset dir="${exist.dir}/lib/core">
-			<include name="*.jar"/>
-		</fileset>
-		<fileset dir="${java.libs}">
-			<include name="*.jar"/>
-		</fileset>
-	</path>
-
+    <path id="classpath">
+        <fileset dir="${exist.dir}">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${exist.dir}/lib/core">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${java.libs}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
     <target name="xar" depends="jar">
         <mkdir dir="${build.dir}"/>
         <zip basedir="." destfile="${build.dir}/atomicwiki-0.1.xar" excludes="${build.dir}/*"/>
     </target>
-
-	<target name="prepare">
-		<mkdir dir="${java.classes}"/>
-	</target>
-
+    <target name="prepare">
+        <mkdir dir="${java.classes}"/>
+    </target>
     <target name="compile" depends="prepare">
-        <javac srcdir="${java.src}" destdir="${java.classes}" optimize="true" debug="true"
-            target="1.5" source="1.5">
+        <javac srcdir="${java.src}" destdir="${java.classes}" optimize="true" debug="true" target="1.5" source="1.5">
             <classpath>
                 <path refid="classpath"/>
             </classpath>
         </javac>
     </target>
-
     <target name="jar" depends="compile">
         <jar basedir="${java.classes}" jarfile="${build.dir}/atomicwiki-0.1.jar">
             <manifest>

@@ -55,7 +55,10 @@ body { font: 12px/20px Verdana, Arial, Helvetica, sans-serif; color: #222; backg
 
 #right { width: 240px; float: right; background: url(../images/grey-box-rpt.gif) repeat-y;  }
 #r-top { width: 240px; float: right; background: url(../images/grey-box-top.gif) no-repeat;  }
-#r-bot { width: 240px; float: right; background: url(../images/grey-box-bot.gif) no-repeat 0 100%; min-height: 180px;  }
+#r-bot { 
+    width: 240px;
+    float: right; 
+    background: url(../images/grey-box-bot.gif) no-repeat 0 100%; min-height: 180px; }
 
 #right h2, #bluebox h2 { text-align: center; color: #FFF; font-size: 12px; padding: 20px 0 0; }
 #right p, #bluebox p { text-align: center; color: #FFF; font-size: 10px; padding: 20px 0 5px; }
@@ -138,6 +141,24 @@ form { margin: 20px 0; }
 .hi { background: #FFED3D; }
 
 /* --------------------------------------- Wiki styles ------------------------------------ */
+#navigation h2 {
+    font: 200% Arial, Helvetica, sans-serif;
+}
+
+#navigation h2 a {
+    color: white;
+}
+
+#navigation a:hover { color: #ffcb05; }
+
+.sidepanel {
+    padding: 0 20px;
+}
+
+.menu {
+    list-style: none;
+}
+
 .entries {
     /*font: 108% Georgia, "Times New Roman", Times, serif;*/
     font: 128% Georgia, "Times New Roman", Times, serif;
@@ -278,6 +299,10 @@ form { margin: 20px 0; }
     list-style: none;
     margin: 0;
     text-align: right;
+}
+
+.toolbar a {
+    margin-right: 8px;
 }
 
 .entry .toolbar li {

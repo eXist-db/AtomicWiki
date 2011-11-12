@@ -89,20 +89,18 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                         <view>
                             <forward url="{$exist:controller}/modules/view.xql">
                                 { local:set-user() }
-                                <add-parameter name="feed" value="{$relPath[1]}"/>
-                                <add-parameter name="entry" value="{$relPath[2]}"/>
+                                <add-parameter name="wiki-id" value="{$relPath[2]}"/>
                             </forward>
                         </view>
                     </dispatch>
-                case "edit" return
+                case "edit" case "addentry" return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{$exist:controller}/edit.html">
                         </forward>
                         <view>
                             <forward url="{$exist:controller}/modules/view.xql" absolute="no">
                                 { local:set-user() }
-                                <add-parameter name="feed" value="{$relPath[1]}"/>
-                                <add-parameter name="entry" value="{$relPath[2]}"/>
+                                <add-parameter name="wiki-id" value="{$relPath[2]}"/>
                             </forward>
                         </view>
                     </dispatch>
@@ -113,8 +111,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                         <view>
                             <forward url="{$exist:controller}/modules/view.xql" absolute="no">
                                 { local:set-user() }
-                                <add-parameter name="feed" value="{$relPath[1]}"/>
-                                <add-parameter name="entry" value="{$relPath[2]}"/>
+                                <add-parameter name="wiki-id" value="{$relPath[2]}"/>
                             </forward>
                         </view>
                     </dispatch>
@@ -125,7 +122,6 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                 <view>
                     <forward url="/modules/view.xql">
                         { local:set-user() }
-                        <add-parameter name="feed" value="{$relPath[1]}"/>
                     </forward>
                 </view>
             </dispatch>

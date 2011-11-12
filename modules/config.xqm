@@ -4,6 +4,8 @@
  :)
 module namespace config="http://exist-db.org/xquery/apps/config";
 
+import module namespace wiki="http://exist-db.org/xquery/wiki" at "java:org.exist.xquery.modules.wiki.WikiModule";
+
 declare namespace repo="http://exist-db.org/xquery/repo";
 declare namespace expath="http://expath.org/ns/pkg";
 declare namespace atom="http://www.w3.org/2005/Atom";
@@ -60,10 +62,13 @@ declare function config:resolve-feed($feed as xs:string) {
         xcollection($path)/atom:feed
 };
 
-declare function config:get-entries($feed as element(atom:feed), $id as xs:string?) as element(atom:entry)* {
+declare function config:get-entries($feed as element(atom:feed), $id as xs:string?,
+    $wikiId as xs:string?) as element(atom:entry)* {
     let $entryCollection := collection(concat(util:collection-name($feed), "/.feed.entry"))
     return
-        if ($id) then
+        if ($wikiId) then
+            $entryCollection/atom:entry[wiki:id = $wikiId]
+        else if ($id) then
             $entryCollection/atom:entry[atom:id = $id]
         else
             $entryCollection/atom:entry

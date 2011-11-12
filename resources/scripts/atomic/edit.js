@@ -23,6 +23,18 @@ $(document).ready(function() {
     $("#edit-form").submit(function () {
         summaryEditor.update();
         contentEditor.update();
+        
+        var wikiId = $("input[name='name']", this).val();
+        var filename = $("input[name='resource']", this).val();
+        
+        if (wikiId === "") {
+            return false;
+        }
+        if (filename === "") {
+            filename = wikiId + ".atom";
+            $("input[name='resource']", this).val(filename);
+        }
+        return true;
     });
 });
 

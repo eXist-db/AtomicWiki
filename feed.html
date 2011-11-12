@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div class="templates:surround?with=templates/page.html&amp;at=content">
     <div class="app:feed">
-        <h2 class="app:title"/>
         <div class="app:entries entries">
             <div class="entry">
-                <div class="toolbar">
-                    <a class="app:toolbar-edit" href="#">Edit</a>
+                <div class="templates:if-session-set?attribute=wiki.user">
+                    <div class="toolbar">
+                        <a class="app:edit-link?action=edit" href="#">Edit</a>
+                        <a class="app:edit-link?action=delete" href="#">Delete</a>
+                    </div>
                 </div>
                 <div class="entryhead">
                     <div class="app:publication-date"/>

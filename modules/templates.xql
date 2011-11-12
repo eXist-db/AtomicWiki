@@ -169,6 +169,17 @@ declare function templates:if-parameter-unset($node as node(), $params as elemen
             ()
 };
 
+declare function templates:if-session-set($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $paramAttr := $params/param[@name = "attribute"]/@value
+    let $isSet :=
+        ($paramAttr and session:get-attribute($paramAttr)) or session:exists()
+    return
+        if ($isSet) then
+            templates:process($node/node(), $model)
+        else
+            ()
+};
+
 declare function templates:load-source($node as node(), $params as element(parameters), $model as item()*) as node()* {
     let $href := $node/@href/string()
     let $context := request:get-context-path()
