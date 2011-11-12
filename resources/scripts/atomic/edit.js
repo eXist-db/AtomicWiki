@@ -63,9 +63,6 @@ Atomic.Editor = (function () {
         var WikiMode = require("Atomic/mode/wiki").Mode;
     	doc.setMode(new WikiMode());
         
-        var catalog = require("pilot/plugin_manager").catalog;
-        catalog.registerPlugins([ "pilot/index" ]);
-	    
 	    var renderer = new Renderer(div, "ace/theme/eclipse");
 	    
         this.container = $(div);

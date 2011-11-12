@@ -1,7 +1,6 @@
 define("Atomic/mode/wiki_highlight_rules", function(require, exports, module) {
 
-var oop = require("pilot/oop");
-var lang = require("pilot/lang");
+var oop = require("ace/lib/oop");
 var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
 
 var WikiHighlightRules = function() {
@@ -38,7 +37,7 @@ exports.WikiHighlightRules = WikiHighlightRules;
 
 define("Atomic/mode/wiki", function(require, exports, module) {
 
-var oop = require("pilot/oop");
+var oop = require("ace/lib/oop");
 var TextMode = require("ace/mode/text").Mode;
 var Tokenizer = require("ace/tokenizer").Tokenizer;
 var WikiHighlightRules = require("Atomic/mode/wiki_highlight_rules").WikiHighlightRules;

@@ -5,6 +5,9 @@
     <property name="java.classes" value="java/classes"/>
     <property name="java.libs" value="java/lib"/>
     <property name="build.dir" value="build"/>
+    <property name="scripts" value="resources/scripts"/>
+    <property name="scripts.ace" value="${scripts}/ace"/>
+    <property name="ace.src" value="support/ace"/>
     <path id="classpath">
         <fileset dir="${exist.dir}">
             <include name="*.jar"/>
@@ -16,7 +19,7 @@
             <include name="*.jar"/>
         </fileset>
     </path>
-    <target name="xar" depends="jar">
+    <target name="xar" depends="jar,ace">
         <mkdir dir="${build.dir}"/>
         <zip basedir="." destfile="${build.dir}/atomicwiki-0.1.xar" excludes="${build.dir}/*"/>
     </target>
@@ -38,5 +41,13 @@
                 <attribute name="Project-Build" value="${DSTAMP}"/>
             </manifest>
         </jar>
+    </target>
+    <target name="ace">
+        <mkdir dir="${scripts.ace}"/>
+        <copy todir="${scripts.ace}">
+            <fileset dir="${ace.src}/build/src">
+                <exclude name="*-uncompressed.js"/>
+            </fileset>
+        </copy>
     </target>
 </project>
