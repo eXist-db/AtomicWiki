@@ -13,7 +13,7 @@ declare namespace atom="http://www.w3.org/2005/Atom";
 declare variable $app:months := ('January', 'February', 'March', 'April', 'May', 'June', 'July', 
     'August', 'September', 'October', 'November', 'December');
 
-declare function app:create-entry() {
+declare function app:create-entry() as element(atom:entry) {
     <atom:entry>
         <atom:id>{util:uuid()}</atom:id>
         <atom:published>{ current-dateTime() }</atom:published>
@@ -27,6 +27,27 @@ declare function app:feed($node as node(), $params as element(parameters)?, $mod
     let $feed := request:get-attribute("feed")
     return
         templates:process($node/node(), $feed)
+};
+
+declare function app:create-feed() as element(atom:feed) {
+    <atom:feed>
+        <atom:id>{util:uuid()}</atom:id>
+        <atom:updated>{ current-dateTime() }</atom:updated>
+        <atom:title></atom:title>
+        <atom:author><atom:name>{ xmldb:get-current-user() }</atom:name></atom:author>
+        <category scheme="http://exist-db.org/NS/wiki/type/" term="wiki"/>
+    </atom:feed>
+};
+
+declare function app:get-or-create-feed($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $feed := request:get-attribute("feed")
+    let $data :=
+        if ($feed) then
+            $feed
+        else
+            app:create-feed()
+    return
+        templates:process($node/node(), $data)
 };
 
 declare function app:create-entry($node as node(), $params as element(parameters)?, $model as item()*) {
@@ -67,6 +88,14 @@ declare function app:entries($node as node(), $params as element(parameters)?, $
         }
 };
 
+declare function app:entry($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $feed := $params/param[@name = "feed"]/@value
+    let $entry := $params/param[@name = "entry"]/@value
+    let $collection := concat($config:wiki-root, "/", $feed, "/.feed.entry")
+    return
+        templates:process($node/node(), (collection($collection)/atom:entry[wiki:id = $entry], false()))
+};
+
 declare function app:get-or-create-entry($node as node(), $params as element(parameters)?, $feed as element(atom:feed)) {
     let $id := request:get-parameter("id", ())
     let $wikiId := request:get-parameter("wiki-id", ())
@@ -83,8 +112,9 @@ declare function app:get-or-create-entry($node as node(), $params as element(par
 };
 
 declare function app:title($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $isFeed := $model[1] instance of element(atom:feed)
     let $link :=
-        if ($model[1] instance of element(atom:feed)) then
+        if ($isFeed) then
             "."
         else if ($model[1]/wiki:id) then
             $model[1]/wiki:id/string()
@@ -92,7 +122,11 @@ declare function app:title($node as node(), $params as element(parameters)?, $mo
             concat("?id=", $model[1]/atom:id)
     return
         element { node-name($node) } {
-            $node/@*, <a href="{$link}">{$model[1]/atom:title/string()}</a>
+            $node/@*, <a href="{$link}">{$model[1]/atom:title/string()}</a>,
+            if ($isFeed) then
+                <a class="action" href="?action=editfeed">Edit</a>
+            else
+                ()
         }
 };
 
@@ -163,6 +197,10 @@ declare function app:edit-title($node as node(), $params as element(parameters)?
     <input type="text" value="{$model[1]/atom:title}" name="{$node/@name}"/>
 };
 
+declare function app:edit-subtitle($node as node(), $params as element(parameters)?, $model as item()*) {
+    <input type="text" value="{$model[1]/atom:subtitle}" name="{$node/@name}"/>
+};
+
 declare function app:edit-name($node as node(), $params as element(parameters)?, $model as item()*) {
     <input type="text" value="{$model[1]/wiki:id}" name="{$node/@name}"/>
 };
@@ -203,10 +241,17 @@ declare function app:edit-id($node as node(), $params as element(parameters)?, $
 };
 
 declare function app:edit-collection($node as node(), $params as element(parameters)?, $model as item()*) {
-    element { node-name($node) } {
-        $node/@*,
-        attribute value { concat(util:collection-name(request:get-attribute("feed")), "/.feed.entry") }
-    }
+    let $collection := request:get-attribute("collection")
+    let $feed :=
+        if ($collection) then 
+            $collection
+        else
+            concat(util:collection-name(request:get-attribute("feed")), "/.feed.entry")
+    return
+        element { node-name($node) } {
+            $node/@*,
+            attribute value { $feed }
+        }
 };
 
 declare function app:edit-resource($node as node(), $params as element(parameters)?, $model as item()*) {

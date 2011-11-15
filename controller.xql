@@ -54,12 +54,16 @@ declare function local:set-user() as element()* {
             ()
 };
 
+(:~
+    Split the URL into collection and article. Returns a sequence with two strings:
+    first is the collection, second the article (if specified)
+:)
 declare function local:extract-feed() {
     subsequence(text:groups($exist:path, '^/?(.*)/([^/]*)$'), 2)
 };
 
+(: preview edited articles :)
 if (ends-with($exist:resource, "preview.html")) then
-    (: the html page is run through view.xql to expand templates :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/preview.html"/>
         <view>
@@ -67,17 +71,26 @@ if (ends-with($exist:resource, "preview.html")) then
         </view>
     </dispatch>
 
+(: URL addresses a collection or article :)
 else if (matches($exist:path, ".*/[^\./]*$")) then
     let $editCollection := request:get-parameter("collection", ())
     let $relPath := local:extract-feed()
+    (: Try to determine the feed collection, either by looking at the URL or a parameter 'collection' :)
     let $feed := 
-        if ($editCollection) then 
-            xcollection(substring-before($editCollection, "/.feed.entry"))/atom:feed 
+        if ($editCollection) then
+            let $relColl :=
+                if (ends-with($editCollection, "/.feed.entry")) then
+                    substring-before($editCollection, "/.feed.entry")
+                else
+                    $editCollection
+            return
+                xcollection($relColl)/atom:feed 
         else
             config:resolve-feed($relPath[1])
+    (: The feed XML will be saved to a request attribute :)
     let $setAttr := request:set-attribute("feed", $feed)
     let $action := request:get-parameter("action", "view")
-    let $log := util:log("DEBUG", ("ACTION: '", $action, "'"))
+    let $template := config:get-template($feed)
     return
         if ($feed) then
             switch ($action)
@@ -87,6 +100,9 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                         { local:set-user() }
                         </forward>
                         <view>
+                            <forward url="{$exist:controller}/{$template}" method="GET">
+                                <set-header name="Cache-Control" value="no-cache"/>
+                            </forward>
                             <forward url="{$exist:controller}/modules/view.xql">
                                 { local:set-user() }
                                 <add-parameter name="wiki-id" value="{$relPath[2]}"/>
@@ -96,6 +112,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                 case "edit" case "addentry" return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{$exist:controller}/edit.html">
+                            <set-header name="Cache-Control" value="no-cache"/>
                         </forward>
                         <view>
                             <forward url="{$exist:controller}/modules/view.xql" absolute="no">
@@ -104,9 +121,22 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                             </forward>
                         </view>
                     </dispatch>
+                case "editfeed" return
+                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                        <forward url="{$exist:controller}/unknown-feed.html">
+                            <set-header name="Cache-Control" value="no-cache"/>
+                        </forward>
+                        <view>
+                            <forward url="{$exist:controller}/modules/view.xql">
+                                <set-attribute name="collection" value="{$config:wiki-root}/{$relPath[1]}"/>
+                                { local:set-user() }
+                            </forward>
+                        </view>
+                    </dispatch>
                 default return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                        <forward url="{$exist:controller}/feed.html">
+                        <forward url="{$exist:controller}/{$template}">
+                            <set-header name="Cache-Control" value="max-age=3600"/>
                         </forward>
                         <view>
                             <forward url="{$exist:controller}/modules/view.xql" absolute="no">
@@ -116,15 +146,30 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                         </view>
                     </dispatch>
         else
-            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                <forward url="{$exist:controller}/unknown-feed.html">
-                </forward>
-                <view>
-                    <forward url="/modules/view.xql">
+            switch ($action)
+                case "store" return
+                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                        <forward url="{$exist:controller}/modules/store.xql">
                         { local:set-user() }
-                    </forward>
-                </view>
-            </dispatch>
+                        </forward>
+                        <view>
+                            <forward url="{$exist:controller}/{$template}" method="GET"></forward>
+                            <forward url="{$exist:controller}/modules/view.xql">
+                                { local:set-user() }
+                            </forward>
+                        </view>
+                    </dispatch>
+                default return
+                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                        <forward url="{$exist:controller}/unknown-feed.html">
+                        </forward>
+                        <view>
+                            <forward url="{$exist:controller}/modules/view.xql">
+                                <set-attribute name="collection" value="{$config:wiki-root}/{$relPath[1]}"/>
+                                { local:set-user() }
+                            </forward>
+                        </view>
+                    </dispatch>
 else if (contains($exist:path, "/resources/")) then
     let $path := substring-after($exist:path, "/resources/")
     return

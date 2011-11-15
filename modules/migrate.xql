@@ -53,4 +53,4 @@ declare function atom:transform-collection($collection) {
         atom:transform-collection(concat($collection, "/", $child))
 };
 
-atom:transform-collection("/db/wiki/data/eXist/")
+atom:transform-collection("/db/wiki/data/")

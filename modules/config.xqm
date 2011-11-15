@@ -74,6 +74,13 @@ declare function config:get-entries($feed as element(atom:feed), $id as xs:strin
             $entryCollection/atom:entry
 };
 
+declare function config:get-template($feed as element(atom:feed)) {
+    (: <category scheme="http://atomic.exist-db.org/template" term="blog"/>:)
+    let $templateName := $feed/atom:category[@scheme = "http://atomic.exist-db.org/template"]/@term/string()
+    return
+        concat(($templateName, "feed")[1], ".html")
+};
+
 (:~
  : Returns the repo.xml descriptor for the current application.
  :)

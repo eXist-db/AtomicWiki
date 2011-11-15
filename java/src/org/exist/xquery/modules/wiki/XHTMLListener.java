@@ -209,11 +209,29 @@ public class XHTMLListener implements IWemListener {
     }
 
     public void onExtensionBlock(String name, WikiParameters wikiParameters) {
-        onExtension(name, "div", null, wikiParameters);
+		if (name.equals("image"))
+			onExtensionImage(wikiParameters);
+		else
+        	onExtension(name, "div", null, wikiParameters);
     }
 
     public void onExtensionInline(String name, WikiParameters wikiParameters) {
-		onExtension(name, "span", null, wikiParameters);
+		if (name.equals("image"))
+			onExtensionImage(wikiParameters);
+		else
+			onExtension(name, "span", null, wikiParameters);
+	}
+
+	private void onExtensionImage(WikiParameters wikiParameters) {
+		WikiParameter src = wikiParameters.getParameter("src");
+		WikiParameter fl = wikiParameters.getParameter("float");
+		AttributesImpl attribs = new AttributesImpl();
+		if (src != null)
+			attribs.addAttribute("", "src", "src", "CDATA", src.getValue());
+		if (fl != null)
+			attribs.addAttribute("", "class", "class", "CDATA", "float-" + fl.getValue());
+		builder.startElement(XHTML_NS, "img", "img", attribs);
+		builder.endElement();
 	}
 
 	private void onExtension(String name, String targetTag, String content, 
@@ -269,11 +287,18 @@ public class XHTMLListener implements IWemListener {
     }
 
     public void onReference(String href, boolean explicitLink) {
-        String link = WikiPageUtil.escapeXmlAttribute(href);
+		String label = href;
+		String link = href;
+		int p = href.indexOf("|");
+		if (p > 0 && explicitLink) {
+			link = href.substring(0, p);
+			label = href.substring(p + 1);
+		}
+        link = WikiPageUtil.escapeXmlAttribute(link);
         AttributesImpl attribs = new AttributesImpl();
         attribs.addAttribute("", "href", "href", "CDATA", link);
         builder.startElement(XHTML_NS, "a", "a", attribs);
-        builder.characters(WikiPageUtil.escapeXmlString(href));
+        builder.characters(WikiPageUtil.escapeXmlString(label));
         builder.endElement();
     }
 

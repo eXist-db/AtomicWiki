@@ -54,18 +54,15 @@ body { font: 12px/20px Verdana, Arial, Helvetica, sans-serif; color: #222; backg
 #content { width: 700px; float: left; min-height: 600px; padding: 0 10px; }
 
 #right { width: 240px; float: right; background: url(../images/grey-box-rpt.gif) repeat-y;  }
-#r-top { width: 240px; float: right; background: url(../images/grey-box-top.gif) no-repeat;  }
-#r-bot { 
+.r-top { width: 240px; float: right; background: url(../images/grey-box-top.gif) no-repeat;  }
+.r-bot { 
     width: 240px;
-    float: right; 
+    color: white;
     background: url(../images/grey-box-bot.gif) no-repeat 0 100%; min-height: 180px; }
 
-#right h2, #bluebox h2 { text-align: center; color: #FFF; font-size: 12px; padding: 20px 0 0; }
-#right p, #bluebox p { text-align: center; color: #FFF; font-size: 10px; padding: 20px 0 5px; }
-#right p { padding: 0px 0 20px; margin: 0; }
-#right ol li { color: #777; }
-#right a, #bluebox p a { color: #0099FF; }
-#right a:hover, #bluebox p a:hover { color: #ffcb05; }
+.r-bot .entrytitle, .r-bot .content {
+    padding : 10px 20px;
+}
 
 #main ul#twitter { float: left; margin: 10px 20px 20px; padding: 0; color: #FFF; width: 200px; }
 #main ul#twitter li { list-style-type: none; background: url(../images/twitter-right.gif) no-repeat 50% 100%; padding: 4px 5px 18px; width: 190px; float: left; line-height: 15px; margin: 1px auto; }
@@ -150,6 +147,13 @@ form { margin: 20px 0; }
 }
 
 #navigation a:hover { color: #ffcb05; }
+
+#navigation .action {
+    font-size: 66%;
+    vertical-align: top;
+    margin-left: .5em;
+    font-weight: normal;
+}
 
 .sidepanel {
     padding: 0 20px;

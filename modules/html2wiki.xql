@@ -4,6 +4,12 @@ module namespace html2wiki="http://atomic.exist-db.org/xquery/html2wiki";
 
 declare namespace html="http://www.w3.org/1999/xhtml";
 
+(:~
+    Transform XHTML into wiki markup. 
+    
+    Articles are always stored as XHTML. This function is called from the editor
+    to transform the XHTML back into wiki markup.
+:)
 declare function html2wiki:html2wiki($nodes as element()*) {
     let $output := html2wiki:transform($nodes)
     return
@@ -38,6 +44,18 @@ declare function html2wiki:transform($nodes as node()*) {
                 <t>{{{{{{{html2wiki:transform($node/node())}}}}}}}&#10;&#10;</t>
             case element(html:blockquote) return
                 <t>Q:{html2wiki:transform($node/node())}&#10;&#10;</t>
+            case element(html:a) return
+                let $label := $node/string()
+                let $href := $node/@href
+                return
+                    if ($label eq $href) then
+                        $label
+                    else
+                        concat("[", $href, "|", $label, "]")
+            case element(html:img) return
+                let $src := $node/@src/string()
+                return
+                    <t>$image(src={$src})</t>
             case element(html:li) return
                 if ($node/parent::html:ol) then
                     <t>+ {html2wiki:transform($node/node())}&#10;</t>
