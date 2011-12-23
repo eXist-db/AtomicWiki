@@ -39,9 +39,12 @@ declare function local:set-user() as element()* {
     session:create(),
     let $user := request:get-parameter("user", ())
     let $password := request:get-parameter("password", ())
+    let $logout := request:get-parameter("logout", ())
     let $sessionCredentials := local:credentials-from-session()
     return
-        if ($user) then
+        if ($logout eq "logout") then
+            local:set-credentials((), ())
+        else if ($user) then
             let $loggedIn := xmldb:login("/db", $user, $password)
             return
                 if ($loggedIn) then
@@ -146,6 +149,8 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                         </view>
                     </dispatch>
         else
+            let $log := util:log("WARN", ("no feed, action = ", $action))
+            return
             switch ($action)
                 case "store" return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">

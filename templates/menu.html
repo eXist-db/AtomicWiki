@@ -3,22 +3,23 @@
     <div class="r-top">
         <div class="r-bot">
             <div class="app:login">
-                <form class="login" action="" method="POST">
+                <form class="login" action="?" method="POST">
                     <div>
-                        <label for="user">User</label>
-                        <input type="text" name="user"/>
+                        <input type="text" name="user" placeholder="User" required="required"/>
                     </div>
                     <div>
-                        <label for="password">Password</label>
                         <input type="password" name="password"/>
                     </div>
                     <button type="submit">Login</button>
                 </form>
                 <div class="sidepanel">
-                    <h2>Edit Menu</h2>
+                    <h2>Actions</h2>
                     <ul class="menu">
                         <li>
                             <a href="?action=addentry">New Article</a>
+                        </li>
+                        <li>
+                            <a href="?logout=logout">Logout</a>
                         </li>
                     </ul>
                 </div>

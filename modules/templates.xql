@@ -169,6 +169,16 @@ declare function templates:if-parameter-unset($node as node(), $params as elemen
             ()
 };
 
+declare function templates:if-attribute-set($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $paramName := $params/param[@name = "name"]/@value/string()
+    let $param := request:get-attribute($paramName)
+    return
+        if (empty($param) or string-length($param) eq 0) then
+            ()
+        else
+            templates:process($node/node(), $model)
+};
+
 declare function templates:if-session-set($node as node(), $params as element(parameters)?, $model as item()*) {
     let $paramAttr := $params/param[@name = "attribute"]/@value
     let $isSet :=

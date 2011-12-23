@@ -13,26 +13,31 @@
                 </ul>
                 <div id="edit" class="edit">
                     <form id="edit-form" action="." method="POST">
-                        <div class="editrow">
-                            <button type="submit">Store</button>
+                        <div class="editrow edit-toolbar">
+                            <button id="edit-form-cancel" type="cancel">Cancel</button>
+                            <button id="edit-form-save">Save</button>
+                            <button id="edit-form-saveAndClose" name="action" value="store" type="submit">Save and Close</button>
                         </div>
                         <div class="editrow title">
-                            <input class="app:edit-title" name="title"/>
+                            <input class="app:edit-title" name="title" placeholder="Title" required="required"/>
                             <label for="title">Title</label>
                         </div>
                         <div class="editrow">
-                            <input class="app:edit-name" name="name"/>
+                            <input class="app:edit-name" name="name" placeholder="ShortName" required="required" pattern="^[\w-.:]+$"/>
                             <label for="name">Short Name</label>
                         </div>
                         <div class="editrow">
-                            <h3>Summary:</h3>
-                            <textarea id="summary-editor" name="summary" class="app:edit-summary summary-editor"/>
+                            <h3>Summary</h3>
+                            <div id="summary-editor">
+                                <textarea name="summary" class="app:edit-summary"/>
+                            </div>
                         </div>
                         <div class="editrow">
-                            <h3>Content:</h3>
-                            <textarea id="content-editor" name="content" class="app:edit-content content-editor"/>
+                            <h3>Content</h3>
+                            <div id="content-editor">
+                                <textarea name="content" class="app:edit-content"/>
+                            </div>
                         </div>
-                        <input type="hidden" name="action" value="store"/>
                         <input type="hidden" name="id" class="app:edit-id"/>
                         <input type="hidden" name="author" class="app:edit-author"/>
                         <input type="hidden" name="published" class="app:edit-publication-date"/>

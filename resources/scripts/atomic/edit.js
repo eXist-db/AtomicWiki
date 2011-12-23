@@ -1,7 +1,7 @@
 $(document).ready(function() {
     
-    var summaryEditor = new Atomic.Editor(document.getElementById("summary-editor"));
     var contentEditor = new Atomic.Editor(document.getElementById("content-editor"));
+    var summaryEditor = new Atomic.Editor(document.getElementById("summary-editor"));
     
     $("#edit-tabs").tabs({
         select: function (ev, ui) {
@@ -20,6 +20,32 @@ $(document).ready(function() {
             }
         }
     });
+    $("#edit-form-cancel").button({
+        icons: {
+            primary: "ui-icon-check"
+        }
+    });
+    $("#edit-form-saveAndClose").button({
+        icons: {
+            primary: "ui-icon-check"
+        }
+    });
+    $("#edit-form-save").button({
+        icons: {
+            primary: "ui-icon-disk"
+        }
+    }).click(function (ev) {
+        ev.preventDefault();
+        summaryEditor.update();
+        contentEditor.update();
+        var data = $("#edit-form").serialize();
+        $.ajax({
+		    type: "POST",
+		    url: "modules/store.xql",
+		    data: data
+        });
+    });
+    
     $("#edit-form").submit(function () {
         summaryEditor.update();
         contentEditor.update();
@@ -47,13 +73,19 @@ Atomic.Editor = (function () {
 	var EditSession = require("ace/edit_session").EditSession;
     var UndoManager = require("ace/undomanager").UndoManager;
     
-    Constr = function(textarea) {
-        this.input = $(textarea);
-        var text = this.input.val();
+    Constr = function(container) {
+        this.container = $(container);
+        this.input = $("textarea", container);
+        var text = this.input.text();
+        if (text.length === 0) {
+            text = "\n";
+        }
         
-        var div = $("<div></div>").insertAfter(this.input)[0];
-        div.className = textarea.className;
-        this.input.hide();
+        this.input.empty().hide();
+        
+        var div = document.createElement("div");
+        div.className = "code-editor";
+        this.container.append(div);
         
         var doc = new EditSession(text);
         doc.setUndoManager(new UndoManager());
@@ -65,11 +97,9 @@ Atomic.Editor = (function () {
         
 	    var renderer = new Renderer(div, "ace/theme/eclipse");
 	    
-        this.container = $(div);
         
-		this.editor = new Editor(renderer);
-        this.editor.setSession(doc);
-        this.resize();
+        this.editor = new Editor(renderer, doc);
+        this.editor.resize();
     };
     
     Constr.prototype.resize = function() {

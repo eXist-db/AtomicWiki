@@ -92,8 +92,10 @@ declare function app:entry($node as node(), $params as element(parameters)?, $mo
     let $feed := $params/param[@name = "feed"]/@value
     let $entry := $params/param[@name = "entry"]/@value
     let $collection := concat($config:wiki-root, "/", $feed, "/.feed.entry")
+    let $entryData := collection($collection)/atom:entry[wiki:id = $entry]
+    where $entryData
     return
-        templates:process($node/node(), (collection($collection)/atom:entry[wiki:id = $entry], false()))
+        templates:process($node/node(), ($entryData, false()))
 };
 
 declare function app:get-or-create-entry($node as node(), $params as element(parameters)?, $feed as element(atom:feed)) {
@@ -194,15 +196,30 @@ declare function app:edit-link($node as node(), $params as element(parameters)?,
 };
 
 declare function app:edit-title($node as node(), $params as element(parameters)?, $model as item()*) {
-    <input type="text" value="{$model[1]/atom:title}" name="{$node/@name}"/>
+    let $title := $model[1]/atom:title
+    return
+        element { node-name($node) } {
+            $node/@* except $node/@value,
+            if ($title) then attribute value { $title } else ()
+        }
 };
 
 declare function app:edit-subtitle($node as node(), $params as element(parameters)?, $model as item()*) {
-    <input type="text" value="{$model[1]/atom:subtitle}" name="{$node/@name}"/>
+    let $title := $model[1]/atom:subtitle
+    return
+        element { node-name($node) } {
+            $node/@* except $node/@value,
+            if ($title) then attribute value { $title } else ()
+        }
 };
 
 declare function app:edit-name($node as node(), $params as element(parameters)?, $model as item()*) {
-    <input type="text" value="{$model[1]/wiki:id}" name="{$node/@name}"/>
+    let $pageName := $model[1]/wiki:id
+    return
+        element { node-name($node) } {
+            $node/@* except $node/@value,
+            if ($pageName) then attribute value { $pageName } else ()
+        }
 };
 
 declare function app:edit-content($node as node(), $params as element(parameters)?, $model as item()*) {
@@ -213,10 +230,12 @@ declare function app:edit-content($node as node(), $params as element(parameters
 };
 
 declare function app:edit-summary($node as node(), $params as element(parameters)?, $model as item()*) {
-    element { node-name($node) } {
-        $node/@*,
-        html2wiki:html2wiki($model[1]/atom:summary/*)
-    }
+    let $summary := $model[1]/atom:summary/*
+    return
+        element { node-name($node) } {
+            $node/@*,
+            html2wiki:html2wiki($summary)
+        }
 };
 
 declare function app:edit-publication-date($node as node(), $params as element(parameters)?, $model as item()*) {

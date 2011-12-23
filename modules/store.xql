@@ -6,6 +6,8 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
 declare namespace store="http://atomic.exist-db.org/xquery/store";
 declare namespace atom="http://www.w3.org/2005/Atom";
 
+declare option exist:serialize "method=json";
+
 declare function store:article() {
     let $name := request:get-parameter("name", ())
     let $id := request:get-parameter("id", ())
@@ -35,7 +37,7 @@ declare function store:article() {
     let $stored :=
         xmldb:store(store:create-collection($collection), $resource, $entry, "application/atom+xml")
     return
-        ()
+        <result status="ok"/>
 };
 
 declare function store:mkcol-recursive($parent as xs:string, $components as xs:string*) {
