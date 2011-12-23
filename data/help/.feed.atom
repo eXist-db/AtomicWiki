@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<atom:feed xmlns:atom="http://www.w3.org/2005/Atom">
+    <atom:id>89f21d49-52e0-49a9-8440-33f60a96b296</atom:id>
+    <atom:updated>2011-11-13T22:28:07.924+01:00</atom:updated>
+    <atom:title>Help</atom:title>
+    <atom:author>
+        <atom:name>admin</atom:name>
+    </atom:author>
+    <category scheme="http://exist-db.org/NS/wiki/type/" term="wiki"/>
+</atom:feed>
