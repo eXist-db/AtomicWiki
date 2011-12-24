@@ -4,6 +4,9 @@ module namespace html2wiki="http://atomic.exist-db.org/xquery/html2wiki";
 
 declare namespace html="http://www.w3.org/1999/xhtml";
 
+declare variable $html2wiki:specialChars := string-to-codepoints("*+_${}=");
+declare variable $html2wiki:escape := string-to-codepoints("\");
+
 (:~
     Transform XHTML into wiki markup. 
     
@@ -97,6 +100,8 @@ declare function html2wiki:transform($nodes as node()*) {
                                 html2wiki:transform($node/node())
             case element() return
                 html2wiki:transform($node/node())
+            case text() return
+                html2wiki:text($node)
             default return
                 $node
 };
@@ -114,4 +119,9 @@ declare function html2wiki:macro-parameters($paramStr as xs:string?) {
             )
     else
         ()
+};
+
+declare function html2wiki:text($text as xs:string) {
+    replace($text, "\*", "\\*")
+
 };

@@ -205,7 +205,7 @@ public class XHTMLListener implements IWemListener {
     }
 
     public void onEscape(String s) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        builder.characters(WikiPageUtil.escapeXmlString(s));
     }
 
     public void onExtensionBlock(String name, WikiParameters wikiParameters) {

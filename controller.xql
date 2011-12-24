@@ -139,7 +139,8 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                 default return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{$exist:controller}/{$template}">
-                            <set-header name="Cache-Control" value="max-age=3600"/>
+                            <set-header name="Cache-Control" value="no-cache"/>
+                            <!--set-header name="Cache-Control" value="max-age=3600"/-->
                         </forward>
                         <view>
                             <forward url="{$exist:controller}/modules/view.xql" absolute="no">
