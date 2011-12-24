@@ -24,12 +24,22 @@
                         <a href="index.html" id="logo">eXistDB</a>
                     </div><!--/header-->
                     <div id="navigation">
-                        <ul id="nav" class="dropdown dropdown-horizontal"/>
+                        <div class="app:feed">
+                            <h2 class="app:title"/>
+                        </div>
                     </div>
                     <div id="main">
                         <!-- Page content will be injected into the div below -->
                         <div id="content"/>
-                        <div class="templates:include?path=templates/menu.html"/>
+                        <div id="right">
+                            <div class="templates:include?path=templates/menu.html"/>
+                            <div class="box">
+                                <div class="app:entry?feed=help&amp;entry=MarkupHelp">
+                                    <h3 class="app:title entrytitle"/>
+                                    <div class="app:content content"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
