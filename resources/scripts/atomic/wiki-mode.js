@@ -15,12 +15,16 @@ var WikiHighlightRules = function() {
                 regex: "^=+[^=]*=+$"
             },
             {
-                token: "string",
-                regex: "\\$\\$[^\\$]*\\$\\$"
-            },
-            {
                 token: "markup-em",
                 regex: "__[^_]*__"
+            },
+            {
+                token: "markup-strong",
+                regex: "\\*\\*[^_]*\\*\\*"
+            },
+            {
+                token: "markup-code",
+                regex: "\\$\\$[^_]*\\$\\$"
             },
             {
                 token: "support.function",

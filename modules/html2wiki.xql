@@ -1,4 +1,4 @@
-xquery version "1.0";
+xquery version "3.0";
 
 module namespace html2wiki="http://atomic.exist-db.org/xquery/html2wiki";
 
@@ -88,7 +88,11 @@ declare function html2wiki:transform($nodes as node()*) {
                             else
                                 <t>${$name}({$params})</t>
                     else
-                        html2wiki:transform($node/node())
+                        switch ($class)
+                            case "strong" return
+                                <t>**{$node/string()}**</t>
+                            default return
+                                html2wiki:transform($node/node())
             case element() return
                 html2wiki:transform($node/node())
             default return

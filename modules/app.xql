@@ -289,6 +289,12 @@ declare function app:login($node as node(), $params as element(parameters)?, $mo
             templates:process($node/*[1], $model)
 };
 
+declare function app:user($node as node(), $params as element(parameters)?, $model as item()*) {
+    element { node-name($node) } {
+        session:get-attribute("wiki.user")
+    }
+};
+
 (:~
  : This function can be called from the HTML templating. It shows which parameters
  : are required for a function to be callable from the templating system. To build 
