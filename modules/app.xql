@@ -2,6 +2,7 @@ xquery version "3.0";
 
 module namespace app="http://exist-db.org/xquery/app";
 
+import module namespace atomic="http://atomic.exist-db.org/xquery/atomic" at "atomic.xql";
 import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace date="http://exist-db.org/xquery/datetime" at "java:org.exist.xquery.modules.datetime.DateTimeModule";
@@ -9,34 +10,15 @@ import module namespace html2wiki="http://atomic.exist-db.org/xquery/html2wiki" 
 import module namespace wiki="http://exist-db.org/xquery/wiki" at "java:org.exist.xquery.modules.wiki.WikiModule";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
+declare namespace html="http://www.w3.org/1999/xhtml";
 
 declare variable $app:months := ('January', 'February', 'March', 'April', 'May', 'June', 'July', 
     'August', 'September', 'October', 'November', 'December');
-
-declare function app:create-entry() as element(atom:entry) {
-    <atom:entry>
-        <atom:id>{util:uuid()}</atom:id>
-        <atom:published>{ current-dateTime() }</atom:published>
-        <atom:author><atom:name>{ xmldb:get-current-user() }</atom:name></atom:author>
-        <atom:title></atom:title>
-        <atom:content type="xhtml"></atom:content>
-    </atom:entry>
-};
 
 declare function app:feed($node as node(), $params as element(parameters)?, $model as item()*) {
     let $feed := request:get-attribute("feed")
     return
         templates:process($node/node(), $feed)
-};
-
-declare function app:create-feed() as element(atom:feed) {
-    <atom:feed>
-        <atom:id>{util:uuid()}</atom:id>
-        <atom:updated>{ current-dateTime() }</atom:updated>
-        <atom:title></atom:title>
-        <atom:author><atom:name>{ xmldb:get-current-user() }</atom:name></atom:author>
-        <category scheme="http://exist-db.org/NS/wiki/type/" term="wiki"/>
-    </atom:feed>
 };
 
 declare function app:get-or-create-feed($node as node(), $params as element(parameters)?, $model as item()*) {
@@ -45,7 +27,7 @@ declare function app:get-or-create-feed($node as node(), $params as element(para
         if ($feed) then
             $feed
         else
-            app:create-feed()
+            atomic:create-feed()
     return
         templates:process($node/node(), $data)
 };
@@ -109,7 +91,7 @@ declare function app:get-or-create-entry($node as node(), $params as element(par
                 return
                     templates:process($node/node(), ($entry, false()))
             else
-                templates:process($node/node(), (app:create-entry(), false()))
+                templates:process($node/node(), (atomic:create-entry(), false()))
         }
 };
 
@@ -179,7 +161,9 @@ declare function app:content($node as node(), $params as element(parameters)?, $
 declare function app:process-content($content as element()?, $model as item()*) {
     switch ($content/@type)
         case "xhtml" return
-            templates:process($content/*, $model)
+            let $data := atomic:process-links($content/*)
+            return
+                templates:process($data, $model)
         default return
             $content/string()
 };
