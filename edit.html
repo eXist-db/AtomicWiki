@@ -13,28 +13,80 @@
                 </ul>
                 <div id="edit" class="edit">
                     <form id="edit-form" action="." method="POST">
-                        <div class="editrow edit-toolbar">
+                        <div class="editrow edit-commands">
                             <button id="edit-form-cancel" type="cancel">Cancel</button>
                             <button id="edit-form-save">Save</button>
                             <button id="edit-form-saveAndClose" name="action" value="store" type="submit">Save and Close</button>
                         </div>
                         <div class="editrow title">
-                            <input class="app:edit-title" name="title" placeholder="Title" required="required"/>
+                            <input class="app:edit-title" type="text" name="title" placeholder="Title" required="required"/>
                             <label for="title">Title</label>
                         </div>
                         <div class="editrow">
-                            <input class="app:edit-name" name="name" placeholder="ShortName" required="required" pattern="^[\w-.:]+$"/>
+                            <input class="app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="^[\w-.:]+$"/>
                             <label for="name">Short Name</label>
+                        </div>
+                        <div class="editrow options">
+                            <input type="checkbox" class="app:edit-external" name="external"/>
+                            Check to store content and metadata in separate documents
                         </div>
                         <div class="editrow">
                             <h3>Summary</h3>
                             <div id="summary-editor">
+                                <div class="editor-toolbar">
+                                    <button>
+                                        <img class="btn-strong" src="resources/images/bold.gif"/>
+                                    </button>
+                                    <button>
+                                        <img class="btn-emphasis" src="resources/images/italic.gif"/>
+                                    </button>
+                                    <button>
+                                        <img class="btn-code" src="resources/images/code.gif"/>
+                                    </button>
+                                    <select class="sel-heading">
+                                        <option>-- Heading --</option>
+                                        <option>Heading 1</option>
+                                        <option>Heading 2</option>
+                                        <option>Heading 3</option>
+                                    </select>
+                                    <select class="sel-code">
+                                        <option>-- Code --</option>
+                                        <option>XQuery</option>
+                                        <option>XML</option>
+                                        <option>Java</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
                                 <textarea name="summary" class="app:edit-summary"/>
                             </div>
                         </div>
                         <div class="editrow">
                             <h3>Content</h3>
                             <div id="content-editor">
+                                <div class="editor-toolbar">
+                                    <button>
+                                        <img class="btn-strong" src="resources/images/bold.gif"/>
+                                    </button>
+                                    <button>
+                                        <img class="btn-emphasis" src="resources/images/italic.gif"/>
+                                    </button>
+                                    <button>
+                                        <img class="btn-code" src="resources/images/code.gif"/>
+                                    </button>
+                                    <select class="sel-heading">
+                                        <option>-- Heading --</option>
+                                        <option>Heading 1</option>
+                                        <option>Heading 2</option>
+                                        <option>Heading 3</option>
+                                    </select>
+                                    <select class="sel-code">
+                                        <option>-- Code --</option>
+                                        <option>XQuery</option>
+                                        <option>XML</option>
+                                        <option>Java</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
                                 <textarea name="content" class="app:edit-content"/>
                             </div>
                         </div>

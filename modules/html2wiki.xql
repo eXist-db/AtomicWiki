@@ -21,15 +21,15 @@ declare function html2wiki:transform($nodes as node()*) {
     return
         typeswitch ($node)
             case element(html:h1) return
-                <t>={html2wiki:transform($node/node())}=&#10;</t>
+                <t>={html2wiki:transform($node/node())}=&#10;&#10;</t>
             case element(html:h2) return
-                <t>=={html2wiki:transform($node/node())}==&#10;</t>
+                <t>=={html2wiki:transform($node/node())}==&#10;&#10;</t>
             case element(html:h3) return
-                <t>==={html2wiki:transform($node/node())}===&#10;</t>
+                <t>==={html2wiki:transform($node/node())}===&#10;&#10;</t>
             case element(html:h4) return
-                <t>===={html2wiki:transform($node/node())}====&#10;</t>
+                <t>===={html2wiki:transform($node/node())}====&#10;&#10;</t>
             case element(html:h5) return
-                <t>====={html2wiki:transform($node/node())}=====&#10;</t>
+                <t>====={html2wiki:transform($node/node())}=====&#10;&#10;</t>
             case element(html:p) return
                 <t>{html2wiki:transform($node/node())}&#10;&#10;</t>
             case element(html:em) return
@@ -55,7 +55,9 @@ declare function html2wiki:transform($nodes as node()*) {
             case element(html:img) return
                 let $src := $node/@src/string()
                 return
-                    <t>$image(src={$src})</t>
+                    <t>$image(src={$src})&#10;&#10;</t>
+            case element(html:ol) return
+                <t>{html2wiki:transform($node/node())}&#10;</t>
             case element(html:li) return
                 if ($node/parent::html:ol) then
                     <t>+ {html2wiki:transform($node/node())}&#10;</t>

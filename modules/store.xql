@@ -18,6 +18,7 @@ declare function store:article() {
     let $author := request:get-parameter("author", xmldb:get-current-user())
     let $collection := request:get-parameter("collection", ())
     let $resource := request:get-parameter("resource", ())
+    let $storeSeparate := request:get-parameter("external", ())
     let $entry :=
         <atom:entry>
             <atom:id>{$id}</atom:id>
@@ -31,7 +32,17 @@ declare function store:article() {
                 else
                     ()
             }
-            <atom:content type="xhtml">{ wiki:parse($content, <parameters/>) }</atom:content>
+            {
+                if ($storeSeparate) then
+                    let $dataColl := substring-before($collection, "/.feed.entry")
+                    let $docName := concat($name, ".html")
+                    let $stored := 
+                        xmldb:store($dataColl, $docName, wiki:parse($content, <parameters/>), "text/html")
+                    return
+                        <atom:content type="xhtml" src="{$docName}"/>
+                else
+                    <atom:content type="xhtml">{ wiki:parse($content, <parameters/>) }</atom:content>
+            }
         </atom:entry>
     let $log := util:log("DEBUG", ("STORING ", $resource, " to collection ", $collection))
     let $stored :=

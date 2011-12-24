@@ -48,3 +48,12 @@ declare function atomic:create-entry() as element(atom:entry) {
         <atom:content type="xhtml"></atom:content>
     </atom:entry>
 };
+
+declare function atomic:get-content($content as element(atom:content)) {
+    if ($content/@src) then
+        let $baseColl := substring-before(util:collection-name($content), "/.feed.entry")
+        return
+            doc(concat($baseColl, "/", $content/@src))/node()
+    else
+        $content/*
+};

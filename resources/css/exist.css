@@ -133,6 +133,11 @@ blockquote p { padding: 0 0 10px; }
 .code { font: 13px/20px bold "Courier New", Courier, monospace; }
 
 /* ---------------------------------------- Local styles ----------------------------------- */
+.actions p {
+    margin: 15px 0 0 0;
+    text-align: right;
+}
+
 form { margin: 10px 0; }
 .item { 
     background: #FFFFFF;
@@ -326,13 +331,27 @@ form { margin: 10px 0; }
     width: 100%;
 }
 
-.edit-toolbar {
-    font-size: .85em;
+.edit-commands {
+    font-size: 85%;
     margin-bottom: 20px;
+    margin-right: 10px;
 }
 
-.edit-toolbar button {
-    margin-right: 10px;
+.edit-commands button {
+    margin-right: 4px;
+}
+
+.editor-toolbar {
+    font-size: 85%;
+    vertical-align: top;
+}
+
+.editor-toolbar select, .editor-toolbar button {
+    vertical-align: top;
+    border: 1px solid #CCC;
+    background: transparent;
+    height: 22px;
+    margin-right: 2px;
 }
 
 .editrow h3 {
@@ -347,8 +366,12 @@ form { margin: 10px 0; }
     margin-left: 20px;
 }
 
-.editrow input {
+.editrow input[type=text] {
     width: 420px;
+}
+
+.options {
+    font-size: 85%;
 }
 
 .edit .title input {

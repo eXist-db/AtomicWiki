@@ -142,14 +142,15 @@ declare function app:content($node as node(), $params as element(parameters)?, $
     element { node-name($node) } {
         $node/@*,
         let $summary := $model[1]/atom:summary
-        let $content := $model[1]/atom:content
+        let $atomContent := $model[1]/atom:content
+        let $content := atomic:get-content($atomContent)
         return (
             if ($model[2]) then
-                app:process-content(($summary, $content)[1], $model)
+                app:process-content($atomContent/@type, ($summary, $content)[1], $model)
             else
                 for $content in ($summary, $content)
                 return
-                    app:process-content($content, $model),
+                    app:process-content($atomContent/@type, $content, $model),
             if ($model[2] and $summary) then
                 <a href="?id={$model[1]/atom:id}">Read article ...</a>
             else
@@ -158,10 +159,10 @@ declare function app:content($node as node(), $params as element(parameters)?, $
     }
 };
 
-declare function app:process-content($content as element()?, $model as item()*) {
-    switch ($content/@type)
+declare function app:process-content($type as xs:string, $content as element()?, $model as item()*) {
+    switch ($type)
         case "xhtml" return
-            let $data := atomic:process-links($content/*)
+            let $data := atomic:process-links($content)
             return
                 templates:process($data, $model)
         default return
@@ -207,10 +208,12 @@ declare function app:edit-name($node as node(), $params as element(parameters)?,
 };
 
 declare function app:edit-content($node as node(), $params as element(parameters)?, $model as item()*) {
-    element { node-name($node) } {
-        $node/@*,
-        html2wiki:html2wiki($model[1]/atom:content/*)
-    }
+    let $content := atomic:get-content($model[1]/atom:content)
+    return
+        element { node-name($node) } {
+            $node/@*,
+            html2wiki:html2wiki($content)
+        }
 };
 
 declare function app:edit-summary($node as node(), $params as element(parameters)?, $model as item()*) {
@@ -240,6 +243,16 @@ declare function app:edit-id($node as node(), $params as element(parameters)?, $
     element { node-name($node) } {
         $node/@*,
         attribute value { $model[1]/atom:id }
+    }
+};
+
+declare function app:edit-external($node as node(), $params as element(parameters)?, $model as item()*) {
+    element { node-name($node) } {
+        $node/@*,
+        if ($model[1]/atom:content/@src) then
+            attribute checked { "checked" }
+        else
+            ()
     }
 };
 
