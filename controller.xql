@@ -8,6 +8,13 @@ declare variable $exist:path external;
 declare variable $exist:resource external;
 declare variable $exist:controller external;
 
+declare variable $local:error-handler :=
+    <error-handler xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/error-page.html" method="get"/>
+        <forward url="{$exist:controller}/modules/view.xql"/>
+    </error-handler>
+;
+
 (:~
     Retrieve current user credentials from HTTP session
 :)
@@ -111,6 +118,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                                 <add-parameter name="wiki-id" value="{$relPath[2]}"/>
                             </forward>
                         </view>
+                        { $local:error-handler }
                     </dispatch>
                 case "edit" case "addentry" return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -123,6 +131,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                                 <add-parameter name="wiki-id" value="{$relPath[2]}"/>
                             </forward>
                         </view>
+                        { $local:error-handler }
                     </dispatch>
                 case "editfeed" return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -135,6 +144,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                                 { local:set-user() }
                             </forward>
                         </view>
+                        { $local:error-handler }
                     </dispatch>
                 default return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -148,6 +158,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                                 <add-parameter name="wiki-id" value="{$relPath[2]}"/>
                             </forward>
                         </view>
+                        { $local:error-handler }
                     </dispatch>
         else
             let $log := util:log("WARN", ("no feed, action = ", $action))
@@ -164,6 +175,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                                 { local:set-user() }
                             </forward>
                         </view>
+                        { $local:error-handler }
                     </dispatch>
                 default return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -175,6 +187,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                                 { local:set-user() }
                             </forward>
                         </view>
+                        { $local:error-handler }
                     </dispatch>
 else if (contains($exist:path, "/resources/")) then
     let $path := substring-after($exist:path, "/resources/")
