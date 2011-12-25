@@ -143,7 +143,7 @@ declare function app:content($node as node(), $params as element(parameters)?, $
         $node/@*,
         let $summary := $model[1]/atom:summary
         let $atomContent := $model[1]/atom:content
-        let $content := atomic:get-content($atomContent)
+        let $content := atomic:get-content($atomContent, true())
         return (
             if ($model[2]) then
                 app:process-content($atomContent/@type, ($summary, $content)[1], $model)
@@ -159,14 +159,14 @@ declare function app:content($node as node(), $params as element(parameters)?, $
     }
 };
 
-declare function app:process-content($type as xs:string, $content as element()?, $model as item()*) {
+declare function app:process-content($type as xs:string, $content as item()?, $model as item()*) {
     switch ($type)
         case "xhtml" return
             let $data := atomic:process-links($content)
             return
                 templates:process($data, $model)
         default return
-            $content/string()
+            $content
 };
 
 declare function app:edit-link($node as node(), $params as element(parameters)?, $model as item()*) {
@@ -207,12 +207,33 @@ declare function app:edit-name($node as node(), $params as element(parameters)?,
         }
 };
 
-declare function app:edit-content($node as node(), $params as element(parameters)?, $model as item()*) {
-    let $content := atomic:get-content($model[1]/atom:content)
+declare function app:edit-content-type($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $type := $model[1]/atom:content/@type
     return
         element { node-name($node) } {
             $node/@*,
-            html2wiki:html2wiki($content)
+            for $option in $node/option
+            return
+                if ($option/@value eq $type) then
+                    element { node-name($option) } {
+                        $option/@*,
+                        attribute selected { "selected" },
+                        $option/node()
+                    }
+                else
+                    $option
+        }
+};
+
+declare function app:edit-content($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $content := atomic:get-content($model[1]/atom:content, false())
+    return
+        element { node-name($node) } {
+            $node/@*,
+            if ($content instance of element()) then
+                html2wiki:html2wiki($content)
+            else
+                $content
         }
 };
 
@@ -249,7 +270,7 @@ declare function app:edit-id($node as node(), $params as element(parameters)?, $
 declare function app:edit-external($node as node(), $params as element(parameters)?, $model as item()*) {
     element { node-name($node) } {
         $node/@*,
-        if ($model[1]/atom:content/@src) then
+        if (empty($model[1]/atom:content) or $model[1]/atom:content/@src) then
             attribute checked { "checked" }
         else
             ()

@@ -1,3 +1,5 @@
+xquery version "3.0";
+
 module namespace atomic="http://atomic.exist-db.org/xquery/atomic";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
@@ -49,11 +51,29 @@ declare function atomic:create-entry() as element(atom:entry) {
     </atom:entry>
 };
 
-declare function atomic:get-content($content as element(atom:content)) {
-    if ($content/@src) then
-        let $baseColl := substring-before(util:collection-name($content), "/.feed.entry")
-        return
-            doc(concat($baseColl, "/", $content/@src))/node()
-    else
-        $content/*
+declare function atomic:get-content($content as element(atom:content), $eval as xs:boolean) as item()* {
+    let $data :=
+        if ($content/@src) then
+            let $baseColl := substring-before(util:collection-name($content), "/.feed.entry")
+            let $path := concat($baseColl, "/", $content/@src)
+            return
+                switch ($content/@type)
+                    case "html" return
+                        doc($path)/*
+                    default return
+                        util:binary-to-string(util:binary-doc($path))
+        else
+            if ($content/@type eq "html") then $content/* else $content/node()
+    return
+        if ($data and $content/@type eq "xquery" and $eval) then
+            (: The following variables will be available within the script :)
+            let $collection :=
+                substring-after(
+                    substring-before(util:collection-name($content), "/.feed.entry"),
+                    concat($config:wiki-root, "/")
+                )
+            return
+                util:eval($data)
+        else
+            $data
 };

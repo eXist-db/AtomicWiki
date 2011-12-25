@@ -19,6 +19,12 @@ declare function store:article() {
     let $collection := request:get-parameter("collection", ())
     let $resource := request:get-parameter("resource", ())
     let $storeSeparate := request:get-parameter("external", ())
+    let $contentType := request:get-parameter("ctype", "html")
+    let $contentParsed := 
+        if ($contentType eq "html") then
+            wiki:parse($content, <parameters/>)
+        else
+            $content
     let $entry :=
         <atom:entry>
             <atom:id>{$id}</atom:id>
@@ -27,7 +33,7 @@ declare function store:article() {
             <atom:author><atom:name>{ $author }</atom:name></atom:author>
             <atom:title>{$title}</atom:title>
             {
-                if ($summary != "") then
+                if (normalize-space($summary) != "") then
                     <atom:summary type="xhtml">{ wiki:parse($summary, <parameters/>) }</atom:summary>
                 else
                     ()
@@ -35,16 +41,16 @@ declare function store:article() {
             {
                 if ($storeSeparate) then
                     let $dataColl := substring-before($collection, "/.feed.entry")
-                    let $docName := concat($name, ".html")
+                    let $docName := concat($name, if ($contentType eq "xquery") then ".xql" else ".html")
+                    let $mediaType := if ($contentType eq "xquery") then "application/xquery" else "text/html"
                     let $stored := 
-                        xmldb:store($dataColl, $docName, wiki:parse($content, <parameters/>), "text/html")
+                        xmldb:store($dataColl, $docName, $contentParsed, $mediaType)
                     return
-                        <atom:content type="xhtml" src="{$docName}"/>
+                        <atom:content type="{$contentType}" src="{$docName}"/>
                 else
-                    <atom:content type="xhtml">{ wiki:parse($content, <parameters/>) }</atom:content>
+                    <atom:content type="{$contentType}">{ $contentParsed }</atom:content>
             }
         </atom:entry>
-    let $log := util:log("DEBUG", ("STORING ", $resource, " to collection ", $collection))
     let $stored :=
         xmldb:store(store:create-collection($collection), $resource, $entry, "application/atom+xml")
     return
