@@ -21,6 +21,24 @@ declare function app:feed($node as node(), $params as element(parameters)?, $mod
         templates:process($node/node(), $feed)
 };
 
+declare function app:breadcrumbs($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $collection := util:collection-name($model)
+    let $path := substring-after($collection, $config:wiki-root)
+    return
+        <div class="breadcrumbs">
+        {
+            for $component at $p in tokenize($path, "/")
+            return (
+                if ($p gt 1) then
+                    " / "
+                else
+                    (),
+                <a href="#">{ $component }</a>
+            )
+        }
+        </div>
+};
+
 declare function app:get-or-create-feed($node as node(), $params as element(parameters)?, $model as item()*) {
     let $feed := request:get-attribute("feed")
     let $data :=

@@ -10,4 +10,6 @@
     <repo:target>/db/wiki</repo:target>
     <repo:prepare>pre-install.xql</repo:prepare>
     <repo:finish/>
+    <repo:permissions user="editor" password="editor" group="editors" mode="0774"/>
+    <deployed>2011-12-26T07:09:28.692+01:00</deployed>
 </repo:meta>

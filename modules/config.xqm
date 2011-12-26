@@ -10,6 +10,9 @@ declare namespace repo="http://exist-db.org/xquery/repo";
 declare namespace expath="http://expath.org/ns/pkg";
 declare namespace atom="http://www.w3.org/2005/Atom";
 
+declare variable $config:default-user := ("editor", "editor");
+declare variable $config:default-group := "editors";
+
 (: 
     Determine the application root collection from the current module load path.
 :)

@@ -1,5 +1,6 @@
 xquery version "1.0";
 
+import module namespace config="http://exist-db.org/xquery/apps/config" at "modules/config.xqm";
 import module namespace xdb="http://exist-db.org/xquery/xmldb";
 
 (: The following external variables are set by the repo:deploy function :)
@@ -29,4 +30,13 @@ declare function local:mkcol($collection, $path) {
 
 (: store the collection configuration :)
 local:mkcol("/db/system/config", $target),
-xdb:store-files-from-pattern(concat("/system/config", $target), $dir, "*.xconf")
+xdb:store-files-from-pattern(concat("/system/config", $target), $dir, "*.xconf"),
+
+if (xdb:group-exists($config:default-group)) then 
+    ()
+else 
+    xdb:create-group($config:default-group),
+if (xdb:exists-user($config:default-user[1])) then
+    ()
+else
+    xdb:create-user($config:default-user[1], $config:default-user[2], $config:default-group, ())

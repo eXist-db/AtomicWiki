@@ -151,6 +151,10 @@ form { margin: 10px 0; }
 .hi { background: #FFED3D; }
 
 /* --------------------------------------- Wiki styles ------------------------------------ */
+#navigation {
+    position: relative;
+}
+
 #navigation h2 {
     font: 175% "Quicksand", sans-serif;
     font-weight: bold;
@@ -167,6 +171,15 @@ form { margin: 10px 0; }
     vertical-align: top;
     margin-left: .5em;
     font-weight: normal;
+}
+
+#navigation .breadcrumbs {
+    position: absolute;
+    right: 0;
+    bottom: 25px;
+    margin-top: 6px;
+    font-size: 112%;
+    color: white;
 }
 
 .menu {
