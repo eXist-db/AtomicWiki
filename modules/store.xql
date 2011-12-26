@@ -118,7 +118,7 @@ declare function store:collection() {
     let $stored :=
         xmldb:store($collectionPath, ".feed.atom", $data, "application/atom+xml")
     return
-        ()
+        request:set-attribute("feed", doc($stored)/*)
 };
 
 let $content := request:get-parameter("content", ())
