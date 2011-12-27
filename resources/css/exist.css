@@ -417,8 +417,7 @@ form { margin: 10px 0; }
 }
 
 .ace_markup-code {
-    font-family: "Ubuntu Mono", Consolas, monospace;
-    font-size: 100%;
+    text-decoration: underline;
 }
 
 input:required:invalid, fieldset input:focus:invalid { 

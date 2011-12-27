@@ -74,6 +74,7 @@ Atomic.Editor = (function () {
     var UndoManager = require("ace/undomanager").UndoManager;
     
     Constr = function(container) {
+        var $this = this;
         this.container = $(container);
         this.input = $("textarea", container);
         var text = this.input.text();
@@ -95,11 +96,36 @@ Atomic.Editor = (function () {
         var WikiMode = require("Atomic/mode/wiki").Mode;
     	doc.setMode(new WikiMode());
         
-	    var renderer = new Renderer(div, "ace/theme/eclipse");
+	    var renderer = new Renderer(div, "ace/theme/dawn");
 	    
-        
         this.editor = new Editor(renderer, doc);
         this.editor.resize();
+        
+        this.container.find(".btn-strong").click(function(ev) {
+            ev.preventDefault();
+            $this.markup("**", "**");
+        });
+        this.container.find(".btn-emphasis").click(function(ev) {
+            ev.preventDefault();
+            $this.markup("__", "__");
+        });
+        this.container.find(".btn-code").click(function(ev) {
+            ev.preventDefault();
+            $this.markup("$$", "$$");
+        });
+        this.container.find(".sel-heading").change(function(ev) {
+            var val = parseInt($(this).val());
+            if (val > 0) {
+                var stars = "*****".substring(0, val);
+                $this.markup(stars, stars);
+            }
+        });
+        this.container.find(".sel-code").change(function(ev) {
+            var val = $(this).val();
+            if (val != "none") {
+                $this.markup("{code lang=\"" + val + "\"}\n", "\n{/code}");
+            }
+        });
     };
     
     Constr.prototype.resize = function() {
@@ -109,6 +135,23 @@ Atomic.Editor = (function () {
     Constr.prototype.update = function() {
         var value = this.editor.getSession().getValue();
         this.input.val(value);
+    };
+    
+    Constr.prototype.markup = function(before, after) {
+        var session = this.editor.getSession();
+        var selection = this.editor.getSelectionRange();
+        var selected = session.doc.getTextRange(selection);
+        if (selected !== "") {
+            session.remove(selection);
+            this.editor.insert(before + selected + after);
+        } else {
+            this.editor.insert(before);
+            var sel = this.editor.getSelection();
+            var lead = sel.getSelectionLead();
+            this.editor.insert(after);
+            sel.moveCursorToPosition(lead);
+            this.editor.focus();
+        }
     };
     
     return Constr;
