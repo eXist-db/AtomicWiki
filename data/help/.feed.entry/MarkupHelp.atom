@@ -87,6 +87,9 @@
             <p>
                 <code>{code lang="XQuery"} code block {/code}</code>
             </p>
+            <p>
+                <code>{script} inline XQuery block {/script}</code>
+            </p>
         </div>
     </atom:content>
 </atom:entry>

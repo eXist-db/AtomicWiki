@@ -116,7 +116,7 @@ Atomic.Editor = (function () {
         this.container.find(".sel-heading").change(function(ev) {
             var val = parseInt($(this).val());
             if (val > 0) {
-                var stars = "*****".substring(0, val);
+                var stars = "===============".substring(0, val);
                 $this.markup(stars, stars);
             }
         });
