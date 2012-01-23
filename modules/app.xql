@@ -27,13 +27,14 @@ declare function app:breadcrumbs($node as node(), $params as element(parameters)
     return
         <div class="breadcrumbs">
         {
-            for $component at $p in tokenize($path, "/")
+            let $components := tokenize(substring($path, 2), "/")
+            for $component at $p in $components
             return (
                 if ($p gt 1) then
                     " / "
                 else
                     (),
-                <a href="#">{ $component }</a>
+                <a href="{ string-join(for $i in 1 to count($components) - $p return '..', '/') }">{ $component }</a>
             )
         }
         </div>
