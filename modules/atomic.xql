@@ -47,7 +47,6 @@ declare function atomic:create-entry() as element(atom:entry) {
         <atom:published>{ current-dateTime() }</atom:published>
         <atom:author><atom:name>{ xmldb:get-current-user() }</atom:name></atom:author>
         <atom:title></atom:title>
-        <atom:content type="xhtml"></atom:content>
     </atom:entry>
 };
 

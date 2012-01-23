@@ -151,8 +151,13 @@ form { margin: 10px 0; }
 .hi { background: #FFED3D; }
 
 /* --------------------------------------- Wiki styles ------------------------------------ */
-#navigation {
-    position: relative;
+.ui-widget {
+    font-size: 85% !important;
+}
+
+#Atomic-dialog-icon {
+    float: left;
+    margin: 4px 10px 0 0;
 }
 
 #navigation h2 {
@@ -174,11 +179,10 @@ form { margin: 10px 0; }
 }
 
 #navigation .breadcrumbs {
-    position: absolute;
-    right: 0;
-    bottom: 25px;
     margin-top: 6px;
-    font-size: 112%;
+    float: right;
+    font-size: 120%;
+    font-weight: bold;
     color: white;
 }
 

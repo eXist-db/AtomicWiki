@@ -198,6 +198,17 @@ declare function app:edit-link($node as node(), $params as element(parameters)?,
         <a href="?id={$model[1]/atom:id}&amp;{$addParams}">{ $node/@*[local-name(.) != 'href'], $node/node() }</a>
 };
 
+declare function app:action-button($node as node(), $params as element(parameters)?, $model as item()*) {
+    element { node-name($node) } {
+        $node/@*,
+        <input name="id" value="{$model[1]/atom:id}" type="hidden"/>,
+        for $param in $params/param
+        return
+            <input name="{$param/@name}" value="{$param/@value}" type="hidden"/>,
+        templates:process($node/node(), $model)
+    }
+};
+
 declare function app:edit-title($node as node(), $params as element(parameters)?, $model as item()*) {
     let $title := $model[1]/atom:title
     return

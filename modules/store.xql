@@ -1,4 +1,4 @@
-xquery version "1.0";
+xquery version "3.0";
 
 import module namespace wiki="http://exist-db.org/xquery/wiki" at "java:org.exist.xquery.modules.wiki.WikiModule";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
@@ -7,6 +7,8 @@ declare namespace store="http://atomic.exist-db.org/xquery/store";
 declare namespace atom="http://www.w3.org/2005/Atom";
 
 declare option exist:serialize "method=json";
+
+declare variable $store:ERROR := xs:QName("store:error");
 
 declare function store:article() {
     let $name := request:get-parameter("name", ())
@@ -121,7 +123,41 @@ declare function store:collection() {
         ()
 };
 
+declare function store:delete-content($collection as xs:string, $src as xs:string) {
+    let $dataColl := substring-before($collection, "/.feed.entry")
+    return
+        xmldb:remove($dataColl, $src)
+};
+
+declare function store:delete-article($article as element(atom:entry)) {
+    util:log("WARN", ("Deleting article: ", $article)),
+    let $src := $article/atom:content/@src
+    return
+        if ($src) then
+            store:delete-content(util:collection-name($article), $src)
+        else
+            (),
+    xmldb:remove(util:collection-name($article), util:document-name($article))
+};
+
+declare function store:delete-article() {
+    let $id := request:get-parameter("id", ())
+    let $article := collection($config:wiki-root)//atom:entry[atom:id = $id]
+    return
+        if ($article) then
+            store:delete-article($article)
+        else
+            error($store:ERROR, "Article with id " || $id || " not found.")
+};
+
+let $action := request:get-parameter("action", ())
 let $content := request:get-parameter("content", ())
 return
-    if ($content) then store:article()
-    else store:collection()
+    switch ($action)
+        case "delete" return
+            store:delete-article()
+        case "store" return
+            if ($content) then store:article()
+            else store:collection()
+        default return
+            error($store:ERROR, "Unknown action: " || $action)
