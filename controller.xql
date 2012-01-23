@@ -104,7 +104,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
     return
         if ($feed) then
             switch ($action)
-                case "store" return
+                case "store" case "delete" return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{$exist:controller}/modules/store.xql">
                         { local:set-user() }
@@ -164,7 +164,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
             let $log := util:log("WARN", ("no feed, action = ", $action))
             return
             switch ($action)
-                case "store" return
+                case "store" case "delete" return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{$exist:controller}/modules/store.xql">
                         { local:set-user() }
@@ -175,7 +175,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                                 { local:set-user() }
                             </forward>
                         </view>
-                        { $local:error-handler }
+                     { $local:error-handler }
                     </dispatch>
                 default return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">

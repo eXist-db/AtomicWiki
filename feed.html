@@ -6,7 +6,9 @@
                 <div class="templates:if-session-set?attribute=wiki.user">
                     <div class="toolbar">
                         <a class="app:edit-link?action=edit" href="#">Edit</a>
-                        <a class="app:edit-link?action=delete" href="#">Delete</a>
+                        <form class="app:action-button?action=delete" id="delete-article">
+                            <button name="action" value="delete">Delete</button>
+                        </form>
                     </div>
                 </div>
                 <div class="entryhead">
