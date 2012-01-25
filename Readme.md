@@ -12,8 +12,9 @@ Features
 * **XML storage**: article metadata is saved using the Atom Syndication Format, which allows for easy exchange with other systems or news readers. The article content is stored separately as an HTML file, so authors can choose to directly edit the HTML using editing tools outside the wiki (e.g. oXygen).
 * **XQuery scripting**: embed XQuery code directly into a document and have it executed. Directly query data stored in the database from within an article. Furthermore, all wiki macros are written in XQuery and you can add your own any time.
 * **eXist-db Integration**: AtomicWiki ships as a self-contained package which can be deployed into any eXist-db using eXist's application repository. It runs alongside other apps within the same db and ignores any documents which are not part of the wiki.
-=Current State=
 
+Current State
+-------------
 This version of AtomicWiki is a complete rewrite of the older code base. It is usable, but not yet feature-complete. The following features are planned to be implemented next:
 
 + **Access control**: Right now users can view/edit any resource if they have access rights on the database resource. The editing forms do not provide any means to restrict access. We plan to implement a dedicated security model for the wiki based on ACLs. 
