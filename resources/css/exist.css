@@ -152,7 +152,7 @@ form { margin: 10px 0; }
 
 /* --------------------------------------- Wiki styles ------------------------------------ */
 .ui-widget {
-    font-size: 85% !important;
+    font-size: 90% !important;
 }
 
 #Atomic-dialog-icon {
@@ -334,8 +334,15 @@ form { margin: 10px 0; }
     text-align: right;
 }
 
-.toolbar a {
+.toolbar button {
     margin-right: 8px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.toolbar form {
+    display: inline;
 }
 
 .entry .toolbar li {
@@ -397,7 +404,7 @@ form { margin: 10px 0; }
 
 #content-editor .code-editor {
     position: relative;
-    height: 400px;
+    height: 600px;
     width: 100%;
 }
 

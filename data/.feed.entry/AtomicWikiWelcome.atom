@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<atom:entry xmlns:atom="http://www.w3.org/2005/Atom">
+    <atom:id>1b122f87-ede6-40a8-8d4e-c5275e24ddd1</atom:id>
+    <wiki:id xmlns:wiki="http://exist-db.org/xquery/wiki">AtomicWikiWelcome</wiki:id>
+    <atom:published>2012-01-25T12:01:12.713+01:00</atom:published>
+    <atom:author>
+        <atom:name>admin</atom:name>
+    </atom:author>
+    <atom:title>Welcome to Atomic Wiki</atom:title>
+    <atom:content type="html" src="AtomicWikiWelcome.html"/>
+</atom:entry>

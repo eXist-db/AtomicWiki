@@ -125,11 +125,15 @@ declare function app:title($node as node(), $params as element(parameters)?, $mo
             concat("?id=", $model[1]/atom:id)
     return
         element { node-name($node) } {
-            $node/@*, <a href="{$link}">{$model[1]/atom:title/string()}</a>,
-            if ($isFeed) then
-                <a class="action" href="?action=editfeed">Edit</a>
-            else
-                ()
+            $node/@*,
+            if ($model[1]/atom:title/text()) then (
+                <a href="{$link}">{$model[1]/atom:title/string()}</a>,
+                if ($isFeed) then
+                    <a class="action" href="?action=editfeed">Edit</a>
+                else
+                    ()
+            ) else
+                <a>Untitled</a>
         }
 };
 

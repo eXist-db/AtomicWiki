@@ -136,7 +136,7 @@ var WikiHighlightRules = function() {
     this.$rules = {
         start : [
             {
-                token: "markup-heading",
+                token: "heading.1",
                 regex: "^=+[^=]*=+$"
             },
             {
@@ -150,6 +150,22 @@ var WikiHighlightRules = function() {
             {
                 token: "markup-code",
                 regex: "\\$\\$[^_]*\\$\\$"
+            },
+            {
+                token: "keyword",
+                regex: "\\[[^\\]]*\\]"
+            },
+            {
+                token: "keyword",
+                regex: "^\\*\\s"
+            },
+            {
+                token: "keyword",
+                regex: "^\\+\\s"
+            },
+            {
+                token: "constant.numeric",
+                regex: "\\$\\w+\\(.*\\)"
             },
             {
                 token: "support.function",

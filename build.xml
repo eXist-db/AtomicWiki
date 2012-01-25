@@ -22,14 +22,19 @@
     <target name="xar" depends="jar,ace">
         <mkdir dir="${build.dir}"/>
         <zip destfile="${build.dir}/atomicwiki-0.1.xar">
-			<fileset dir=".">
-				<include name="*.*"/>
-				<include name="modules/**"/>
-				<include name="resources/**"/>
-				<include name="templates/**"/>
-				<exclude name=".git*"/>
-			</fileset>
-		</zip>
+            <fileset dir=".">
+                <include name="*.*"/>
+                <include name="modules/**"/>
+                <include name="resources/**"/>
+                <include name="templates/**"/>
+                <include name=".feed.entry/**"/>
+                <include name="data/help/**"/>
+		<include name="data/.feed.atom"/>
+		<include name="data/AtomicWikiWelcome.html"/>
+		<include name="data/.feed.entry/AtomicWikiWelcome.atom"/>
+                <exclude name=".git*"/>
+            </fileset>
+        </zip>
     </target>
     <target name="prepare">
         <mkdir dir="${java.classes}"/>

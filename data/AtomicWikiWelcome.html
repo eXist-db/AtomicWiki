@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml">
+    <p>You are viewing the root of the collection hierarchy of this wiki. To edit this page, log into the system. If this is a new installation, there's a default user named "editor" with password "editor".</p>
+    <h1>About</h1>
+    <p>AtomicWiki is a simple wiki based on the  <a href="http://exist-db.org">eXist-db XML Database</a> . It has the following features:</p>
+    <ul>
+        <li>
+            <span class="strong">Hierarchical collections</span>: articles are organized into collections. Each collection may contain one or more articles and an arbitrary number of sub-collections.</li>
+        <li>
+            <span class="strong">Blog support</span>: a collection can be displayed as a weblog feed.</li>
+        <li>
+            <span class="strong">Rich wiki markup</span> with syntax highlighting: our wiki editor allows for fast authoring with a number of useful extensions, e.g. to display a block of source code. The wiki editor supports on-the-fly syntax highlighting of the wiki markup.</li>
+        <li>
+            <span class="strong">XML storage</span>: article metadata is saved using the Atom Syndication Format, which allows for easy exchange with other systems or news readers. The article content is stored separately as an HTML file, so authors can choose to directly edit the HTML using editing tools outside the wiki (e.g. oXygen).</li>
+        <li>
+            <span class="strong">XQuery scripting</span>: embed XQuery code directly into a document and have it executed. Directly query data stored in the database from within an article. Furthermore, all wiki macros are written in XQuery and you can add your own any time.</li>
+        <li>
+            <span class="strong">eXist-db Integration</span>: AtomicWiki ships as a self-contained package which can be deployed into any eXist-db using eXist's application repository. It runs alongside other apps within the same db and ignores any documents which are not part of the wiki.</li>
+    </ul>
+    <h1>Current State</h1>
+    <p>This version of AtomicWiki is a complete rewrite of the older code base. It is usable, but not yet feature-complete. The following features are planned to be implemented next:</p>
+    <ol>
+        <li>
+            <span class="strong">Access control</span>: Right now users can view/edit any resource if they have access rights on the database resource. The editing forms do not provide any means to restrict access. We plan to implement a dedicated security model for the wiki based on ACLs. </li>
+        <li>
+            <span class="strong">User management</span>: While users can be added/edited using eXist-db standard tools, there are no forms for this within the wiki.</li>
+        <li>
+            <span class="strong">Commenting</span>: commenting and annotations will be a major feature of AtomicWiki. We plan to go beyond simple comments attached to an article, allowing users to annotate virtually everything: an article, a piece of text within a page, a relation between two resources, ... </li>
+        <li>
+            <span class="strong">Resource upload</span>: Likewise, images or other resources can be uploaded using eXist-db tooling, but not from within the wiki.</li>
+        <li>
+            <span class="strong">Editor improvements</span>: auto-complete for links, more keyboard shortcuts ...</li>
+        <li>
+            <span class="strong">HTML WYSWIG editor</span>: since all content is stored as XML/HTML, we could also support editing content with a WYSWIG editor instead of wiki markup. The goal is to allow any type of editor to be plugged in.</li>
+    </ol>
+</div>

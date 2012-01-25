@@ -62,6 +62,21 @@ $(document).ready(function() {
         }
         return true;
     });
+    
+    $(".accordion").accordion({ 
+        collapsible: true, 
+        active: false,
+        change: function() {
+            summaryEditor.resize();
+        }
+    });
+    
+//    $("#content-editor .code-editor").resizable({
+//        containment: "#edit",
+//        stop: function() {
+//            contentEditor.resize();
+//        }
+//    });
 });
 
 Atomic.namespace("Atomic.Editor");
@@ -96,7 +111,7 @@ Atomic.Editor = (function () {
         var WikiMode = require("Atomic/mode/wiki").Mode;
     	doc.setMode(new WikiMode());
         
-	    var renderer = new Renderer(div, "ace/theme/dawn");
+	    var renderer = new Renderer(div, "ace/theme/tomorrow");
 	    
         this.editor = new Editor(renderer, doc);
         this.editor.resize();
@@ -130,6 +145,10 @@ Atomic.Editor = (function () {
     
     Constr.prototype.resize = function() {
         this.editor.resize();
+    };
+    
+    Constr.prototype.focus = function() {
+        this.editor.focus();
     };
     
     Constr.prototype.update = function() {
