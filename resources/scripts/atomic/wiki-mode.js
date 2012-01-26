@@ -136,7 +136,7 @@ var WikiHighlightRules = function() {
     this.$rules = {
         start : [
             {
-                token: "heading.1",
+                token: "markup-heading",
                 regex: "^=+[^=]*=+$"
             },
             {
