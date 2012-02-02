@@ -70,6 +70,7 @@ body { font: 1em/1.6em Helmet, Freesans, sans-serif; color: #222; background: ur
 .login input {
     display: block;
     margin: 0 0 6px 0;
+    width: 100%;
 }
 
 #main ul#twitter { float: left; margin: 10px 20px 20px; padding: 0; color: #FFF; width: 200px; }
