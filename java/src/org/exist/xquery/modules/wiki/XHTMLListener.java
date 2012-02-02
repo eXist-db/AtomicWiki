@@ -28,6 +28,9 @@ public class XHTMLListener implements IWemListener {
     private MemTreeBuilder builder;
     private Map parameters;
 
+	private int lastHeader = 0;
+	private int sectionLevel = 0;
+
     public XHTMLListener(MemTreeBuilder builder, Map params) {
         this.builder = builder;
         this.parameters = params;
@@ -46,7 +49,7 @@ public class XHTMLListener implements IWemListener {
     }
 
     public void beginDocument() {
-        builder.startElement(XHTML_NS, "div", "div", EMPTY_ATTRIBS);
+        builder.startElement(XHTML_NS, "article", "article", EMPTY_ATTRIBS);
     }
 
     public void beginFormat(WikiFormat wikiFormat) {
@@ -70,6 +73,18 @@ public class XHTMLListener implements IWemListener {
     }
 
     public void beginHeader(int i, WikiParameters wikiParameters) {
+		if (sectionLevel > i) {
+			for (int j = sectionLevel; j >= i; j--)
+				builder.endElement();
+			builder.startElement(XHTML_NS, "section", "section", EMPTY_ATTRIBS);
+		} else if (sectionLevel < i) {
+			for (int j = sectionLevel; j < i; j++)
+				builder.startElement(XHTML_NS, "section", "section", EMPTY_ATTRIBS);
+		} else if (sectionLevel == i) {
+			builder.startElement(XHTML_NS, "section", "section", EMPTY_ATTRIBS);
+		}
+		sectionLevel = i;
+
         String tag = "h" + i;
         builder.startElement(XHTML_NS, tag, tag, getParameters(wikiParameters));
     }
@@ -147,6 +162,11 @@ public class XHTMLListener implements IWemListener {
     }
 
     public void endDocument() {
+		// close open sections
+		for (int i = 0; i < sectionLevel; i++) {
+			builder.endElement();
+		}
+		// close <article>
         builder.endElement();
     }
 
