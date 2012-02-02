@@ -184,7 +184,7 @@ declare function app:content($node as node(), $params as element(parameters)?, $
 
 declare function app:process-content($type as xs:string, $content as item()?, $model as item()*) {
     switch ($type)
-        case "xhtml" return
+        case "html" case "xhtml" return
             let $data := atomic:process-links($content)
             return
                 templates:process($data, $model)
