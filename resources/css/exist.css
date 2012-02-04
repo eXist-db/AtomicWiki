@@ -152,6 +152,14 @@ form { margin: 10px 0; }
 .hi { background: #FFED3D; }
 
 /* --------------------------------------- Wiki styles ------------------------------------ */
+.error {
+    font-family: "Ubuntu Mono", "Consolas", monospace;
+    font-size: 112%;
+    white-space: pre-wrap;
+    width: 100%;
+    overflow: auto;
+}
+
 .ui-widget {
     font-size: 90% !important;
 }
@@ -444,4 +452,23 @@ input:required:valid {
     background-position:right; 
     background-repeat:no-repeat; 
     -moz-box-shadow:none; 
+}
+
+/* --------------------------------------- Permissions ------------------------------------ */
+table.permissions td {
+    padding: 4px 4px 8px 0;
+}
+
+/* --------------------------------------- Latest posts box ------------------------------------ */
+#latest-posts ul {
+    margin: .5em 0;
+}
+
+#latest-posts li {
+    list-style: none;
+}
+
+#latest-posts .date {
+    margin: .5em 0 .25em 0;
+    border-bottom: 1px solid white;
 }

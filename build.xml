@@ -19,17 +19,17 @@
             <include name="*.jar"/>
         </fileset>
     </path>
-	<target name="dist" depends="xar">
-		<zip destfile="${build.dir}/atomicwiki-0.1.zip">
-			<fileset dir="${build.dir}">
-				<include name="*.jar"/>
-				<include name="*.xar"/>
-			</fileset>
-			<fileset dir="${java.libs}">
-				<include name="*.jar"/>
-			</fileset>
-		</zip>
-	</target>
+    <target name="dist" depends="xar">
+        <zip destfile="${build.dir}/atomicwiki-0.1.zip">
+            <fileset dir="${build.dir}">
+                <include name="*.jar"/>
+                <include name="*.xar"/>
+            </fileset>
+            <fileset dir="${java.libs}">
+                <include name="*.jar"/>
+            </fileset>
+        </zip>
+    </target>
     <target name="xar" depends="jar,ace">
         <mkdir dir="${build.dir}"/>
         <zip destfile="${build.dir}/atomicwiki-0.1.xar">
@@ -40,9 +40,9 @@
                 <include name="templates/**"/>
                 <include name=".feed.entry/**"/>
                 <include name="data/help/**"/>
-		<include name="data/.feed.atom"/>
-		<include name="data/AtomicWikiWelcome.html"/>
-		<include name="data/.feed.entry/AtomicWikiWelcome.atom"/>
+                <include name="data/.feed.atom"/>
+                <include name="data/AtomicWikiWelcome.html"/>
+                <include name="data/.feed.entry/AtomicWikiWelcome.atom"/>
                 <exclude name=".git*"/>
             </fileset>
         </zip>

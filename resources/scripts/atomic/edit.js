@@ -70,7 +70,17 @@ $(document).ready(function() {
             summaryEditor.resize();
         }
     });
-    
+    $("#permissions-accordion").accordion({
+        collapsible: true,
+        active: false
+    });
+    $("#perm-private").change(function() {
+        if ($(this).is(":checked")) {
+            $(".perm-detail").hide();
+        } else {
+            $(".perm-detail").show();
+        }
+    });
 //    $("#content-editor .code-editor").resizable({
 //        containment: "#edit",
 //        stop: function() {

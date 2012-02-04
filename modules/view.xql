@@ -8,6 +8,7 @@ declare variable $modules :=
     <modules>
         <module prefix="config" uri="http://exist-db.org/xquery/apps/config" at="config.xql"/>
         <module prefix="app" uri="http://exist-db.org/xquery/app" at="app.xql"/>
+        <module prefix="acl" uri="http://atomic.exist-db.org/xquery/atomic/acl" at="acl.xql"/>
         <module prefix="ext" uri="http://atomic.exist-db.org/xquery/extensions" at="extensions.xql"/>
     </modules>;
 

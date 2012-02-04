@@ -26,6 +26,12 @@
                             <input class="app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="^[\w-.:]+$"/>
                             <label for="name">Short Name</label>
                         </div>
+                        <div class="editrow" id="permissions-accordion">
+                            <h3>
+                                <a href="#">Permissions</a>
+                            </h3>
+                            <div class="templates:include?path=templates/permissions.html"/>
+                        </div>
                         <div class="editrow options">
                             <input type="checkbox" class="app:edit-external" name="external"/>
                             Check to store content and metadata in separate documents

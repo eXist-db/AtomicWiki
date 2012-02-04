@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<atom:entry xmlns:atom="http://www.w3.org/2005/Atom">
+    <atom:id>4df1d88e-449c-4bf0-b0e1-4d93984eddcd</atom:id>
+    <wiki:id xmlns:wiki="http://exist-db.org/xquery/wiki">ListCollectionContents</wiki:id>
+    <atom:published>2011-12-25T10:55:09.424+01:00</atom:published>
+    <atom:author>
+        <atom:name>admin</atom:name>
+    </atom:author>
+    <atom:title>Latest Posts</atom:title>
+    <atom:summary type="xhtml">
+        <div xmlns="http://www.w3.org/1999/xhtml"/>
+    </atom:summary>
+    <atom:content type="xquery" src="ListCollectionContents.xql"/>
+</atom:entry>

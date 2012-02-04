@@ -11,7 +11,7 @@ declare namespace expath="http://expath.org/ns/pkg";
 declare namespace atom="http://www.w3.org/2005/Atom";
 
 declare variable $config:default-user := ("editor", "editor");
-declare variable $config:default-group := "editors";
+declare variable $config:default-group := "wiki";
 
 (: 
     Determine the application root collection from the current module load path.
@@ -29,6 +29,15 @@ declare variable $config:app-root :=
             $rawPath
     return
         substring-before($modulePath, "/modules")
+;
+
+declare variable $config:app-home :=
+    let $path := request:get-attribute("exist.path")
+    return
+        if (exists($path) and $path != "/") then
+            concat(substring-before(request:get-uri(), $path), "/")
+        else
+            request:get-uri()
 ;
 
 (:
@@ -58,6 +67,32 @@ declare variable $config:items-per-page :=
         else
             10
 ;
+
+declare function config:feed-from-entry($entry as element(atom:entry)) {
+    let $collection := substring-before(util:collection-name($entry), "/.feed.entry")
+    return
+        substring-after($collection, concat($config:wiki-root, "/"))
+};
+
+declare function config:feed-url-from-entry($entry as element(atom:entry)) {
+    let $path := config:feed-from-entry($entry)
+    let $appPath := request:get-attribute("exist.path")
+    let $base := $config:app-home
+    let $feed :=
+        if (ends-with($config:app-home, "/")) then
+            concat($config:app-home, $path)
+        else
+            concat($config:app-home, "/", $path)
+    return
+        if (ends-with($feed, "/")) then
+            $feed
+        else
+            concat($feed, "/")
+};
+
+declare function config:entry-url-from-entry($entry as element(atom:entry)) {
+    concat(config:feed-url-from-entry($entry), $entry/wiki:id)
+};
 
 declare function config:resolve-feed($feed as xs:string) {
     let $path := concat($config:wiki-root, "/", $feed)

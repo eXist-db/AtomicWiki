@@ -116,6 +116,13 @@ declare function templates:extract-prefixes($modules as element(modules)) as xs:
         concat($module/@prefix/string(), ":")
 };
 
+declare function templates:copy-node($node as element(), $model as item()*) {
+    element { node-name($node) } {
+        $node/@*,
+        templates:process($node/*, $model)
+    }
+};
+
 declare function templates:include($node as node(), $params as element(parameters)?, $model as item()*) {
     let $relPath := $params/param[@name = "path"]/@value
     let $path := concat($config:app-root, "/", $relPath)

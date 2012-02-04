@@ -2,6 +2,7 @@ xquery version "3.0";
 
 import module namespace wiki="http://exist-db.org/xquery/wiki" at "java:org.exist.xquery.modules.wiki.WikiModule";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
+import module namespace acl="http://atomic.exist-db.org/xquery/atomic/acl" at "acl.xql";
 
 declare namespace store="http://atomic.exist-db.org/xquery/store";
 declare namespace atom="http://www.w3.org/2005/Atom";
@@ -9,6 +10,12 @@ declare namespace atom="http://www.w3.org/2005/Atom";
 declare option exist:serialize "method=json";
 
 declare variable $store:ERROR := xs:QName("store:error");
+
+declare function store:store-resource($collection, $name, $content, $mediaType) {
+    let $stored := xmldb:store($collection, $name, $content, $mediaType)
+    return
+        acl:change-permissions($stored)
+};
 
 declare function store:article() {
     let $name := request:get-parameter("name", ())
@@ -32,6 +39,7 @@ declare function store:article() {
             <atom:id>{$id}</atom:id>
             <wiki:id>{$name}</wiki:id>
             <atom:published>{ $published }</atom:published>
+            <atom:updated>{current-dateTime()}</atom:updated>
             <atom:author><atom:name>{ $author }</atom:name></atom:author>
             <atom:title>{$title}</atom:title>
             {
@@ -46,7 +54,7 @@ declare function store:article() {
                     let $docName := concat($name, if ($contentType eq "xquery") then ".xql" else ".html")
                     let $mediaType := if ($contentType eq "xquery") then "application/xquery" else "text/html"
                     let $stored := 
-                        xmldb:store($dataColl, $docName, $contentParsed, $mediaType)
+                        store:store-resource($dataColl, $docName, $contentParsed, $mediaType)
                     return
                         <atom:content type="{$contentType}" src="{$docName}"/>
                 else
@@ -54,7 +62,7 @@ declare function store:article() {
             }
         </atom:entry>
     let $stored :=
-        xmldb:store(store:create-collection($collection), $resource, $entry, "application/atom+xml")
+        store:store-resource(store:create-collection($collection), $resource, $entry, "application/atom+xml")
     return
         <result status="ok"/>
 };
@@ -150,7 +158,7 @@ declare function store:delete-article() {
             error($store:ERROR, "Article with id " || $id || " not found.")
 };
 
-let $action := request:get-parameter("action", ())
+let $action := request:get-parameter("action", "store")
 let $content := request:get-parameter("content", ())
 return
     switch ($action)

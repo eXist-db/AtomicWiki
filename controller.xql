@@ -26,11 +26,16 @@ declare function local:credentials-from-session() as xs:string* {
     Store user credentials to session for future use. Return an XML
     fragment to pass user and password to the query.
 :)
-declare function local:set-credentials($user as xs:string, $password as xs:string?) as element()+ {
-    session:set-attribute("wiki.user", $user), 
-    session:set-attribute("wiki.password", $password),
-    <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="xquery.user" value="{$user}"/>,
-    <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="xquery.password" value="{$password}"/>
+declare function local:set-credentials($user as xs:string, $password as xs:string?) as element()* {
+    (: We have to call xmldb:login to set the user for the current query as well :)
+    if (xmldb:login("/db", $user, $password)) then (
+        session:set-attribute("wiki.user", $user), 
+        session:set-attribute("wiki.password", $password),
+        <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="xquery.user" value="{$user}"/>,
+        <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="xquery.password" value="{$password}"/>
+    ) else (
+        session:clear()
+    )
 };
 
 (:~
@@ -155,6 +160,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                         <view>
                             <forward url="{$exist:controller}/modules/view.xql" absolute="no">
                                 { local:set-user() }
+                                <set-attribute name="exist.path" value="{$exist:path}"/>
                                 <add-parameter name="wiki-id" value="{$relPath[2]}"/>
                             </forward>
                         </view>
@@ -184,7 +190,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                         <view>
                             <forward url="{$exist:controller}/modules/view.xql">
                                 <set-attribute name="collection" value="{$config:wiki-root}/{$relPath[1]}"/>
-                                { local:set-user() }
+                                {  local:set-user() }
                             </forward>
                         </view>
                         { $local:error-handler }
