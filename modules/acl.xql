@@ -19,7 +19,7 @@ declare function acl:change-permissions($path as xs:string) {
     return (
         (: Change main group :)
         (: Need to switch to the user who created the group :)
-        system:as-user($config:default-user[1], $config:default-user[2], sm:chgrp($path, $config:default-group)),
+        sm:chgrp($path, $config:default-group),
         if ($private) then
             sm:chmod($path, "rw-------")
         else
@@ -28,10 +28,13 @@ declare function acl:change-permissions($path as xs:string) {
 };
 
 declare function acl:show-permissions($node as node(), $params as element(parameters)?, $model as item()*) {
-    let $permissions := sm:get-permissions(document-uri(root($model[1])))
-    let $processed := templates:copy-node($node, $model)
-    return
-        acl:show-permissions($processed, $permissions/*)
+    if (doc-available(document-uri(root($model[1])))) then
+        let $permissions := sm:get-permissions(document-uri(root($model[1])))
+        let $processed := templates:copy-node($node, $model)
+        return
+            acl:show-permissions($processed, $permissions/*)
+    else
+        ()
 };
 
 declare function acl:show-permissions($node as node(), $permissions as element()) {
