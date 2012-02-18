@@ -76,6 +76,7 @@ declare function store:mkcol-recursive($parent as xs:string, $components as xs:s
                 store:mkcol-recursive($path, subsequence($components, 2))
             else (
                 xmldb:create-collection($parent, $components[1]),
+                acl:change-collection-permissions($path),
                 store:mkcol-recursive($path, subsequence($components, 2))
             )
     else
@@ -127,6 +128,7 @@ declare function store:collection() {
         </atom:feed>
     let $stored :=
         xmldb:store($collectionPath, ".feed.atom", $data, "application/atom+xml")
+    let $perms := acl:change-permissions($stored)
     return
         request:set-attribute("feed", doc($stored)/*)
 };

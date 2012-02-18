@@ -350,6 +350,10 @@ form { margin: 10px 0; }
     cursor: pointer;
 }
 
+.toolbar a {
+    margin-right: 8px;
+}
+
 .toolbar form {
     display: inline;
 }
@@ -415,12 +419,14 @@ form { margin: 10px 0; }
     position: relative;
     height: 600px;
     width: 100%;
+    font-size: 16px;
 }
 
 #summary-editor .code-editor {
     position: relative;
     height: 180px;
     width: 100%;
+    font-size: 16px;
 }
 
 /* Styles for wiki editor */
@@ -471,4 +477,17 @@ table.permissions td {
 #latest-posts .date {
     margin: .5em 0 .25em 0;
     border-bottom: 1px solid white;
+}
+
+.example {
+    padding: 10px 10px;
+    border: 1px solid #707070;
+}
+
+.result {
+    font-family: "Ubuntu Mono", "Consolas", monospace;
+    font-size: 112%;
+    white-space: pre-wrap;
+    width: 100%;
+    overflow: auto;
 }

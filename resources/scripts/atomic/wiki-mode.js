@@ -174,6 +174,11 @@ var WikiHighlightRules = function() {
             },
             {
                 token: "support.function",
+                regex: "{example lang=\"xquery\"[^{]*}",
+                next: "xq-start"
+            },
+            {
+                token: "support.function",
                 regex: "{script}",
                 next: "xq-start"
             },

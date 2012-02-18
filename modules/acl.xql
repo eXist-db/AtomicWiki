@@ -27,6 +27,10 @@ declare function acl:change-permissions($path as xs:string) {
     )
 };
 
+declare function acl:change-collection-permissions($path as xs:string) {
+    sm:chmod($path, "rwxrwxr-x")
+};
+
 declare function acl:show-permissions($node as node(), $params as element(parameters)?, $model as item()*) {
     if (doc-available(document-uri(root($model[1])))) then
         let $permissions := sm:get-permissions(document-uri(root($model[1])))

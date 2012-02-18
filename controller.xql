@@ -86,6 +86,11 @@ if (ends-with($exist:resource, "preview.html")) then
         </view>
     </dispatch>
 
+else if (ends-with($exist:resource, ".xql")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/modules/{$exist:resource}"/>
+    </dispatch>
+    
 (: URL addresses a collection or article :)
 else if (matches($exist:path, ".*/[^\./]*$")) then
     let $editCollection := request:get-parameter("collection", ())
