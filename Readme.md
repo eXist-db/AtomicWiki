@@ -66,6 +66,8 @@ you should first get eXist-db from SVN and build it (build.sh/build.bat). Next, 
      cd AtomicWiki
      git submodule update --init --recursive
 
+Edit the file build.properties and change the property exist.dir to point to the root of your eXist installation (eXist-db > 2.0). This is required to compile the Java modules for parsing wiki markup.
+
 Next, call ant on the build.xml file in AtomicWiki:
 
       ant
