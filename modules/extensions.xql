@@ -9,7 +9,7 @@ declare namespace atom="http://www.w3.org/2005/Atom";
 declare function ext:macro($node as node(), $params as element(parameters)?, $model as item()*) {
     (: variables which will be visible within the script :)
     let $entry := $model
-    let $collection := substring-before(util:collection-name($model), "/.feed.entry")
+    let $collection := util:collection-name($model)
     return
         try {
             util:eval($node/string())
@@ -24,7 +24,7 @@ declare function ext:script($node as node(), $params as element(parameters)?, $m
     let $data := $model[1]
     let $collection :=
         substring-after(
-            substring-before(util:collection-name($data), "/.feed.entry"),
+            util:collection-name($data),
             concat($config:wiki-root, "/")
         )
     return

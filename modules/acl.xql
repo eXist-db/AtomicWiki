@@ -15,7 +15,7 @@ declare function acl:change-permissions($path as xs:string) {
     let $public-perms := if ($public-read) then "r--" else "---"
     let $reg-read := request:get-parameter("perm-reg-read", ())
     let $reg-write := request:get-parameter("perm-reg-write", ())
-    let $reg-perms := acl:set-perm($reg-read, "r") || acl:set-perm($reg-write, "w") || "-"
+    let $reg-perms := acl:set-perm($reg-read or $reg-write, "r") || acl:set-perm($reg-write, "w") || "-"
     return (
         (: Change main group :)
         (: Need to switch to the user who created the group :)
@@ -38,7 +38,7 @@ declare function acl:show-permissions($node as node(), $params as element(parame
         return
             acl:show-permissions($processed, $permissions/*)
     else
-        ()
+        templates:copy-node($node, $model)
 };
 
 declare function acl:show-permissions($node as node(), $permissions as element()) {
@@ -57,7 +57,7 @@ declare function acl:show-permissions($node as node(), $permissions as element()
                     default return
                         false()
             return
-                <input>{ $node/@*, if ($checked) then attribute checked { "checked" } else () }</input>
+                <input>{ $node/@*[local-name(.) != "checked"], if ($checked) then attribute checked { "checked" } else () }</input>
         case element() return
             element { node-name($node) } {
                 $node/@*, for $child in $node/node() return acl:show-permissions($child, $permissions)

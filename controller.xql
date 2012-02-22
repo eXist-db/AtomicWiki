@@ -73,8 +73,8 @@ declare function local:set-user() as element()* {
     Split the URL into collection and article. Returns a sequence with two strings:
     first is the collection, second the article (if specified)
 :)
-declare function local:extract-feed() {
-    subsequence(text:groups($exist:path, '^/?(.*)/([^/]*)$'), 2)
+declare function local:extract-feed($path as xs:string) {
+    subsequence(text:groups($path, '^/?(.*)/([^/]*)$'), 2)
 };
 
 (: preview edited articles :)
@@ -90,21 +90,27 @@ else if (ends-with($exist:resource, ".xql")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/modules/{$exist:resource}"/>
     </dispatch>
-    
+
+(: If URL starts with /atom, return the raw atom feed data :)
+else if (starts-with($exist:path, "/atom/")) then
+    let $relPath := local:extract-feed(substring-after($exist:path, "/atom/"))
+    let $feed := config:resolve-feed($relPath[1])
+    let $setAttr := request:set-attribute("feed", $feed)
+    return
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$exist:controller}/modules/feeds.xql">
+            { local:set-user() }
+            </forward>
+        </dispatch>
+
 (: URL addresses a collection or article :)
 else if (matches($exist:path, ".*/[^\./]*$")) then
     let $editCollection := request:get-parameter("collection", ())
-    let $relPath := local:extract-feed()
+    let $relPath := local:extract-feed($exist:path)
     (: Try to determine the feed collection, either by looking at the URL or a parameter 'collection' :)
     let $feed := 
         if ($editCollection) then
-            let $relColl :=
-                if (ends-with($editCollection, "/.feed.entry")) then
-                    substring-before($editCollection, "/.feed.entry")
-                else
-                    $editCollection
-            return
-                xcollection($relColl)/atom:feed 
+            xcollection($editCollection)/atom:feed 
         else
             config:resolve-feed($relPath[1])
     (: The feed XML will be saved to a request attribute :)

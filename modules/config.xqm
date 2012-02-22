@@ -59,6 +59,9 @@ declare variable $config:wiki-root :=
             concat($config:app-root, "/", $root)
 ;
 
+declare variable $config:wiki-data :=
+    substring-after($config:wiki-root, $config:app-root);
+    
 declare variable $config:items-per-page := 
     let $itemsPerPage := $config:wiki-config/configuration/items-per-page/string()
     return
@@ -69,7 +72,7 @@ declare variable $config:items-per-page :=
 ;
 
 declare function config:feed-from-entry($entry as element(atom:entry)) {
-    let $collection := substring-before(util:collection-name($entry), "/.feed.entry")
+    let $collection := util:collection-name($entry)
     return
         substring-after($collection, concat($config:wiki-root, "/"))
 };
@@ -102,7 +105,7 @@ declare function config:resolve-feed($feed as xs:string) {
 
 declare function config:get-entries($feed as element(atom:feed), $id as xs:string?,
     $wikiId as xs:string?) as element(atom:entry)* {
-    let $entryCollection := collection(concat(util:collection-name($feed), "/.feed.entry"))
+    let $entryCollection := xcollection(util:collection-name($feed))
     return
         if ($wikiId) then
             $entryCollection/atom:entry[wiki:id = $wikiId]

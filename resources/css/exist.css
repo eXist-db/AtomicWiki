@@ -51,7 +51,10 @@ body { font: 1em/1.6em Helmet, Freesans, sans-serif; color: #222; background: ur
 /* ---------------------------------------- INDEX ---------------------------------------- */
 
 
-#content { width: 700px; float: left; min-height: 600px; padding: 0 10px; }
+#content { 
+    font: 16px/24px Georgia, serif;
+    width: 700px; float: left; min-height: 600px; padding: 0 10px;
+}
 
 #right { width: 240px; float: right; }
 
@@ -106,8 +109,8 @@ body { font: 1em/1.6em Helmet, Freesans, sans-serif; color: #222; background: ur
 
 p { padding: 5px 0; }
 
-h1 { font-size: 16px; padding: 0px 0 5px; margin: 0; font-weight: bold; font-family: "Century Gothic", Verdana, Helvetica, sans-serif; letter-spacing: 1px; }
-h2 { font-size: 1.2em; padding: 10px 0; font-weight: bold; font-family: "Century Gothic", Verdana, Helvetica, sans-serif; letter-spacing: 1px; }
+h1 { font-size: 1.5em; padding: 0px 0 5px; margin: 0; font-weight: bold; "Quicksand", "Arial", Helvetica, sans-serif; }
+h2 { font-size: 1.2em; padding: 10px 0; font-weight: bold; font-family: "Quicksand", "Arial", Helvetica, sans-serif; letter-spacing: 1px; }
 h3 { font-size: 1.2em; padding: 10px 0 5px; margin: 0 0 5px; font-weight: bold; }
 h4 { font-size: 1.1em; padding: 10px 0; font-weight: bold; }
 h5 { font-size: 1.0em; padding: 10px 0; font-weight: bold; }
@@ -170,7 +173,7 @@ form { margin: 10px 0; }
 }
 
 #navigation h2 {
-    font: 175% "Quicksand", sans-serif;
+    font: 175% "Quicksand", "Arial", Helvetica, sans-serif;
     font-weight: bold;
 }
 
@@ -203,6 +206,14 @@ form { margin: 10px 0; }
     /*font: 108% Georgia, "Times New Roman", Times, serif;*/
     /* font: 128% Georgia, "Times New Roman", Times, serif; */
     /* font: 89% Georgia, "Times New Roman", Times, serif; */
+}
+
+.entries footer {
+    border-top: 1px solid #CCC;
+}
+
+.next-page {
+    float: right;
 }
 
 .entry {
@@ -253,16 +264,15 @@ form { margin: 10px 0; }
 }
 
 .content h1 {
-    font-family: Arial, sans-serif;
-    font-size: 1.5em;
-    margin-bottom: .5em;
-    margin-top: .4em;
+    font-family: "Quicksand", "Arial", Helvetica, sans-serif;
+    font-size: 1.85em;
+    margin: 1em 0 0 0;
 }
 
 .content h2 {
+    font-family: "Quicksand", "Arial", Helvetica, sans-serif;
     font-size: 125%;
-    margin-bottom: .5em;
-    font-variant: small-caps;
+    margin: .3em 0 0;
 }
 
 .content h3 {
@@ -289,6 +299,10 @@ form { margin: 10px 0; }
     font-style: italic;
 }
 
+.content code {
+    font-size: .92em;
+}
+
 .content blockquote {
     margin: .5em 2em;
     font-style: italic;
@@ -311,6 +325,7 @@ form { margin: 10px 0; }
 
 .content img {
     margin: 8px 0;
+    max-width: 100%
 }
 
 .content .img-float-left {
@@ -329,10 +344,6 @@ form { margin: 10px 0; }
 
 .content .example {
     margin: .25em 0 .25em 1em;
-}
-
-.content .syntaxhighlighter {
-    font-size: .85em !important;
 }
 
 .toolbar {

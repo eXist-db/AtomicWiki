@@ -74,11 +74,26 @@ $(document).ready(function() {
         collapsible: true,
         active: false
     });
+    
+    $("#perm-private:checked").each(function() {
+        $(".perm-detail").hide();
+    });
     $("#perm-private").change(function() {
         if ($(this).is(":checked")) {
             $(".perm-detail").hide();
+            $("#perm-public-read").attr("checked", false);
+            $("#perm-reg-read").attr("checked", false);
+            $("#perm-reg-write").attr("checked", false);
         } else {
             $(".perm-detail").show();
+            $("#perm-public-read").attr("checked", true);
+            $("#perm-reg-read").attr("checked", true);
+        }
+    });
+    $("#perm-public-read").change(function() {
+        if ($(this).is(":checked")) {
+            $("#perm-reg-read").attr("checked", true);
+            $("#perm-private").attr("checked", false);
         }
     });
 //    $("#content-editor .code-editor").resizable({

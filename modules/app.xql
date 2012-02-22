@@ -72,6 +72,7 @@ declare function app:create-entry($node as node(), $params as element(parameters
 };
 
 declare function app:entries($node as node(), $params as element(parameters)?, $feed as element(atom:feed)) {
+    let $countParam := $params/param[@name = "count"]/@value
     let $id := request:get-parameter("id", ())
     let $wikiId := request:get-parameter("wiki-id", ())
     let $start := request:get-parameter("start", 1)
@@ -80,23 +81,45 @@ declare function app:entries($node as node(), $params as element(parameters)?, $
         order by xs:dateTime($entry/atom:published) descending
         return
             $entry
+    let $count := if ($countParam) then number($countParam) else $config:items-per-page
     return
         element { node-name($node) } {
             $node/@*,
-            for $entry in subsequence($entries, $start, $config:items-per-page)
+            for $entry in subsequence($entries, $start, $count)
             return
-                templates:process($node/node(), ($entry, count($entries) gt 1))
+                templates:process($node/*[1], ($entry, count($entries))),
+            templates:process($node/*[2], (count($entries), $count))
         }
+};
+
+declare function app:next-page($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $start := number(request:get-parameter("start", 1))
+    return
+        if ($start + $model[2] le $model[1]) then
+            <a href="?start={$start + $model[2]}" class="next-page">{ templates:process($node/node(), $model) }</a>
+        else
+            ()
+};
+
+declare function app:previous-page($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $start := number(request:get-parameter("start", 1))
+    return
+        if ($start gt 1) then
+            let $prev := if ($start - $model[2] gt 1) then $start - $model[2] else 1
+            return
+                <a href="?start={$prev}" class="prev-page">{ templates:process($node/node(), $model) }</a>
+        else
+            ()
 };
 
 declare function app:entry($node as node(), $params as element(parameters)?, $model as item()*) {
     let $feed := $params/param[@name = "feed"]/@value
     let $entry := $params/param[@name = "entry"]/@value
-    let $collection := concat($config:wiki-root, "/", $feed, "/.feed.entry")
+    let $collection := concat($config:wiki-root, "/", $feed)
     let $entryData := collection($collection)/atom:entry[wiki:id = $entry]
     where $entryData
     return
-        templates:process($node/node(), ($entryData, false()))
+        templates:process($node/node(), ($entryData, 1))
 };
 
 declare function app:get-or-create-entry($node as node(), $params as element(parameters)?, $feed as element(atom:feed)) {
@@ -168,13 +191,16 @@ declare function app:content($node as node(), $params as element(parameters)?, $
         let $atomContent := $model[1]/atom:content
         let $content := atomic:get-content($atomContent, true())
         return (
-            if ($model[2]) then
+            if ($model[2] gt 1) then
                 app:process-content($atomContent/@type, ($summary, $content)[1], $model)
-            else
-                for $content in ($summary, $content)
-                return
-                    app:process-content($content/@type, $content, $model),
-            if ($model[2] and $summary) then
+            else (
+                if ($summary) then
+                    app:process-content($summary/@type, $summary/*, $model)
+                else
+                    (),
+                app:process-content($atomContent/@type, $content, $model)
+            ),
+            if ($model[2] gt 1 and $summary) then
                 <a href="?id={$model[1]/atom:id}">Read article ...</a>
             else
                 ()
@@ -319,7 +345,7 @@ declare function app:edit-collection($node as node(), $params as element(paramet
         if ($collection) then 
             $collection
         else
-            concat(util:collection-name(request:get-attribute("feed")), "/.feed.entry")
+            util:collection-name(request:get-attribute("feed"))
     return
         element { node-name($node) } {
             $node/@*,

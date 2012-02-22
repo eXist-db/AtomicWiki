@@ -50,7 +50,7 @@ declare function store:article() {
             }
             {
                 if ($storeSeparate) then
-                    let $dataColl := substring-before($collection, "/.feed.entry")
+                    let $dataColl := $collection
                     let $docName := concat($name, if ($contentType eq "xquery") then ".xql" else ".html")
                     let $mediaType := if ($contentType eq "xquery") then "application/xquery" else "text/html"
                     let $stored := 
@@ -61,8 +61,9 @@ declare function store:article() {
                     <atom:content type="{$contentType}">{ $contentParsed }</atom:content>
             }
         </atom:entry>
+    let $atomResource := if ($resource) then $resource else $id || ".atom"
     let $stored :=
-        store:store-resource(store:create-collection($collection), $resource, $entry, "application/atom+xml")
+        store:store-resource(store:create-collection($collection), $atomResource, $entry, "application/atom+xml")
     return
         <result status="ok"/>
 };
@@ -127,14 +128,14 @@ declare function store:collection() {
             }
         </atom:feed>
     let $stored :=
-        xmldb:store($collectionPath, ".feed.atom", $data, "application/atom+xml")
+        xmldb:store($collectionPath, "feed.atom", $data, "application/atom+xml")
     let $perms := acl:change-permissions($stored)
     return
         request:set-attribute("feed", doc($stored)/*)
 };
 
 declare function store:delete-content($collection as xs:string, $src as xs:string) {
-    let $dataColl := substring-before($collection, "/.feed.entry")
+    let $dataColl := $collection
     return
         xmldb:remove($dataColl, $src)
 };

@@ -38,11 +38,10 @@
                 <include name="modules/**"/>
                 <include name="resources/**"/>
                 <include name="templates/**"/>
-                <include name=".feed.entry/**"/>
                 <include name="data/help/**"/>
-                <include name="data/.feed.atom"/>
+                <include name="data/feed.atom"/>
                 <include name="data/AtomicWikiWelcome.html"/>
-                <include name="data/.feed.entry/AtomicWikiWelcome.atom"/>
+                <include name="data/AtomicWikiWelcome.atom"/>
                 <exclude name=".git*"/>
             </fileset>
         </zip>

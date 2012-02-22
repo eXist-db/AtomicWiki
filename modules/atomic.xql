@@ -15,13 +15,9 @@ declare function atomic:process-links($node as node()) {
                 if (matches($src, "^(/|\w+:).*")) then
                     $node
                 else
-                    let $collection :=
-                        substring-before(
-                            substring-after(util:collection-name($node), concat($config:app-root, "/")),
-                            "/.feed.entry"
-                        )
+                    let $collection := substring-after(util:collection-name($node), concat($config:wiki-root, "/"))
                     return
-                        <html:img src="{$collection}/{$src}"/>
+                        <html:img src="{$config:app-home}{$config:wiki-data}/{$collection}/{$src}"/>
         case element() return
             element { node-name($node) } {
                 $node/@*,
@@ -53,22 +49,22 @@ declare function atomic:create-entry() as element(atom:entry) {
 declare function atomic:get-content($content as element(atom:content), $eval as xs:boolean) as item()* {
     let $data :=
         if ($content/@src) then
-            let $baseColl := substring-before(util:collection-name($content), "/.feed.entry")
+            let $baseColl := util:collection-name($content)
             let $path := concat($baseColl, "/", $content/@src)
             return
                 switch ($content/@type)
-                    case "html" return
+                    case "html" case "xhtml" return
                         doc($path)/*
                     default return
                         util:binary-to-string(util:binary-doc($path))
         else
-            if ($content/@type eq "html") then $content/* else $content/node()
+            if ($content/@type = ("html", "xhtml")) then $content/* else $content/node()
     return
         if ($data and $content/@type eq "xquery" and $eval) then
             (: The following variables will be available within the script :)
             let $collection :=
                 substring-after(
-                    substring-before(util:collection-name($content), "/.feed.entry"),
+                    util:collection-name($content),
                     concat($config:wiki-root, "/")
                 )
             return
