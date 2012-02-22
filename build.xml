@@ -20,7 +20,7 @@
         </fileset>
     </path>
     <target name="dist" depends="xar">
-        <zip destfile="${build.dir}/atomicwiki-0.1.zip">
+        <zip destfile="${build.dir}/atomicwiki-${project.version}.zip">
             <fileset dir="${build.dir}">
                 <include name="*.jar"/>
                 <include name="*.xar"/>
@@ -32,7 +32,7 @@
     </target>
     <target name="xar" depends="jar,ace">
         <mkdir dir="${build.dir}"/>
-        <zip destfile="${build.dir}/atomicwiki-0.1.xar">
+        <zip destfile="${build.dir}/atomicwiki-${project.version}.xar">
             <fileset dir=".">
                 <include name="*.*"/>
                 <include name="modules/**"/>
@@ -57,7 +57,7 @@
         </javac>
     </target>
     <target name="jar" depends="compile">
-        <jar basedir="${java.classes}" jarfile="${build.dir}/atomicwiki-0.1.jar">
+        <jar basedir="${java.classes}" jarfile="${build.dir}/atomicwiki-${project.version}.jar">
             <manifest>
                 <attribute name="Project-Name" value="${project.name}"/>
                 <attribute name="Project-Version" value="${project.version}"/>
