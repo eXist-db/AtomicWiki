@@ -61,7 +61,7 @@ declare function store:article() {
                     <atom:content type="{$contentType}">{ $contentParsed }</atom:content>
             }
         </atom:entry>
-    let $atomResource := if ($resource) then $resource else $id || ".atom"
+    let $atomResource := if ($resource) then $resource else $name || ".atom"
     let $stored :=
         store:store-resource(store:create-collection($collection), $atomResource, $entry, "application/atom+xml")
     return
