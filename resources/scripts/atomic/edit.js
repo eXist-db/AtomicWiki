@@ -46,6 +46,8 @@ $(document).ready(function() {
         });
     });
     
+    Atomic.Form.validator($("#edit-form"), ["name"]);
+    
     $("#edit-form").submit(function () {
         summaryEditor.update();
         contentEditor.update();
@@ -96,13 +98,51 @@ $(document).ready(function() {
             $("#perm-private").attr("checked", false);
         }
     });
-//    $("#content-editor .code-editor").resizable({
-//        containment: "#edit",
-//        stop: function() {
-//            contentEditor.resize();
-//        }
-//    });
 });
+
+Atomic.namespace("Atomic.Form");
+
+Atomic.Form = (function () {
+    
+    return {
+        /**
+         * Listen on the onChange event of all input fields whose name is given in fields.
+         * Send the form data to the server when onChange fires and validate.
+         */
+        validator: function(form, fields) {
+            var onChange = function() {
+                var $this = this;
+                var val = $(this).val();
+                var data = form.serialize();
+                data += "&validate=true";
+                $.ajax({
+                    type: "POST",
+                    url: "modules/store.xql",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        if (typeof data == "object") {
+                            for (var field in data) {
+                                if (data.hasOwnProperty(field)) {
+                                    $.log("[form validation] Error in field %s: %s", field, data[field]);
+                                    $("input[name='" + field + "']", form).each(function() {
+                                        this.setCustomValidity(data[field]);
+                                    });
+                                }
+                            }
+                        } else {
+                            $this.setCustomValidity("");
+                        }
+                    }
+                });
+            };
+            
+            for (var i = 0; i < fields.length; i++) {
+                $("input[name='" + fields[i] + "']", form).change(onChange);
+            }
+        }
+    };
+}());
 
 Atomic.namespace("Atomic.Editor");
 
