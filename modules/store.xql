@@ -19,7 +19,7 @@ declare function store:store-resource($collection, $name, $content, $mediaType) 
 
 declare function store:article() {
     let $name := request:get-parameter("name", ())
-    let $id := request:get-parameter("id", ())
+    let $id := request:get-parameter("edit-id", ())
     let $published := request:get-parameter("published", current-dateTime())
     let $title := request:get-parameter("title", ())
     let $content := request:get-parameter("content", ())
@@ -61,7 +61,7 @@ declare function store:article() {
                     <atom:content type="{$contentType}">{ $contentParsed }</atom:content>
             }
         </atom:entry>
-    let $atomResource := if ($resource) then $resource else $id || ".atom"
+    let $atomResource := if ($resource) then $resource else $name || ".atom"
     let $stored :=
         store:store-resource(store:create-collection($collection), $atomResource, $entry, "application/atom+xml")
     return

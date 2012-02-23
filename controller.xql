@@ -38,6 +38,23 @@ declare function local:set-credentials($user as xs:string, $password as xs:strin
     )
 };
 
+declare function local:login() {
+    let $user := request:get-parameter("user", ())
+    return
+        if ($user) then (
+            session:create(),
+            let $password := request:get-parameter("password", ())
+            let $loggedIn := xmldb:login("/db", $user, $password)
+            return
+                if ($loggedIn) then (
+                    session:set-attribute("wiki.user", $user), 
+                    session:set-attribute("wiki.password", $password)
+                ) else
+                    ()
+        ) else
+            ()
+};
+
 (:~
     Check if login parameters were passed in the request. If yes, try to authenticate
     the user and store credentials into the session. Clear the session if parameter
@@ -77,6 +94,8 @@ declare function local:extract-feed($path as xs:string) {
     subsequence(text:groups($path, '^/?(.*)/([^/]*)$'), 2)
 };
 
+local:login(),
+
 (: preview edited articles :)
 if (ends-with($exist:resource, "preview.html")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -107,10 +126,11 @@ else if (starts-with($exist:path, "/atom/")) then
 else if (matches($exist:path, ".*/[^\./]*$")) then
     let $editCollection := request:get-parameter("collection", ())
     let $relPath := local:extract-feed($exist:path)
+    let $log := util:log("WARN", ("Rel path: ", $relPath))
     (: Try to determine the feed collection, either by looking at the URL or a parameter 'collection' :)
     let $feed := 
         if ($editCollection) then
-            xcollection($editCollection)/atom:feed 
+            xmldb:xcollection($editCollection)/atom:feed 
         else
             config:resolve-feed($relPath[1])
     (: The feed XML will be saved to a request attribute :)
@@ -165,12 +185,12 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                 default return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{$exist:controller}/{$template}">
+                            { local:set-user() }
                             <set-header name="Cache-Control" value="no-cache"/>
                             <!--set-header name="Cache-Control" value="max-age=3600"/-->
                         </forward>
                         <view>
                             <forward url="{$exist:controller}/modules/view.xql" absolute="no">
-                                { local:set-user() }
                                 <set-attribute name="exist.path" value="{$exist:path}"/>
                                 <add-parameter name="wiki-id" value="{$relPath[2]}"/>
                             </forward>
@@ -190,6 +210,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                             <forward url="{$exist:controller}/{$template}" method="GET"></forward>
                             <forward url="{$exist:controller}/modules/view.xql">
                                 { local:set-user() }
+                                <set-attribute name="exist.path" value="{$exist:path}"/>
                             </forward>
                         </view>
                      { $local:error-handler }
@@ -197,11 +218,12 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                 default return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{$exist:controller}/unknown-feed.html">
+                            <set-header name="Cache-Control" value="no-cache"/>
+                            {  local:set-user() }
                         </forward>
                         <view>
                             <forward url="{$exist:controller}/modules/view.xql">
                                 <set-attribute name="collection" value="{$config:wiki-root}/{$relPath[1]}"/>
-                                {  local:set-user() }
                             </forward>
                         </view>
                         { $local:error-handler }

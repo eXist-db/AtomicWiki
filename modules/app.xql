@@ -139,6 +139,7 @@ declare function app:get-or-create-entry($node as node(), $params as element(par
 
 declare function app:title($node as node(), $params as element(parameters)?, $model as item()*) {
     let $isFeed := $model[1] instance of element(atom:feed)
+    let $user := session:get-attribute("wiki.user")
     let $link :=
         if ($isFeed) then
             "."
@@ -151,7 +152,7 @@ declare function app:title($node as node(), $params as element(parameters)?, $mo
             $node/@*,
             if ($model[1]/atom:title/text()) then (
                 <a href="{$link}">{$model[1]/atom:title/string()}</a>,
-                if ($isFeed) then
+                if ($isFeed and $user) then
                     <a class="action" href="?action=editfeed">Edit</a>
                 else
                     ()

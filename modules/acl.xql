@@ -51,9 +51,9 @@ declare function acl:show-permissions($node as node(), $permissions as element()
                     case "perm-public-read" return
                         matches($permissions/@mode, "r..$")
                     case "perm-reg-read" return
-                        matches($permissions/@mode, "^ .{3}r")
+                        matches($permissions/@mode, "^.{3}r")
                     case "perm-reg-write" return
-                        matches($permissions/@mode, "^ .{4}w")
+                        matches($permissions/@mode, "^.{4}w")
                     default return
                         false()
             return

@@ -433,14 +433,14 @@ form { margin: 10px 0; }
     position: relative;
     height: 600px;
     width: 100%;
-    font-size: 16px;
+    font-size: 13px;
 }
 
 #summary-editor .code-editor {
     position: relative;
     height: 180px;
     width: 100%;
-    font-size: 16px;
+    font-size: 13px;
 }
 
 /* Styles for wiki editor */

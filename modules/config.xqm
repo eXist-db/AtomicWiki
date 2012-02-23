@@ -100,12 +100,12 @@ declare function config:entry-url-from-entry($entry as element(atom:entry)) {
 declare function config:resolve-feed($feed as xs:string) {
     let $path := concat($config:wiki-root, "/", $feed)
     return
-        xcollection($path)/atom:feed
+        xmldb:xcollection($path)/atom:feed
 };
 
 declare function config:get-entries($feed as element(atom:feed), $id as xs:string?,
     $wikiId as xs:string?) as element(atom:entry)* {
-    let $entryCollection := xcollection(util:collection-name($feed))
+    let $entryCollection := xmldb:xcollection(util:collection-name($feed))
     return
         if ($wikiId) then
             $entryCollection/atom:entry[wiki:id = $wikiId]

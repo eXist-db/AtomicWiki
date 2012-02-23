@@ -15,7 +15,8 @@
                     <div class="app:login">
                         <div class="entry">
                             <div class="content">
-                                <p>The specified collection does not exist. Log in to create it.</p>
+                                <p>The specified collection does not exist or you do not have permission to view it. 
+                                Please log in.</p>
                             </div>
                         </div>
                         <div class="edit entry">
@@ -38,6 +39,12 @@
                                         <option value="blog">Blog</option>
                                     </select>
                                     <label for="template">Template</label>
+                                </div>
+                                <div class="editrow" id="permissions-accordion">
+                                    <h3>
+                                        <a href="#">Permissions</a>
+                                    </h3>
+                                    <div class="templates:include?path=templates/permissions.html"/>
                                 </div>
                                 <input type="hidden" name="feed-id" class="app:edit-id"/>
                                 <input type="hidden" name="author" class="app:edit-author"/>
