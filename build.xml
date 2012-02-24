@@ -70,6 +70,7 @@
         <copy todir="${scripts.ace}">
             <fileset dir="${ace.src}/build/src">
                 <exclude name="*-uncompressed.js"/>
+				<exclude name="*-noconflict.js"/>
             </fileset>
         </copy>
     </target>
