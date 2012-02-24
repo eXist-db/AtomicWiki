@@ -35,7 +35,7 @@ declare variable $config:app-home :=
     let $path := request:get-attribute("exist.path")
     return
         if (exists($path) and $path != "/") then
-            concat(substring-before(request:get-uri(), $path), "/")
+            substring-before(request:get-uri(), $path)
         else
             request:get-uri()
 ;

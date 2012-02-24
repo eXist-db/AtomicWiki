@@ -18,6 +18,18 @@ declare function atomic:process-links($node as node()) {
                     let $collection := substring-after(util:collection-name($node), concat($config:wiki-root, "/"))
                     return
                         <html:img src="{$config:app-home}{$config:wiki-data}/{$collection}/{$src}"/>
+        case element(html:a) return
+            let $href := $node/@href/string()
+            let $url :=
+                if (matches($href, "^\w+:.*")) then
+                    $href
+                else if (starts-with($href, "/")) then
+                    $config:app-home || $href
+                else
+                    $href
+            return
+                <html:a href="{$url}">{$node/node()}</html:a>
+                    
         case element() return
             element { node-name($node) } {
                 $node/@*,
