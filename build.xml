@@ -38,6 +38,7 @@
                 <include name="modules/**"/>
                 <include name="resources/**"/>
                 <include name="templates/**"/>
+				<include name="data/_theme/**"/>
                 <include name="data/help/**"/>
                 <include name="data/feed.atom"/>
                 <include name="data/AtomicWikiWelcome.html"/>

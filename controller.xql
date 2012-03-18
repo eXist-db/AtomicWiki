@@ -1,6 +1,7 @@
 xquery version "3.0";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "modules/config.xqm";
+import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "modules/themes.xql";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
 
@@ -126,7 +127,6 @@ else if (starts-with($exist:path, "/atom/")) then
 else if (matches($exist:path, ".*/[^\./]*$")) then
     let $editCollection := request:get-parameter("collection", ())
     let $relPath := local:extract-feed($exist:path)
-    let $log := util:log("WARN", ("Rel path: ", $relPath))
     (: Try to determine the feed collection, either by looking at the URL or a parameter 'collection' :)
     let $feed := 
         if ($editCollection) then
@@ -136,7 +136,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
     (: The feed XML will be saved to a request attribute :)
     let $setAttr := request:set-attribute("feed", $feed)
     let $action := request:get-parameter("action", "view")
-    let $template := config:get-template($feed)
+    let $template := if ($feed) then theme:resolve(util:collection-name($feed), config:get-template($feed)) else ()
     return
         if ($feed) then
             switch ($action)
@@ -158,7 +158,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                     </dispatch>
                 case "edit" case "addentry" return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                        <forward url="{$exist:controller}/edit.html">
+                        <forward url="{$exist:controller}/{theme:resolve(util:collection-name($feed), 'edit.html')}">
                             <set-header name="Cache-Control" value="no-cache"/>
                         </forward>
                         <view>
@@ -171,7 +171,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                     </dispatch>
                 case "editfeed" return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                        <forward url="{$exist:controller}/unknown-feed.html">
+                        <forward url="{$exist:controller}/{theme:resolve(util:collection-name($feed), 'unknown-feed.html')}">
                             <set-header name="Cache-Control" value="no-cache"/>
                         </forward>
                         <view>
@@ -198,26 +198,27 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                         { $local:error-handler }
                     </dispatch>
         else
-            let $log := util:log("WARN", ("no feed, action = ", $action))
-            return
             switch ($action)
                 case "store" case "delete" return
-                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                        <forward url="{$exist:controller}/modules/store.xql">
-                        { local:set-user() }
-                        </forward>
-                        <view>
-                            <forward url="{$exist:controller}/{$template}" method="GET"></forward>
-                            <forward url="{$exist:controller}/modules/view.xql">
-                                { local:set-user() }
-                                <set-attribute name="exist.path" value="{$exist:path}"/>
+                    let $feedColl := request:get-parameter('collection', ())
+                    let $template := request:get-parameter('template', ()) || ".html"
+                    return
+                        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                            <forward url="{$exist:controller}/modules/store.xql">
+                            { local:set-user() }
                             </forward>
-                        </view>
-                     { $local:error-handler }
-                    </dispatch>
+                            <view>
+                                <forward url="{$exist:controller}/{theme:resolve($feedColl, $template)}" method="GET"></forward>
+                                <forward url="{$exist:controller}/modules/view.xql">
+                                    { local:set-user() }
+                                    <set-attribute name="exist.path" value="{$exist:path}"/>
+                                </forward>
+                            </view>
+                         { $local:error-handler }
+                        </dispatch>
                 default return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                        <forward url="{$exist:controller}/unknown-feed.html">
+                        <forward url="{$exist:controller}/{theme:resolve($config:wiki-root || '/' || $relPath[1], 'unknown-feed.html')}">
                             <set-header name="Cache-Control" value="no-cache"/>
                             {  local:set-user() }
                         </forward>
