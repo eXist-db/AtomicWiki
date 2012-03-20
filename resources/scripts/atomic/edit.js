@@ -161,14 +161,17 @@ Atomic.Editor = (function () {
         this.container.find(".btn-strong").click(function(ev) {
             ev.preventDefault();
             $this.markup("**", "**");
+            return false;
         });
         this.container.find(".btn-emphasis").click(function(ev) {
             ev.preventDefault();
             $this.markup("__", "__");
+            return false;
         });
         this.container.find(".btn-code").click(function(ev) {
             ev.preventDefault();
             $this.markup("$$", "$$");
+            return false;
         });
         this.container.find(".sel-heading").change(function(ev) {
             var val = parseInt($(this).val());
