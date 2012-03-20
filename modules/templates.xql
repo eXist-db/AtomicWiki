@@ -5,6 +5,12 @@ module namespace templates="http://exist-db.org/xquery/templates";
 :)
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
+declare variable $templates:root-collection :=
+    let $root := request:get-attribute("templating.root")
+    return
+        if ($root) then $root else $config:app-root
+;
+
 (:~
  : Start processing the provided content using the modules defined by $modules. $modules should
  : be an XML fragment following the scheme:
@@ -134,7 +140,13 @@ declare function templates:surround($node as node(), $params as element(paramete
     let $with := $params/param[@name = "with"]/@value
     let $at := $params/param[@name = "at"]/@value
     let $using := $params/param[@name = "using"]/@value
-    let $path := concat($config:app-root, "/", $with)
+    let $path :=
+        if (starts-with($with, "/")) then
+            (: Search template relative to app root :)
+            concat($config:app-root, $with)
+        else
+            (: Locate template relative to HTML file :)
+            concat($templates:root-collection, "/", $with)
     let $content :=
         if ($using) then
             doc($path)//*[@id = $using]
@@ -257,4 +269,39 @@ declare function templates:error-description($node as node(), $params as element
             $node/@*,
             util:parse($input)//message/string()
         }
+};
+
+declare function templates:fix-links($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $root := $params/param[@name = "root"]/@value/string()
+    let $prefix :=
+        if ($root eq "context") then
+            request:get-context-path()
+        else
+            concat(request:get-context-path(), request:get-attribute("$exist:prefix"), request:get-attribute("$exist:controller"))
+    let $temp := 
+        element { node-name($node) } {
+            $node/@* except $node/@class,
+            for $child in $node/node() return templates:fix-links($child, $prefix)
+        }
+    return
+        templates:process($temp, $model)
+};
+
+declare function templates:fix-links($node as node(), $prefix as xs:string) {
+    typeswitch ($node)
+        case element(a) return
+            let $href := $node/@href
+            return
+                if (starts-with($href, "/")) then
+                    <a href="{$prefix}{$href}">
+                    { $node/@* except $href, $node/node() }
+                    </a>
+                else
+                    $node
+        case element() return
+            element { node-name($node) } {
+                $node/@*, for $child in $node/node() return templates:fix-links($child, $prefix)
+            }
+        default return
+            $node
 };

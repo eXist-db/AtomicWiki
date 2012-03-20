@@ -229,6 +229,16 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                         </view>
                         { $local:error-handler }
                     </dispatch>
+else if (contains($exist:path, "/theme/")) then
+    let $feedURL := substring-before($exist:path, "/theme/")
+    let $resourcePath := substring-after($exist:path, "/theme/")
+    let $relPath := local:extract-feed($feedURL)
+    return
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/{theme:resolve($config:wiki-root || '/' || $relPath[1], $resourcePath)}">
+            <cache-control cache="yes"/>
+        </forward>
+    </dispatch>
 else if (contains($exist:path, "/resources/")) then
     let $path := substring-after($exist:path, "/resources/")
     return
@@ -242,7 +252,7 @@ else if (contains($exist:path, "/libs/")) then
         <forward url="/{substring-after($exist:path, '/libs/')}" absolute="yes"/>
     </dispatch>
 else
-    (: everything else is passed through :)
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <cache-control cache="yes"/>
-    </dispatch>
+        (: everything else is passed through :)
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <cache-control cache="yes"/>
+        </dispatch>

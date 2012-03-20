@@ -27,14 +27,26 @@ declare function theme:theme-for-feed($feed as xs:string) as xs:string? {
                     ()
 };
 
+declare function theme:resolve($feed as xs:string) as xs:string {
+    let $themeColl := theme:theme-for-feed($feed)
+    return (
+        request:set-attribute("templating.root", $themeColl),
+        if ($themeColl) then
+            substring-after($themeColl, $config:app-root)
+        else
+            ()
+    )
+};
+
 declare function theme:resolve($feed as xs:string, $resource as xs:string) as xs:string {
     let $themeColl := theme:theme-for-feed($feed)
-    let $log := util:log("WARN", ("THEME: ", $themeColl))
-    return
+    return (
+        request:set-attribute("templating.root", $themeColl),
         if ($themeColl) then
             let $collection := $themeColl || "/" || $resource
             return
                 substring-after($collection, $config:app-root)
         else
             ()
+    )
 };

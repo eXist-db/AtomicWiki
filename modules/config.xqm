@@ -1,3 +1,5 @@
+xquery version "3.0";
+
 (:~
  : A set of helper functions to access the application context from
  : within a module.
@@ -100,7 +102,18 @@ declare function config:entry-url-from-entry($entry as element(atom:entry)) {
 declare function config:resolve-feed($feed as xs:string) {
     let $path := concat($config:wiki-root, "/", $feed)
     return
-        xmldb:xcollection($path)/atom:feed
+        config:resolve-feed-helper($path, false())
+};
+
+declare function config:resolve-feed-helper($path as xs:string, $recurse as xs:boolean) {
+    let $feed := xmldb:xcollection($path)/atom:feed
+    return
+        if ($feed) then
+            $feed
+        else if ($path != $config:wiki-root and $recurse) then
+            config:resolve-feed-helper(replace($path, "^(.*)/[^/]+$", "$1"), $recurse)
+        else
+            ()
 };
 
 declare function config:get-entries($feed as element(atom:feed), $id as xs:string?,
