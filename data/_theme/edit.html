@@ -5,17 +5,6 @@
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link rel="stylesheet" type="text/css" href="libs/scripts/jquery/css/smoothness/jquery.ui.all.css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
-        <script type="text/javascript" src="libs/scripts/jquery/jquery-1.6.2.min.js"/>
-        <script type="text/javascript" src="libs/scripts/jquery/jquery-ui-1.8.custom.min.js"/>
-        <script type="text/javascript" src="resources/scripts/shCore.js"/>
-        <script type="text/javascript" src="resources/scripts/shBrushXQuery.js"/>
-        <script type="text/javascript" src="resources/scripts/shBrushXml.js"/>
-        <script type="text/javascript" src="resources/scripts/shBrushPlain.js"/>
-        <script src="resources/scripts/ace/ace.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/ace/theme-tomorrow.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/atomic/wiki-mode.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/atomic/edit.js" type="text/javascript" charset="utf-8"/>
     </head>
     <body class="templates:surround?with=templates/page.html&amp;at=main&amp;using=body">
         <div id="right">
@@ -44,7 +33,10 @@
                                 <div class="editrow edit-commands">
                                     <button id="edit-form-cancel" type="cancel">Cancel</button>
                                     <button id="edit-form-save">Save</button>
-                                    <button id="edit-form-saveAndClose" name="action" value="store" type="submit">Save and Close</button>
+                                    <button id="edit-form-saveAndClose" type="submit">Save and Close</button>
+                                </div>
+                                <div class="editrow">
+                                    Using wiki editor. <button name="action" value="switch-editor" id="editor-switch">Switch to HTML editor</button>
                                 </div>
                                 <div class="editrow title">
                                     <input class="app:edit-title" type="text" name="title" placeholder="Title" required="required"/>
@@ -66,8 +58,8 @@
                                 </div>
                                 <div class="editrow options">
                                     Content type:
-                                        <select name="ctype" class="app:edit-content-type">
-                                        <option value="html">Standard (HTML)</option>
+                                    <select name="ctype" class="app:edit-content-type">
+                                        <option value="wiki">Wiki Markup</option>
                                         <option value="xquery">XQuery</option>
                                     </select>
                                 </div>
@@ -100,7 +92,7 @@
                                                 <option value="text">Other</option>
                                             </select>
                                         </div>
-                                        <textarea name="summary" class="app:edit-summary"/>
+                                        <textarea name="summary" class="app:edit-summary?mode=markup"/>
                                     </div>
                                 </div>
                                 <div class="editrow">
@@ -130,14 +122,16 @@
                                                 <option value="text">Other</option>
                                             </select>
                                         </div>
-                                        <textarea name="content" class="app:edit-content"/>
+                                        <textarea name="content" class="app:edit-content?mode=markup"/>
                                     </div>
                                 </div>
-                                <input type="hidden" name="edit-id" class="app:edit-id"/>
+                                <input type="hidden" name="id" class="app:edit-id"/>
                                 <input type="hidden" name="author" class="app:edit-author"/>
                                 <input type="hidden" name="published" class="app:edit-publication-date"/>
                                 <input type="hidden" name="collection" class="app:edit-collection"/>
                                 <input type="hidden" name="resource" class="app:edit-resource"/>
+                                <input type="hidden" name="editor" value="wiki"/>
+                                <input type="hidden" name="action" value=""/>
                             </form>
                         </div>
                         <div id="preview"/>
@@ -145,5 +139,17 @@
                 </div>
             </div>
         </div>
+        <script type="text/javascript" src="libs/scripts/jquery/jquery-1.6.2.min.js"/>
+        <script type="text/javascript" src="libs/scripts/jquery/jquery-ui-1.8.custom.min.js"/>
+        <script type="text/javascript" src="resources/scripts/shCore.js"/>
+        <script type="text/javascript" src="resources/scripts/shBrushXQuery.js"/>
+        <script type="text/javascript" src="resources/scripts/shBrushXml.js"/>
+        <script type="text/javascript" src="resources/scripts/shBrushPlain.js"/>
+        <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/ace/ace.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/ace/theme-tomorrow.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/atomic/wiki-mode.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/atomic/markup-editor.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/atomic/edit.js" type="text/javascript" charset="utf-8"/>
     </body>
 </html>

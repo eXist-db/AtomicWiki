@@ -4,6 +4,7 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "modu
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "modules/themes.xql";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
+declare namespace wiki="http://exist-db.org/xquery/wiki";
 
 declare variable $exist:path external;
 declare variable $exist:resource external;
@@ -156,19 +157,38 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                         </view>
                         { $local:error-handler }
                     </dispatch>
-                case "edit" case "addentry" return
-                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                        <forward url="{$exist:controller}/{theme:resolve(util:collection-name($feed), 'edit.html')}">
-                            <set-header name="Cache-Control" value="no-cache"/>
-                        </forward>
-                        <view>
-                            <forward url="{$exist:controller}/modules/view.xql" absolute="no">
-                                { local:set-user() }
-                                <add-parameter name="wiki-id" value="{$relPath[2]}"/>
+                case "edit" case "addentry" case "switch-editor" return
+                    let $entry := config:get-entries($feed, (), $relPath[2])
+                    let $editorParam := request:get-parameter("editor", ())
+                    let $editor := 
+                        if ($editorParam) then
+                            $editorParam
+                        else if ($entry/wiki:editor/text()) then 
+                            $entry/wiki:editor/string()
+                        else
+                            "wiki"
+                    let $template := if ($editor = "html") then "html-edit.html" else "edit.html"
+                    return
+                        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                            {
+                                if ($editorParam) then
+                                    <forward url="{$exist:controller}/modules/store.xql">
+                                    { local:set-user() }
+                                    </forward>
+                                else
+                                    ()
+                            }
+                            <forward url="{$exist:controller}/{theme:resolve(util:collection-name($feed), $template)}">
+                                <set-header name="Cache-Control" value="no-cache"/>
                             </forward>
-                        </view>
-                        { $local:error-handler }
-                    </dispatch>
+                            <view>
+                                <forward url="{$exist:controller}/modules/view.xql" absolute="no">
+                                    { local:set-user() }
+                                    <add-parameter name="wiki-id" value="{$relPath[2]}"/>
+                                </forward>
+                            </view>
+                            { $local:error-handler }
+                        </dispatch>
                 case "editfeed" return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{$exist:controller}/{theme:resolve(util:collection-name($feed), 'unknown-feed.html')}">

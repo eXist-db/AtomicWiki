@@ -98,6 +98,8 @@ declare function html2wiki:transform($nodes as node()*) {
                                 <t>**{$node/string()}**</t>
                             default return
                                 html2wiki:transform($node/node())
+            case document-node() return
+                html2wiki:transform($node/*)
             case element() return
                 html2wiki:transform($node/node())
             case text() return

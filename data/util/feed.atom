@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<atom:feed xmlns:atom="http://www.w3.org/2005/Atom">
+    <atom:id>e48a1d0f-c584-4a3b-8c62-6fb36b954d02</atom:id>
+    <atom:updated>2012-03-28T17:03:21.805+02:00</atom:updated>
+    <atom:title>Scripts and Utilities</atom:title>
+    <atom:author>
+        <atom:name>editor</atom:name>
+    </atom:author>
+    <atom:category scheme="http://atomic.exist-db.org/template" term="feed"/>
+</atom:feed>

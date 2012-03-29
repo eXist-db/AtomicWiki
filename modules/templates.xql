@@ -131,7 +131,13 @@ declare function templates:copy-node($node as element(), $model as item()*) {
 
 declare function templates:include($node as node(), $params as element(parameters)?, $model as item()*) {
     let $relPath := $params/param[@name = "path"]/@value
-    let $path := concat($config:app-root, "/", $relPath)
+    let $path := 
+        if (starts-with($relPath, "/")) then
+            (: Search template relative to app root :)
+            concat($config:app-root, "/", $relPath)
+        else
+            (: Locate template relative to HTML file :)
+            concat($templates:root-collection, "/", $relPath)
     return
         templates:process(doc($path), $model)
 };

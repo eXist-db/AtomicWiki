@@ -150,7 +150,9 @@ declare function app:title($node as node(), $params as element(parameters)?, $mo
     return
         element { node-name($node) } {
             $node/@*,
-            if ($model[1]/atom:title/text()) then (
+            if ($model[1]/atom:title[@type = "xhtml"]) then
+                $model[1]/atom:title/node()
+            else if ($model[1]/atom:title/text()) then (
                 <a href="{$link}">{$model[1]/atom:title/string()}</a>,
                 if ($isFeed and $user) then
                     <a class="action" href="?action=editfeed">Edit</a>
@@ -210,13 +212,21 @@ declare function app:content($node as node(), $params as element(parameters)?, $
 };
 
 declare function app:process-content($type as xs:string?, $content as item()?, $model as item()*) {
+    app:process-content($type, $content, $model, true())
+};
+
+declare function app:process-content($type as xs:string?, $content as item()?, $model as item()*,
+    $expandTemplates as xs:boolean) {
     let $type := if ($type) then $type else "html"
     return
         switch ($type)
             case "html" case "xhtml" return
                 let $data := atomic:process-links($content)
                 return
-                    templates:process($data, $model)
+                    if ($expandTemplates) then
+                        templates:process($data, $model)
+                    else
+                        $data
             default return
                 $content
 };
@@ -288,24 +298,45 @@ declare function app:edit-content-type($node as node(), $params as element(param
         }
 };
 
+declare function app:get-edit-mode($params as element(parameters)?) as xs:string {
+    let $modeParam := $params/param[@name = "mode"]/@value/string()
+    return
+        if ($modeParam) then $modeParam else "markup"
+};
+
 declare function app:edit-content($node as node(), $params as element(parameters)?, $model as item()*) {
-    let $content := atomic:get-content($model[1]/atom:content, false())
+    let $mode := app:get-edit-mode($params)
+    let $contentElem := $model[1]/atom:content
+    let $content := atomic:get-content($contentElem, false())
     return
         element { node-name($node) } {
             $node/@*,
             if ($content instance of element()) then
-                html2wiki:html2wiki($content)
+                switch ($mode)
+                    case "html" return
+                        app:process-content($contentElem/@type, $content, $model, false())
+                    default return
+                        let $wiki := html2wiki:html2wiki($content)
+                        let $log := util:log("WARN", ("CONTENT: ", $content, $wiki))
+                        return
+                            $wiki
             else
                 $content
         }
 };
 
 declare function app:edit-summary($node as node(), $params as element(parameters)?, $model as item()*) {
-    let $summary := $model[1]/atom:summary/*
+    let $mode := app:get-edit-mode($params)
+    let $summary := $model[1]/atom:summary
+    let $summaryContent := $summary/*
     return
         element { node-name($node) } {
             $node/@*,
-            html2wiki:html2wiki($summary)
+            switch ($mode)
+                case "html" return
+                    app:process-content($summary/@type, $summaryContent, $model, false())
+                default return
+                    html2wiki:html2wiki($summaryContent)
         }
 };
 

@@ -3,6 +3,7 @@
     <atom:id>1b122f87-ede6-40a8-8d4e-c5275e24ddd1</atom:id>
     <wiki:id xmlns:wiki="http://exist-db.org/xquery/wiki">AtomicWikiWelcome</wiki:id>
     <atom:published>2012-01-25T12:01:12.713+01:00</atom:published>
+    <atom:updated>2012-03-22T10:56:16.409+01:00</atom:updated>
     <atom:author>
         <atom:name>admin</atom:name>
     </atom:author>

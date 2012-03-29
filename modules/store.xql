@@ -19,7 +19,7 @@ declare function store:store-resource($collection, $name, $content, $mediaType) 
 
 declare function store:article() {
     let $name := request:get-parameter("name", ())
-    let $id := request:get-parameter("edit-id", ())
+    let $id := request:get-parameter("id", ())
     let $published := request:get-parameter("published", current-dateTime())
     let $title := request:get-parameter("title", ())
     let $content := request:get-parameter("content", ())
@@ -28,16 +28,25 @@ declare function store:article() {
     let $collection := request:get-parameter("collection", ())
     let $resource := request:get-parameter("resource", ())
     let $storeSeparate := request:get-parameter("external", ())
-    let $contentType := request:get-parameter("ctype", "html")
+    let $editor := request:get-parameter("editor", "wiki")
+    let $editType := request:get-parameter("ctype", "html")
     let $contentParsed := 
-        if ($contentType eq "html") then
-            wiki:parse($content, <parameters/>)
-        else
-            $content
+        switch ($editType)
+            case "wiki" return
+                wiki:parse($content, <parameters/>)
+            case "html" return
+                if (matches($content, "^[^<]*<article")) then
+                    $content
+                else
+                    '<article xmlns="http://www.w3.org/1999/xhtml">' || $content || "</article>"
+            default return
+                $content
+    let $contentType := if ($editType = ("wiki", "html")) then "html" else $editType
     let $entry :=
         <atom:entry>
             <atom:id>{$id}</atom:id>
             <wiki:id>{$name}</wiki:id>
+            <wiki:editor>{$editor}</wiki:editor>
             <atom:published>{ $published }</atom:published>
             <atom:updated>{current-dateTime()}</atom:updated>
             <atom:author><atom:name>{ $author }</atom:name></atom:author>
@@ -177,13 +186,13 @@ return
     if (request:get-parameter("validate", ())) then
         store:validate()
     else
-    switch ($action)
-        case "delete" return
-            store:delete-article()
-        case "store" return
-            if ($content) then 
-                store:article()
-            else 
-                store:collection()
-        default return
-            error($store:ERROR, "Unknown action: " || $action)
+        switch ($action)
+            case "delete" return
+                store:delete-article()
+            case "store" return
+                if ($content) then 
+                    store:article()
+                else 
+                    store:collection()
+            default return
+                ()

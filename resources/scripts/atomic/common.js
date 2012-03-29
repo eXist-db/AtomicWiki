@@ -81,8 +81,9 @@ Atomic.util.Dialog = (function () {
 	var warnIcon = "resources/images/error.png";
 	var infoIcon = "resources/images/information.png";
 	
-	var callback = null;
-	
+	var okCallback = null;
+	var cancelCallback = null;
+    
 	$(document).ready(function() {
 		$(document.body).append(
 				"<div id=\"Atomic-dialog\">" +
@@ -98,12 +99,15 @@ Atomic.util.Dialog = (function () {
 			buttons: {
 				"OK": function () {
 			        $(this).dialog("close");
-				    if (callback != null) {
-				        callback.apply($("#Atomic-dialog-body"), []);
+				    if (okCallback != null) {
+				        okCallback.apply($("#Atomic-dialog-body"), []);
 				    }
 			    },
 			    Cancel: function() {
 			         $(this).dialog("close");
+                     if (cancelCallback != null) {
+                         cancelCallback.apply($("#Atomic-dialog-body"), []);
+                     }
 			    }
 			}
 		});
@@ -111,13 +115,63 @@ Atomic.util.Dialog = (function () {
 	
 	return {
 		
-		confirm: function (title, msg, okCallback) {
-            callback = okCallback;
+		confirm: function (title, msg, ok, cancel) {
+            okCallback = ok;
+            if (cancel) {
+                cancelCallback = cancel;
+            }
             dialog.dialog("option", "title", title);
             $("#Atomic-dialog-body").html(msg);
             dialog.dialog("open");
 		}
 	};
+}());
+
+Atomic.namespace("Atomic.Form");
+
+Atomic.Form = (function () {
+    
+    return {
+        /**
+         * Listen on the onChange event of all input fields whose name is given in fields.
+         * Send the form data to the server when onChange fires and validate.
+         */
+        validator: function(form, fields) {
+            var onChange = function() {
+                var $this = this;
+                if (typeof $this.setCustomValidity === "undefined") {
+                    return;
+                }
+                var val = $(this).val();
+                var data = form.serialize();
+                data += "&validate=true";
+                $.ajax({
+                    type: "POST",
+                    url: "modules/store.xql",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        if (typeof data == "object") {
+                            for (var field in data) {
+                                if (data.hasOwnProperty(field)) {
+                                    $.log("[form validation] Error in field %s: %s", field, data[field]);
+                                    $("input[name='" + field + "']", form).each(function() {
+                                        this.setCustomValidity(data[field]);
+                                    });
+                                }
+                            }
+                        } else {
+                            $this.setCustomValidity("");
+                        }
+                    }
+                });
+            };
+            
+            for (var i = 0; i < fields.length; i++) {
+                $("input[name='" + fields[i] + "']", form).change(onChange);
+            }
+        }
+    };
 }());
 
 /* Debug and logging functions */
