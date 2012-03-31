@@ -53,6 +53,13 @@ define( [
     	            Aloha.Selection.changeMarkupOnSelection(jQuery("<pre class=\"ext:code?lang=xml\"></pre>"))      
 		        },
 		        'tooltip' : "XML Code"
+		    }, {
+               'name' : 'java',
+    	        'iconClass' : 'code-button-java',
+		        'click' : function () {
+    	            Aloha.Selection.changeMarkupOnSelection(jQuery("<pre class=\"ext:code?lang=java\"></pre>"))      
+		        },
+		        'tooltip' : "XML Code"
 		    }];
 			this.multiSplitButton = new Aloha.ui.MultiSplitButton({
 				'name' : 'environments',

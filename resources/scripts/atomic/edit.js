@@ -12,37 +12,37 @@ Aloha.ready( function() {
     Aloha.jQuery('#content-editor-html').aloha();
     Aloha.jQuery('#summary-editor-html').aloha();
     
-    $("#editor-switch").button().click(function(ev) {
+    $("#editor-switch").click(function(ev) {
         ev.preventDefault();
-        Atomic.util.Dialog.confirm("Switch to Wiki markup editor",
-            "The form needs to be saved before switching editors. Please note that " +
-            "the HTML editor is not as extensible as the wiki editor!", 
-            function () {
-                $("input[name='editor']", form).val("wiki");
-                $("input[name='action']", form).val("switch-editor");
-                form.submit();
-            }
-        );
+        var name = $("input[name='name']").val();
+        var title = $("input[name='title']").val();
+        if (name === "" && title === "") {
+            Atomic.util.Dialog.confirm("Switch to Wiki markup editor",
+                "The page will be <strong>reloaded</strong>! Please note that " +
+                "the HTML editor is not as extensible as the wiki editor and some formatting " + 
+                "<strong>might get lost</strong> when switching back at a later point.", 
+                function () {
+                    window.location = "?action=addentry&editor=wiki";
+                }
+            );
+        } else {
+            Atomic.util.Dialog.confirm("Switch to Wiki markup editor",
+                "The form needs to be saved before switching editors. Please note that " +
+                "the HTML editor is not as extensible as the wiki editor!", 
+                function () {
+                    $("input[name='editor']", form).val("wiki");
+                    $("input[name='action']", form).val("switch-editor");
+                    form.submit();
+                }
+            );
+        }
     });
     
-    $("#edit-form-cancel").button({
-        icons: {
-            primary: "ui-icon-check"
-        }
-    });
-    $("#edit-form-saveAndClose").button({
-        icons: {
-            primary: "ui-icon-check"
-        }
-    }).click(function(ev) {
+    $("#edit-form-saveAndClose").click(function(ev) {
         $("input[name='action']", form).val("store");
         return true;
     });
-    $("#edit-form-save").button({
-        icons: {
-            primary: "ui-icon-disk"
-        }
-    }).click(function (ev) {
+    $("#edit-form-save").click(function (ev) {
         ev.preventDefault();
         
         updateForm();
@@ -70,10 +70,5 @@ Aloha.ready( function() {
         
         updateForm();
         return true;
-    });
-    
-    $(".accordion").accordion({ 
-        collapsible: true, 
-        active: false
     });
 });

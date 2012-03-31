@@ -4,12 +4,90 @@
         <title>Atomic Wiki</title>
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link rel="stylesheet" type="text/css" href="libs/scripts/jquery/css/smoothness/jquery.ui.all.css"/>
+        <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
         <link rel="stylesheet" href="resources/scripts/aloha/css/aloha.css" id="aloha-style-include" type="text/css"/>
     </head>
-    <body class="templates:surround?with=templates/page.html&amp;at=main&amp;using=body">
-        <div id="right">
-            <div class="templates:include?path=templates/menu.html"/>
+    <body class="templates:surround?with=templates/page.html&amp;at=container-body&amp;using=body">
+        <div class="span9">
+            <div class="app:feed">
+                <div class="app:get-or-create-entry entries">
+                    <div id="edit" class="edit">
+                        <form id="edit-form" class="form-horizontal" action="?" method="POST">
+                            <div class="control-group">
+                                <div class="btn-group">
+                                    <a href="?" id="edit-form-cancel" class="btn">
+                                        <i class="icon-ban-circle"/> Cancel</a>
+                                    <button id="edit-form-save" class="btn">
+                                        <i class="icon-download-alt"/> Save</button>
+                                    <button id="edit-form-saveAndClose" class="btn btn-primary" type="submit">
+                                        <i class="icon-ok"/> Save and Close</button>
+                                    <button id="editor-switch" class="btn btn-info">Wiki editor</button>
+                                </div>
+                            </div>
+                            <div class="control-group title">
+                                <label class="control-label" for="title">Title</label>
+                                <div class="controls">
+                                    <input class="span6 app:edit-title" type="text" name="title" placeholder="Title" required="required"/>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="name">Short Name</label>
+                                <div class="controls">
+                                    <input class="span3 app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="^[\w-.:]+$"/>
+                                </div>
+                            </div>
+                            <div class="control-group options">
+                                <label class="control-label" for="external">Store</label>
+                                <div class="controls">
+                                    <label class="checkbox">
+                                        <input type="checkbox" class="app:edit-external" name="external"/>
+                                        Check to store content and metadata in separate documents
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="accordion">
+                                <div class="accordion-group">
+                                    <div class="accordion-heading">
+                                        <a href="#permissions" class="accordion-toggle" data-toggle="collapse">Permissions</a>
+                                    </div>
+                                    <div class="accordion-body collapse" id="permissions">
+                                        <div class="accordion-inner">
+                                            <div class="templates:include?path=templates/permissions.html"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <fieldset id="content">
+                                <ul class="nav nav-tabs">
+                                    <li class="active">
+                                        <a href="#content-editor-html" data-toggle="tab">Body</a>
+                                    </li>
+                                    <li>
+                                        <a href="#summary-editor-html" data-toggle="tab">Summary</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="content-editor-html" class="tab-pane active content app:edit-content?mode=html"/>
+                                    <div id="summary-editor-html" class="tab-pane content app:edit-summary?mode=html"/>
+                                </div>
+                            </fieldset>
+                            <input type="hidden" name="ctype" value="html"/>
+                            <textarea name="content" style="display: none;"/>
+                            <textarea name="summary" style="display: none;"/>
+                            <input type="hidden" name="id" class="app:edit-id"/>
+                            <input type="hidden" name="author" class="app:edit-author"/>
+                            <input type="hidden" name="published" class="app:edit-publication-date"/>
+                            <input type="hidden" name="collection" class="app:edit-collection"/>
+                            <input type="hidden" name="resource" class="app:edit-resource"/>
+                            <input type="hidden" name="editor" class="app:edit-editor"/>
+                            <input type="hidden" name="action" value=""/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="span3">
             <div class="box">
                 <div class="app:entry?feed=help&amp;entry=MarkupHelp">
                     <h3 class="app:title entrytitle"/>
@@ -17,68 +95,10 @@
                 </div>
             </div>
         </div>
-        <div id="content">
-            <div class="app:feed">
-                <div class="app:get-or-create-entry entries">
-                    <div id="edit" class="edit">
-                        <form id="edit-form" action="?" method="POST">
-                            <div class="editrow edit-commands">
-                                <button id="edit-form-cancel" type="cancel">Cancel</button>
-                                <button id="edit-form-save">Save</button>
-                                <button id="edit-form-saveAndClose" type="submit">Save and Close</button>
-                            </div>
-                            <div class="editrow">
-                                Using HTML editor. <button name="action" value="switch-editor" id="editor-switch">Switch to Wiki editor</button>
-                            </div>
-                            <div class="editrow title">
-                                <input class="app:edit-title" type="text" name="title" placeholder="Title" required="required"/>
-                                <label for="title">Title</label>
-                            </div>
-                            <div class="editrow">
-                                <input class="app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="^[\w-.:]+$"/>
-                                <label for="name">Short Name</label>
-                            </div>
-                            <div class="editrow" id="permissions-accordion">
-                                <h3>
-                                    <a href="#">Permissions</a>
-                                </h3>
-                                <div class="templates:include?path=templates/permissions.html"/>
-                            </div>
-                            <div class="editrow options">
-                                <input type="checkbox" class="app:edit-external" name="external"/>
-                                Check to store content and metadata in separate documents
-                            </div>
-                            <div class="editrow accordion">
-                                <h3>
-                                    <a href="#">Summary</a>
-                                </h3>
-                                <div id="summary-editor-html" class="content app:edit-summary?mode=html"/>
-                            </div>
-                            <div class="editrow">
-                                <h3>Content</h3>
-                                <div id="content-editor-html" class="content app:edit-content?mode=html"/>
-                            </div>
-                            <input type="hidden" name="ctype" value="html"/>
-                            <textarea name="content" class="hidden"/>
-                            <textarea name="summary" class="hidden"/>
-                            <input type="hidden" name="id" class="app:edit-id"/>
-                            <input type="hidden" name="author" class="app:edit-author"/>
-                            <input type="hidden" name="published" class="app:edit-publication-date"/>
-                            <input type="hidden" name="collection" class="app:edit-collection"/>
-                            <input type="hidden" name="resource" class="app:edit-resource"/>
-                            <input type="hidden" name="editor" value="html"/>
-                            <input type="hidden" name="action" value=""/>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <script type="text/javascript" src="libs/scripts/jquery/jquery-1.6.2.min.js"/>
+        <script type="text/javascript" src="libs/scripts/jquery/jquery-1.7.1.min.js"/>
+        <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
         <script type="text/javascript" src="libs/scripts/jquery/jquery-ui-1.8.custom.min.js"/>
-        <script type="text/javascript" src="resources/scripts/shCore.js"/>
-        <script type="text/javascript" src="resources/scripts/shBrushXQuery.js"/>
-        <script type="text/javascript" src="resources/scripts/shBrushXml.js"/>
-        <script type="text/javascript" src="resources/scripts/shBrushPlain.js"/>
+        <script type="text/javascript" src="resources/scripts/prettify/prettify.js"/>
         <script type="text/javascript">
         var Aloha = window.Aloha || ( window.Aloha = {} );
         (function (window) {
@@ -106,34 +126,16 @@
                         removeFormats : [ 'strong', 'em', 'b', 'code', 'i', 'cite', 'q', 'code', 'abbr', 'del', 'sub', 'sup']
                     }
                 },
-                contentHandler: {
-                    insertHtml: [ 'sanitize' ],
-                    initEditable: [ 'sanitize' ],
-                    sanitize: 'restricted', // relaxed, restricted, basic
-                    allows: {
-                        elements: [
-                            'p'],
-                 
-                        attributes: {
-                            'a'         : ['href'],
-                            'blockquote': ['cite'],
-                            'q'         : ['cite']
-                         },
-                 
-                        protocols: {
-                            'a'         : {'href': ['ftp', 'http', 'https', 'mailto', '__relative__']}, // Sanitize.RELATIVE
-                            'blockquote': {'cite': ['http', 'https', '__relative__']},
-                            'q'         : {'cite': ['http', 'https', '__relative__']}
-                        }
-                    }
-                },
+                sidebar: {
+            		disabled: true
+        		},
                 bundles: {
                     user: '../../atomic/aloha'
                 }
             };
         } )(window);
         </script>
-        <script src="resources/scripts/aloha/lib/aloha.js" data-aloha-plugins="common/format,common/list,common/link,user/environment"/>
+        <script src="resources/scripts/aloha/lib/aloha.js" data-aloha-plugins="common/format,common/list,common/link,common/dom-to-xhtml,user/environment"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
         <script src="resources/scripts/atomic/edit.js" type="text/javascript" charset="utf-8"/>
     </body>

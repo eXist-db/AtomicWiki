@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <editor default="wiki"/>
     <!-- 
         The root collection which should be scanned for wiki feeds.
         Relative paths will be resolved relative to the app root.

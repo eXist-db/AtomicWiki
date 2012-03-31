@@ -137,6 +137,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
     (: The feed XML will be saved to a request attribute :)
     let $setAttr := request:set-attribute("feed", $feed)
     let $action := request:get-parameter("action", "view")
+    let $log := util:log("WARN", ("FEED: ", $feed))
     let $template := if ($feed) then theme:resolve(util:collection-name($feed), config:get-template($feed)) else ()
     return
         if ($feed) then
@@ -158,15 +159,16 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                         { $local:error-handler }
                     </dispatch>
                 case "edit" case "addentry" case "switch-editor" return
-                    let $entry := config:get-entries($feed, (), $relPath[2])
+                    let $id := request:get-parameter("id", ())
+                    let $entry := config:get-entries($feed, $id, $relPath[2])[1]
                     let $editorParam := request:get-parameter("editor", ())
                     let $editor := 
                         if ($editorParam) then
                             $editorParam
-                        else if ($entry/wiki:editor/text()) then 
+                        else if ($entry/wiki:editor) then
                             $entry/wiki:editor/string()
                         else
-                            "wiki"
+                            $config:default-editor
                     let $template := if ($editor = "html") then "html-edit.html" else "edit.html"
                     return
                         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">

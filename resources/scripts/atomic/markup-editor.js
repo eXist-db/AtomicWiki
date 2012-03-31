@@ -5,42 +5,26 @@ $(document).ready(function() {
     
     var form = $("#edit-form");
     
-    $("#edit-tabs").tabs({
-        select: function (ev, ui) {
-            if (ui.index == 1) { // preview tab selected
-                summaryEditor.update();
-                contentEditor.update();
-                var data = form.serialize();
-                $.ajax({
-        		    type: "POST",
-				    url: "preview.html",
-				    data: data,
-				    success: function (data) {
-                        $(ui.panel).html(data);
-				    }
-                });
-            }
-        }
+    $("#editor-tabs a[href='#preview']").on('show', function (e) {
+        // update the preview tab
+        summaryEditor.update();
+        contentEditor.update();
+        var data = form.serialize();
+        $.ajax({
+		    type: "POST",
+		    url: "preview.html",
+		    data: data,
+		    success: function (data) {
+                $("#preview").html(data);
+		    }
+        });
     });
     
-    $("#edit-form-cancel").button({
-        icons: {
-            primary: "ui-icon-check"
-        }
-    });
-    $("#edit-form-saveAndClose").button({
-        icons: {
-            primary: "ui-icon-check"
-        }
-    }).click(function(ev) {
+    $("#edit-form-saveAndClose").click(function(ev) {
         $("input[name='action']", form).val("store");
         return true;
     });
-    $("#edit-form-save").button({
-        icons: {
-            primary: "ui-icon-disk"
-        }
-    }).click(function (ev) {
+    $("#edit-form-save").click(function (ev) {
         ev.preventDefault();
         summaryEditor.update();
         contentEditor.update();
@@ -51,18 +35,31 @@ $(document).ready(function() {
 		    data: data
         });
     });
-    $("#editor-switch").button().click(function(ev) {
+    $("#editor-switch").click(function(ev) {
         ev.preventDefault();
-        Atomic.util.Dialog.confirm("Switch to HTML editor",
-            "The form needs to be saved before switching editors. Please note that " +
-            "the HTML editor is not as extensible as the wiki editor, so some features " +
-            "may get lost if you switch!", 
-            function() {
-                $("input[name='editor']", form).val("html");
-                $("input[name='action']", form).val("switch-editor");
-                form.submit();
-            }
-        );
+        var name = $("input[name='name']").val();
+        var title = $("input[name='title']").val();
+        if (name === "" && title === "") {
+            Atomic.util.Dialog.confirm("Switch to HTML editor",
+                "The page will be <strong>reloaded</strong>! Please note that " +
+                "the HTML editor is not as extensible as the wiki editor and some formatting " + 
+                "<strong>might get lost</strong>.", 
+                function () {
+                    window.location = "?action=addentry&editor=html";
+                }
+            );
+        } else {
+            Atomic.util.Dialog.confirm("Switch to HTML editor",
+                "The form needs to be saved before switching editors. Please note that " +
+                "the HTML editor is not as extensible as the wiki editor and some formatting " +
+                "<strong>might get lost</strong>!", 
+                function () {
+                    $("input[name='editor']", form).val("html");
+                    $("input[name='action']", form).val("switch-editor");
+                    form.submit();
+                }
+            );
+        }
     });
     Atomic.Form.validator(form, ["name"]);
     
@@ -81,14 +78,6 @@ $(document).ready(function() {
             $("input[name='resource']", this).val(filename);
         }
         return true;
-    });
-    
-    $(".accordion").accordion({ 
-        collapsible: true, 
-        active: false,
-        change: function() {
-            summaryEditor.resize();
-        }
     });
 });
 

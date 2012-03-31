@@ -153,11 +153,7 @@ declare function app:title($node as node(), $params as element(parameters)?, $mo
             if ($model[1]/atom:title[@type = "xhtml"]) then
                 $model[1]/atom:title/node()
             else if ($model[1]/atom:title/text()) then (
-                <a href="{$link}">{$model[1]/atom:title/string()}</a>,
-                if ($isFeed and $user) then
-                    <a class="action" href="?action=editfeed">Edit</a>
-                else
-                    ()
+                <a href="{$link}">{$model[1]/atom:title/string()}</a>
             ) else
                 <a>Untitled</a>
         }
@@ -204,7 +200,7 @@ declare function app:content($node as node(), $params as element(parameters)?, $
                 app:process-content($atomContent/@type, $content, $model)
             ),
             if ($model[2] gt 1 and $summary) then
-                <a href="?id={$model[1]/atom:id}">Read article ...</a>
+                <a class="label" href="?id={$model[1]/atom:id}">Read article ...</a>
             else
                 ()
         )
@@ -245,12 +241,16 @@ declare function app:edit-link($node as node(), $params as element(parameters)?,
 declare function app:action-button($node as node(), $params as element(parameters)?, $model as item()*) {
     element { node-name($node) } {
         $node/@*,
-        <input name="id" value="{$model[1]/atom:id}" type="hidden"/>,
-        for $param in $params/param
-        return
-            <input name="{$param/@name}" value="{$param/@value}" type="hidden"/>,
         templates:process($node/node(), $model)
-    }
+    },
+    <form action="" method="post" style="display: none;">
+        <input name="id" value="{$model[1]/atom:id}" type="hidden"/>
+        {
+            for $param in $params/param
+            return
+                <input name="{$param/@name}" value="{$param/@value}" type="hidden"/>
+        }
+    </form>
 };
 
 declare function app:edit-title($node as node(), $params as element(parameters)?, $model as item()*) {
@@ -389,6 +389,13 @@ declare function app:edit-resource($node as node(), $params as element(parameter
     element { node-name($node) } {
         $node/@*,
         attribute value { util:document-name($model[1]) }
+    }
+};
+
+declare function app:edit-editor($node as node(), $params as element(parameters)?, $model as item()*) {
+    element { node-name($node) } {
+        $node/@*,
+        attribute value { $model[1]/wiki:editor/string() }
     }
 };
 

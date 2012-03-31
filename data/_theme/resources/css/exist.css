@@ -1,13 +1,12 @@
 @charset "utf-8";
 /* CSS Document */
 
-@import url('reset.css');
+@import url('bootstrap.min.css');
 @import url('dropdowns.css');
-
 
 /* ---------------------------------------- LAYOUT ---------------------------------------- */
 
-body { font: 1em/1.6em Helmet, Freesans, sans-serif; color: #222; background: url(../images/body.gif) repeat 50% 100%; }
+body { color: #222; background: url(../images/body.gif) repeat 50% 100%; }
 
 #grey-top { background: #F3F3F3 url(../images/horizontal.gif) repeat-x 50% 0; float: left; width: 100%; height: 100%; }
 #grey-bot { background: url(../images/body-base.gif) repeat-x 50% 100%; float: left; width: 100%; height: 100%; }
@@ -18,7 +17,35 @@ body { font: 1em/1.6em Helmet, Freesans, sans-serif; color: #222; background: ur
 
 #header a#logo { display: block; width: 220px; height: 100px; outline: 0; text-indent: -999em; overflow: hidden; float: left; margin: 10px 0; }
 
-#navigation { float: left; height: 70px; width: 960px; }
+#navigation {
+    float: left; 
+    height: 70px; 
+    width: 960px;
+    color: white;
+}
+
+#navigation .btn-group { 
+    float: left;
+    margin: 8px 0 8px 20px;
+    vertical-align: middle;
+}
+
+#navigation h2 {
+    float: left;
+    margin: auto 0;
+    font: 2.5em/1em "Quicksand", "Arial", Helvetica, sans-serif;
+    font-weight: bold;
+    color: #FFF;
+}
+
+#navigation h2 a {
+    color: #FFF;
+}
+
+#navigation .userinfo {
+    float: right;
+    margin: 8px 0 8px 0;
+}
 
 #main { width: 960px; float: left; padding: 0 0 30px; }
 
@@ -52,11 +79,8 @@ body { font: 1em/1.6em Helmet, Freesans, sans-serif; color: #222; background: ur
 
 
 #content { 
-    font: 16px/24px Georgia, serif;
-    width: 700px; float: left; min-height: 600px; padding: 0 10px;
+    min-height: 600px;
 }
-
-#right { width: 240px; float: right; }
 
 .box {
     margin: 0 0 20px 0;
@@ -65,19 +89,11 @@ body { font: 1em/1.6em Helmet, Freesans, sans-serif; color: #222; background: ur
     border-radius: 10px 10px 10px 10px;
     -moz-border-radius: 10px 10px 10px 10px;
     -webkit-border-radius: 10px 10px 10px 10px;
-    font-size: 85%;
-    line-height: 1em;
     color: white;
 }
 
-.login input {
-    display: block;
-    margin: 0 0 6px 0;
-    width: 100%;
-}
-
-#main ul#twitter { margin: 10px auto; padding: 0; color: #FFF; width: 200px; }
-#main ul#twitter li { list-style-type: none; background: #0083CB url(../images/twitter-right.gif) no-repeat 50% 100%; padding: 4px 5px 18px; width: 190px; line-height: 15px; margin: 1px auto; }
+#main ul#twitter { margin: 10px auto; padding: 0; color: #FFF; }
+#main ul#twitter li { list-style-type: none; background: #0083CB url(../images/twitter-right.gif) no-repeat 50% 100%; padding: 4px 5px 18px; line-height: 15px; margin: 1px auto; }
 #main ul#twitter li.alt { background: #0083CB url(../images/twitter-left.gif) no-repeat 50% 100%; }
 #main ul#twitter a:link, #main ul#twitter a:visited { color: #FFF; }
 
@@ -101,10 +117,6 @@ body { font: 1em/1.6em Helmet, Freesans, sans-serif; color: #222; background: ur
 
 
 /* ---------------------------------------- TYPE ---------------------------------------- */
-
-#right ol { padding: 0 0 20px 30px; color: #FFF; }
-#right ol li { list-style-type: decimal-leading-zero; padding: 0; margin: 5px 20px; }
-#right ol li ol li { list-style-type: lower-alpha; padding: 0 5px; margin: 5px 20px; }
 
 
 p { padding: 5px 0; }
@@ -142,7 +154,6 @@ blockquote p { padding: 0 0 10px; }
     text-align: right;
 }
 
-form { margin: 10px 0; }
 .item { 
     background: #FFFFFF;
     margin: 8px 0;
@@ -167,45 +178,8 @@ form { margin: 10px 0; }
     font-size: 90% !important;
 }
 
-#Atomic-dialog-icon {
-    float: left;
-    margin: 4px 10px 0 0;
-}
-
-#navigation h2 {
-    font: 175% "Quicksand", "Arial", Helvetica, sans-serif;
-    font-weight: bold;
-}
-
-#navigation h2 a {
-    color: white;
-}
-
-#navigation a:hover { color: #ffcb05; }
-
-#navigation .action {
-    font-size: 66%;
-    vertical-align: top;
-    margin-left: .5em;
-    font-weight: normal;
-}
-
-#navigation .breadcrumbs {
-    margin-top: 6px;
-    float: right;
-    font-size: 120%;
-    font-weight: bold;
-    color: white;
-}
-
 .menu {
     list-style: none;
-}
-
-.entries {
-    /*font: 108% Georgia, "Times New Roman", Times, serif;*/
-    /* font: 128% Georgia, "Times New Roman", Times, serif; */
-    /* font: 89% Georgia, "Times New Roman", Times, serif; */
 }
 
 .entries footer {
@@ -226,13 +200,18 @@ form { margin: 10px 0; }
 }
 
 .entry .entrytitle {
-    font-size: 200%;
+    font-size: 38px;
     font-weight: normal;
     font-family: "QuickSand", Arial, Helvetica, sans-serif;
     font-variant: normal;
     letter-spacing: -1px;
     margin: 0 0 4px 0;
     line-height: 1.2em;
+}
+
+.box .entrytitle a:link {
+    font-weight: normal;
+    color: #FFF;
 }
 
 .entry .author-date {
@@ -263,20 +242,26 @@ form { margin: 10px 0; }
     text-align: center;
 }
 
+#content .content, #content .content p, #content .content li {
+    font: 19px/28px Georgia, "Times New Roman", Times, serif;
+    color: #555;
+}
+
 .content h1 {
     font-family: "Quicksand", "Arial", Helvetica, sans-serif;
-    font-size: 1.85em;
+    font-size: 1.75em;
+    font-weight: normal;
     margin: .8em 0 0 0;
 }
 
 .content h2 {
     font-family: "Quicksand", "Arial", Helvetica, sans-serif;
-    font-size: 125%;
+    font-size: 1.33em;
     margin: .3em 0 0;
 }
 
 .content h3 {
-    font-size: 112%;
+    font-size: 1em;
     font-weight: bold;
 }
 
@@ -301,6 +286,9 @@ form { margin: 10px 0; }
 
 .content code {
     font-size: .92em;
+    background-color: transparent;
+    border: 0;
+    color: inherit;
 }
 
 .content blockquote {
@@ -346,32 +334,9 @@ form { margin: 10px 0; }
     margin: .25em 0 .25em 1em;
 }
 
-.toolbar {
-    font-size: .85em;
+.edit-toolbar {
+    margin-left: 10px;
     float: right;
-    list-style: none;
-    margin: 0;
-    text-align: right;
-}
-
-.toolbar button {
-    margin-right: 8px;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-}
-
-.toolbar a {
-    margin-right: 8px;
-}
-
-.toolbar form {
-    display: inline;
-}
-
-.entry .toolbar li {
-    display: inline;
-    padding: 0 4px 0 0;
 }
 
 .editrow {
@@ -398,7 +363,6 @@ form { margin: 10px 0; }
     vertical-align: top;
     border: 1px solid #CCC;
     background: transparent;
-    height: 22px;
     margin-right: 2px;
 }
 
@@ -425,8 +389,12 @@ form { margin: 10px 0; }
     font-size: 85%;
 }
 
-.edit .title input {
-    font-size: 125%;
+#edit-form .title input {
+    font-size: 150%;
+}
+
+#editor-switch {
+    float: right;
 }
 
 #content-editor .code-editor {
@@ -511,5 +479,9 @@ table.permissions td {
 }
 
 .aloha-editable {
-    border: 2px solid #F8B316;
+    padding: 8px;
+}
+
+.aloha-editable:hover {
+    outline: 1px solid #F8B316;
 }

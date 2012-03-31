@@ -17,6 +17,22 @@ declare function store:store-resource($collection, $name, $content, $mediaType) 
         acl:change-permissions($stored)
 };
 
+declare function store:process-content($editType as xs:string, $content as xs:string) {
+    if (string-length(normalize-space($content)) = 0) then
+        ()
+    else
+        switch ($editType)
+            case "wiki" return
+                wiki:parse($content, <parameters/>)
+            case "html" return
+                if (matches($content, "^[^<]*<article")) then
+                    $content
+                else
+                    '<article xmlns="http://www.w3.org/1999/xhtml">' || $content || "</article>"
+            default return
+                $content
+};
+
 declare function store:article() {
     let $name := request:get-parameter("name", ())
     let $id := request:get-parameter("id", ())
@@ -30,17 +46,8 @@ declare function store:article() {
     let $storeSeparate := request:get-parameter("external", ())
     let $editor := request:get-parameter("editor", "wiki")
     let $editType := request:get-parameter("ctype", "html")
-    let $contentParsed := 
-        switch ($editType)
-            case "wiki" return
-                wiki:parse($content, <parameters/>)
-            case "html" return
-                if (matches($content, "^[^<]*<article")) then
-                    $content
-                else
-                    '<article xmlns="http://www.w3.org/1999/xhtml">' || $content || "</article>"
-            default return
-                $content
+    let $contentParsed := store:process-content($editType, $content)
+    let $summaryParsed := store:process-content($editType, $summary)
     let $contentType := if ($editType = ("wiki", "html")) then "html" else $editType
     let $entry :=
         <atom:entry>
@@ -52,8 +59,8 @@ declare function store:article() {
             <atom:author><atom:name>{ $author }</atom:name></atom:author>
             <atom:title>{$title}</atom:title>
             {
-                if (normalize-space($summary) != "") then
-                    <atom:summary type="xhtml">{ wiki:parse($summary, <parameters/>) }</atom:summary>
+                if ($summaryParsed) then
+                    <atom:summary type="xhtml">{ util:parse-html($summaryParsed) }</atom:summary>
                 else
                     ()
             }

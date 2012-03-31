@@ -3,20 +3,24 @@
     <div class="app:feed">
         <div class="app:entries?count=5 entries">
             <div class="entry">
-                <div class="templates:if-session-set?attribute=wiki.user">
-                    <div class="toolbar">
-                        <a class="app:edit-link?action=edit" href="#">
-                            <img src="theme/resources/images/page-edit-icon.png"/>
-                        </a>
-                        <form class="app:action-button?action=delete" id="delete-article">
-                            <button type="submit">
-                                <img src="theme/resources/images/delete-icon.png"/>
-                            </button>
-                        </form>
-                    </div>
-                </div>
                 <div class="entryhead">
                     <h3 class="app:title entrytitle"/>
+                    <div class="templates:if-session-set?attribute=wiki.user">
+                        <div class="edit-toolbar btn-group">
+                            <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"/>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="app:edit-link?action=edit">
+                                        <i class="icon-plus"/> Edit</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="app:action-button?action=delete" id="delete-article">
+                                        <i class="icon-trash"/> Delete</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                     <div class="author-date">
                         by <span class="app:author"/> at <span class="app:publication-date-full"/>
                     </div>

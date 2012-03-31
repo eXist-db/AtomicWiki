@@ -1,8 +1,26 @@
 .code-button-xquery {
-    background: url('../img/xquery.jpg') no-repeat !important;
+    background: url('../img/xquery-button.gif') no-repeat !important;
     width: 54px !important;
     height: 44px !important;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.code-button-xml {
+    background: url('../img/xml-button.gif') no-repeat !important;
+    width: 54px !important;
+    height: 44px !important;
+    -moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.code-button-java {
+    background: url('../img/java-button.gif') no-repeat !important;
+    width: 54px !important;
+    height: 44px !important;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
 	border-radius: 3px;
 }

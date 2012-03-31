@@ -5,18 +5,12 @@
         <link href="http://fonts.googleapis.com/css?family=Quicksand:400,700" rel="stylesheet" type="text/css"/>
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
-        <link href="resources/scripts/shCore.css" rel="stylesheet" type="text/css"/>
-        <link href="resources/scripts/shThemeDefault.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="libs/scripts/jquery/css/smoothness/jquery.ui.all.css"/>
-        <script type="text/javascript" src="libs/scripts/jquery/jquery-1.6.2.min.js"/>
+        <script type="text/javascript" src="libs/scripts/jquery/jquery-1.7.1.min.js"/>
+        <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
         <script type="text/javascript" src="libs/scripts/jquery/jquery-ui-1.8.custom.min.js"/>
-        <script type="text/javascript" src="resources/scripts/shCore.js"/>
-        <script type="text/javascript" src="resources/scripts/shBrushXQuery.js"/>
-        <script type="text/javascript" src="resources/scripts/shBrushXml.js"/>
-        <script type="text/javascript" src="resources/scripts/shBrushPlain.js"/>
-        <script type="text/javascript">
-            SyntaxHighlighter.all()
-        </script>
+        <script type="text/javascript" src="resources/scripts/prettify/prettify.js"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
     </head>
     <body id="body">
@@ -28,24 +22,52 @@
                     </div><!--/header-->
                     <div class="app:feed">
                         <div id="navigation">
-                            <h2 class="app:title"/>
-                        </div>
-                    </div>
-                    <div id="main">
-                        <!-- Page content will be injected into the div below -->
-                        <div id="content"/>
-                        <div id="right">
-                            <div class="templates:include?path=templates/menu.html"/>
-                            <div id="latest-posts" class="box">
-                                <div class="app:entry?feed=help&amp;entry=ListCollectionContents">
-                                    <h3 class="app:title entrytitle"/>
-                                    <div class="app:content content"/>
+                            <div class="app:login">
+                                <div class="userinfo">
+                                    <a class="btn btn-inverse" href="#loginDialog" data-toggle="modal">Login</a>
+                                </div>
+                                <div class="userinfo">
+                                    <form action="" class="form-inline" method="POST">
+                                    Logged in as <span class="app:user">user</span>.
+                                    <button class="btn btn-small btn-inverse" name="logout" value="logout">Logout</button>
+                                    </form>
                                 </div>
                             </div>
-                            <div class="box">
-                                <div class="app:entry?feed=util&amp;entry=TwitterUserFeed">
-                                    <h3 class="app:title entrytitle"/>
-                                    <div class="app:content content"/>
+                            <h2 class="app:title"/>
+                            <div class="templates:if-session-set?attribute=wiki.user">
+                                <div class="btn-group">
+                                    <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">Collection Actions <span class="caret"/>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href=".?action=addentry">
+                                                <i class="icon-plus"/> New Entry</a>
+                                        </li>
+                                        <li>
+                                            <a href=".?action=editfeed">
+                                                <i class="icon-edit"/> Edit</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container" id="main">
+                        <div class="row" id="container-body">
+                            <!-- Page content will be injected into the div below -->
+                            <div class="span9" id="content"/>
+                            <div class="span3">
+                                <div id="latest-posts" class="box">
+                                    <div class="app:entry?feed=help&amp;entry=ListCollectionContents">
+                                        <h3 class="app:title entrytitle"/>
+                                        <div class="app:content content"/>
+                                    </div>
+                                </div>
+                                <div class="box">
+                                    <div class="app:entry?feed=util&amp;entry=TwitterUserFeed">
+                                        <h3 class="app:title entrytitle"/>
+                                        <div class="app:content content"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -66,5 +88,51 @@
                 </p>
             </div><!--/copyright-->
         </div><!--/footer-->
+        <div class="modal" id="loginDialog" style="display: none;">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">
+                    <i class="icon-remove"/>
+                </a>
+                <h3>Login</h3>
+            </div>
+            <form class="login content" action="" method="POST">
+                <div class="modal-body">
+                    <div class="control-group">
+                        <label for="user" class="control-label">User</label>
+                        <div class="controls">
+                            <input type="text" name="user" placeholder="User" required="required"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="password" class="control-label">Password</label>
+                        <div class="controls">
+                            <input type="password" name="password" placeholder="Password"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-small" type="submit">
+                        <i class="icon-user"/> Login
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="modal" id="confirmDialog" style="display: none;">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">
+                    <i class="icon-remove"/>
+                </a>
+                <h3>Confirm</h3>
+            </div>
+            <div class="modal-body"/>
+            <div class="modal-footer">
+                <a class="btn-primary btn ok-button">
+                    <i class="icon-ok"/> OK
+                </a>
+                <a class="btn btn cancel-button">
+                    <i class="icon-remove"/> Cancel
+                </a>
+            </div>
+        </div>
     </body>
 </html>

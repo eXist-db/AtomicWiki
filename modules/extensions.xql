@@ -34,5 +34,6 @@ declare function ext:script($node as node(), $params as element(parameters)?, $m
 declare function ext:code($node as node(), $params as element(parameters)?, $model as item()*) {
     let $syntax := $params/param[@name = "lang"]/@value/string()
     return
-        <pre class="brush: {if ($syntax) then $syntax else 'text'}">{$node/string()}</pre>
+        <pre class="prettyprint"><code class="{if ($syntax) then 'language-' || $syntax else ''}">{$node/string()}</code></pre>
+(:        <pre class="brush: {if ($syntax) then $syntax else 'text'}">{$node/string()}</pre>:)
 };

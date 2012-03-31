@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div class="templates:surround?with=templates/page.html&amp;at=content">
     <div class="app:feed">
-        <div class="app:entries entries">
+        <div class="app:entries?count=5 entries">
             <div class="entry">
                 <div class="templates:if-session-set?attribute=wiki.user">
-                    <div class="toolbar">
-                        <a class="app:edit-link?action=edit" href="#">Edit</a>
-                        <a class="app:edit-link?action=delete" href="#">Delete</a>
+                    <div class="edit-toolbar btn-group">
+                        <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"/>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="app:edit-link?action=edit">
+                                    <i class="icon-plus"/> Edit</a>
+                            </li>
+                            <li>
+                                <a href="#" class="app:action-button?action=delete" id="delete-article">
+                                    <i class="icon-trash"/> Delete</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
                 <div class="entryhead">
@@ -18,6 +28,10 @@
                 </div>
                 <div class="app:content content"/>
             </div>
+            <footer>
+                <a class="app:previous-page previous-entries">Newer entries</a>
+                <a class="app:next-page">Older entries</a>
+            </footer>
         </div>
     </div>
 </div>

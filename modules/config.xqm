@@ -73,6 +73,10 @@ declare variable $config:items-per-page :=
             10
 ;
 
+declare variable $config:default-editor :=
+    $config:wiki-config/configuration/editor/@default/string()
+;
+
 declare function config:feed-from-entry($entry as element(atom:entry)) {
     let $collection := util:collection-name($entry)
     return

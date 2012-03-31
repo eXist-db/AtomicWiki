@@ -32,20 +32,15 @@ Atomic.app = (function () {
     return {
         
         init: function() {
-            $("#delete-article").submit(function (ev) {
+            $("#delete-article").click(function (ev) {
                 ev.preventDefault();
-                var form = this;
+                var form = $(this).next("form");
                 
                 Atomic.util.Dialog.confirm("Delete Article?", "This will delete the current article. Are you sure?",
                     function () {
                         form.submit();
                     }
                 );
-            });
-            
-            $("#permissions-accordion").accordion({
-                collapsible: true,
-                active: false
             });
             
             $("#perm-private:checked").each(function() {
@@ -69,6 +64,7 @@ Atomic.app = (function () {
                     $("#perm-private").attr("checked", false);
                 }
             });
+            prettyPrint();
         }
     };
 }());
@@ -77,40 +73,36 @@ Atomic.namespace("Atomic.util.Dialog");
 
 Atomic.util.Dialog = (function () {
     
-	var dialog;
-	var warnIcon = "resources/images/error.png";
-	var infoIcon = "resources/images/information.png";
+	var dialog, body, header;
 	
 	var okCallback = null;
 	var cancelCallback = null;
     
 	$(document).ready(function() {
-		$(document.body).append(
-				"<div id=\"Atomic-dialog\">" +
-				"	<img id=\"Atomic-dialog-icon\" src=\"resources/images/error.png\"/>" +
-				"	<div id=\"Atomic-dialog-body\"></div>" +
-				"</div>"
-		);
-		dialog = $("#Atomic-dialog");
-		
-		dialog.dialog({
-			modal: true,
-			autoOpen: false,
-			buttons: {
-				"OK": function () {
-			        $(this).dialog("close");
-				    if (okCallback != null) {
-				        okCallback.apply($("#Atomic-dialog-body"), []);
-				    }
-			    },
-			    Cancel: function() {
-			         $(this).dialog("close");
-                     if (cancelCallback != null) {
-                         cancelCallback.apply($("#Atomic-dialog-body"), []);
-                     }
-			    }
-			}
-		});
+        if (!document.getElementById("confirmDialog"))
+            return;
+		dialog = $("#confirmDialog");
+		body = $(".modal-body", dialog);
+        header = $(".modal-header h3", dialog);
+        
+        dialog.modal({
+            keyboard: true,
+            show: false
+        });
+        $(".ok-button", dialog).click(function(ev) {
+            ev.preventDefault();
+            dialog.modal("hide");
+		    if (okCallback != null) {
+		        okCallback.apply(body, []);
+		    }
+        });
+        $(".cancel-button", dialog).click(function(ev) {
+            ev.preventDefault();
+            dialog.modal("hide");
+            if (cancelCallback != null) {
+                cancelCallback.apply(body, []);
+            }
+        });
 	});
 	
 	return {
@@ -120,9 +112,9 @@ Atomic.util.Dialog = (function () {
             if (cancel) {
                 cancelCallback = cancel;
             }
-            dialog.dialog("option", "title", title);
-            $("#Atomic-dialog-body").html(msg);
-            dialog.dialog("open");
+            header.html(title);
+            body.html(msg);
+            dialog.modal("show");
 		}
 	};
 }());
