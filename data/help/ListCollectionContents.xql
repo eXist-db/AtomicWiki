@@ -18,7 +18,7 @@ declare variable $collection external;
     return
         <li>
             <div class="date">{ dates:formatDate(xs:dateTime($date/text())) }</div>
-            <div><a href="{$path}">{ $entry/atom:title/text() }</a></div>
+            <div><a href="{$path}">{ $entry/atom:title/string() }</a></div>
         </li>
 }
 </ul>

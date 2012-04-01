@@ -169,7 +169,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                             $entry/wiki:editor/string()
                         else
                             $config:default-editor
-                    let $template := if ($editor = "html") then "html-edit.html" else "edit.html"
+                    let $template := if ($editor = "html") then "html-edit.html" else "wiki-edit.html"
                     return
                         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                             {

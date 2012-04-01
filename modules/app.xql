@@ -258,7 +258,7 @@ declare function app:edit-title($node as node(), $params as element(parameters)?
     return
         element { node-name($node) } {
             $node/@* except $node/@value,
-            if ($title) then attribute value { $title } else ()
+            if (exists($title)) then attribute value { $title } else ()
         }
 };
 
@@ -267,7 +267,7 @@ declare function app:edit-subtitle($node as node(), $params as element(parameter
     return
         element { node-name($node) } {
             $node/@* except $node/@value,
-            if ($title) then attribute value { $title } else ()
+            if (exists($title)) then attribute value { $title } else ()
         }
 };
 
