@@ -98,6 +98,10 @@ declare function html2wiki:transform($nodes as node()*) {
                                 <t>**{$node/string()}**</t>
                             default return
                                 html2wiki:transform($node/node())
+            case element(html:table) return
+                <t>{html2wiki:transform($node/node())}&#10;</t>
+            case element(html:tr) return
+                <t>{"||" || string-join($node/(html:td|html:th), "||")}&#10;</t>
             case document-node() return
                 html2wiki:transform($node/*)
             case element() return
