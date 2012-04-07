@@ -188,7 +188,7 @@ declare function store:validate() {
 };
 
 let $action := request:get-parameter("action", "store")
-let $content := request:get-parameter("content", ())
+let $id := request:get-parameter("id", ())
 return
     if (request:get-parameter("validate", ())) then
         store:validate()
@@ -197,7 +197,7 @@ return
             case "delete" return
                 store:delete-article()
             case "store" return
-                if ($content) then 
+                if ($id) then 
                     store:article()
                 else 
                     store:collection()

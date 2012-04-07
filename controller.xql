@@ -204,6 +204,19 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                         </view>
                         { $local:error-handler }
                     </dispatch>
+                case "manage" return
+                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                        <forward url="{$exist:controller}/{theme:resolve(util:collection-name($feed), 'manage.html')}">
+                        { local:set-user() }
+                        </forward>
+                        <view>
+                            <forward url="{$exist:controller}/modules/view.xql">
+                                { local:set-user() }
+                                <add-parameter name="wiki-id" value="{$relPath[2]}"/>
+                            </forward>
+                        </view>
+                        { $local:error-handler }
+                    </dispatch>
                 default return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{$exist:controller}/{$template}">

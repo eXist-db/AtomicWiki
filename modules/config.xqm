@@ -122,7 +122,16 @@ declare function config:resolve-feed-helper($path as xs:string, $recurse as xs:b
 
 declare function config:get-entries($feed as element(atom:feed), $id as xs:string?,
     $wikiId as xs:string?) as element(atom:entry)* {
-    let $entryCollection := xmldb:xcollection(util:collection-name($feed))
+    config:get-entries($feed, $id, $wikiId, false())
+};
+
+declare function config:get-entries($feed as element(atom:feed), $id as xs:string?,
+    $wikiId as xs:string?, $recurse as xs:boolean) as element(atom:entry)* {
+    let $entryCollection := 
+        if ($recurse) then
+            collection(util:collection-name($feed))
+        else
+            xmldb:xcollection(util:collection-name($feed))
     return
         if ($wikiId) then
             $entryCollection/atom:entry[wiki:id = $wikiId]

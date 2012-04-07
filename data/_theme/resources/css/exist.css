@@ -49,6 +49,7 @@ body { color: #222; background: url(../images/body.gif) repeat 50% 100%; }
 
 #main { width: 960px; float: left; padding: 0 0 30px; }
 
+#structure { min-height: 600px; height: 100%; }
 
 /* ---------------------------------------- INDEX ---------------------------------------- */
 

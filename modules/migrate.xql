@@ -6,6 +6,22 @@ declare namespace xhtml="http://www.w3.org/1999/xhtml";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
+declare function atom:mkcol-recursive($collection, $components) {
+    if (exists($components)) then
+        let $newColl := concat($collection, "/", $components[1])
+        return (
+            xmldb:create-collection($collection, $components[1]),
+            atom:mkcol-recursive($newColl, subsequence($components, 2))
+        )
+    else
+        ()
+};
+
+(: Helper function to recursively create a collection hierarchy. :)
+declare function atom:mkcol($collection, $path) {
+    atom:mkcol-recursive($collection, tokenize($path, "/"))
+};
+
 declare function atom:transform($node as node()) {
     typeswitch ($node)
         case document-node() return
@@ -51,7 +67,7 @@ declare function atom:store($target, $id, $data, $mime) {
 };
 
 declare function atom:transform-entries($source as xs:string, $target as xs:string) {
-    for $entry in collection($source)/atom:entry
+    for $entry in collection($source || "/.feed.entry")/atom:entry
     let $fixed := atom:transform($entry)
     let $id := $entry/wiki:id/string()
     let $content := $fixed/atom:content
@@ -89,13 +105,24 @@ declare function atom:copy-binaries($source as xs:string, $target as xs:string) 
 };
 
 declare function atom:transform-collection($source as xs:string, $target as xs:string) {
-    let $feed := xcollection($source)/atom:feed
+    let $feed := xmldb:xcollection($source)/atom:feed
     let $stored := atom:store-feed($target, $feed)
     return (
-        atom:transform-entries($stored, $target),
+        atom:transform-entries($source, $target),
         atom:copy-binaries($source, $target)
     )
 };
 
-xmldb:create-collection("/db/wiki/data", "blog"),
-atom:transform-collection("/db/old", "/db/wiki/data/blog")
+declare function atom:transform($source as xs:string, $targetRel as xs:string) {
+    atom:mkcol($config:wiki-root, $targetRel),
+    let $target := $config:wiki-root || "/" || $targetRel
+    return (
+        atom:transform-collection($source, $target),
+        for $child in xmldb:get-child-collections($source)
+        where $child != ".feed.entry"
+        return
+            atom:transform($source || "/" || $child, $targetRel || "/" || $child)
+    )
+};
+
+atom:transform("/db/old/HowTo", "HowTo")
