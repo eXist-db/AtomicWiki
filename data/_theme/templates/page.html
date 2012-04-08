@@ -2,7 +2,6 @@
 <html>
     <head>
         <title>Atomic Wiki</title>
-        <link href="http://fonts.googleapis.com/css?family=Quicksand:400,700" rel="stylesheet" type="text/css"/>
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
         <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
@@ -21,33 +20,31 @@
                     <div class="app:feed">
                         <div id="navigation">
                             <div class="app:login">
-                                <div class="userinfo">
+                                <div class="actions">
                                     <a class="btn btn-inverse" href="#loginDialog" data-toggle="modal">Login</a>
                                 </div>
-                                <div class="userinfo">
+                                <div class="actions">
                                     <form action="" class="form-inline" method="POST">
-                                    Logged in as <span class="app:user">user</span>.
-                                    <button class="btn btn-small btn-inverse" name="logout" value="logout">Logout</button>
+                                        <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+                                            Collection Actions <span class="caret"/>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a href=".?action=addentry">
+                                                    <i class="icon-plus"/> New Entry</a>
+                                            </li>
+                                            <li>
+                                                <a href=".?action=editfeed">
+                                                    <i class="icon-edit"/> Edit</a>
+                                            </li>
+                                        </ul>
+                                        <button class="btn btn-inverse" name="logout" value="logout">
+                                            Logout <span class="app:user">user</span>
+                                        </button>
                                     </form>
                                 </div>
                             </div>
                             <h2 class="app:title"/>
-                            <div class="templates:if-session-set?attribute=wiki.user">
-                                <div class="btn-group">
-                                    <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">Collection Actions <span class="caret"/>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a href=".?action=addentry">
-                                                <i class="icon-plus"/> New Entry</a>
-                                        </li>
-                                        <li>
-                                            <a href=".?action=editfeed">
-                                                <i class="icon-edit"/> Edit</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="container" id="main">
@@ -74,16 +71,8 @@
             </div>
         </div>
         <div id="footer">
-            <ul>
-                <li>
-                    <a href="#">Documentation</a>
-                </li>
-            </ul>
             <div id="copyright">
                 <p> Copyright eXist 2011</p>
-                <p>
-                    <a href="http://www.jameshambly.com"> Designed by JamesHambly.com</a>
-                </p>
             </div><!--/copyright-->
         </div><!--/footer-->
         <div class="modal" id="loginDialog" style="display: none;">
