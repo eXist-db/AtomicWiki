@@ -235,14 +235,13 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
             switch ($action)
                 case "store" case "delete" return
                     let $feedColl := request:get-parameter('collection', ())
-                    let $template := request:get-parameter('template', ()) || ".html"
                     return
                         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                             <forward url="{$exist:controller}/modules/store.xql">
                             { local:set-user() }
                             </forward>
                             <view>
-                                <forward url="{$exist:controller}/{theme:resolve($feedColl, $template)}" method="GET"></forward>
+                                <forward url="{$exist:controller}/{theme:resolve($feedColl, 'feed.html')}" method="GET"></forward>
                                 <forward url="{$exist:controller}/modules/view.xql">
                                     { local:set-user() }
                                     <set-attribute name="exist.path" value="{$exist:path}"/>

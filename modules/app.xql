@@ -76,11 +76,15 @@ declare function app:entries($node as node(), $params as element(parameters)?, $
     let $id := request:get-parameter("id", ())
     let $wikiId := request:get-parameter("wiki-id", ())
     let $start := request:get-parameter("start", 1)
+    let $allEntries := config:get-entries($feed, $id, $wikiId)
     let $entries :=
-        for $entry in config:get-entries($feed, $id, $wikiId)
-        order by xs:dateTime($entry/atom:published) descending
-        return
-            $entry
+        if ($allEntries[wiki:is-index = "true"]) then
+            $allEntries[wiki:is-index = "true"][1]
+        else
+            for $entry in $allEntries
+            order by xs:dateTime($entry/atom:published) descending
+            return
+                $entry
     let $count := if ($countParam) then number($countParam) else $config:items-per-page
     return
         element { node-name($node) } {
@@ -371,6 +375,16 @@ declare function app:edit-external($node as node(), $params as element(parameter
     }
 };
 
+declare function app:edit-use-index($node as node(), $params as element(parameters)?, $model as item()*) {
+    element { node-name($node) } {
+        $node/@*,
+        if ($model[1]/wiki:is-index = "true") then
+            attribute checked { "checked" }
+        else
+            ()
+    }
+};
+
 declare function app:edit-collection($node as node(), $params as element(parameters)?, $model as item()*) {
     let $collection := request:get-attribute("collection")
     let $feed :=
@@ -393,10 +407,19 @@ declare function app:edit-resource($node as node(), $params as element(parameter
 };
 
 declare function app:edit-editor($node as node(), $params as element(parameters)?, $model as item()*) {
-    element { node-name($node) } {
-        $node/@*,
-        attribute value { $model[1]/wiki:editor/string() }
-    }
+    let $editorParam := request:get-parameter("editor", ())
+    let $editor :=
+        if ($editorParam) then
+            $editorParam
+        else if ($model[1]/wiki:editor) then
+            $model[1]/wiki:editor/string()
+        else
+            "wiki"
+    return
+        element { node-name($node) } {
+            $node/@*,
+            attribute value { $editor }
+        }
 };
 
 declare function app:login($node as node(), $params as element(parameters)?, $model as item()*) {

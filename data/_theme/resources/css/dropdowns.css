@@ -73,14 +73,12 @@ ul.dropdown li {
 ul.dropdown li span {
     padding: 18px 0;
     width: 100%;
-    height: 60px;
     display: block;
     text-align: center;
     font: 1.2em/1em "QuicksandBook", "Arial", Helvetica, sans-serif;
     font-weight: bold;
 }
 
-ul.dropdown li.hover,
 ul.dropdown li:hover {
     color: #ffcb05;
     position: relative;
@@ -109,7 +107,7 @@ ul.dropdown ul ul {
 }
 
 ul.dropdown li:hover > ul {
- visibility: visible;
+    visibility: visible;
 }
 
 
