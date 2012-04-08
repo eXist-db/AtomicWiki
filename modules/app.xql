@@ -415,5 +415,8 @@ declare function app:user($node as node(), $params as element(parameters)?, $mod
 };
 
 declare function app:home-link($node as node(), $params as element(parameters)?, $model as item()*) {
-    <a href="{$config:app-home}">{ $node/@*, templates:process($node/node(), $model)}</a>
+    let $target := $params/param[@name = "target"]/@value
+    let $link := if ($target = "app") then $config:app-home else $config:exist-home
+    return
+        <a href="{$link}">{ $node/@*, templates:process($node/node(), $model)}</a>
 };

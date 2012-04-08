@@ -19,32 +19,46 @@
                     </div><!--/header-->
                     <div class="app:feed">
                         <div id="navigation">
+                            <ul id="nav" class="dropdown dropdown-horizontal">
+                                <li>
+                                    <span>Home</span>
+                                    <ul>
+                                        <li>
+                                            <a class="app:home-link?target=app">Wiki Startpage</a>
+                                        </li>
+                                        <li>
+                                            <a class="app:home-link">eXist-db Home</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
                             <div class="app:login">
                                 <div class="actions">
                                     <a class="btn btn-inverse" href="#loginDialog" data-toggle="modal">Login</a>
                                 </div>
                                 <div class="actions">
                                     <form action="" class="form-inline" method="POST">
-                                        <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-                                            Collection Actions <span class="caret"/>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <a href=".?action=addentry">
-                                                    <i class="icon-plus"/> New Entry</a>
-                                            </li>
-                                            <li>
-                                                <a href=".?action=editfeed">
-                                                    <i class="icon-edit"/> Edit</a>
-                                            </li>
-                                        </ul>
-                                        <button class="btn btn-inverse" name="logout" value="logout">
+                                        <div class="btn-group">
+                                            <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+                                                Collection Actions <span class="caret"/>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a href=".?action=addentry">
+                                                        <i class="icon-plus"/> New Entry</a>
+                                                </li>
+                                                <li>
+                                                    <a href=".?action=editfeed">
+                                                        <i class="icon-edit"/> Edit</a>
+                                                </li>
+                                            </ul>
+                                            <button class="btn btn-inverse" name="logout" value="logout">
                                             Logout <span class="app:user">user</span>
-                                        </button>
+                                            </button>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
-                            <h2 class="app:title"/>
                         </div>
                     </div>
                     <div class="container" id="main">

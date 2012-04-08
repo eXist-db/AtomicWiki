@@ -137,8 +137,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
     (: The feed XML will be saved to a request attribute :)
     let $setAttr := request:set-attribute("feed", $feed)
     let $action := request:get-parameter("action", "view")
-    let $log := util:log("WARN", ("FEED: ", $feed))
-    let $template := if ($feed) then theme:resolve(util:collection-name($feed), config:get-template($feed)) else ()
+    let $template := if ($feed) then theme:resolve(util:collection-name($feed), "feed.html") else ()
     return
         if ($feed) then
             switch ($action)

@@ -33,6 +33,7 @@ body { color: #222; background: url(../images/body.gif) repeat 50% 100%; }
     height: 70px; 
     width: 940px;
     color: white;
+    margin-left: -10px;
 }
 
 #navigation .btn-group { 
@@ -195,7 +196,6 @@ blockquote p { padding: 0 0 10px; }
 }
 
 .entries footer {
-    border-top: 1px solid #CCC;
 }
 
 .next-page {

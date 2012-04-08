@@ -42,6 +42,10 @@ declare variable $config:app-home :=
             request:get-uri()
 ;
 
+declare variable $config:exist-home := 
+    request:get-context-path()
+;
+
 (:
     Returns the configuration document for the wiki.
 :)
