@@ -35,7 +35,7 @@ declare function store:process-content($editType as xs:string, $content as xs:st
 
 declare function store:article() {
     let $name := request:get-parameter("name", ())
-    let $id := request:get-parameter("entryId", ())
+    let $id := request:get-parameter("id", ())
     let $published := request:get-parameter("published", current-dateTime())
     let $title := request:get-parameter("title", ())
     let $content := request:get-parameter("content", ())
@@ -44,7 +44,6 @@ declare function store:article() {
     let $collection := request:get-parameter("collection", ())
     let $resource := request:get-parameter("resource", ())
     let $storeSeparate := request:get-parameter("external", ())
-    let $isIndexPage := request:get-parameter("is-index", ())
     let $editor := request:get-parameter("editor", "wiki")
     let $editType := request:get-parameter("ctype", "html")
     let $contentParsed := store:process-content($editType, $content)
@@ -55,7 +54,6 @@ declare function store:article() {
             <atom:id>{$id}</atom:id>
             <wiki:id>{$name}</wiki:id>
             <wiki:editor>{$editor}</wiki:editor>
-            <wiki:is-index>{if (exists($isIndexPage)) then 'true' else 'false'}</wiki:is-index>
             <atom:published>{ $published }</atom:published>
             <atom:updated>{current-dateTime()}</atom:updated>
             <atom:author><atom:name>{ $author }</atom:name></atom:author>
@@ -190,7 +188,7 @@ declare function store:validate() {
 };
 
 let $action := request:get-parameter("action", "store")
-let $id := request:get-parameter("entryId", ())
+let $id := request:get-parameter("id", ())
 return
     if (request:get-parameter("validate", ())) then
         store:validate()

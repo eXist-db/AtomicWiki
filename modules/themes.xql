@@ -27,26 +27,59 @@ declare function theme:theme-for-feed($feed as xs:string) as xs:string? {
                     ()
 };
 
-declare function theme:resolve($feed as xs:string) as xs:string {
+declare function theme:locate($feed as xs:string) as xs:string {
     let $themeColl := theme:theme-for-feed($feed)
     return (
         request:set-attribute("templating.root", $themeColl),
         if ($themeColl) then
-            substring-after($themeColl, $config:app-root)
+            theme:create-path($themeColl)
         else
             ()
     )
 };
 
-declare function theme:resolve($feed as xs:string, $resource as xs:string) as xs:string {
+declare function theme:locate($feed as xs:string, $resource as xs:string) as xs:string {
     let $themeColl := theme:theme-for-feed($feed)
     return (
         request:set-attribute("templating.root", $themeColl),
         if ($themeColl) then
             let $collection := $themeColl || "/" || $resource
+            let $path :=
+                theme:create-path($collection)
+            let $log := util:log("WARN", ("PATH: ", $path))
             return
-                substring-after($collection, $config:app-root)
+                $path
         else
             ()
     )
+};
+
+declare function theme:create-path($collection as xs:string) {
+    if (starts-with($config:wiki-root, "/")) then
+        $collection
+    else
+        substring-after($collection, $config:app-root)
+};
+
+declare function theme:resolve-relative($collectionRel as xs:string, $resource as xs:string, $controller as xs:string) {
+    let $collectionAbs := $config:wiki-root || "/" || $collectionRel
+    let $resolved := theme:locate($collectionAbs, $resource)
+    let $url :=
+        if (starts-with($config:wiki-root, "/")) then
+            substring-after($resolved, "/db")
+        else
+            $controller || $resolved
+    return
+        $url
+};
+
+declare function theme:resolve($collectionAbs as xs:string, $resource as xs:string, $controller as xs:string) {
+    let $resolved := theme:locate($collectionAbs, $resource)
+    let $url :=
+        if (starts-with($config:wiki-root, "/")) then
+            substring-after($resolved, "/db")
+        else
+            $controller || $resolved
+    return
+        $url
 };
