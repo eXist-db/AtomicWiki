@@ -35,11 +35,12 @@ declare variable $config:app-root :=
 
 declare variable $config:app-home :=
     let $path := request:get-attribute("exist.path")
+    let $uri := replace(request:get-uri(), "^(.*)\??.*", "$1")
     return
         if (exists($path) and $path != "/") then
-            substring-before(request:get-uri(), $path)
+            substring-before($uri, $path)
         else
-            request:get-uri()
+            $uri
 ;
 
 declare variable $config:exist-home := 

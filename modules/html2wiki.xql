@@ -101,7 +101,10 @@ declare function html2wiki:transform($nodes as node()*) {
             case element(html:table) return
                 <t>{html2wiki:transform($node/node())}&#10;</t>
             case element(html:tr) return
-                <t>{"||" || string-join($node/(html:td|html:th), "||")}&#10;</t>
+                if ($node/html:th) then
+                    <t>{"!!" || string-join($node/html:th, "!!")}&#10;</t>
+                else
+                    <t>{"::" || string-join($node/html:td, "::")}&#10;</t>
             case document-node() return
                 html2wiki:transform($node/*)
             case element() return

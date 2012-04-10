@@ -475,6 +475,13 @@ table.permissions td {
     border-bottom: 1px solid white;
 }
 
+.box .markup-help ul {
+    margin-left: 0;
+}
+.box .markup-help li {
+    list-style: none;
+}
+
 .example {
     padding: 10px 10px;
     border: 1px solid #707070;

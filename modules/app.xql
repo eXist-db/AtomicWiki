@@ -204,7 +204,7 @@ declare function app:content($node as node(), $params as element(parameters)?, $
                 app:process-content($atomContent/@type, $content, $model)
             ),
             if ($model[2] gt 1 and $summary) then
-                <a class="label" href="?id={$model[1]/atom:id}">Read article ...</a>
+                <a class="label" href="{$model[1]/wiki:id}">Read article ...</a>
             else
                 ()
         )
@@ -442,4 +442,13 @@ declare function app:home-link($node as node(), $params as element(parameters)?,
     let $link := if ($target = "app") then $config:app-home else $config:exist-home
     return
         <a href="{$link}">{ $node/@*, templates:process($node/node(), $model)}</a>
+};
+
+declare function app:process-links($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $expanded := atomic:process-links($node)
+    return
+        element { node-name($node) } {
+            $node/@*,
+            templates:process($expanded/node(), $model)
+        }
 };

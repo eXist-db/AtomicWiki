@@ -10,86 +10,96 @@
     <atom:content type="xhtml">
         <div xmlns="http://www.w3.org/1999/xhtml">
             <h2>Headings</h2>
-            <p>
-                <code>=Heading1=</code>
-            </p>
-            <p>
-                <code>==Heading2==</code>
-            </p>
-            <p>
-                <code>===Heading3===</code>
-            </p>
+            <ul>
+                <li>
+                    <code>=Heading1=</code>
+                </li>
+                <li>
+                    <code>==Heading2==</code>
+                </li>
+                <li>
+                    <code>===Heading3===</code>
+                </li>
+            </ul>
             <h2>Inline</h2>
-            <p>
-                <code>**</code>
-                <span class="strong">strong</span>
-                <code>**</code>
-            </p>
-            <p>
-                <code>__</code>
-                <em>emphasis</em>
-                <code>__</code>
-            </p>
-            <p>
-                <code>$$</code>
-                <code>code</code>
-                <code>$$</code>
-            </p>
-            <p>
-                <code>^^</code>
-                <sup>superscript</sup>
-                <code>^^</code>
-            </p>
-            <p>
-                <code>~~</code>
-                <sub>subscript</sub>
-                <code>~~</code>
-            </p>
+            <ul>
+                <li>
+                    <code>**</code>
+                    <span class="strong">strong</span>
+                    <code>**</code>
+                </li>
+                <li>
+                    <code>__</code>
+                    <em>emphasis</em>
+                    <code>__</code>
+                </li>
+                <li>
+                    <code>$$</code>
+                    <code>code</code>
+                    <code>$$</code>
+                </li>
+                <li>
+                    <code>^^</code>
+                    <sup>superscript</sup>
+                    <code>^^</code>
+                </li>
+                <li>
+                    <code>~~</code>
+                    <sub>subscript</sub>
+                    <code>~~</code>
+                </li>
+            </ul>
             <h2>Blocks</h2>
-            <p>
-                <code>* unordered list item</code>
-            </p>
-            <p>
-                <code>+ numbered list item</code>
-            </p>
-            <p>
-                <code>{{{verbatim text}}}</code>
-            </p>
-            <p>
-                <code>|| table || cells ||</code>
-            </p>
-            <p>
-                <code>-- horizontal line</code>
-            </p>
-            <p>
-                <code>Q: quoted block</code>
-            </p>
-            <p>
-                <code>&gt; a quoted line</code>
-            </p>
-            <p>
-                <code>{{style='background-color: red'}}block</code>
-            </p>
+            <ul>
+                <li>
+                    <code>* unordered list item</code>
+                </li>
+                <li>
+                    <code>+ numbered list item</code>
+                </li>
+                <li>
+                    <code>{{{verbatim text}}}</code>
+                </li>
+                <li>
+                    <code>!! table !! head !!<br/>:: cell :: cell ::</code>
+                </li>
+                <li>
+                    <code>-- horizontal line</code>
+                </li>
+                <li>
+                    <code>Q: quoted block</code>
+                </li>
+                <li>
+                    <code>&gt; a quoted line</code>
+                </li>
+                <li>
+                    <code>{{style='background-color: red'}}block</code>
+                </li>
+            </ul>
             <h2>Links</h2>
-            <p>
-                <code>http://external.link/</code>
-            </p>
-            <p>
-                <code>[URL | label]</code>
-            </p>
-            <p>
-                <code>[/internal/path | label]</code>
-            </p>
+            <ul>
+                <li>
+                    <code>http://external.link/</code>
+                </li>
+                <li>
+                    <code>[URL | label]</code>
+                </li>
+                <li>
+                    <code>[/internal/path | label]</code>
+                </li>
+            </ul>
             <h2>Macros</h2>
-            <p>
-                <code>$image(src=path float=left|right)</code>
-            </p>
-            <p>
-                <code>{code lang="XQuery"} code block {/code}</code>
-            </p>
-            <p>
-                <code>{script} inline XQuery block {/script}</code>
-            </p>
+            <ul>
+                <li>
+                    <code>$image(src=path float=left|right)</code>
+                </li>
+                <li>
+                    <code>{code lang="XQuery"} code block {/code}</code>
+                </li>
+                <li>
+                    <code>{script} inline XQuery block {/script}</code>
+                </li>
+            </ul>
         </div>
     </atom:content>
 </atom:entry>

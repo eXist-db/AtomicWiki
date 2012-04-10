@@ -10,26 +10,13 @@ declare namespace html="http://www.w3.org/1999/xhtml";
 declare function atomic:process-links($node as node()) {
     typeswitch ($node)
         case element(html:img) return
-            let $src := $node/@src
-            return
-                if (matches($src, "^(/|\w+:).*")) then
-                    $node
-                else
-                    let $collection := substring-after(util:collection-name($node), concat($config:wiki-root, "/"))
-                    return
-                        <html:img src="{$config:app-home}{$config:wiki-data}/{$collection}/{$src}"/>
+            atomic:process-img($node)
+        case element(img) return
+            atomic:process-img($node)
         case element(html:a) return
-            let $href := $node/@href/string()
-            let $url :=
-                if (matches($href, "^\w+:.*")) then
-                    $href
-                else if (starts-with($href, "/")) then
-                    $config:app-home || $href
-                else
-                    $href
-            return
-                <html:a href="{$url}">{$node/node()}</html:a>
-                    
+            atomic:process-href($node)
+        case element(a) return
+            atomic:process-href($node)
         case element() return
             element { node-name($node) } {
                 $node/@*,
@@ -37,6 +24,30 @@ declare function atomic:process-links($node as node()) {
             }
         default return
             $node
+};
+
+declare function atomic:process-img($node as element()) {
+    let $src := $node/@src
+    return
+        if (matches($src, "^(/|\w+:).*")) then
+            $node
+        else
+            let $collection := substring-after(util:collection-name($node), concat($config:wiki-root, "/"))
+            return
+                <html:img src="{$config:app-home}{$config:wiki-data}/{$collection}/{$src}"/>
+};
+
+declare function atomic:process-href($node as element()) {
+    let $href := $node/@href/string()
+    let $url :=
+        if (matches($href, "^\w+:.*")) then
+            $href
+        else if (starts-with($href, "/")) then
+            $config:app-home || $href
+        else
+            $href
+    return
+        <html:a href="{$url}">{$node/node()}</html:a>
 };
 
 declare function atomic:create-feed() as element(atom:feed) {
