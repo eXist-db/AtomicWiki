@@ -38,8 +38,9 @@
                 <include name="modules/**"/>
                 <include name="resources/**"/>
                 <include name="templates/**"/>
-				<include name="data/_theme/**"/>
+                <include name="data/_theme/**"/>
                 <include name="data/help/**"/>
+                <include name="data/util/**"/>
                 <include name="data/feed.atom"/>
                 <include name="data/AtomicWikiWelcome.html"/>
                 <include name="data/AtomicWikiWelcome.atom"/>
@@ -71,7 +72,7 @@
         <copy todir="${scripts.ace}">
             <fileset dir="${ace.src}/build/src">
                 <exclude name="*-uncompressed.js"/>
-				<exclude name="*-noconflict.js"/>
+                <exclude name="*-noconflict.js"/>
             </fileset>
         </copy>
     </target>
