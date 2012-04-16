@@ -17,7 +17,14 @@ declare function local:get-content($entry as element(atom:entry)) {
 };
 
 let $feed := request:get-attribute("feed")
+let $start := request:get-parameter("start", 1)
+let $count := request:get-parameter("count", ())
 let $entries := config:get-entries($feed, (), ())
+let $part :=
+    if ($count) then
+        subsequence($entries, xs:int($start), xs:int($count))
+    else
+        $entries
 return
     element { node-name($feed) } {
         $feed/@*, $feed/*,
