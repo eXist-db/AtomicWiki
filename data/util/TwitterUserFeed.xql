@@ -39,7 +39,7 @@ declare function tc:update-timeline($userId as xs:string, $view as xs:string) {
 declare function tc:timeline($userId as xs:string, $view as xs:string) {
     let $feed := cache:get("twitter", $userId)
     return
-        if (exists($feed) and
+        if (exists($feed) and $feed instance of element() and
             (xs:dateTime($feed/atom:updated) + $tc:update-frequency) > current-dateTime()) then
             $feed
         else
