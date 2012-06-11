@@ -131,6 +131,5 @@ declare function html2wiki:macro-parameters($paramStr as xs:string?) {
 };
 
 declare function html2wiki:text($text as xs:string) {
-    replace($text, "\*", "\\*")
-
+    replace(replace($text, "\*", "\\*"), ":(\w)", "\\:$1")
 };
