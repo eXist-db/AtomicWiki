@@ -2,6 +2,7 @@ xquery version "3.0";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "modules/config.xqm";
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "modules/themes.xql";
+import module namespace login="http://exist-db.org/xquery/app/wiki/session" at "modules/login.xql";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace wiki="http://exist-db.org/xquery/wiki";
@@ -17,77 +18,8 @@ declare variable $local:error-handler :=
     </error-handler>
 ;
 
-(:~
-    Retrieve current user credentials from HTTP session
-:)
-declare function local:credentials-from-session() as xs:string* {
-    (session:get-attribute("wiki.user"), session:get-attribute("wiki.password"))
-};
-
-(:~
-    Store user credentials to session for future use. Return an XML
-    fragment to pass user and password to the query.
-:)
-declare function local:set-credentials($user as xs:string, $password as xs:string?) as element()* {
-    (: We have to call xmldb:login to set the user for the current query as well :)
-    if (xmldb:login("/db", $user, $password)) then (
-        session:set-attribute("wiki.user", $user), 
-        session:set-attribute("wiki.password", $password),
-        <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="xquery.user" value="{$user}"/>,
-        <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="xquery.password" value="{$password}"/>
-    ) else (
-        session:clear()
-    )
-};
-
-declare function local:login() {
-    let $user := request:get-parameter("user", ())
-    return
-        if ($user) then (
-            session:create(),
-            let $password := request:get-parameter("password", ())
-            let $loggedIn := xmldb:login("/db", $user, $password)
-            return
-                if ($loggedIn) then (
-                    session:set-attribute("wiki.user", $user), 
-                    session:set-attribute("wiki.password", $password)
-                ) else
-                    ()
-        ) else
-            ()
-};
-
-(:~
-    Check if login parameters were passed in the request. If yes, try to authenticate
-    the user and store credentials into the session. Clear the session if parameter
-    "logout" is set.
-    
-    The function returns an XML fragment to be included into the dispatch XML or
-    the empty set if the user could not be authenticated or the
-    session is empty.
-:)
-declare function local:set-user() as element()* {
-    session:create(),
-    let $user := request:get-parameter("user", ())
-    let $password := request:get-parameter("password", ())
-    let $logout := request:get-parameter("logout", ())
-    let $sessionCredentials := local:credentials-from-session()
-    return
-        if ($logout eq "logout") then
-            local:set-credentials((), ())
-        else if ($user) then
-            let $loggedIn := xmldb:login("/db", $user, $password)
-            return
-                if ($loggedIn) then
-                    local:set-credentials($user, $password)
-                else
-                    ()
-        else if (exists($sessionCredentials)) then
-            local:set-credentials($sessionCredentials[1], $sessionCredentials[2])
-        else
-            ()
-};
-
+declare variable $local:LOGIN_MAX_AGE := xs:duration("P0Y0M7D");
+declare variable $local:LOGIN_DOMAIN := "wiki";
 (:~
     Split the URL into collection and article. Returns a sequence with two strings:
     first is the collection, second the article (if specified)
@@ -95,8 +27,6 @@ declare function local:set-user() as element()* {
 declare function local:extract-feed($path as xs:string) {
     subsequence(text:groups($path, '^/?(.*)/([^/]*)$'), 2)
 };
-
-local:login(),
 
 (: preview edited articles :)
 if (ends-with($exist:resource, "preview.html")) then
@@ -120,7 +50,7 @@ else if (starts-with($exist:path, "/atom/")) then
     return
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$exist:controller}/modules/feeds.xql">
-            { local:set-user() }
+            { login:set-user($local:LOGIN_DOMAIN, $local:LOGIN_MAX_AGE) }
             </forward>
         </dispatch>
 
@@ -145,14 +75,14 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                 case "store" case "delete" return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{$exist:controller}/modules/store.xql">
-                        { local:set-user() }
+                        { login:set-user($local:LOGIN_DOMAIN, $local:LOGIN_MAX_AGE) }
                         </forward>
                         <view>
                             <forward url="{$template}" method="GET">
                                 <set-header name="Cache-Control" value="no-cache"/>
                             </forward>
                             <forward url="{$exist:controller}/modules/view.xql">
-                                { local:set-user() }
+                                { login:set-user($local:LOGIN_DOMAIN, $local:LOGIN_MAX_AGE) }
                                 <add-parameter name="wiki-id" value="{$relPath[2]}"/>
                             </forward>
                         </view>
@@ -175,7 +105,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                             {
                                 if ($editorParam) then
                                     <forward url="{$exist:controller}/modules/store.xql">
-                                    { local:set-user() }
+                                    { login:set-user($local:LOGIN_DOMAIN, $local:LOGIN_MAX_AGE) }
                                     </forward>
                                 else
                                     ()
@@ -185,7 +115,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                             </forward>
                             <view>
                                 <forward url="{$exist:controller}/modules/view.xql" absolute="no">
-                                    { local:set-user() }
+                                    { login:set-user($local:LOGIN_DOMAIN, $local:LOGIN_MAX_AGE) }
                                     <add-parameter name="wiki-id" value="{$relPath[2]}"/>
                                 </forward>
                             </view>
@@ -199,7 +129,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                         <view>
                             <forward url="{$exist:controller}/modules/view.xql">
                                 <set-attribute name="collection" value="{$config:wiki-root}/{$relPath[1]}"/>
-                                { local:set-user() }
+                                { login:set-user($local:LOGIN_DOMAIN, $local:LOGIN_MAX_AGE) }
                             </forward>
                         </view>
                         { $local:error-handler }
@@ -207,11 +137,11 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                 case "manage" return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{theme:resolve(util:collection-name($feed), 'manage.html', $exist:controller)}">
-                        { local:set-user() }
+                        { login:set-user($local:LOGIN_DOMAIN, $local:LOGIN_MAX_AGE) }
                         </forward>
                         <view>
                             <forward url="{$exist:controller}/modules/view.xql">
-                                { local:set-user() }
+                                { login:set-user($local:LOGIN_DOMAIN, $local:LOGIN_MAX_AGE) }
                                 <add-parameter name="wiki-id" value="{$relPath[2]}"/>
                             </forward>
                         </view>
@@ -220,7 +150,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                 default return
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{$template}">
-                            { local:set-user() }
+                            { login:set-user($local:LOGIN_DOMAIN, $local:LOGIN_MAX_AGE) }
                             <set-header name="Cache-Control" value="no-cache"/>
                             <!--set-header name="Cache-Control" value="max-age=3600"/-->
                         </forward>
@@ -239,12 +169,12 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                     return
                         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                             <forward url="{$exist:controller}/modules/store.xql">
-                            { local:set-user() }
+                            { login:set-user($local:LOGIN_DOMAIN, $local:LOGIN_MAX_AGE) }
                             </forward>
                             <view>
                                 <forward url="{theme:resolve($feedColl, 'feed.html', $exist:controller)}" method="GET"></forward>
                                 <forward url="{$exist:controller}/modules/view.xql">
-                                    { local:set-user() }
+                                    { login:set-user($local:LOGIN_DOMAIN, $local:LOGIN_MAX_AGE) }
                                     <set-attribute name="exist.path" value="{$exist:path}"/>
                                 </forward>
                             </view>
@@ -254,7 +184,7 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         <forward url="{theme:resolve($config:wiki-root || '/' || $relPath[1], 'unknown-feed.html', $exist:controller)}">
                             <set-header name="Cache-Control" value="no-cache"/>
-                            {  local:set-user() }
+                            {  login:set-user($local:LOGIN_DOMAIN, $local:LOGIN_MAX_AGE) }
                         </forward>
                         <view>
                             <forward url="{$exist:controller}/modules/view.xql">
