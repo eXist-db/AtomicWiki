@@ -31,17 +31,17 @@ declare function acl:change-collection-permissions($path as xs:string) {
     sm:chmod($path, "rwxrwxr-x")
 };
 
-declare function acl:show-permissions($node as node(), $params as element(parameters)?, $model as item()*) {
-    if (doc-available(document-uri(root($model[1])))) then
-        let $permissions := sm:get-permissions(document-uri(root($model[1])))
+declare function acl:show-permissions($node as node(), $model as map(*)) {
+    if (doc-available(document-uri(root($model("entry"))))) then
+        let $permissions := sm:get-permissions(document-uri(root($model("entry"))))
         let $processed := templates:copy-node($node, $model)
         return
-            acl:show-permissions($processed, $permissions/*)
+            acl:process-permissions($processed, $permissions/*)
     else
         templates:copy-node($node, $model)
 };
 
-declare function acl:show-permissions($node as node(), $permissions as element()) {
+declare %private function acl:process-permissions($node as node(), $permissions as element()) {
     typeswitch ($node)
         case element(input) return
             let $checked :=
@@ -60,7 +60,7 @@ declare function acl:show-permissions($node as node(), $permissions as element()
                 <input>{ $node/@*[local-name(.) != "checked"], if ($checked) then attribute checked { "checked" } else () }</input>
         case element() return
             element { node-name($node) } {
-                $node/@*, for $child in $node/node() return acl:show-permissions($child, $permissions)
+                $node/@*, for $child in $node/node() return acl:process-permissions($child, $permissions)
             }
         default return
             $node

@@ -167,6 +167,10 @@ blockquote p { padding: 0 0 10px; }
     text-align: right;
 }
 
+.actions .atom-link {
+    margin-right: 1em;
+}
+
 .item { 
     background: #FFFFFF;
     margin: 8px 0;
@@ -340,8 +344,14 @@ blockquote p { padding: 0 0 10px; }
     margin-left: 10px;
 }
 
-.content pre {
+.content pre.prettyprint {
+    padding: 10px 16px;
     margin-bottom: .85em;
+}
+
+#content .content pre.prettyprint li, #content code {
+    font-size: 105%;
+    line-height: 1.2em;
 }
 
 .content .example {
