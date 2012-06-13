@@ -39,7 +39,9 @@ if (ends-with($exist:resource, "preview.html")) then
 
 else if (ends-with($exist:resource, ".xql")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/modules/{$exist:resource}"/>
+        <forward url="{$exist:controller}/modules/{$exist:resource}">
+        { login:set-user($local:LOGIN_DOMAIN, $local:LOGIN_MAX_AGE) }
+        </forward>
     </dispatch>
 
 (: If URL starts with /atom, return the raw atom feed data :)
