@@ -245,7 +245,7 @@ declare function app:process-content($type as xs:string?, $content as item()?, $
 };
 
 declare function app:edit-link($node as node(), $model as map(*), $action as xs:string) {
-    <a href="?id={$model('entry')/atom:id}&amp;action={$action}">{ $node/@*[local-name(.) != 'href'], $node/node() }</a>
+    <a href="{$model('entry')/wiki:id}?action={$action}">{ $node/@*[local-name(.) != 'href'], $node/node() }</a>
 };
 
 declare function app:action-button($node as node(), $model as map(*), $action as xs:string?) {

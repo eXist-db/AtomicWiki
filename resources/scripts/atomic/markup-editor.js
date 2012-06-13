@@ -5,6 +5,24 @@ $(document).ready(function() {
     
     var form = $("#edit-form");
     
+    function save(onSuccess) {
+        $("input[name='action']", form).val("store");
+        summaryEditor.update();
+        contentEditor.update();
+        var data = form.serialize();
+        $.ajax({
+            type: "POST",
+		    url: "modules/store.xql",
+		    data: data,
+            dataType: "json",
+            success: function (data) {
+                if (onSuccess) {
+                    onSuccess();
+                }
+            }
+        });
+    }
+    
     $("#editor-tabs a[href='#preview']").on('show', function (e) {
         // update the preview tab
         summaryEditor.update();
@@ -21,19 +39,16 @@ $(document).ready(function() {
     });
     
     $("#edit-form-saveAndClose").click(function(ev) {
-        $("input[name='action']", form).val("store");
-        return true;
+        var name = $("input[name='name']").val();
+        save(function() {
+            $.log("Data stored. Switching to %s", name);
+            window.location = name;
+        });
+        return false;
     });
     $("#edit-form-save").click(function (ev) {
         ev.preventDefault();
-        summaryEditor.update();
-        contentEditor.update();
-        var data = form.serialize();
-        $.ajax({
-		    type: "POST",
-		    url: "modules/store.xql",
-		    data: data
-        });
+        save();
     });
     $("#editor-switch").click(function(ev) {
         ev.preventDefault();
