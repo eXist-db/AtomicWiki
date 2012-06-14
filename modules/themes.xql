@@ -46,7 +46,6 @@ declare function theme:locate($feed as xs:string, $resource as xs:string) as xs:
             let $collection := $themeColl || "/" || $resource
             let $path :=
                 theme:create-path($collection)
-            let $log := util:log("WARN", ("PATH: ", $path))
             return
                 $path
         else

@@ -20,15 +20,16 @@ let $feed := request:get-attribute("feed")
 let $start := request:get-parameter("start", 1)
 let $count := request:get-parameter("count", ())
 let $entries := config:get-entries($feed, (), ())
+let $sorted := for $entry in $entries order by xs:dateTime($entry/atom:published) descending return $entry
 let $part :=
     if ($count) then
-        subsequence($entries, xs:int($start), xs:int($count))
+        subsequence($sorted, xs:int($start), xs:int($count))
     else
-        $entries
+        $sorted
 return
     element { node-name($feed) } {
         $feed/@*, $feed/*,
-        for $entry in $entries
+        for $entry in $part
         return
             local:get-content($entry)
     }
