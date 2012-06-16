@@ -7,7 +7,7 @@ import module namespace cache="http://exist-db.org/xquery/cache" at "java:org.ex
 declare %private function login:store-credentials($user as xs:string, $password as xs:string,
     $maxAge as xs:duration?) as xs:string {
     let $token := util:uuid($password)
-    let $expires := if (exists($maxAge)) then util:system-dateTime() + $maxAge else ()
+    let $expires := if (empty($maxAge)) then () else util:system-dateTime() + $maxAge
     let $newEntry := map {
         "token" := $token, 
         "user" := $user, 
@@ -18,10 +18,6 @@ declare %private function login:store-credentials($user as xs:string, $password 
         $token,
         cache:put("xquery.login.users", $token, $newEntry)
     )[1]
-};
-
-declare function login:debug($entry as map(*)) {
-    $entry("user") || ", " || login:is-valid($entry) || ", " || $entry("expires")
 };
 
 declare %private function login:is-valid($entry as map(*)) {
@@ -52,17 +48,17 @@ declare %private function login:get-credentials($domain as xs:string, $token as 
 
 declare %private function login:create-login-session($domain as xs:string, $user as xs:string, $password as xs:string,
     $maxAge as xs:duration?) {
+    util:log("WARN", ("Duration: ", empty($maxAge))),
     login:with-login($user, $password, function() {
-        let $duration := request:get-parameter("duration", ())
         let $token := login:store-credentials($user, $password, $maxAge)
         return (
-            if (exists($maxAge)) then
-                response:set-cookie($domain, $token, $maxAge, false())
-            else
-                response:set-cookie($domain, $token),
             <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="{$domain}.user" value="{$user}"/>,
             <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="xquery.user" value="{$user}"/>,
-            <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="xquery.password" value="{$password}"/>
+            <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="xquery.password" value="{$password}"/>,
+            if (empty($maxAge)) then
+                response:set-cookie($domain, $token)
+            else
+                response:set-cookie($domain, $token, $maxAge, false())
         )
     })
 };
@@ -82,17 +78,23 @@ declare %private function login:clear-credentials($token as xs:string) {
     the empty set if the user could not be authenticated or the
     session is empty.
 :)
-declare function login:set-user($domain as xs:string, $maxAge as xs:dayTimeDuration) as element()* {
+declare function login:set-user($domain as xs:string, $maxAge as xs:duration?) as element()* {
     session:create(),
     let $user := request:get-parameter("user", ())
     let $password := request:get-parameter("password", ())
     let $logout := request:get-parameter("logout", ())
+    let $durationParam := request:get-parameter("duration", ())
+    let $duration :=
+        if ($durationParam) then
+            xs:duration($durationParam)
+        else
+            $maxAge
     let $cookie := request:get-cookie-value($domain)
     return
         if ($logout eq "logout") then
             login:clear-credentials($cookie)
         else if ($user) then
-            login:create-login-session($domain, $user, $password, $maxAge)
+            login:create-login-session($domain, $user, $password, $duration)
         else if (exists($cookie)) then
             login:get-credentials($domain, $cookie)
         else
