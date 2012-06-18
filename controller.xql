@@ -18,8 +18,9 @@ declare variable $local:error-handler :=
     </error-handler>
 ;
 
-declare variable $local:LOGIN_MAX_AGE := xs:duration("PT2M");
+declare variable $local:LOGIN_MAX_AGE := ();
 declare variable $local:LOGIN_DOMAIN := "wiki";
+
 (:~
     Split the URL into collection and article. Returns a sequence with two strings:
     first is the collection, second the article (if specified)

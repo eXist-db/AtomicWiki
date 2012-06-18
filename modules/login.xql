@@ -5,7 +5,7 @@ module namespace login="http://exist-db.org/xquery/app/wiki/session";
 import module namespace cache="http://exist-db.org/xquery/cache" at "java:org.exist.xquery.modules.cache.CacheModule";
 
 declare %private function login:store-credentials($user as xs:string, $password as xs:string,
-    $maxAge as xs:duration?) as xs:string {
+    $maxAge as xs:dayTimeDuration?) as xs:string {
     let $token := util:uuid($password)
     let $expires := if (empty($maxAge)) then () else util:system-dateTime() + $maxAge
     let $newEntry := map {
@@ -47,7 +47,7 @@ declare %private function login:get-credentials($domain as xs:string, $token as 
 };
 
 declare %private function login:create-login-session($domain as xs:string, $user as xs:string, $password as xs:string,
-    $maxAge as xs:duration?) {
+    $maxAge as xs:dayTimeDuration?) {
     util:log("WARN", ("Duration: ", empty($maxAge))),
     login:with-login($user, $password, function() {
         let $token := login:store-credentials($user, $password, $maxAge)
@@ -78,7 +78,7 @@ declare %private function login:clear-credentials($token as xs:string) {
     the empty set if the user could not be authenticated or the
     session is empty.
 :)
-declare function login:set-user($domain as xs:string, $maxAge as xs:duration?) as element()* {
+declare function login:set-user($domain as xs:string, $maxAge as xs:dayTimeDuration?) as element()* {
     session:create(),
     let $user := request:get-parameter("user", ())
     let $password := request:get-parameter("password", ())
@@ -86,7 +86,7 @@ declare function login:set-user($domain as xs:string, $maxAge as xs:duration?) a
     let $durationParam := request:get-parameter("duration", ())
     let $duration :=
         if ($durationParam) then
-            xs:duration($durationParam)
+            xs:dayTimeDuration($durationParam)
         else
             $maxAge
     let $cookie := request:get-cookie-value($domain)
