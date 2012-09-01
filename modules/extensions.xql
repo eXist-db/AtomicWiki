@@ -28,23 +28,27 @@ declare function ext:script($node as node(), $model as map(*)) {
             util:collection-name($data),
             concat($config:wiki-root, "/")
         )
-    return
+    return 
         util:eval($code)
 };
 
 declare 
     %templates:default("edit", "no")
-function ext:code($node as node(), $model as map(*), $lang as xs:string?, $edit as xs:string) {
+function ext:code($node as node(), $model as map(*), $lang as xs:string?, $edit as xs:string, $action as xs:string?) {
     let $syntax := $lang
     let $source := replace($node/string(), "^\s*(.*)\s*$", "$1")
     let $context := request:get-context-path()
-    return (
-        <pre class="prettyprint linenums"><code class="{if ($syntax) then 'language-' || $syntax else ''}">{$source}</code></pre>,
-        if ($edit = ("yes", "true")) then
-            <a class="btn" href="{$context}/eXide/index.html?snip={encode-for-uri($source)}" target="eXide"
-                title="Opens the code in eXide in new tab or existing tab if it is already open.">Edit</a>
-        else
-            ()
-(:        <pre class="brush: {if ($syntax) then $syntax else 'text'}">{$node/string()}</pre>:)
-    )
+    return
+        switch ($action)
+            case "edit" return
+                <pre class="ext:code?lang={$syntax}" data-language="{$syntax}">{$source}</pre>
+            default return (
+                (:        <pre class="brush: {if ($syntax) then $syntax else 'text'}">{$node/string()}</pre>:)
+                <pre class="prettyprint linenums"><code class="{if ($syntax) then 'language-' || $syntax else ''}">{$source}</code></pre>,
+                if ($edit = ("yes", "true")) then
+                    <a class="btn" href="{$context}/eXide/index.html?snip={encode-for-uri($source)}" target="eXide"
+                        title="Opens the code in eXide in new tab or existing tab if it is already open.">Edit</a>
+                else
+                    ()
+            )
 };

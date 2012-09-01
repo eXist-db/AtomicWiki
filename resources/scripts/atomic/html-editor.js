@@ -39,13 +39,16 @@ Aloha.ready( function() {
     });
     
     $("#edit-form-saveAndClose").click(function(ev) {
+        updateForm();
         $("input[name='action']", form).val("store");
-        return true;
+        form.submit();
+        return false;
     });
     $("#edit-form-save").click(function (ev) {
         ev.preventDefault();
         
         updateForm();
+        $("input[name='action']", form).val("store");
         var data = form.serialize();
         $.ajax({
 		    type: "POST",

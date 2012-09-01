@@ -6,9 +6,9 @@ xquery version "3.0";
  :)
 module namespace config="http://exist-db.org/xquery/apps/config";
 
-import module namespace wiki="http://exist-db.org/xquery/wiki" at "java:org.exist.xquery.modules.wiki.WikiModule";
 import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
 
+declare namespace wiki="http://exist-db.org/xquery/wiki";
 declare namespace repo="http://exist-db.org/xquery/repo";
 declare namespace expath="http://expath.org/ns/pkg";
 declare namespace atom="http://www.w3.org/2005/Atom";

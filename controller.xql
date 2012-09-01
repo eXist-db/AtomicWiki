@@ -38,6 +38,11 @@ if (ends-with($exist:resource, "preview.html")) then
         </view>
     </dispatch>
 
+else if ($exist:resource = "code-edit.html") then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/data/_theme/code-edit.html"/>
+    </dispatch>
+    
 else if (ends-with($exist:resource, ".xql")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/modules/{$exist:resource}">

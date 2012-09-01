@@ -195,8 +195,8 @@ declare %private function templates:map-argument($arg as element(argument), $par
     let $type := $arg/@type/string()
     let $param := 
         (
-            request:get-parameter($var, ()), 
             $parameters/param[@name = $var]/@value,
+            request:get-parameter($var, ()), 
             templates:arg-from-annotation($var, $arg)
         )[1]
     let $data :=

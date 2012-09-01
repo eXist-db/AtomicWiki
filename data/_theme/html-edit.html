@@ -5,10 +5,10 @@
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
-        <link rel="stylesheet" href="resources/scripts/aloha/css/aloha.css" id="aloha-style-include" type="text/css"/>
+        <link href="http://cdn.aloha-editor.org/latest/css/aloha.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="templates:surround?with=templates/page.html&amp;at=container-body&amp;using=body">
-        <div class="span9">
+        <div class="span12">
             <div class="app:feed">
                 <div class="app:get-or-create-entry entries">
                     <div id="edit" class="edit">
@@ -97,29 +97,20 @@
                 </div>
             </div>
         </div>
-        <div class="span3">
-            <div class="box">
-                <div class="app:entry?feed=help&amp;entry=MarkupHelp">
-                    <h3 class="app:title entrytitle"/>
-                    <div class="app:content content"/>
-                </div>
-            </div>
-        </div>
-        <script type="text/javascript" src="libs/scripts/jquery/jquery-1.7.1.min.js"/>
-        <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
-        <script type="text/javascript" src="resources/scripts/prettify/prettify.js"/>
+        <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/vendor/jquery-1.7.2.js"/>
+        <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/require.js"/>
         <script type="text/javascript">
         var Aloha = window.Aloha || ( window.Aloha = {} );
         (function (window) {
             Aloha.settings = {    
                 logLevels: { 'error': true, 'warn': true, 'info': true, 'debug': false, 'deprecated': true },
-                errorhandling: false,
+                errorhandling: true,
                 ribbon: false,
             	locale: 'en',
             	floatingmenu: {
         			"horizontalOffset" : "5",
         			"behaviour" : "topalign",
-                    "width" : "620",
+                    "width" : "680",
         			"topalignOffset" : "110" 
             	},
                 plugins: {
@@ -133,18 +124,23 @@
                         },
                         // those are the tags that will be cleaned when clicking "remove formatting"
                         removeFormats : [ 'strong', 'em', 'b', 'code', 'i', 'cite', 'q', 'code', 'abbr', 'del', 'sub', 'sup']
+                    },
+                    environment: {
+                        config: {}
                     }
                 },
                 sidebar: {
             		disabled: true
         		},
                 bundles: {
-                    user: '../../atomic/aloha'
+                    "user": 'http://localhost:8080/exist/apps/wiki/resources/scripts/atomic/aloha/'
                 }
-            };
+            }
         } )(window);
         </script>
-        <script src="resources/scripts/aloha/lib/aloha.js" data-aloha-plugins="common/format,common/list,common/link,common/dom-to-xhtml,user/environment"/>
+        <script src="http://cdn.aloha-editor.org/latest/lib/aloha.js" data-aloha-plugins="common/ui, common/block, common/paste, common/format, common/list, common/link, common/table, common/dom-to-xhtml, common/highlighteditables, user/environment"/>
+        <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
+        <script type="text/javascript" src="resources/scripts/prettify/prettify.js"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
         <script src="resources/scripts/atomic/html-editor.js" type="text/javascript" charset="utf-8"/>
     </body>

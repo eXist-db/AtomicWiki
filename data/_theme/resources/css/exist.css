@@ -516,3 +516,7 @@ table.permissions td {
 .aloha-editable:hover {
     outline: 1px solid #F8B316;
 }
+
+.aloha-editable-active .aloha-block, .aloha-block.aloha-block-highlighted {
+    box-shadow: 0 !important;
+}

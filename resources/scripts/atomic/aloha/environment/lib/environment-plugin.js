@@ -1,15 +1,63 @@
-define( [
-    'aloha',
-	'aloha/jquery',
-	'aloha/plugin',
-	'aloha/floatingmenu',
-	'i18n!aloha/nls/i18n',
-    "css!environment/css/environment.css"
-], function ( Aloha, jQuery, Plugin, FloatingMenu, i18nCore ) {
-	
-	
-	var GENTICS = window.GENTICS;
+define(
+    ['aloha', 'aloha/plugin', 'jquery', 'ui/ui', 'ui/ui-plugin', 'ui/utils', 'ui/toggleButton', 
+        'block/blockmanager', 'block/block',
+        'ui/port-helper-multi-split', 'i18n!format/nls/i18n', 'i18n!aloha/nls/i18n', 'aloha/console',
+         "css!environment/css/environment.css"],
+function(Aloha, Plugin, jQuery, UI, UIPlugin, Utils, ToggleButton, BlockManager, block, MultiSplitButton, i18n, i18nCore) {
 
+    var CodeBlock = function($element) {
+        console.log("Initializing block");
+        var self = this;
+        
+        this.container = $element;
+    };
+    
+    CodeBlock.prototype.activate = function() {
+        var self = this;
+        
+        this.language = self.container.data("language");
+        var data = self.container.text();
+        
+        console.log("Activating source block. Language: %s", this.language);
+        
+        var div = document.createElement("div");
+        div.setAttribute("data-block-skip-scope", "true");
+
+        var iframe = document.createElement("iframe");
+        iframe.src = "code-edit.html";
+        iframe.style.width = "98%";
+        $(iframe).load(function() {
+            $("#editor", this.contentWindow.document).text(data);
+            self.editor = new this.contentWindow.Editor(self.language);
+        });
+        div.appendChild(iframe);
+        
+        self.container.replaceWith(div);
+        self.container = $(div);
+        
+		self.container.alohaBlock();
+    };
+    
+    CodeBlock.prototype.deactivate = function() {
+        console.log("Deactivating");
+        var code = this.editor.getData();
+        
+        var parent = this.container.parent();
+    	if (parent.mahaloBlock) {
+			parent.mahaloBlock();
+		}
+        
+        var pre = document.createElement("pre");
+        pre.setAttribute("data-language", this.language);
+        pre.className = "ext:code?lang=" + this.language;
+        pre.appendChild(document.createTextNode(code));
+        
+        this.container.replaceWith(pre);
+        
+        this.container = null;
+        this.editor = null;
+    };
+    
 	/**
 	 * register the plugin with unique name
 	 */
@@ -17,7 +65,7 @@ define( [
 		/**
 		 * Configure the available languages
 		 */
-		languages: [ 'en' ],
+		languages: [ 'en', 'de' ],
 
 		/**
 		 * default button configuration
@@ -28,14 +76,44 @@ define( [
 		 * Initialize the plugin and set initialize flag on true
 		 */
 		init: function () {
+            var self = this;
+            this.registry = [];
+            
 			this.createButtons();
+			
+            Aloha.bind( 'aloha-editable-activated', function (event, properties) {
+                properties.editable.obj.find("pre").each(function() {
+                    var codeBlock = new CodeBlock(Aloha.jQuery(this));
+                    codeBlock.activate();
+                    self.registry.push(codeBlock);
+                });
+            });
+            Aloha.bind( 'aloha-editable-deactivated', function (event, properties) {
+                console.log("deactivate source block");
+                for (var i = 0; i < self.registry.length; i++) {
+                	self.registry[i].deactivate();
+                }
+                self.registry = [];
+            });
 		},
-
+        
+        activateSelected: function(lang) {
+            var self = this;
+            var pre = jQuery("<pre class=\"ext:code?lang=" + lang + "\" data-language=\"" + lang + "\"></pre>");
+            Aloha.Selection.changeMarkupOnSelection(pre);
+            Aloha.activeEditable.obj.find("pre").each(function() {
+                var codeBlock = new CodeBlock(Aloha.jQuery(this));
+                codeBlock.activate();
+                self.registry.push(codeBlock);
+            });
+        },
+        
 		/**
 		 * Initialize the buttons
 		 */
 		createButtons: function () {
-		    var $this = this;
+		    var self = this;
+            console.log("Init button");
 
 		    // format Abbr Button
 		    // this button behaves like a formatting button like (bold, italics, etc)
@@ -43,34 +121,46 @@ define( [
 		    	'name' : 'xquery',
 		        'iconClass' : 'code-button-xquery',
 		        'click' : function () {
-    	            Aloha.Selection.changeMarkupOnSelection(jQuery("<pre class=\"codeblock ext:code?lang=xquery\"></pre>"));
+                    self.activateSelected("xquery");
 		        },
 		        'tooltip' : "XQuery Code"
 		    }, {
     	       'name' : 'xml',
     	        'iconClass' : 'code-button-xml',
 		        'click' : function () {
-    	            Aloha.Selection.changeMarkupOnSelection(jQuery("<pre class=\"ext:code?lang=xml\"></pre>"))      
+    	            self.activateSelected("xml");
 		        },
 		        'tooltip' : "XML Code"
 		    }, {
                'name' : 'java',
     	        'iconClass' : 'code-button-java',
 		        'click' : function () {
-    	            Aloha.Selection.changeMarkupOnSelection(jQuery("<pre class=\"ext:code?lang=java\"></pre>"))      
+    	            self.activateSelected("java");
 		        },
-		        'tooltip' : "XML Code"
+		        'tooltip' : "Java Code"
 		    }];
-			this.multiSplitButton = new Aloha.ui.MultiSplitButton({
-				'name' : 'environments',
-				'items' : this.formats
+            this.multiSplitButton = MultiSplitButton({
+				name: 'formatBlock',
+				items: this.formats,
+                scope: 'Aloha.continuoustext',
+                hideIfEmpty: true,
+                width: "200"
 			});
-			FloatingMenu.addButton(
-				'Aloha.continuoustext',
-				this.multiSplitButton,
-				"Format",
-				2
-			);
+		},
+        
+        subscribeEvents: function() {
+        },
+        
+        makeClean: function ( obj ) {
+    		// nothing to do...
+		},
+
+		/**
+		* toString method
+		* @return string
+		*/
+		toString: function () {
+			return 'environment';
 		}
 	});
 });
