@@ -34,7 +34,7 @@ declare function atomic:process-img($node as element()) {
         else
             let $collection := substring-after(util:collection-name($node), concat($config:wiki-root, "/"))
             return
-                <html:img src="{$config:app-home}{$config:wiki-data}/{$collection}/{$src}"/>
+                <html:img src="{$src}"/>
 };
 
 declare function atomic:process-href($node as element()) {
@@ -43,7 +43,7 @@ declare function atomic:process-href($node as element()) {
         if (matches($href, "^\w+:.*")) then
             $href
         else if (starts-with($href, "/")) then
-            $config:app-home || $href
+            $config:base-url || $href
         else
             $href
     return
@@ -78,6 +78,8 @@ declare function atomic:get-content($content as element(atom:content), $eval as 
                 switch ($content/@type)
                     case "html" case "xhtml" return
                         doc($path)/*
+                    case "xquery" return
+                        xs:anyURI($path)
                     default return
                         util:binary-to-string(util:binary-doc($path))
         else

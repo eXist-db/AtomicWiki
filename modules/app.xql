@@ -462,3 +462,9 @@ declare function app:atom-link($node as node(), $model as map(*)) {
             { templates:process($node/*, $model) }
         </a>
 };
+
+declare function app:ajax($node as node(), $model as map(*), $href as xs:anyURI) {
+    let $id := "_t" || util:uuid()
+    return
+        <a id="{$id}" href="{$href}" class="load-async">{ $node/node() }</a>
+};

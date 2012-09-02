@@ -102,9 +102,9 @@ declare function html2wiki:transform($nodes as node()*) {
                 <t>{html2wiki:transform($node/node())}&#10;</t>
             case element(html:tr) return
                 if ($node/html:th) then
-                    <t>{"!!" || string-join($node/html:th, "!!")}&#10;</t>
+                    <t>{"!!" || html2wiki:text(string-join($node/html:th, "!!"))}&#10;</t>
                 else
-                    <t>{"::" || string-join($node/html:td, "::")}&#10;</t>
+                    <t>{"::" || html2wiki:text(string-join($node/html:td, "::"))}&#10;</t>
             case document-node() return
                 html2wiki:transform($node/*)
             case element() return
@@ -131,5 +131,5 @@ declare function html2wiki:macro-parameters($paramStr as xs:string?) {
 };
 
 declare function html2wiki:text($text as xs:string) {
-    replace(replace($text, "\*", "\\*"), ":(\w)", "\\:$1")
+    replace(replace($text, "\*", "\\*"), "(\w+):(\w+)", "$1\\:$2")
 };

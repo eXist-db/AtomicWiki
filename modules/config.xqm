@@ -1,14 +1,15 @@
 xquery version "3.0";
 
+
 (:~
  : A set of helper functions to access the application context from
  : within a module.
  :)
 module namespace config="http://exist-db.org/xquery/apps/config";
 
+import module namespace wiki="http://exist-db.org/xquery/wiki" at "java:org.exist.xquery.modules.wiki.WikiModule";
 import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
 
-declare namespace wiki="http://exist-db.org/xquery/wiki";
 declare namespace repo="http://exist-db.org/xquery/repo";
 declare namespace expath="http://expath.org/ns/pkg";
 declare namespace atom="http://www.w3.org/2005/Atom";
@@ -43,6 +44,8 @@ declare variable $config:app-home :=
         else
             $uri
 ;
+
+declare variable $config:base-url := "";
 
 declare variable $config:exist-home := 
     request:get-context-path()
@@ -109,10 +112,10 @@ declare function config:feed-url-from-entry($entry as element(atom:entry)) {
     let $appPath := request:get-attribute("exist.path")
     let $base := $config:app-home
     let $feed :=
-        if (ends-with($config:app-home, "/")) then
-            concat($config:app-home, $path)
+        if (ends-with($config:base-url, "/")) then
+            concat($config:base-url, $path)
         else
-            concat($config:app-home, "/", $path)
+            concat($config:base-url, "/", $path)
     return
         if (ends-with($feed, "/")) then
             $feed
@@ -128,7 +131,7 @@ declare function config:atom-url-from-feed($feed as element(atom:feed)) {
     let $collection := util:collection-name($feed)
     let $relPath := substring-after($collection, concat($config:wiki-root, "/"))
     return
-        concat($config:app-home, "/atom/", $relPath, "/")
+        concat($config:base-url, "/atom/", $relPath, "/")
 };
 
 declare function config:resolve-feed($feed as xs:string) {
@@ -146,6 +149,10 @@ declare %private function config:resolve-feed-helper($path as xs:string, $recurs
             config:resolve-feed-helper(replace($path, "^(.*)/[^/]+$", "$1"), $recurse)
         else
             ()
+};
+
+declare function config:resolve-resource($feed as xs:string, $resource as xs:string) {
+    concat(substring-after($config:wiki-root, "/db"), "/", $feed, "/", $resource)
 };
 
 declare function config:get-entries($feed as element(atom:feed), $id as xs:string?,
