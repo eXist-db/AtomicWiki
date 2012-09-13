@@ -203,6 +203,7 @@ declare function app:publication-date($node as node(), $model as map(*)) {
 declare function app:content($node as node(), $model as map(*)) {
     element { node-name($node) } {
         $node/@*,
+        attribute id { $model("entry")/atom:id },
         let $summary := $model("entry")/atom:summary
         let $atomContent := $model("entry")/atom:content
         let $content := atomic:get-content($atomContent, true())

@@ -5,7 +5,7 @@
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
-        <link href="http://cdn.aloha-editor.org/latest/css/aloha.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/scripts/aloha/css/aloha.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="templates:surround?with=templates/page.html&amp;at=container-body&amp;using=body">
         <div class="span12">
@@ -97,8 +97,8 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/vendor/jquery-1.7.2.js"/>
-        <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/require.js"/>
+        <script type="text/javascript" src="resources/scripts/aloha/require.js"/>
+        <script type="text/javascript" src="libs/scripts/jquery/jquery-1.7.1.min.js"/>
         <script type="text/javascript">
         var Aloha = window.Aloha || ( window.Aloha = {} );
         (function (window) {
@@ -133,12 +133,12 @@
             		disabled: true
         		},
                 bundles: {
-                    "user": 'http://localhost:8080/exist/apps/wiki/resources/scripts/atomic/aloha/'
+                    "user": '../../../../resources/scripts/atomic/aloha/'
                 }
             }
         } )(window);
         </script>
-        <script src="http://cdn.aloha-editor.org/latest/lib/aloha.js" data-aloha-plugins="common/ui, common/block, common/paste, common/format, common/list, common/link, common/table, common/dom-to-xhtml, common/highlighteditables, user/environment"/>
+        <script src="resources/scripts/aloha/lib/aloha.js" data-aloha-plugins="common/ui, common/block, common/paste, common/format, common/list, common/link, common/table, common/dom-to-xhtml, common/highlighteditables, user/environment"/>
         <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
         <script type="text/javascript" src="resources/scripts/prettify/prettify.js"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>

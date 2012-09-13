@@ -3,6 +3,8 @@ xquery version "3.0";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "modules/config.xqm";
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "modules/themes.xql";
 import module namespace login="http://exist-db.org/xquery/app/wiki/session" at "modules/login.xql";
+import module namespace restxq="http://exist-db.org/xquery/restxq" at "modules/restxq.xql";
+import module namespace anno="http://exist-db.org/annotations" at "modules/annotations.xql";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace wiki="http://exist-db.org/xquery/wiki";
@@ -29,8 +31,11 @@ declare function local:extract-feed($path as xs:string) {
     subsequence(text:groups($path, '^/?(.*)/([^/]*)$'), 2)
 };
 
+if (starts-with($exist:path, "/_annotations") or starts-with($exist:path, "/_get")) then
+    restxq:process($exist:path, util:list-functions("http://exist-db.org/annotations"))
+    
 (: preview edited articles :)
-if (ends-with($exist:resource, "preview.html")) then
+else if (ends-with($exist:resource, "preview.html")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/preview.html"/>
         <view>

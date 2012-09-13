@@ -1,36 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div class="templates:surround?with=templates/page.html&amp;at=content">
-    <div class="app:feed">
-        <div class="app:entries?count=5 entries">
-            <div class="entry">
-                <div class="entryhead">
-                    <div class="templates:if-attribute-set?attribute=wiki.user">
-                        <div class="edit-toolbar btn-group">
-                            <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"/>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="app:edit-link?action=edit">
-                                        <i class="icon-plus"/> Edit</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="app:action-button?action=delete" id="delete-article">
-                                        <i class="icon-trash"/> Delete</a>
-                                </li>
-                            </ul>
+<html>
+    <head>
+        <title>Atomic Wiki</title>
+        <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
+        <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
+        <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript" src="libs/scripts/jquery/jquery-1.7.1.min.js"/>
+        <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
+        <script type="text/javascript" src="resources/scripts/prettify/prettify.js"/>
+        <script type="text/javascript" src="resources/scripts/rangy-core.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery.color.js"/>
+        <script src="resources/scripts/wysihtml5/wysihtml5-0.3.0.min.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/wysihtml5/advanced.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/annotations/util.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/annotations/editor.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/annotations/annotate.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
+    </head>
+    <body class="templates:surround?with=templates/page.html&amp;at=content&amp;using=body">
+        <div class="app:feed">
+            <div class="app:entries?count=5 entries">
+                <div class="entry">
+                    <div class="entryhead">
+                        <div class="templates:if-attribute-set?attribute=wiki.user">
+                            <div class="edit-toolbar btn-group">
+                                <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"/>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="app:edit-link?action=edit">
+                                            <i class="icon-plus"/> Edit</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="app:action-button?action=delete" id="delete-article">
+                                            <i class="icon-trash"/> Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <h3 class="app:title entrytitle"/>
+                        <div class="author-date">
+                            by <span class="app:author"/> at <span class="app:publication-date-full"/>
                         </div>
                     </div>
-                    <h3 class="app:title entrytitle"/>
-                    <div class="author-date">
-                        by <span class="app:author"/> at <span class="app:publication-date-full"/>
-                    </div>
+                    <div class="app:content content annotatable"/>
                 </div>
-                <div class="app:content content"/>
+                <footer>
+                    <a class="app:previous-page previous-entries">Newer entries</a>
+                    <a class="app:next-page">Older entries</a>
+                </footer>
             </div>
-            <footer>
-                <a class="app:previous-page previous-entries">Newer entries</a>
-                <a class="app:next-page">Older entries</a>
-            </footer>
         </div>
-    </div>
-</div>
+        <div class="modal fade" id="annotationDialog">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">
+                    <i class="icon-remove"/>
+                </a>
+                <h3>Add Annotation</h3>
+            </div>
+            <div class="modal-body">
+                <div class="annotations"/>
+                <form class="editor-form">
+                    <div id="annotation-editor-toolbar" style="display: none;" class="header">
+                        <a data-wysihtml5-command="bold"/>
+                        <a data-wysihtml5-command="italic"/>
+                        <a data-wysihtml5-command="createLink"/>
+                        <div data-wysihtml5-dialog="createLink" style="display: none;">
+                            <label>Link:
+                                <input data-wysihtml5-dialog-field="href" value="http://" class="text"/>
+                            </label>
+                            <a data-wysihtml5-dialog-action="save">OK</a>
+                            <a data-wysihtml5-dialog-action="cancel">Cancel</a>
+                        </div>
+                        <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1"/>
+                        <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h2"/>
+                        <a data-wysihtml5-command="insertUnorderedList"/>
+                        <a data-wysihtml5-command="insertOrderedList"/>
+                    </div>
+                    <div class="editor">
+                        <textarea id="annotation-editor" name="text" placeholder="Enter your comment"/>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn-primary btn ok-button">
+                    <i class="icon-ok"/> OK
+                </a>
+                <a class="btn btn cancel-button">
+                    <i class="icon-remove"/> Cancel
+                </a>
+            </div>
+        </div>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            new Annotations.Annotate();
+        });
+        </script>
+    </body>
+</html>

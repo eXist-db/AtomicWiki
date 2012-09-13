@@ -520,3 +520,164 @@ table.permissions td {
 .aloha-editable-active .aloha-block, .aloha-block.aloha-block-highlighted {
     box-shadow: 0 !important;
 }
+
+#new-annotation img {
+    height: 20px;
+}
+
+.annotated {
+    /* background-color: #FC0; */
+}
+
+.annotation-marker {
+    height: 20px;
+    padding-left: .5em;
+    vertical-align: middle;
+}
+
+#annotationDialog {
+    width: 640px;
+}
+
+#annotationDialog .editor {
+    width: 100%;
+    height: 120px;
+}
+
+#annotationDialog textarea {
+    display: block;
+    width: 100%;
+    height: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.annotations {
+    height: 200px;
+    overflow: auto;
+}
+
+.annotations > ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+.annotation {
+    border: 1px solid rgb(200, 200, 200);
+    box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.3);
+    padding: 4px;
+    margin-bottom: 4px;
+}
+
+.annotation h4 {
+    margin: 0;
+    padding: 0;
+    font-size: 85%;
+}
+
+/* Annotations editor */
+#annotation-editor-toolbar {
+    position: relative;
+    height: 40px;
+}
+
+.header {
+  display: block;
+  border-radius: 4px;
+  width: 100%;
+  background: #eee;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  background-image: linear-gradient(bottom, rgb(238,238,238) 0%, rgb(255,255,255) 100%);
+  background-image: -o-linear-gradient(bottom, rgb(238,238,238) 0%, rgb(255,255,255) 100%);
+  background-image: -moz-linear-gradient(bottom, rgb(238,238,238) 0%, rgb(255,255,255) 100%);
+  background-image: -webkit-linear-gradient(bottom, rgb(238,238,238) 0%, rgb(255,255,255) 100%);
+  background-image: -ms-linear-gradient(bottom, rgb(238,238,238) 0%, rgb(255,255,255) 100%);
+  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
+  font-size: 0;
+  text-align: center;
+}
+
+[data-wysihtml5-command],
+[data-wysihtml5-action],
+.fore-color {
+  position: relative;
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #fff;
+  list-style: none;
+  font-size: 12px;
+  display: inline-block;
+  cursor: pointer;
+  height: 40px;
+  width: 68px;
+}
+
+[data-wysihtml5-command]::after,
+[data-wysihtml5-action]::after,
+.fore-color::after {
+  content: "";
+  background-image: url(../images/spr_toolbar_icons_r1.png);
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+[data-wysihtml5-command]:hover,
+[data-wysihtml5-action]:hover,
+.fore-color:hover {
+  background-image: linear-gradient(bottom, rgb(229,240,226) 0%, rgb(255,255,255) 100%);
+  background-image: -o-linear-gradient(bottom, rgb(229,240,226) 0%, rgb(255,255,255) 100%);
+  background-image: -moz-linear-gradient(bottom, rgb(229,240,226) 0%, rgb(255,255,255) 100%);
+  background-image: -webkit-linear-gradient(bottom, rgb(229,240,226) 0%, rgb(255,255,255) 100%);
+  background-image: -ms-linear-gradient(bottom, rgb(229,240,226) 0%, rgb(255,255,255) 100%);
+}
+
+[data-wysihtml5-command="bold"]::after {
+  background-position: 24px center;
+}
+
+[data-wysihtml5-command="italic"]::after {
+  background-position: -48px center;
+}
+
+[data-wysihtml5-command="insertUnorderedList"]::after {
+  background-position: -115px center;
+}
+
+[data-wysihtml5-command="insertOrderedList"]::after {
+  background-position: -197px center;
+}
+
+[data-wysihtml5-command="formatBlock"][data-wysihtml5-command-value="h1"]::after {
+  background-position: -344px center;
+}
+
+[data-wysihtml5-command="formatBlock"][data-wysihtml5-command-value="h2"]::after {
+  background-position: -428px center;
+}
+
+[data-wysihtml5-command="createLink"]::after {
+  background-position: -271px center;
+}
+
+[data-wysihtml5-command="insertImage"]::after {
+  background-position: -513px center;
+}
+
+.fore-color::after {
+  background-position: -741px center;
+}
+
+[data-wysihtml5-command="insertSpeech"]::after {
+  background-position: -596px center;
+}
+
+[data-wysihtml5-action="change_view"]::after {
+  background-position: -670px center;
+}

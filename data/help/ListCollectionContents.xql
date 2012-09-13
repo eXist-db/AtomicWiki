@@ -1,5 +1,3 @@
-import module namespace dates="http://atomic.exist-db.org/xquery/dates" at "dates.xql";
-
 declare namespace atom="http://www.w3.org/2005/Atom";
 
 declare variable $collection external;
@@ -17,7 +15,7 @@ declare variable $collection external;
     let $path := config:entry-url-from-entry($entry)
     return
         <li>
-            <div class="date">{ dates:formatDate(xs:dateTime($date/text())) }</div>
+            <div class="date">{ format-dateTime(xs:dateTime($date/text()), "[MNn] [D00] [Y0000] [H00]:[m00]:[s00]") }</div>
             <div><a href="{$path}">{ $entry/atom:title/string() }</a></div>
         </li>
 }
