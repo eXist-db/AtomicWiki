@@ -24,12 +24,6 @@ This version of AtomicWiki is a complete rewrite of the older code base. It is u
 + **Editor improvements**: auto-complete for links, more keyboard shortcuts ...
 + **HTML WYSWIG editor**: since all content is stored as XML/HTML, we could also support editing content with a WYSWIG editor instead of wiki markup. The goal is to allow any type of editor to be plugged in.
 
-Download
---------
-
-You can [https://github.com/wolfgangmm/AtomicWiki/downloads](download) a zip containing a ready-to-install application 
-package plus additional libraries required by eXist. Unzip the downloaded archive and proceed with installing jars.
-
 Installing jars
 ---------------
 You need to copy two .jar files into your eXist-db installation:
