@@ -7,7 +7,6 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
 declare variable $theme:feed-collection := "_theme";
 
 declare function theme:parent-collection($collection as xs:string) as xs:string? {
-    util:log("DEBUG", "theme:parent-collection")
     if (matches($collection, "^/db/?$")) then
         ()
     else
@@ -15,7 +14,6 @@ declare function theme:parent-collection($collection as xs:string) as xs:string?
 };
 
 declare function theme:theme-for-feed($feed as xs:string) as xs:string? {
-    util:log("DEBUG", "theme:theme-for-feed")
     let $coll := $feed || "/" || $theme:feed-collection
     return
         if (xmldb:collection-available($coll)) then
@@ -30,7 +28,7 @@ declare function theme:theme-for-feed($feed as xs:string) as xs:string? {
 };
 
 declare function theme:locate($feed as xs:string) as xs:string {
-    util:log("DEBUG", "theme:locate - line 33")
+    let $log := util:log("DEBUG", "theme:locate - line 33")
     let $themeColl := theme:theme-for-feed($feed)
     return (
         request:set-attribute("templating.root", $themeColl),
@@ -42,7 +40,7 @@ declare function theme:locate($feed as xs:string) as xs:string {
 };
 
 declare function theme:locate($feed as xs:string, $resource as xs:string) as xs:string {
-    util:log("DEBUG", "theme:locate - line 45")
+    let $log := util:log("DEBUG", "theme:locate - line 45")
     let $themeColl := theme:theme-for-feed($feed)
     return (
         request:set-attribute("templating.root", $themeColl),
@@ -58,35 +56,32 @@ declare function theme:locate($feed as xs:string, $resource as xs:string) as xs:
 };
 
 declare function theme:create-path($collection as xs:string) {
-    util:log("DEBUG", "theme:create-path")
     if (starts-with($config:wiki-root, "/")) then
         $collection
     else
         substring-after($collection, $config:app-root)
 };
 
-declare function theme:resolve-relative($collectionRel as xs:string, $resource as xs:string, $controller as xs:string) {
-    util:log("DEBUG", "theme:resolve-relative")
+declare function theme:resolve-relative($collectionRel as xs:string?, $resource as xs:string, $root as xs:string, $controller as xs:string) {
     let $collectionAbs := $config:wiki-root || "/" || $collectionRel
     let $resolved := theme:locate($collectionAbs, $resource)
     let $url :=
         if (starts-with($config:wiki-root, "/")) then
-            substring-after($resolved, "/db")
+            substring-after($resolved, $root)
         else
-            $controller || $resolved
+            $root || $controller || $resolved
     return
         $url
 };
 
-declare function theme:resolve($collectionAbs as xs:string, $resource as xs:string, $controller as xs:string) {
-    util:log("DEBUG", "theme:resolve")
+declare function theme:resolve($collectionAbs as xs:string, $resource as xs:string, $root as xs:string, $controller as xs:string) {
     let $resolved := theme:locate($collectionAbs, $resource)
-        let $log := util:log("WARN", "$resolved = " || $resolved |(:| " root = " || $root):)
+        let $log := util:log("WARN", "$resolved = " || $resolved || " root = " || $root)
     let $url :=
         if (starts-with($config:wiki-root, "/")) then
-            substring-after($resolved, "/db")
+            substring-after($resolved, $root)
         else
-            $controller || $resolved
+            $root || $controller || $resolved
     return
         $url
 };
