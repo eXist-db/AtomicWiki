@@ -74,6 +74,7 @@ declare function theme:resolve-relative($collectionRel as xs:string, $resource a
 
 declare function theme:resolve($collectionAbs as xs:string, $resource as xs:string, $controller as xs:string) {
     let $resolved := theme:locate($collectionAbs, $resource)
+        let $log := util:log("WARN", "$resolved = " || $resolved || " root = " || $root)
     let $url :=
         if (starts-with($config:wiki-root, "/")) then
             substring-after($resolved, "/db")
