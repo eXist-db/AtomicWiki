@@ -81,7 +81,8 @@ else if (matches($exist:path, ".*/[^\./]*$")) then
     let $setAttr := request:set-attribute("feed", $feed)
     let $action := request:get-parameter("action", "view")
     let $log := util:log("WARN", ("FEED: ", $feed))
-    let $template := if ($feed) then theme:resolve(util:collection-name($feed), "feed.html", $exist:controller) else ()
+    let $template := if ($feed) then theme:resolve(util:collection-name($feedsed), "feed.html", $exist:controller) else ()
+    let $log := util:log("WARN", "template = " || $template || " controller = " || $exist:controller || " prefix = " || $root)
     return
         if ($feed) then
             switch ($action)
