@@ -24,7 +24,7 @@ body { color: #222; background: url(../images/body.gif) repeat 50% 100%; }
 
 #container { width: 940px; margin: 0 auto 30px auto; }
 
-#header { width: 940px; float: left; background: url(../images/heidelberg_kjc_logo.png) no-repeat 0 50%; height: 120px; }
+#header { width: 940px; float: left; background: url(../images/header.gif) no-repeat 0 50%; height: 120px; }
 
 #header a#logo { display: block; width: 220px; height: 100px; outline: 0; text-indent: -999em; overflow: hidden; float: left; margin: 10px 0; }
 
