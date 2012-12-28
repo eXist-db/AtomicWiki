@@ -24,7 +24,7 @@ body { color: #222; background: url(../images/body.gif) repeat 50% 100%; }
 
 #container { width: 940px; margin: 0 auto 30px auto; }
 
-#header { width: 940px; float: left; background: url(../images/header.gif) no-repeat; height: 120px; }
+#header { width: 940px; float: left; background: url(../images/heidelberg_kjc_logo.png) no-repeat 0 50%; height: 120px; }
 
 #header a#logo { display: block; width: 220px; height: 100px; outline: 0; text-indent: -999em; overflow: hidden; float: left; margin: 10px 0; }
 
@@ -283,6 +283,25 @@ blockquote p { padding: 0 0 10px; }
     font-weight: bold;
 }
 
+.content figure {
+    margin: 1.5em 0;
+}
+
+.annotorious-canvas {
+  -moz-transition-property: opacity;
+  -moz-transition-duration: 0.5s;
+  -moz-transition-delay: 0s;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 0.5s;
+  -webkit-transition-delay: 0s;
+  -o-transition-property: opacity;
+  -o-transition-duration: 0.5s;
+  -o-transition-delay: 0s;
+  transition-property: opacity;
+  transition-duration: 0.5s;
+  transition-delay: 0s;
+}
+
 .content table {
     margin: .5em 1em;
 }
@@ -347,6 +366,14 @@ blockquote p { padding: 0 0 10px; }
 .content pre.prettyprint {
     padding: 10px 16px;
     margin-bottom: .85em;
+}
+
+.code {
+    font-family: "Ubuntu Mono", "Menlo", "Consolas", monospace;
+    font-size: 1em;
+    background: #555555 url(../images/noise.png);
+    margin: 16px 8px;
+    padding: 8px 8px;
 }
 
 #content .content pre.prettyprint li, #content code {
@@ -521,6 +548,27 @@ table.permissions td {
     box-shadow: 0 !important;
 }
 
+#annotation-popup {
+    position: absolute;
+    display: none;
+    background-color: rgba(40, 40, 40, 0.7);
+    color: #FFF;
+    padding: 8px 4px;
+    box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+}
+
+#annotation-popup .annotation {
+    border: 0;
+    box-shadow: 0 0 0 0;
+}
+
+#annotation-popup > ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
 #new-annotation img {
     height: 20px;
 }
@@ -554,7 +602,7 @@ table.permissions td {
 }
 
 .annotations {
-    height: 200px;
+    max-height: 220px;
     overflow: auto;
 }
 
@@ -680,4 +728,12 @@ table.permissions td {
 
 [data-wysihtml5-action="change_view"]::after {
   background-position: -670px center;
+}
+
+.image-annotation {
+    border: 1px solid #999999;
+}
+
+.image-annotation:hover {
+    border: 1px solid #FFFFFF;
 }

@@ -21,6 +21,75 @@ Annotations.namespace = function (ns_string) {
 	return parent;
 };
 
+Annotations.namespace("Annotations.oop");
+
+/**
+ * Static utility method for class inheritance.
+ * 
+ * @param name
+ * @param path
+ * @param mimeType
+ */
+Annotations.oop.inherit = (function() {
+        
+    var F = function() {};
+    return function(C, P) {
+            F.prototype = P.prototype;
+            C.prototype = new F();
+            C.super_ = P.prototype;
+            C.prototype.constructor = C;
+    }
+}());
+
+Annotations.oop.extend = (function() {
+  return function(destination, source) {
+      for (var k in source) {
+        if (source.hasOwnProperty(k)) {
+          destination[k] = source[k];
+        }
+      }
+  }
+}());
+
+Annotations.namespace("Annotations.events.Sender");
+
+/**
+ * Interface for sending events, registering listeners.
+ */
+Annotations.events.Sender = (function() {
+
+    Constr = function() {
+    };
+    
+    Constr.prototype = {
+        
+        addEventListener: function (name, obj, callback) {
+            this.events = this.events || {};
+        	var event = this.events[name];
+            if (!event) {
+                event = new Array();
+                this.events[name] = event;
+            }
+			event.push({
+				obj: obj,
+				callback: callback
+			});
+		},
+        
+		$triggerEvent: function (name, args) {
+            this.events = this.events || {};
+			var event = this.events[name];
+			if (event) {
+				for (var i = 0; i < event.length; i++) {
+					event[i].callback.apply(event[i].obj, args);
+				}
+			}
+		}
+    };
+    
+    return Constr;
+}());
+
 Annotations.namespace("Annotations.util.Selection");
 
 Annotations.util.Selection = (function () {

@@ -64,7 +64,7 @@ Atomic.app = (function () {
                     $("#perm-private").attr("checked", false);
                 }
             });
-            prettyPrint();
+//            prettyPrint();
         }
     };
 }());
