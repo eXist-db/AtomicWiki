@@ -60,25 +60,26 @@ declare function theme:create-path($collection as xs:string) {
         substring-after($collection, $config:app-root)
 };
 
-declare function theme:resolve-relative($collectionRel as xs:string, $resource as xs:string, $controller as xs:string) {
+declare function theme:resolve-relative($collectionRel as xs:string?, $resource as xs:string, $root as xs:string, $controller as xs:string) {
     let $collectionAbs := $config:wiki-root || "/" || $collectionRel
     let $resolved := theme:locate($collectionAbs, $resource)
     let $url :=
         if (starts-with($config:wiki-root, "/")) then
-            substring-after($resolved, "/db")
+            substring-after($resolved, $root)
         else
-            $controller || $resolved
+            $root || $controller || $resolved
     return
         $url
 };
 
-declare function theme:resolve($collectionAbs as xs:string, $resource as xs:string, $controller as xs:string) {
+declare function theme:resolve($collectionAbs as xs:string, $resource as xs:string, $root as xs:string, $controller as xs:string) {
     let $resolved := theme:locate($collectionAbs, $resource)
+        let $log := util:log("WARN", "$resolved = " || $resolved || " root = " || $root)
     let $url :=
         if (starts-with($config:wiki-root, "/")) then
-            substring-after($resolved, "/db")
+            substring-after($resolved, $root)
         else
-            $controller || $resolved
+            $root || $controller || $resolved
     return
         $url
 };
