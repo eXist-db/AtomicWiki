@@ -1,6 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://exist-db.org/ns/expath-pkg">
-
-   <jar>WikiModelV2.jar</jar>
-   <jar>atomicwiki-0.2.jar</jar>
-
+    <jar>WikiModelV2.jar</jar>
+    <jar>atomicwiki-0.3.jar</jar>
+    <java>
+        <namespace>http://exist-db.org/xquery/wiki</namespace>
+        <class>org.exist.xquery.modules.wiki.WikiModule</class>
+    </java>
 </package>
