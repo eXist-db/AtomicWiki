@@ -6,8 +6,6 @@
     <property name="java.libs" value="java/lib"/>
     <property name="build.dir" value="build"/>
     <property name="scripts" value="resources/scripts"/>
-    <property name="scripts.ace" value="${scripts}/ace"/>
-    <property name="ace.src" value="support/ace"/>
     <path id="classpath">
         <fileset dir="${exist.dir}">
             <include name="*.jar"/>
@@ -30,7 +28,7 @@
             </fileset>
         </zip>
     </target>
-    <target name="xar" depends="jar,ace">
+    <target name="xar" depends="jar">
         <mkdir dir="${build.dir}"/>
         <zip destfile="${build.dir}/atomicwiki-${project.version}.xar">
             <fileset dir=".">
@@ -39,6 +37,7 @@
                 <include name="resources/**"/>
                 <include name="templates/**"/>
                 <include name="data/_theme/**"/>
+		<include name="data/annotations"/>
                 <include name="data/help/**"/>
                 <include name="data/util/**"/>
                 <include name="data/feed.atom"/>
@@ -46,6 +45,8 @@
                 <include name="data/AtomicWikiWelcome.atom"/>
                 <exclude name=".git*"/>
             </fileset>
+	    <zipfileset dir="${build.dir}" includes="*.jar" prefix="wiki"/>
+	    <zipfileset dir="${java.libs}" includes="*.jar" prefix="wiki"/>
         </zip>
     </target>
     <target name="prepare">
@@ -67,17 +68,7 @@
             </manifest>
         </jar>
     </target>
-    <target name="ace">
-        <mkdir dir="${scripts.ace}"/>
-        <copy todir="${scripts.ace}">
-            <fileset dir="${ace.src}/build/src">
-                <exclude name="*-uncompressed.js"/>
-                <exclude name="*-noconflict.js"/>
-            </fileset>
-        </copy>
-    </target>
     <target name="clean">
-        <delete dir="${scripts.ace}"/>
         <delete dir="${build.dir}"/>
         <delete dir="${java.classes}"/>
     </target>

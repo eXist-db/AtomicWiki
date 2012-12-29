@@ -18,17 +18,29 @@ declare
     %rest:form-param("startOffset", "{$startOffset}")
     %rest:form-param("end", "{$end}")
     %rest:form-param("endOffset", "{$endOffset}")
+    %rest:form-param("top", "{$top}")
+    %rest:form-param("left", "{$left}")
+    %rest:form-param("bottom", "{$bottom}")
+    %rest:form-param("right", "{$right}")
     %output:method("json")
-function anno:store($target as xs:string?, $body as xs:string, $start as xs:string, $startOffset as xs:integer, 
-    $end as xs:string, $endOffset as xs:integer) {
+function anno:store($target as xs:string?, $body as xs:string, $start as xs:string?, $startOffset as xs:integer?, 
+    $end as xs:string?, $endOffset as xs:integer?, 
+    $top as xs:integer?, $left as xs:integer?, $bottom as xs:integer?, $right as xs:integer?) {
     let $collection := anno:create-collection()
     let $uuid := util:uuid()
     let $data :=
         <annotations id="{$uuid}">
-            <target id="{$target}">
-                <start ref="{$start}" offset="{$startOffset}"/>
-                <end ref="{$end}" offset="{$endOffset}"/>
-            </target>
+            {
+                if ($start) then
+                    <target id="{$target}">
+                        <start ref="{$start}" offset="{$startOffset}"/>
+                        <end ref="{$end}" offset="{$endOffset}"/>
+                    </target>
+                else
+                    <target id="{$target}">
+                        <area top="{$top}" left="{$left}" bottom="{$bottom}" right="{$right}"/>
+                    </target>
+            }
             <annotation>
                 <user>{xmldb:get-current-user()}</user>
                 <created>{current-dateTime()}</created>
@@ -92,10 +104,19 @@ declare
     %rest:GET
     %rest:path("/_annotations")
     %rest:query-param("target", "{$target}")
+    %rest:query-param("top", "{$top}")
+    %rest:query-param("left", "{$left}")
+    %rest:query-param("right", "{$right}")
+    %rest:query-param("bottom", "{$bottom}")
     %output:media-type("application/json")
     %output:method("json")
-function anno:list($target as xs:string) {
-    let $annotations := collection($anno:COLLECTION)/annotations[target/@id = $target]
+function anno:list($target as xs:string, $top as xs:integer?, $left as xs:integer?, $bottom as xs:integer?, $right as xs:integer?) {
+    let $annotations := 
+        if ($top) then
+            collection($anno:COLLECTION)/annotations/target[@id = $target][area/@top = $top][area/@bottom = $bottom]
+                [area/@left = $left][area/@right = $right]/..
+        else
+            collection($anno:COLLECTION)/annotations[target/@id = $target]
     return
         <annotations>
         {

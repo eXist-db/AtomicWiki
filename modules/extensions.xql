@@ -43,8 +43,7 @@ function ext:code($node as node(), $model as map(*), $lang as xs:string?, $edit 
             case "edit" return
                 <pre class="ext:code?lang={$syntax}" data-language="{$syntax}">{$source}</pre>
             default return (
-                (:        <pre class="brush: {if ($syntax) then $syntax else 'text'}">{$node/string()}</pre>:)
-                <pre class="prettyprint linenums"><code class="{if ($syntax) then 'language-' || $syntax else ''}">{$source}</code></pre>,
+                <div class="code" data-language="{$syntax}">{$source}</div>,
                 if ($edit = ("yes", "true")) then
                     <a class="btn" href="{$context}/eXide/index.html?snip={encode-for-uri($source)}" target="eXide"
                         title="Opens the code in eXide in new tab or existing tab if it is already open.">Edit</a>

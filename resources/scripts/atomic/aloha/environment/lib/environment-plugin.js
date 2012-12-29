@@ -5,6 +5,36 @@ define(
          "css!environment/css/environment.css"],
 function(Aloha, Plugin, jQuery, UI, UIPlugin, Utils, ToggleButton, BlockManager, block, MultiSplitButton, i18n, i18nCore) {
 
+    var CodeEditorBlock = block.AbstractBlock.extend({
+    	title: 'CodeEditor',
+
+		getSchema: function() {
+			return {
+                "syntax": {
+    				type: 'select',
+    				label: 'Syntax',
+    				values: [{
+    					key: 'xquery',
+    					label: 'XQuery'
+    				}, {
+    					key: 'XML',
+    					label: 'XML'
+    				}, {
+    					key: 'java',
+    					label: 'Java'
+    				}, {
+                        key: 'text',
+                        label: 'Plain Text'
+    				}]
+                }
+			};
+		},
+        
+        init: function($element, postProcessFn) {
+            postProcessFn();
+        }
+    });
+    
     var CodeBlock = function($element) {
         console.log("Initializing block");
         var self = this;
@@ -18,28 +48,24 @@ function(Aloha, Plugin, jQuery, UI, UIPlugin, Utils, ToggleButton, BlockManager,
         this.language = self.container.data("language");
         var data = self.container.text();
         
-        console.log("Activating source block. Language: %s", this.language);
-        
         var div = document.createElement("div");
         div.setAttribute("data-block-skip-scope", "true");
 
         var iframe = document.createElement("iframe");
         iframe.src = "code-edit.html";
         iframe.style.width = "98%";
-        $(iframe).load(function() {
-            $("#editor", this.contentWindow.document).text(data);
+        Aloha.jQuery(iframe).load(function() {
+            Aloha.jQuery("#editor", this.contentWindow.document).text(data);
             self.editor = new this.contentWindow.Editor(self.language);
         });
         div.appendChild(iframe);
         
         self.container.replaceWith(div);
-        self.container = $(div);
-        
-		self.container.alohaBlock();
+        self.container = Aloha.jQuery(div);
+		self.container.alohaBlock({ "aloha-block-type": 'CodeEditorBlock' });
     };
     
     CodeBlock.prototype.deactivate = function() {
-        console.log("Deactivating");
         var code = this.editor.getData();
         
         var parent = this.container.parent();
@@ -81,6 +107,8 @@ function(Aloha, Plugin, jQuery, UI, UIPlugin, Utils, ToggleButton, BlockManager,
             
 			this.createButtons();
 			
+            BlockManager.registerBlockType('CodeEditorBlock', CodeEditorBlock);
+            
             Aloha.bind( 'aloha-editable-activated', function (event, properties) {
                 properties.editable.obj.find("pre").each(function() {
                     var codeBlock = new CodeBlock(Aloha.jQuery(this));
@@ -89,7 +117,6 @@ function(Aloha, Plugin, jQuery, UI, UIPlugin, Utils, ToggleButton, BlockManager,
                 });
             });
             Aloha.bind( 'aloha-editable-deactivated', function (event, properties) {
-                console.log("deactivate source block");
                 for (var i = 0; i < self.registry.length; i++) {
                 	self.registry[i].deactivate();
                 }
@@ -99,7 +126,7 @@ function(Aloha, Plugin, jQuery, UI, UIPlugin, Utils, ToggleButton, BlockManager,
         
         activateSelected: function(lang) {
             var self = this;
-            var pre = jQuery("<pre class=\"ext:code?lang=" + lang + "\" data-language=\"" + lang + "\"></pre>");
+            var pre = Aloha.jQuery("<pre class=\"ext:code?lang=" + lang + "\" data-language=\"" + lang + "\"></pre>");
             Aloha.Selection.changeMarkupOnSelection(pre);
             Aloha.activeEditable.obj.find("pre").each(function() {
                 var codeBlock = new CodeBlock(Aloha.jQuery(this));
@@ -113,7 +140,6 @@ function(Aloha, Plugin, jQuery, UI, UIPlugin, Utils, ToggleButton, BlockManager,
 		 */
 		createButtons: function () {
 		    var self = this;
-            console.log("Init button");
 
 		    // format Abbr Button
 		    // this button behaves like a formatting button like (bold, italics, etc)

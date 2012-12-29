@@ -7,7 +7,7 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace html="http://www.w3.org/1999/xhtml";
 
-declare function atomic:process-links($node as node()) {
+declare function atomic:process-links($node as node()?) {
     typeswitch ($node)
         case element(html:img) return
             atomic:process-img($node)
@@ -32,9 +32,13 @@ declare function atomic:process-img($node as element()) {
         if (matches($src, "^(/|\w+:).*")) then
             $node
         else
-            let $collection := substring-after(util:collection-name($node), concat($config:wiki-root, "/"))
+            let $collection := substring-after($config:wiki-root, $config:app-root || "/")
             return
-                <html:img src="{$src}"/>
+                element { node-name($node) } {
+                    $node/@* except $node/@src,
+                    attribute src { $collection || "/" || $src },
+                    $node/node()
+                }
 };
 
 declare function atomic:process-href($node as element()) {
@@ -69,7 +73,7 @@ declare function atomic:create-entry() as element(atom:entry) {
     </atom:entry>
 };
 
-declare function atomic:get-content($content as element(atom:content), $eval as xs:boolean) as item()* {
+declare function atomic:get-content($content as element(atom:content)?, $eval as xs:boolean) as item()* {
     let $data :=
         if ($content/@src) then
             let $baseColl := util:collection-name($content)

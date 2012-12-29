@@ -33,12 +33,7 @@ declare function local:extract-feed($path as xs:string) {
 
 let $root := substring-after($exist:root, "xmldb:exist://")
 return
-    if ($exist:path eq "/") then
-        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-            <redirect url="blogs/eXist/"/>
-        </dispatch>
-        
-else if (contains($exist:path, "/_annotations") or contains($exist:path, "/_get")) then
+if (contains($exist:path, "/_annotations") or contains($exist:path, "/_get")) then
     restxq:process($exist:path, util:list-functions("http://exist-db.org/annotations"))
     
 (: preview edited articles :)

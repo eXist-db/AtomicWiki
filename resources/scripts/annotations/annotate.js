@@ -2,16 +2,14 @@ Annotations.namespace("Annotations.Annotate");
 
 Annotations.Annotate = (function () {
     
-    Constr = function() {
+    Constr = function(editor) {
         var self = this;
         
         self.currentRange = null;
         
         self.toolbar = self._initToolbar();
         
-        self.editor = new Annotations.edit.Editor(function(body, link) {
-            self.store(body, link);
-        });
+        self.editor = editor;
         
         self.selection = new Annotations.util.Selection($(".annotatable"), {
             onSelect: function(pageX, pageY) {
@@ -27,7 +25,26 @@ Annotations.Annotate = (function () {
             }
         });
         self._load();
+        
+        self.popup = $("#annotation-popup");
     };
+    
+    Annotations.oop.inherit(Constr, Annotations.events.Sender);
+    
+    Constr.prototype.view = function(id, x, y) {
+        var self = this;
+        console.log("Loading annotation %s: %d, %d", id, x, y);
+        self.popup.css({ top: y + "px", left: x + "px"});
+        self.popup.load("_annotations/" + id, function() {
+            //self.popup.fadeIn(200);
+            self.popup.show();
+        });
+    },
+    
+    Constr.prototype.hide = function() {
+        //this.popup.fadeOut(200);
+        this.popup.hide();
+    },
     
     Constr.prototype._load = function() {
         var self = this;
@@ -40,10 +57,19 @@ Annotations.Annotate = (function () {
                 data: { target: id },
                 success: function(data) {
                     self.selection.load(container, data);
-                    
+                    $(".annotation-marker").mouseover(function(ev) {
+                        var x = ($(ev.target).offset().left) + 10;
+                        var y = ($(ev.target).offset().top) + 20;
+                        self.view(this.dataset.annotationBody, x, y);
+                    });
+                    $(".annotation-marker").mouseout(function(ev) {
+                        self.hide();
+                    });
                     $(".annotation-marker").click(function() {
                         self.currentRange = null;
-                        self.editor.open("_annotations/" + this.dataset.annotationBody);
+                        self.editor.open("_annotations/" + this.dataset.annotationBody, function(body, link) {
+                            self.store(body, link);
+                        });
                     });
                 }
             });
@@ -60,7 +86,9 @@ Annotations.Annotate = (function () {
         button.title = "Add annotation to selected text";
         $(button).click(function() {
             self.currentRange = self.selection.getLink();
-            self.editor.open();
+            self.editor.open(null, function(body, link) {
+                self.store(body, link);
+            });
         });
         var img = document.createElement("img");
         img.src = "resources/images/comment-add.png";
@@ -95,8 +123,18 @@ Annotations.Annotate = (function () {
                 },
                 success: function(data) {
                     var marker = self.selection.highlight(range.range, data.id);
+                    $(marker).mouseover(function(ev) {
+                        var x = ($(ev.target).offset().left) + 10;
+                        var y = ($(ev.target).offset().top) + 20;
+                        self.view(this.dataset.annotationBody, x, y);
+                    });
+                    $(marker).mouseout(function(ev) {
+                        self.hide();
+                    });
                     $(marker).click(function() {
-                        self.editor.open("_annotations/" + data.id);
+                        self.editor.open("_annotations/" + data.id, function(body, link) {
+                            self.store(body, link);
+                        });
                     });
                 }
             });

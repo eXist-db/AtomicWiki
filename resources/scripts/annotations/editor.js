@@ -2,8 +2,9 @@ Annotations.namespace("Annotations.edit.Editor");
 
 Annotations.edit.Editor = (function () {
     
-    Constr = function(onStore) {
+    Constr = function() {
         var self = this;
+        self.onStore = null;
         self.link = null;
         self.dialog = $("#annotationDialog");
         self.dialog.modal({
@@ -14,7 +15,7 @@ Annotations.edit.Editor = (function () {
             ev.preventDefault();
             var body = self.dialog.find("textarea").val();
             if (body && body.length > 0)
-                onStore(body, self.link);
+                self.onStore(body, self.link);
             self.dialog.modal("hide");
         });
         self.dialog.find(".cancel-button").click(function(ev) {
@@ -40,8 +41,9 @@ Annotations.edit.Editor = (function () {
         self.dialog.hide();
     };
     
-    Constr.prototype.open = function(link) {
+    Constr.prototype.open = function(link, callback) {
         var self = this;
+        self.onStore = callback;
         self.link = link;
         self.dialog.modal("show");
     };

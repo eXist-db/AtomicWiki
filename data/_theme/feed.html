@@ -5,17 +5,6 @@
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
         <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
-        <script type="text/javascript" src="libs/scripts/jquery/jquery-1.7.1.min.js"/>
-        <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
-        <script type="text/javascript" src="resources/scripts/prettify/prettify.js"/>
-        <script type="text/javascript" src="resources/scripts/rangy-core.js"/>
-        <script type="text/javascript" src="resources/scripts/jquery.color.js"/>
-        <script src="resources/scripts/wysihtml5/wysihtml5-0.3.0.min.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/wysihtml5/advanced.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/annotations/util.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/annotations/editor.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/annotations/annotate.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
     </head>
     <body class="templates:surround?with=templates/page.html&amp;at=content&amp;using=body">
         <div class="app:feed">
@@ -91,9 +80,34 @@
                 </a>
             </div>
         </div>
+        <div id="annotation-popup"/>
+        <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
+        <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
+        <script type="text/javascript" src="$shared/resources/scripts/ace/ace.js"/>
+        <script type="text/javascript" src="$shared/resources/scripts/ace/mode-javascript.js"/>
+        <script type="text/javascript" src="$shared/resources/scripts/ace/mode-text.js"/>
+        <script type="text/javascript" src="$shared/resources/scripts/ace/mode-xquery.js"/>
+        <script type="text/javascript" src="$shared/resources/scripts/ace/theme-tomorrow_night.js"/>
+        <script type="text/javascript" src="resources/scripts/atomic/highlight.js"/>
+        <script type="text/javascript" src="resources/scripts/rangy-core.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery.color.js"/>
+        <script src="resources/scripts/wysihtml5/wysihtml5-0.3.0.min.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/wysihtml5/advanced.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/annotations/util.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/annotations/editor.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/annotations/annotate.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
+        <script type="text/javascript" src="resources/scripts/annotations/images.js"/>
         <script type="text/javascript">
         $(document).ready(function() {
-            new Annotations.Annotate();
+            $(".code").highlight();
+            var editor = new Annotations.edit.Editor();
+            var anno = new Annotations.Annotate(editor);
+            $(".annotate").each(function() {
+                var imageAnno = new Annotations.image.ImageAnnotation(this, editor);
+                imageAnno.viewer.addEventListener("mouseover", anno, anno.view);
+                imageAnno.viewer.addEventListener("mouseout", anno, anno.hide);
+            });
         });
         </script>
     </body>
