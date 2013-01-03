@@ -42,6 +42,10 @@ Atomic.app = (function () {
                     }
                 );
             });
+            $(".posted-link").click(function(ev) {
+                ev.preventDefault();
+                var form = $(this).next().submit();
+            });
             
             $("#perm-private:checked").each(function() {
                 $(".perm-detail").hide();

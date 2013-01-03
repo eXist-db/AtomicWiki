@@ -40,30 +40,28 @@
                                     <a class="btn btn-inverse" href="#loginDialog" data-toggle="modal">Login</a>
                                 </div>
                                 <div class="actions">
-                                    <form action="" class="form-inline" method="POST">
-                                        <div class="btn-group">
-                                            <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-                                                Collection Actions <span class="caret"/>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a href=".?action=addentry&amp;editor=html">
-                                                        <i class="icon-plus"/> New HTML Entry</a>
-                                                </li>
-                                                <li>
-                                                    <a href=".?action=addentry&amp;editor=wiki">
-                                                        <i class="icon-plus"/> New Wiki Entry</a>
-                                                </li>
-                                                <li>
-                                                    <a href=".?action=editfeed">
-                                                        <i class="icon-edit"/> Edit</a>
-                                                </li>
-                                            </ul>
-                                            <button class="btn btn-inverse" name="logout" value="logout">
+                                    <div class="btn-group">
+                                        <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+                                            Actions <span class="caret"/>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a href=".?action=addentry&amp;editor=html">
+                                                    <i class="icon-plus"/> New HTML Article</a>
+                                            </li>
+                                            <li>
+                                                <a href=".?action=addentry&amp;editor=wiki">
+                                                    <i class="icon-plus"/> New Wiki Article</a>
+                                            </li>
+                                            <li>
+                                                <a href="?action=editfeed" class="app:posted-link">
+                                                    <i class="icon-edit"/> Edit Section</a>
+                                            </li>
+                                        </ul>
+                                        <a href="?logout=logout" class="btn btn-inverse app:posted-link">
                                             Logout <span class="app:user">user</span>
-                                            </button>
-                                        </div>
-                                    </form>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -133,6 +131,20 @@
                 </a>
                 <a class="btn btn cancel-button">
                     <i class="icon-remove"/> Cancel
+                </a>
+            </div>
+        </div>
+        <div class="modal hide fade" id="manage-dialog">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">
+                    <i class="icon-remove"/>
+                </a>
+                <h3>Content Overview</h3>
+            </div>
+            <div class="modal-body"/>
+            <div class="modal-footer">
+                <a class="btn-primary btn ok-button">
+                    <i class="icon-ok"/> Close
                 </a>
             </div>
         </div>

@@ -48,7 +48,7 @@ declare function app:get-or-create-feed($node as node(), $model as map(*)) as ma
         else
             atomic:create-feed()
     return
-        map { "feed" := $data }
+        map { "feed" := $data, "entry" := $data }
 };
 
 declare function app:create-entry($node as node(), $model as map(*)) {
@@ -262,6 +262,22 @@ declare function app:action-button($node as node(), $model as map(*), $action as
             else
                 ()
         }
+    </form>
+};
+
+declare function app:posted-link($node as node(), $model as map(*)) {
+    element { node-name($node) } {
+        attribute class { $node/@class || " posted-link" },
+        $node/@* except $node/@class,
+        $node/node()
+    },
+    <form action="" method="post" style="display: none;">
+    {
+        let $href := substring-after($node/@href, "?")
+        for $pair in tokenize($href, "&amp;")
+        return
+            <input type="hidden" name="{substring-before($pair, '=')}" value="{substring-after($pair, '=')}"/>
+    }
     </form>
 };
 

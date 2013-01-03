@@ -442,6 +442,7 @@ blockquote p { padding: 0 0 10px; }
 
 #edit-form .title input {
     font-size: 150%;
+    width: 460px;
 }
 
 #editor-switch {
