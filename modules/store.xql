@@ -90,8 +90,6 @@ declare function store:article() {
     let $storeSeparate := request:get-parameter("external", ())
     let $isIndexPage := request:get-parameter("is-index", ())
     let $sortIndex := request:get-parameter("sort-index", "")
-    let $isHidden := request:get-parameter("is-hidden", ())
-    let $role := request:get-parameter("role", "")
     let $editor := request:get-parameter("editor", "wiki")
     let $editType := request:get-parameter("ctype", "html")
     let $contentParsed := store:process-content($editType, $content)
@@ -105,16 +103,9 @@ declare function store:article() {
             <wiki:id>{$name}</wiki:id>
             <wiki:editor>{$editor}</wiki:editor>
             <wiki:is-index>{if (exists($isIndexPage)) then 'true' else 'false'}</wiki:is-index>
-            <wiki:is-hidden>{if (exists($isHidden)) then 'true' else 'false'}</wiki:is-hidden>
             {
                 if ($sortIndex != "") then
                     <wiki:sort-index>{$sortIndex}</wiki:sort-index>
-                else
-                    ()
-            }
-            {
-                if ($role and $role != "") then
-                    <wiki:role>{$role}</wiki:role>
                 else
                     ()
             }
