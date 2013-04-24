@@ -37,16 +37,17 @@
                 <include name="resources/**"/>
                 <include name="templates/**"/>
                 <include name="data/_theme/**"/>
-		<include name="data/annotations"/>
+                <include name="data/annotations"/>
                 <include name="data/help/**"/>
                 <include name="data/util/**"/>
                 <include name="data/feed.atom"/>
                 <include name="data/AtomicWikiWelcome.html"/>
                 <include name="data/AtomicWikiWelcome.atom"/>
+                <include name="data/*.png"/>
                 <exclude name=".git*"/>
             </fileset>
-	    <zipfileset dir="${build.dir}" includes="*.jar" prefix="wiki"/>
-	    <zipfileset dir="${java.libs}" includes="*.jar" prefix="wiki"/>
+            <zipfileset dir="${build.dir}" includes="*.jar" prefix="wiki"/>
+            <zipfileset dir="${java.libs}" includes="*.jar" prefix="wiki"/>
         </zip>
     </target>
     <target name="prepare">

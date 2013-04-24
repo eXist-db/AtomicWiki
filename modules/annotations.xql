@@ -7,7 +7,7 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace json="http://www.json.org";
 
-declare variable $anno:COLLECTION := $config:wiki-root || "/annotations";
+declare variable $anno:COLLECTION := $config:app-root || "/annotations";
 
 declare
     %rest:PUT
@@ -130,11 +130,13 @@ function anno:list($target as xs:string, $top as xs:integer?, $left as xs:intege
         </annotations>
 };
 
-declare %private function anno:create-collection() {
+declare function anno:create-collection() {
     if (xmldb:collection-available($anno:COLLECTION)) then
         $anno:COLLECTION
-    else
-        xmldb:create-collection($config:wiki-root, "annotations")
+    else (
+        xmldb:create-collection($config:app-root, "annotations"),
+        sm:chmod(xs:anyURI($anno:COLLECTION), "rwxrwxrwx")
+    )
 };
 
 declare function anno:parse-body($body as xs:string) as element() {

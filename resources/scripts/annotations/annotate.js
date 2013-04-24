@@ -71,6 +71,9 @@ Annotations.Annotate = (function () {
                             self.store(body, link);
                         });
                     });
+                },
+                error: function() {
+                    $.log("No annotations found.");
                 }
             });
         });

@@ -439,7 +439,11 @@ declare function templates:error-description($node as node(), $model as map(*)) 
     return
         element { node-name($node) } {
             $node/@*,
-            util:parse($input)//message/string()
+            try {
+                util:parse($input)//message/string()
+            } catch * {
+                $input
+            }
         }
 };
 

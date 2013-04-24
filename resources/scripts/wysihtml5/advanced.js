@@ -71,8 +71,11 @@ var wysihtml5ParserRules = {
         "wysiwyg-text-align-center": 1,
         "wysiwyg-text-align-justify": 1,
         "wysiwyg-text-align-left": 1,
-        "wysiwyg-text-align-right": 1
+        "wysiwyg-text-align-right": 1,
+        "wysiwyg-img-float-left": 1,
+        "wysiwyg-img-float-right": 1
     },
+    
     /**
      * Tag list
      *
@@ -119,9 +122,7 @@ var wysihtml5ParserRules = {
             "rename_tag": "span"
         },
         "br": {
-            "add_class": {
-                "clear": "clear_br"
-            }
+            "remove": 1
         },
         "details": {
             "rename_tag": "div"
@@ -178,7 +179,6 @@ var wysihtml5ParserRules = {
         },
         "a": {
             "check_attributes": {
-                "href": "url"
             },
             "set_attributes": {
                 "rel": "nofollow",

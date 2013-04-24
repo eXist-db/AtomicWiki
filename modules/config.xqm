@@ -45,7 +45,20 @@ declare variable $config:app-home :=
             $uri
 ;
 
-declare variable $config:base-url := "";
+(:~
+ : Try to find an application by its unique name and return the relative path to which it
+ : has been deployed inside the database.
+ : 
+ : @param $pkgURI unique name of the application
+ : @return database path relative to the collection returned by repo:get-root() 
+ : or the empty sequence if the package could not be found or is not deployed into the db
+ :)
+declare variable $config:base-url :=
+    let $path := collection(repo:get-root())//expath:package[@name = "http://exist-db.org/apps/wiki"]
+    let $relPath := substring-after(util:collection-name($path), repo:get-root())
+    return
+        request:get-context-path() || request:get-attribute("$exist:prefix") || "/" || $relPath
+;
 
 declare variable $config:exist-home := 
     request:get-context-path()
@@ -101,7 +114,7 @@ declare function config:resolve($relPath as xs:string) {
         doc(concat("file://", $config:app-root, "/", $relPath))
 };
 
-declare function config:feed-from-entry($entry as element(atom:entry)) {
+declare function config:feed-from-entry($entry as element()) {
     let $collection := util:collection-name($entry)
     return
         substring-after($collection, concat($config:wiki-root, "/"))
@@ -109,8 +122,6 @@ declare function config:feed-from-entry($entry as element(atom:entry)) {
 
 declare function config:feed-url-from-entry($entry as element(atom:entry)) {
     let $path := config:feed-from-entry($entry)
-    let $appPath := request:get-attribute("exist.path")
-    let $base := $config:app-home
     let $feed :=
         if (ends-with($config:base-url, "/")) then
             concat($config:base-url, $path)

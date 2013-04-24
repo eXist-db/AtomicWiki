@@ -4,14 +4,14 @@
         <title>Atomic Wiki</title>
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
-        <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="templates:surround?with=templates/page.html&amp;at=content&amp;using=body">
         <div class="app:feed">
             <div class="app:entries?count=5 entries">
                 <div class="entry">
                     <div class="entryhead">
-                        <div class="templates:if-attribute-set?attribute=wiki.user">
+                        <div class="templates:if-attribute-set?attribute=org.exist.wiki.login.user">
                             <div class="edit-toolbar btn-group">
                                 <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"/>
                                 </button>
@@ -40,6 +40,23 @@
                 </footer>
             </div>
         </div>
+        <div class="modal hide fade" id="sitemap-dialog">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">
+                    <i class="icon-remove"/>
+                </a>
+                <h3>Sitemap</h3>
+            </div>
+            <div class="modal-body">
+                <p>Double click on section or article to navigate to it.</p>
+                <div class="sitemap"/>
+            </div>
+            <div class="modal-footer">
+                <a class="btn-primary btn close-button">
+                    <i class="icon-remove"/> Close
+                </a>
+            </div>
+        </div>
         <div class="modal fade" id="annotationDialog">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">
@@ -50,21 +67,66 @@
             <div class="modal-body">
                 <div class="annotations"/>
                 <form class="editor-form">
-                    <div id="annotation-editor-toolbar" style="display: none;" class="header">
-                        <a data-wysihtml5-command="bold"/>
-                        <a data-wysihtml5-command="italic"/>
-                        <a data-wysihtml5-command="createLink"/>
-                        <div data-wysihtml5-dialog="createLink" style="display: none;">
-                            <label>Link:
-                                <input data-wysihtml5-dialog-field="href" value="http://" class="text"/>
-                            </label>
-                            <a data-wysihtml5-dialog-action="save">OK</a>
-                            <a data-wysihtml5-dialog-action="cancel">Cancel</a>
-                        </div>
-                        <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1"/>
-                        <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h2"/>
-                        <a data-wysihtml5-command="insertUnorderedList"/>
-                        <a data-wysihtml5-command="insertOrderedList"/>
+                    <div id="annotation-editor-toolbar" style="display: none;" class="header wysihtml5-toolbar">
+                        <ul>
+                            <li class="dropdown">
+                                <a class="btn dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+                                    <i class="icon-font"/>&#160;
+                                    <span class="current-font">Normal</span>
+                                    <b class="caret"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="p">Normal</a>
+                                    </li>
+                                    <li>
+                                        <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">Heading 1</a>
+                                    </li>
+                                    <li>
+                                        <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h2">Heading 2</a>
+                                    </li>
+                                    <li>
+                                        <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h3">Heading 3</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="btn-group">
+                                <a data-wysihtml5-command="bold" class="btn">
+                                    <i class="icon-bold"/>
+                                </a>
+                                <a data-wysihtml5-command="italic" class="btn">
+                                    <i class="icon-italic"/>
+                                </a>
+                                <a data-wysihtml5-command="underline" class="btn">
+                                    <i class="icon-underline"/>
+                                </a>
+                                <a data-wysihtml5-command="formatInline" data-wysihtml5-command-value="code" class="btn" title="Code">
+                                    <i class="icon-barcode"/>
+                                </a>
+                            </li>
+                            <li class="btn-group">
+                                <a class="btn" data-wysihtml5-command="justifyLeft" title="Align Left">
+                                    <i class="icon-align-left"/>
+                                </a>
+                                <a class="btn" data-wysihtml5-command="justifyRight" title="Align Right">
+                                    <i class="icon-align-right"/>
+                                </a>
+                                <a class="btn" data-wysihtml5-command="justifyCenter" title="Center">
+                                    <i class="icon-align-center"/>
+                                </a>
+                                <a class="btn" data-wysihtml5-command="justifyFull" title="Justify">
+                                    <i class="icon-align-justify"/>
+                                </a>
+                            </li>
+                            <li class="btn-group">
+                                <a class="btn" data-wysihtml5-command="insertUnorderedList" title="Insert/Toggle Unordered List">
+                                    <i class="icon-list"/>
+                                </a>
+                                <a class="btn" data-wysihtml5-command="insertOrderedList" title="Insert/Toggle Ordered List">
+                                    <i class="icon-th-list"/>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                     <div class="editor">
                         <textarea id="annotation-editor" name="text" placeholder="Enter your comment"/>
@@ -82,6 +144,8 @@
         </div>
         <div id="annotation-popup"/>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery/jquery-ui.custom.min.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery/jquery.dynatree.min.js"/>
         <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
         <script type="text/javascript" src="$shared/resources/scripts/ace/ace.js"/>
         <script type="text/javascript" src="$shared/resources/scripts/ace/mode-javascript.js"/>
@@ -91,12 +155,13 @@
         <script type="text/javascript" src="resources/scripts/atomic/highlight.js"/>
         <script type="text/javascript" src="resources/scripts/rangy-core.js"/>
         <script type="text/javascript" src="resources/scripts/jquery.color.js"/>
-        <script src="resources/scripts/wysihtml5/wysihtml5-0.3.0.min.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/wysihtml5/advanced.js" type="text/javascript" charset="utf-8"/>
+        <script type="text/javascript" src="resources/scripts/wysihtml5/wysihtml5-0.4.0pre.min.js"/>
+        <script src="resources/scripts/wysihtml5/simple.js" type="text/javascript" charset="utf-8"/>
         <script src="resources/scripts/annotations/util.js" type="text/javascript" charset="utf-8"/>
         <script src="resources/scripts/annotations/editor.js" type="text/javascript" charset="utf-8"/>
         <script src="resources/scripts/annotations/annotate.js" type="text/javascript" charset="utf-8"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/atomic/manage.js" type="text/javascript" charset="utf-8"/>
         <script type="text/javascript" src="resources/scripts/annotations/images.js"/>
         <script type="text/javascript">
         $(document).ready(function() {

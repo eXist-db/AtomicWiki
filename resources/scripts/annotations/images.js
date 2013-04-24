@@ -10,6 +10,10 @@ Annotations.namespace("Annotations.image.ImageAnnotation");
  */
 Annotations.image.ImageAnnotation = function(image, editor) {
     this.id = image.id;
+    if (!this.id || this.id == "") {
+        this.id = image.getAttribute("data-annotations-path") || image.src;
+    }
+    $.log("image: %s", this.id);
     
     var annotationLayer = document.createElement("div");
     annotationLayer.className = "yuma-annotationlayer";
@@ -20,7 +24,7 @@ Annotations.image.ImageAnnotation = function(image, editor) {
     });
     
     // the viewer displays existing annotations on a canvas
-    this.viewer = new Annotations.image.Viewer(image.id, annotationLayer, image);
+    this.viewer = new Annotations.image.Viewer(this.id, annotationLayer, image);
     
     // selector is used to draw a new area on the image. It has a separate canvas.
     var selector = new Annotations.image.Selector(this.id, annotationLayer, image, editor);
@@ -202,6 +206,7 @@ Annotations.oop.inherit(Annotations.image.Viewer, Annotations.events.Sender);
  * Load existing annotations from database.
  */
 Annotations.image.Viewer.prototype.load = function() {
+    $.log("Loading image annotations for %s", this.id);
     var self = this;
     $.ajax({
         url: "_annotations/",

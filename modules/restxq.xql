@@ -84,6 +84,7 @@ declare function restxq:process($path-info as xs:string?, $functions as function
             let $arguments := restxq:map-arguments($meta, $params)
             return (
                 restxq:set-serialization($meta),
+                util:log("DEBUG", "Calling function " || function-name($function)),
                 restxq:call-with-args($function, $arguments)
             )
         })
@@ -147,7 +148,7 @@ declare %private function restxq:match-annotation($anno as element(annotation), 
             case "GET" case "DELETE" case "HEAD" return
                 restxq:method($method, $anno, $params)
             case "POST" case "PUT" return
-                restxq:post($anno, $params)
+                restxq:post($anno, $method, $params)
             case "consumes" return
                 restxq:consumes($anno, $params)
             case "produces" return
@@ -173,8 +174,8 @@ declare %private function restxq:method($method as xs:string, $anno as element(a
 (:~
  : %restxq:POST(param)
  :)
-declare %private function restxq:post($anno as element(annotation), $params as map(*)) {
-    if (not(upper-case(request:get-method()) = ("POST", "PUT"))) then
+declare %private function restxq:post($anno as element(annotation), $method as xs:string, $params as map(*)) {
+    if (not(upper-case(request:get-method()) = $method)) then
         ()
     else
         let $value := $anno/value

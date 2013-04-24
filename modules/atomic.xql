@@ -6,6 +6,7 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
 
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace html="http://www.w3.org/1999/xhtml";
+declare namespace wiki="http://exist-db.org/xquery/wiki";
 
 declare function atomic:process-links($node as node()?) {
     typeswitch ($node)
@@ -28,17 +29,20 @@ declare function atomic:process-links($node as node()?) {
 
 declare function atomic:process-img($node as element()) {
     let $src := $node/@src
-    return
-        if (matches($src, "^(/|\w+:).*")) then
-            $node
+    let $resolved :=
+        if (starts-with($src, "/")) then
+            $config:base-url || $src
         else
-            let $collection := substring-after($config:wiki-root, $config:app-root || "/")
-            return
-                element { node-name($node) } {
-                    $node/@* except $node/@src,
-                    attribute src { $collection || "/" || $src },
-                    $node/node()
-                }
+            $src
+    return
+        element { node-name($node) } {
+            $node/@* except ($node/@alt, $node/@src, $node/@class),
+            attribute src { $resolved },
+            attribute alt { $resolved },
+            attribute data-annotations-path { $node/@src/string() },
+            attribute class { $node/@class || " annotate" },
+            $node/node()
+        }
 };
 
 declare function atomic:process-href($node as element()) {
@@ -46,12 +50,12 @@ declare function atomic:process-href($node as element()) {
     let $url :=
         if (matches($href, "^\w+:.*")) then
             $href
-        else if (starts-with($href, "/")) then
+        else if (starts-with($href, "/") and not(starts-with($href, $config:base-url))) then
             $config:base-url || $href
         else
             $href
     return
-        <html:a href="{$url}">{$node/node()}</html:a>
+        <a xmlns="http://www.w3.org/1999/xhtml" href="{$url}">{$node/@* except $node/@href, $node/node()}</a>
 };
 
 declare function atomic:create-feed() as element(atom:feed) {
@@ -100,4 +104,52 @@ declare function atomic:get-content($content as element(atom:content)?, $eval as
                 util:eval($data)
         else
             $data
+};
+
+declare function atomic:lock-for-user($feed as element(atom:entry)) {
+    let $lock := $feed/wiki:lock/@user
+    return
+        if ($lock and $lock != xmldb:get-current-user()) then
+            $lock/string()
+        else
+            let $addLock :=
+                element { node-name($feed) } {
+                    $feed/@*, $feed/node(),
+                    <wiki:lock user="{xmldb:get-current-user()}"/>
+                }
+            let $store := xmldb:store(util:collection-name($feed), util:document-name($feed), $addLock)
+            return
+                ()
+};
+
+declare function atomic:unlock-for-user() as empty() {
+    let $collection := request:get-parameter("collection", ())
+    let $resource := request:get-parameter("resource", ())
+    let $unlocked :=
+        if ($collection and $resource) then
+            let $entry := doc($collection || "/" || $resource)/atom:entry
+            let $unlocked :=
+                element { node-name($entry) } {
+                    $entry/@*, $entry/node() except $entry/wiki:lock
+                }
+            return
+                xmldb:store($collection, $resource, $unlocked)
+        else
+            ()
+    return
+        ()
+};
+
+declare function atomic:sort($entries as element(atom:entry)*) {
+    if (exists($entries/wiki:sort-index)) then
+        for $entry in $entries
+        where not($entry/wiki:is-hidden = "true")
+        order by number($entry/wiki:sort-index)
+        return
+            $entry
+    else
+        for $entry in $entries
+        order by xs:dateTime($entry/atom:published) descending
+        return
+            $entry
 };

@@ -28,17 +28,27 @@ declare function acl:change-permissions($path as xs:string) {
 };
 
 declare function acl:change-collection-permissions($path as xs:string) {
-    sm:chmod($path, "rwxrwxr-x")
+    sm:chmod($path, "rwxrwxr-x"),
+    sm:chgrp($path, $config:default-group)
 };
 
 declare function acl:show-permissions($node as node(), $model as map(*)) {
-    if (doc-available(document-uri(root($model("entry"))))) then
-        let $permissions := sm:get-permissions(document-uri(root($model("entry"))))
-        let $processed := templates:copy-node($node, $model)
-        return
-            acl:process-permissions($processed, $permissions/*)
-    else
-        templates:copy-node($node, $model)
+    let $doc := document-uri(root($model("entry")))
+    return
+        if (doc-available($doc)) then
+            let $permissions := sm:get-permissions($doc)
+            let $owner := $permissions/@owner/string()
+            return
+                if ($owner = xmldb:get-current-user()) then
+                    let $processed := templates:copy-node($node, $model)
+                    return
+                        acl:process-permissions($processed, $permissions/*)
+                else
+                    <tr>
+                        <td>Only the user who created an article is allowed to change permissions.</td>
+                    </tr>
+        else
+            templates:copy-node($node, $model)
 };
 
 declare %private function acl:process-permissions($node as node(), $permissions as element()) {

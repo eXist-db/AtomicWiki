@@ -1,147 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<html>
-    <head>
-        <title>Atomic Wiki</title>
-        <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
-        <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
-        <link href="resources/scripts/aloha/css/aloha.css" rel="stylesheet" type="text/css"/>
-    </head>
-    <body class="templates:surround?with=templates/page.html&amp;at=container-body&amp;using=body">
-        <div class="span12">
-            <div class="app:feed">
-                <div class="app:get-or-create-entry entries">
-                    <div id="edit" class="edit">
-                        <form id="edit-form" class="form-horizontal" action="?" method="POST">
-                            <div class="control-group">
-                                <div class="btn-group">
-                                    <a href="?" id="edit-form-cancel" class="btn">
-                                        <i class="icon-ban-circle"/> Cancel</a>
-                                    <button id="edit-form-save" class="btn">
-                                        <i class="icon-download-alt"/> Save</button>
-                                    <button id="edit-form-saveAndClose" class="btn btn-primary" type="submit">
-                                        <i class="icon-ok"/> Save and Close</button>
-                                    <button id="editor-switch" class="btn btn-info">Wiki editor</button>
-                                </div>
-                            </div>
-                            <div class="control-group title">
-                                <label class="control-label" for="title">Title</label>
-                                <div class="controls">
-                                    <input class="span6 app:edit-title" type="text" name="title" placeholder="Title" required="required"/>
-                                    <p class="help-block">A short, unique name for this entry which will be used in
-                                        URLs.</p>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label" for="name">Short Name</label>
-                                <div class="controls">
-                                    <input class="span3 app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="^[\w-.:]+$"/>
-                                </div>
-                            </div>
-                            <div class="control-group options">
-                                <label class="control-label" for="is-index">Index Page</label>
-                                <div class="controls">
-                                    <label class="checkbox">
-                                        <input type="checkbox" class="app:edit-use-index" name="is-index"/>
+<html><head><title>Atomic Wiki</title><link rel="shortcut icon" href="theme/resources/images/favicon.ico"/><link href="http://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" type="text/css"/><link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/><link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/><link href="theme/resources/css/bootstrap-wysihtml5-0.0.2.css" rel="stylesheet" type="text/css"/></head><body class="templates:surround?with=templates/page.html&amp;at=container-body&amp;using=body"><div class="span12"><div class="app:feed"><div class="app:get-or-create-entry?lock=true entries"><div id="edit" class="edit"><form id="edit-form" class="form-horizontal" action="?" method="POST"><div class="control-group"><div class="btn-group"><button id="edit-form-cancel" class="btn"><i class="icon-ban-circle"/> Cancel</button><button id="edit-form-save" class="btn"><i class="icon-download-alt"/> Save</button><button id="edit-form-saveAndClose" class="btn btn-primary" type="submit"><i class="icon-ok"/> Save and Close</button></div></div><div class="control-group title"><label class="control-label" for="title">Title</label><div class="controls"><input class="span6 app:edit-title" type="text" name="title" placeholder="Title" required="required"/><p class="help-block">A short, unique name for this entry which will be used in
+                                        URLs.</p></div></div><div class="control-group"><label class="control-label" for="name">Short Name</label><div class="controls"><input class="span3 app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="^[\w-.:]+$"/><span class="help-inline">Only letters and -.: are allowed. No spaces.</span></div></div>
+                            
+<!-- START - Navigation --><div class="control-group options"><label class="control-label" for="is-index">Index Page</label><div class="controls"><label class="checkbox"><input type="checkbox" class="app:edit-use-index" name="is-index"/>
                                         Check to use this page as the index page for the section
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="control-group options">
-                                <label class="control-label" for="external">Store</label>
-                                <div class="controls">
-                                    <label class="checkbox">
-                                        <input type="checkbox" class="app:edit-external" name="external"/>
-                                        Check to store content and metadata in separate documents
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="accordion">
-                                <div class="accordion-group">
-                                    <div class="accordion-heading">
-                                        <a href="#permissions" class="accordion-toggle" data-toggle="collapse">Permissions</a>
-                                    </div>
-                                    <div class="accordion-body collapse" id="permissions">
-                                        <div class="accordion-inner">
-                                            <div class="templates:include?path=templates/permissions.html"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <fieldset id="content">
-                                <ul class="nav nav-tabs">
-                                    <li class="active">
-                                        <a href="#content-editor-html" data-toggle="tab">Body</a>
-                                    </li>
-                                    <li>
-                                        <a href="#summary-editor-html" data-toggle="tab">Summary</a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content">
-                                    <div id="content-editor-html" class="tab-pane active content app:edit-content?mode=html"/>
-                                    <div id="summary-editor-html" class="tab-pane content app:edit-summary?mode=html"/>
-                                </div>
-                            </fieldset>
-                            <input type="hidden" name="ctype" value="html"/>
-                            <textarea name="content" style="display: none;"/>
-                            <textarea name="summary" style="display: none;"/>
-                            <input type="hidden" name="entryId" class="app:edit-id"/>
-                            <input type="hidden" name="author" class="app:edit-author"/>
-                            <input type="hidden" name="published" class="app:edit-publication-date"/>
-                            <input type="hidden" name="collection" class="app:edit-collection"/>
-                            <input type="hidden" name="resource" class="app:edit-resource"/>
-                            <input type="hidden" name="editor" class="app:edit-editor"/>
-                            <input type="hidden" name="action" value=""/>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <script type="text/javascript" src="resources/scripts/aloha/lib/require.js"/>
-        <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
-        <script type="text/javascript">
-        var Aloha = window.Aloha || ( window.Aloha = {} );
-        (function (window) {
-            Aloha.settings = {    
-                logLevels: { 'error': true, 'warn': true, 'info': true, 'debug': false, 'deprecated': true },
-                errorhandling: true,
-                ribbon: false,
-            	locale: 'en',
-            	floatingmenu: {
-        			"horizontalOffset" : "5",
-        			"behaviour" : "topalign",
-                    "width" : "680",
-        			"topalignOffset" : "110" 
-            	},
-                plugins: {
-                    format: {
-                        // configure buttons available in the toolbar
-                        config : [ 'b', 'em', 'p', 'del', 'title', 'code', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'removeFormat' ],
-                        // specific configuration for each editable identified by css selectors
-                        editables : {
-                            // the editable with id "teaser" won't offer any formatting options
-                            '#teaser'   : [  ]
-                        },
-                        // those are the tags that will be cleaned when clicking "remove formatting"
-                        removeFormats : [ 'strong', 'em', 'b', 'code', 'i', 'cite', 'q', 'code', 'abbr', 'del', 'sub', 'sup']
-                    },
-                    environment: {
-                        config: {}
-                    }
-                },
-                sidebar: {
-            		disabled: true
-        		},
-                bundles: {
-                    "user": '../../../../resources/scripts/atomic/aloha/'
-                }
-            }
-        } )(window);
-        </script>
-        <script src="resources/scripts/aloha/lib/aloha-full.min.js" data-aloha-plugins="common/ui, common/block, common/paste, common/format, common/list, common/link, common/table, common/dom-to-xhtml, common/highlighteditables, user/environment"/>
-        <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
-        <script type="text/javascript" src="resources/scripts/prettify/prettify.js"/>
-        <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/atomic/html-editor.js" type="text/javascript" charset="utf-8"/>
-    </body>
-</html>
+                                    </label></div></div><div class="control-group"><label class="control-label" for="role">Role</label><div class="controls"><select class="app:edit-role" name="role"><option/><option value="toc">Table of Contents</option></select><span class="help-inline">Display this article for the selected role</span></div></div><div class="control-group"><label class="control-label" for="sort-index">Sort Index</label><div class="controls"><input class="span2 app:edit-sort-index" type="text" name="sort-index" placeholder="1" pattern="^\d+$"/><span class="help-inline">Determines the position of the article in navigation.</span></div></div><div class="control-group options"><label class="control-label" for="is-hidden">Hide in navigation</label><div class="controls"><label class="checkbox"><input class="app:edit-hide-in-nav" type="checkbox" name="is-hidden"/>
+                                        Check to hide the article in navigation.
+                                    </label></div></div>
+                            
+                                                     
+                            
+<!-- START - Navigation -->
+                            
+                            
+<!-- START - Permissions --><div class="accordion"><div class="accordion-group"><div class="accordion-heading"><a href="#permissions" class="accordion-toggle" data-toggle="collapse">Permissions</a></div><div class="accordion-body collapse" id="permissions"><div class="accordion-inner"><div class="templates:include?path=templates/permissions.html"/></div></div></div></div>
+
+<!-- END - Permissions --><fieldset id="content"><ul class="nav nav-tabs"><li class="active"><a id="content-editor-tab" href="#content-editor-html">Body</a></li><li><a id="summary-editor-tab" href="#summary-editor-html">Summary</a></li></ul><div class="tab-content"><div id="content-editor-html" class="tab-pane active content"><div id="content-editor-toolbar" style="display: none;" class="wysihtml5-toolbar"><ul><li class="dropdown"><a class="btn dropdown-toggle" role="button" data-toggle="dropdown" href="#"><i class="icon-font"/>&#160;
+                                                        <span class="current-font">Normal</span><b class="caret"/></a><ul class="dropdown-menu" role="menu"><li><a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="p">Normal</a></li><li><a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">Heading 1</a></li><li><a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h2">Heading 2</a></li><li><a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h3">Heading 3</a></li><li><a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="xquery">XQuery Code</a></li><li><a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="xml">XML Code</a></li><li><a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="javascript">Javascript Code</a></li></ul></li><li class="btn-group"><a data-wysihtml5-command="bold" class="btn"><i class="icon-bold"/></a><a data-wysihtml5-command="italic" class="btn"><i class="icon-italic"/></a><a data-wysihtml5-command="underline" class="btn"><i class="icon-underline"/></a><a data-wysihtml5-command="formatInline" data-wysihtml5-command-value="code" class="btn" title="Code"><i class="icon-barcode"/></a></li><li class="btn-group"><a data-wysihtml5-command="createLink" class="btn" title="Insert/Edit Link"><i class="icon-share"/></a><a data-wysihtml5-command="insertImage" class="btn" title="Insert/Edit Image"><i class="icon-picture"/></a></li><li class="btn-group"><a class="btn" data-wysihtml5-command="justifyLeft" title="Align Left"><i class="icon-align-left"/></a><a class="btn" data-wysihtml5-command="justifyRight" title="Align Right"><i class="icon-align-right"/></a><a class="btn" data-wysihtml5-command="justifyCenter" title="Center"><i class="icon-align-center"/></a><a class="btn" data-wysihtml5-command="justifyFull" title="Justify"><i class="icon-align-justify"/></a></li><li class="btn-group"><a class="btn" data-wysihtml5-command="insertUnorderedList" title="Insert/Toggle Unordered List"><i class="icon-list"/></a><a class="btn" data-wysihtml5-command="insertOrderedList" title="Insert/Toggle Ordered List"><i class="icon-th-list"/></a><a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="info" title="Insert/Toggle an Info Box"><i class="icon-info-sign"/></a><a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="alert" title="Insert/Toggle an Alert Box"><i class="icon-warning-sign"/></a></li><li class="btn-group"><a class="btn" data-wysihtml5-command="undo" title="Undo"><i class="icon-undo"/></a><a class="btn" data-wysihtml5-command="redo" title="Redo"><i class="icon-redo"/></a></li></ul></div><pre id="content-editor-content" class="app:edit-content?mode=html"/><textarea name="content" id="content-editor-textarea" placeholder="Article text..."/></div><div id="summary-editor-html" class="tab-pane content"><div id="summary-editor-toolbar" style="display: none;" class="wysihtml5-toolbar"><ul><li class="dropdown"><a class="btn dropdown-toggle" role="button" data-toggle="dropdown" href="#"><i class="icon-font"/>&#160;
+                                                        <span class="current-font">Normal</span><b class="caret"/></a><ul class="dropdown-menu" role="menu"><li><a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="p">Normal</a></li><li><a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">Heading 1</a></li><li><a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h2">Heading 2</a></li><li><a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h3">Heading 3</a></li><li><a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="xquery">XQuery Code</a></li><li><a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="xml">XML Code</a></li><li><a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="javascript">Javascript Code</a></li></ul></li><li class="btn-group"><a data-wysihtml5-command="bold" class="btn"><i class="icon-bold"/></a><a data-wysihtml5-command="italic" class="btn"><i class="icon-italic"/></a><a data-wysihtml5-command="underline" class="btn"><i class="icon-underline"/></a><a data-wysihtml5-command="formatInline" data-wysihtml5-command-value="code" class="btn" title="Code"><i class="icon-barcode"/></a></li><li class="btn-group"><a data-wysihtml5-command="createLink" class="btn" title="Insert/Edit Link"><i class="icon-share"/></a><a data-wysihtml5-command="insertImage" class="btn" title="Insert/Edit Image"><i class="icon-picture"/></a></li><li class="btn-group"><a class="btn" data-wysihtml5-command="justifyLeft" title="Align Left"><i class="icon-align-left"/></a><a class="btn" data-wysihtml5-command="justifyRight" title="Align Right"><i class="icon-align-right"/></a><a class="btn" data-wysihtml5-command="justifyCenter" title="Center"><i class="icon-align-center"/></a><a class="btn" data-wysihtml5-command="justifyFull" title="Justify"><i class="icon-align-justify"/></a></li><li class="btn-group"><a class="btn" data-wysihtml5-command="insertUnorderedList" title="Insert/Toggle Unordered List"><i class="icon-list"/></a><a class="btn" data-wysihtml5-command="insertOrderedList" title="Insert/Toggle Ordered List"><i class="icon-th-list"/></a><a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="info" title="Insert/Toggle an Info Box"><i class="icon-info-sign"/></a><a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="alert" title="Insert/Toggle an Alert Box"><i class="icon-warning-sign"/></a></li><li class="btn-group"><a class="btn" data-wysihtml5-command="undo" title="Undo"><i class="icon-undo"/></a><a class="btn" data-wysihtml5-command="redo" title="Redo"><i class="icon-redo"/></a></li></ul></div><pre id="summary-editor-content" class="app:edit-summary?mode=html"/><textarea name="summary" id="summary-editor-textarea" placeholder="Article text..."/></div></div></fieldset><input type="hidden" name="ctype" value="html"/>
+                            <!--textarea name="content" style="display: none;"/>
+                            <textarea name="summary" style="display: none;"/--><input type="hidden" name="entryId" class="app:edit-id"/><input type="hidden" name="author" class="app:edit-author"/><input type="hidden" name="published" class="app:edit-publication-date"/><input type="hidden" name="collection" class="app:edit-collection"/><input type="hidden" name="resource" class="app:edit-resource"/><input type="hidden" name="editor" class="app:edit-editor"/><input type="hidden" name="external" value="on"/><input type="hidden" name="action" value=""/></form></div><div class="accordion"><div class="accordion-group"><div class="accordion-heading"><a href="#attachments" class="accordion-toggle" data-toggle="collapse">Attachments</a></div><div class="accordion-body collapse" id="attachments"><div class="accordion-inner"><div class="attachment-list"><table><thead><th>Name</th><th>Thumbnail</th><th>Type</th></thead><tbody class="app:attachments attachments"/></table></div><div id="image-upload"><p>To upload: drop one or more files on this dialog or click on the button below.</p><form class="file_upload" action="modules/upload.xql" method="POST" enctype="multipart/form-data"><div class="file_upload_body"><input type="file" name="uploadedfiles[]" multiple="multiple"/><input name="collection" value="/db/abc" type="hidden"/><button>Upload</button><div class="file_upload_label">Upload</div></div></form><div class="overall-progress" style="opacity: 0"><div class="bar" style="width: 0%;"/><div class="progress-label">0%</div></div><div class="queue"><table class="files"/></div></div></div></div></div></div></div></div></div><div class="modal hide fade" id="link-dialog"><div class="modal-header"><a class="close" data-dismiss="modal"><i class="icon-remove"/></a><h3 class="title">Insert Link</h3></div><div class="modal-body"><form class="form-horizontal" action=""><div class="control-group"><label class="control-label" for="url">URL:</label><div class="controls"><input class="span4" type="text" name="url" placeholder="http://" required="required"/><span class="help-inline">Enter absolute URL or select resource from tree</span></div></div><div class="image-settings"><div class="control-group"><label class="control-label" for="width">Width:</label><div class="controls"><input class="span2" type="text" name="width"/><span class="help-inline">Set either width or height</span></div></div><div class="control-group"><label class="control-label" for="height">Height:</label><div class="controls"><input class="span2" type="text" name="height"/></div></div><div class="control-group"><label class="control-label" for="align">Alignment:</label><div class="controls"><select class="span4" name="align"><option value="wysiwyg-text-align-center" selected="selected">Center</option><option value="wysiwyg-img-float-left">Left</option><option value="wysiwyg-img-float-right">Right</option><option value="wysiwyg-float-left">Left 50%</option><option value="wysiwyg-float-right">Right 50%</option></select></div></div></div></form><div class="sitemap"/></div><div class="modal-footer"><a class="btn btn close-button"><i class="icon-remove"/> Cancel
+                </a><a class="btn-primary btn apply-button"><i class="icon-remove"/> Apply
+                </a></div></div><script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/><script type="text/javascript" src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"/><script type="text/javascript" src="resources/scripts/jquery/jquery.fileupload.js"/><script type="text/javascript" src="resources/scripts/jquery/jquery.dynatree.min.js"/><script type="text/javascript" src="resources/scripts/bootstrap.min.js"/><script type="text/javascript" src="resources/scripts/wysihtml5/wysihtml5-0.4.0pre.min.js"/><script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/><script src="resources/scripts/atomic/manage.js" type="text/javascript" charset="utf-8"/><script src="resources/scripts/atomic/attachments.js" type="text/javascript" charset="utf-8"/><script type="text/javascript" src="resources/scripts/wysihtml5/simple.js"/><script src="resources/scripts/atomic/html-editor.js" type="text/javascript" charset="utf-8"/></body></html>

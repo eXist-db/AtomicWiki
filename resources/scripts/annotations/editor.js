@@ -34,9 +34,16 @@ Annotations.edit.Editor = (function () {
             self.dialog.find("form").each(function() { this.reset(); });
             div.empty().hide();
         });
+        $.log("Initializing annotation editor...");
         var editor = new wysihtml5.Editor("annotation-editor", { // id of textarea element
             toolbar: "annotation-editor-toolbar", // id of toolbar element
-            parserRules: wysihtml5ParserRules // defined in parser rules set 
+            useLineBreaks: false,
+            autoLink: false,
+            cleanUp: true,
+            parserRules: wysihtml5ParserRules, // defined in parser rules set
+            stylesheets: ["theme/resources/css/editor.css"],
+            allowObjectResizing: true,
+            style: true
         });
         self.dialog.hide();
     };

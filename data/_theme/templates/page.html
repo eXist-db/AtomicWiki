@@ -4,10 +4,8 @@
         <title>Atomic Wiki</title>
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
-        <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
         <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
-        <script type="text/javascript" src="resources/scripts/prettify/prettify.js"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
     </head>
     <body id="body">
@@ -20,17 +18,7 @@
                     <div class="app:feed">
                         <div id="navigation">
                             <ul id="nav" class="dropdown dropdown-horizontal">
-                                <li>
-                                    <span>Home</span>
-                                    <ul>
-                                        <li>
-                                            <a class="app:home-link?target=app">Wiki Startpage</a>
-                                        </li>
-                                        <li>
-                                            <a class="app:home-link">eXist-db Home</a>
-                                        </li>
-                                    </ul>
-                                </li>
+                                <li class="app:section-menu"/>
                             </ul>
                             <div class="app:login">
                                 <div class="actions">
@@ -42,7 +30,7 @@
                                 <div class="actions">
                                     <div class="btn-group">
                                         <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-                                            Actions <span class="caret"/>
+                                            Section <span class="caret"/>
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li>
@@ -56,6 +44,10 @@
                                             <li>
                                                 <a href="?action=editfeed" class="app:posted-link">
                                                     <i class="icon-edit"/> Edit Section</a>
+                                            </li>
+                                            <li>
+                                                <a href="#" id="open-sitemap">
+                                                    <i class="icon-home"/> Sitemap</a>
                                             </li>
                                         </ul>
                                         <a href="?logout=logout" class="btn btn-inverse app:posted-link">
@@ -96,6 +88,7 @@
                 <h3>Login</h3>
             </div>
             <form class="login content" action="" method="POST">
+                <input type="hidden" name="duration" value="P14D"/>
                 <div class="modal-body">
                     <div class="control-group">
                         <label for="user" class="control-label">User</label>
@@ -131,20 +124,6 @@
                 </a>
                 <a class="btn btn cancel-button">
                     <i class="icon-remove"/> Cancel
-                </a>
-            </div>
-        </div>
-        <div class="modal hide fade" id="manage-dialog">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">
-                    <i class="icon-remove"/>
-                </a>
-                <h3>Content Overview</h3>
-            </div>
-            <div class="modal-body"/>
-            <div class="modal-footer">
-                <a class="btn-primary btn ok-button">
-                    <i class="icon-ok"/> Close
                 </a>
             </div>
         </div>

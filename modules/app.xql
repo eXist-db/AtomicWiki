@@ -21,25 +21,6 @@ declare function app:feed($node as node(), $model as map(*)) {
         map { "feed" := $feed }
 };
 
-declare function app:breadcrumbs($node as node(), $model as map(*)) {
-    let $collection := util:collection-name($model)
-    let $path := substring-after($collection, $config:wiki-root)
-    return
-        <div class="breadcrumbs">
-        {
-            let $components := tokenize(substring($path, 2), "/")
-            for $component at $p in $components
-            return (
-                if ($p gt 1) then
-                    " / "
-                else
-                    (),
-                <a href="{ string-join(for $i in 1 to count($components) - $p return '..', '/') }">{ $component }</a>
-            )
-        }
-        </div>
-};
-
 declare function app:get-or-create-feed($node as node(), $model as map(*)) as map(*) {
     let $feed := request:get-attribute("feed")
     let $data :=
@@ -82,10 +63,7 @@ function app:entries($node as node(), $model as map(*), $count as xs:string?, $i
         if ($allEntries[wiki:is-index = "true"]) then
             $allEntries[wiki:is-index = "true"][1]
         else
-            for $entry in $allEntries
-            order by xs:dateTime($entry/atom:published) descending
-            return
-                $entry
+            atomic:sort($allEntries)
     let $count := if ($count) then number($count) else $config:items-per-page
     return (
         for $entry in subsequence($entries, $start, $count)
@@ -122,7 +100,7 @@ declare function app:entry($node as node(), $model as map(*), $feed as xs:string
         map { "entry" := $entryData, "count" := 1 }
 };
 
-declare function app:get-or-create-entry($node as node(), $model as map(*)) {
+declare function app:get-or-create-entry($node as node(), $model as map(*), $lock as xs:string?) {
     let $feed := $model("feed")
     let $id := request:get-parameter("id", ())
     let $wikiId := request:get-parameter("wiki-id", ())
@@ -131,8 +109,15 @@ declare function app:get-or-create-entry($node as node(), $model as map(*)) {
             $node/@*,
             if ($id or $wikiId) then
                 let $entry := config:get-entries($feed, $id, $wikiId)
+                let $locked := atomic:lock-for-user($entry)
                 return
-                    templates:process($node/node(), map:new(($model, map { "entry" := $entry })))
+                    if ($locked) then
+                        <div class="alert">
+                            <h3>Document Locked</h3>
+                            <p>The document is currently being edited by another user.</p>
+                        </div>
+                    else
+                        templates:process($node/node(), map:new(($model, map { "entry" := $entry })))
             else
                 templates:process($node/node(), map:new(($model, map { "entry" := atomic:create-entry() })))
         }
@@ -140,7 +125,7 @@ declare function app:get-or-create-entry($node as node(), $model as map(*)) {
 
 declare function app:title($node as node(), $model as map(*)) {
     let $entry := $model("entry")
-    let $user := session:get-attribute("wiki.user")
+    let $user := request:get-attribute("org.exist.wiki.login.user")
     let $link :=
         if (empty($entry)) then
             "."
@@ -182,6 +167,16 @@ declare function app:publication-date-full($node as node(), $model as map(*)) {
             xs:dateTime($model("entry")/atom:published)
         else
             xs:dateTime($model("feed")/atom:published)
+    return
+        datetime:format-dateTime($date, "yyyy/MM/dd 'at' HH:mm:ss z")
+};
+
+declare function app:updated-date-full($node as node(), $model as map(*)) {
+    let $date := 
+        if (map:contains($model, "entry")) then
+            xs:dateTime($model("entry")/atom:updated)
+        else
+            xs:dateTime($model("feed")/atom:updated)
     return
         datetime:format-dateTime($date, "yyyy/MM/dd 'at' HH:mm:ss z")
 };
@@ -246,7 +241,12 @@ declare function app:process-content($type as xs:string?, $content as item()?, $
 };
 
 declare function app:edit-link($node as node(), $model as map(*), $action as xs:string) {
-    <a href="{$model('entry')/wiki:id}?action={$action}">{ $node/@*[local-name(.) != 'href'], $node/node() }</a>
+    let $lockedBy := $model('entry')/wiki:lock/@user
+    return
+        if ($lockedBy and $lockedBy != xmldb:get-current-user()) then
+            <span><i class="icon-lock"></i> Locked by {$lockedBy/string()}</span>
+        else
+            <a href="{$model('entry')/wiki:id}?action={$action}">{ $node/@*[local-name(.) != 'href'], $node/node() }</a>
 };
 
 declare function app:action-button($node as node(), $model as map(*), $action as xs:string?) {
@@ -404,6 +404,36 @@ declare function app:edit-use-index($node as node(), $model as map(*)) {
     }
 };
 
+declare function app:edit-sort-index($node as node(), $model as map(*)) {
+    element { node-name($node) } {
+        $node/@* except $node/@value,
+        attribute value { $model("entry")/wiki:sort-index }
+    }
+};
+
+declare function app:edit-hide-in-nav($node as node(), $model as map(*)) {
+    element { node-name($node) } {
+        $node/@*,
+        if ($model("entry")/wiki:is-hidden = "true") then
+            attribute checked { "checked" }
+        else
+            ()
+    }
+};
+
+declare function app:edit-role($node as node(), $model as map(*)) {
+    element { node-name($node) } {
+        $node/@*,
+        let $role := $model("entry")/wiki:role
+        for $option in $node/option
+        return
+            <option value="{$option/@value}">
+            { if ($option/@value = $role) then attribute selected { "selected" } else () }
+            { $option/node() }
+            </option>
+    }
+};
+
 declare function app:edit-collection($node as node(), $model as map(*)) {
     let $collection := request:get-attribute("collection")
     let $feed :=
@@ -441,8 +471,30 @@ declare function app:edit-editor($node as node(), $model as map(*)) {
         }
 };
 
+declare 
+    %templates:wrap
+function app:attachments($node as node(), $model as map(*)) {
+    let $collection := util:collection-name($model("feed"))
+    for $resource in xmldb:get-child-resources($collection)
+    let $mime := xmldb:get-mime-type(xs:anyURI($collection || "/" || $resource))
+    where not($mime = ("application/xml", "text/xml", "text/html", "application/atom+xml"))
+    return
+        <tr>
+            <td>{$resource}</td>
+            <td>
+            {
+                if (starts-with($mime, "image")) then
+                    <img src="modules/images.xql?image={$collection}/{$resource}&amp;size=64"/>
+                else
+                    ()
+            }
+            </td>
+            <td>{$mime}</td>
+        </tr>
+};
+
 declare function app:login($node as node(), $model as map(*)) {
-    let $user := request:get-attribute("wiki.user") != "guest"
+    let $user := request:get-attribute("org.exist.wiki.login.user")
     return
         if ($user) then
             templates:process($node/*[2], $model)
@@ -450,9 +502,29 @@ declare function app:login($node as node(), $model as map(*)) {
             templates:process($node/*[1], $model)
 };
 
+declare function app:check-access($node as node(), $model as map(*)) {
+    let $user := request:get-attribute("org.exist.wiki.login.user")
+    return
+        if ($user) then
+            let $collection := request:get-attribute("collection")
+            let $log := util:log-system-out("collection: " || $collection)
+            return
+                if ($collection and xmldb:collection-available($collection)) then
+                    let $feed := xmldb:xcollection($collection)//atom:feed
+                    return
+                        if (sm:has-access(xs:anyURI(document-uri(root($feed))), "w")) then
+                            templates:process($node/*[2], $model)
+                        else
+                            templates:process($node/*[1], $model)
+                else
+                    templates:process($node/*[2], $model)
+        else
+            templates:process($node/*[1], $model)
+};
+
 declare function app:user($node as node(), $model as map(*)) {
     element { node-name($node) } {
-        request:get-attribute("wiki.user")
+        request:get-attribute("org.exist.wiki.login.user")
     }
 };
 
@@ -460,6 +532,35 @@ declare function app:home-link($node as node(), $model as map(*), $target as xs:
     let $link := if ($target = "app") then $config:app-home else $config:exist-home
     return
         <a href="{$link}">{ $node/@*, templates:process($node/node(), $model)}</a>
+};
+
+declare function app:section-menu($node as node(), $model as map(*)) {
+    if ($model("feed")) then
+        let $collection := util:collection-name($model("feed"))
+        let $toc := xmldb:xcollection($collection)/atom:entry[wiki:role = "toc"][1]
+        let $root := 
+            if ($toc) then
+                $toc
+            else
+                xmldb:xcollection($collection)/atom:entry[wiki:is-index = "true"][1]
+        let $feedHome := if (ends-with(request:get-uri(), "/")) then "#" else "."
+        return
+            <li>
+                <span>
+                    <a href="{if ($root) then $root/wiki:id else $feedHome}">
+                    {if ($root) then $root/atom:title/text() else $model("feed")/atom:title/text()}
+                    </a>
+                </span>
+                <ul>
+                {
+                    for $entry in atomic:sort(xmldb:xcollection($collection)/atom:entry)
+                    return
+                        <li><a href="{$entry/wiki:id}">{$entry/atom:title}</a></li>
+                }
+                </ul>
+            </li>
+    else
+        ()
 };
 
 declare function app:process-links($node as node(), $model as map(*)) {
@@ -472,12 +573,15 @@ declare function app:process-links($node as node(), $model as map(*)) {
 };
 
 declare function app:atom-link($node as node(), $model as map(*)) {
-    let $url := config:atom-url-from-feed($model("feed"))
-    return
-        <a href="{$url}">
-            { $node/@* except $node/@href }
-            { templates:process($node/*, $model) }
-        </a>
+    if (exists($model("feed"))) then
+        let $url := config:atom-url-from-feed($model("feed"))
+        return
+            <a href="{$url}">
+                { $node/@* except $node/@href }
+                { templates:process($node/*, $model) }
+            </a>
+    else
+        ()
 };
 
 declare function app:ajax($node as node(), $model as map(*), $href as xs:anyURI) {

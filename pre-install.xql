@@ -2,6 +2,8 @@ xquery version "1.0";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "modules/config.xqm";
 import module namespace xdb="http://exist-db.org/xquery/xmldb";
+import module namespace anno="http://exist-db.org/annotations" at "modules/annotations.xql";
+
 
 (: The following external variables are set by the repo:deploy function :)
 

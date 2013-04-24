@@ -1,8 +1,11 @@
 xquery version "3.0";
 
+
+import module namespace cleanup="http://atomic.exist-db.org/xquery/cleanup" at "cleanup.xql";
 import module namespace wiki="http://exist-db.org/xquery/wiki" at "java:org.exist.xquery.modules.wiki.WikiModule";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace acl="http://atomic.exist-db.org/xquery/atomic/acl" at "acl.xql";
+import module namespace atomic="http://atomic.exist-db.org/xquery/atomic" at "atomic.xql";
 
 declare namespace store="http://atomic.exist-db.org/xquery/store";
 declare namespace atom="http://www.w3.org/2005/Atom";
@@ -13,8 +16,12 @@ declare variable $store:ERROR := xs:QName("store:error");
 
 declare function store:store-resource($collection, $name, $content, $mediaType) {
     let $stored := xmldb:store($collection, $name, $content, $mediaType)
+    let $owner := sm:get-permissions(xs:anyURI($stored))/@owner
     return
-        acl:change-permissions($stored)
+        if ($owner = xmldb:get-current-user()) then
+            acl:change-permissions($stored)
+        else
+            ()
 };
 
 declare function store:process-content($editType as xs:string, $content as xs:string) {
@@ -33,6 +40,43 @@ declare function store:process-content($editType as xs:string, $content as xs:st
                 $content
 };
 
+declare function store:relativize-links($node as node()) {
+    if ($node instance of element()) then
+        if ($node/@href) then
+            element { node-name($node) } {
+                if (starts-with($node/@href, $config:base-url)) then (
+                    attribute href { substring-after($node/@href, $config:base-url) },
+                    $node/@* except $node/@href,
+                    for $child in $node/node() return store:relativize-links($child)
+                ) else
+                    ( $node/@*, for $child in $node/node() return store:relativize-links($child) )
+            }
+        else if ($node/@src) then
+            element { node-name($node) } {
+                if (starts-with($node/@src, $config:base-url)) then (
+                    attribute src { substring-after($node/@src, $config:base-url) },
+                    $node/@* except $node/@src,
+                    for $child in $node/node() return store:relativize-links($child)
+                ) else
+                    ( $node/@*, for $child in $node/node() return store:relativize-links($child) )
+            }
+        else
+            element { node-name($node) } {
+                $node/@*, for $child in $node/node() return store:relativize-links($child)
+            }
+    else
+        $node
+};
+
+declare function store:process-html($content as xs:string?) {
+    if ($content) then
+        let $parsed := cleanup:clean(util:parse-html($content)//*:article)
+        return
+            store:relativize-links($parsed)
+    else
+        ()
+};
+
 declare function store:article() {
     let $name := request:get-parameter("name", ())
     let $id := request:get-parameter("entryId", ())
@@ -45,10 +89,15 @@ declare function store:article() {
     let $resource := request:get-parameter("resource", ())
     let $storeSeparate := request:get-parameter("external", ())
     let $isIndexPage := request:get-parameter("is-index", ())
+    let $sortIndex := request:get-parameter("sort-index", "")
+    let $isHidden := request:get-parameter("is-hidden", ())
+    let $role := request:get-parameter("role", "")
     let $editor := request:get-parameter("editor", "wiki")
     let $editType := request:get-parameter("ctype", "html")
     let $contentParsed := store:process-content($editType, $content)
     let $summaryParsed := store:process-content($editType, $summary)
+    let $contentData := if ($editor = "wiki") then $contentParsed else store:process-html($contentParsed)
+    let $summaryData := if ($editor = "wiki") then $summaryParsed else store:process-html($summaryParsed)
     let $contentType := if ($editType = ("wiki", "html")) then "html" else $editType
     let $entry :=
         <atom:entry>
@@ -56,13 +105,26 @@ declare function store:article() {
             <wiki:id>{$name}</wiki:id>
             <wiki:editor>{$editor}</wiki:editor>
             <wiki:is-index>{if (exists($isIndexPage)) then 'true' else 'false'}</wiki:is-index>
+            <wiki:is-hidden>{if (exists($isHidden)) then 'true' else 'false'}</wiki:is-hidden>
+            {
+                if ($sortIndex != "") then
+                    <wiki:sort-index>{$sortIndex}</wiki:sort-index>
+                else
+                    ()
+            }
+            {
+                if ($role and $role != "") then
+                    <wiki:role>{$role}</wiki:role>
+                else
+                    ()
+            }
             <atom:published>{ $published }</atom:published>
             <atom:updated>{current-dateTime()}</atom:updated>
             <atom:author><atom:name>{ $author }</atom:name></atom:author>
             <atom:title>{$title}</atom:title>
             {
                 if ($summaryParsed) then
-                    <atom:summary type="xhtml">{ $summaryParsed }</atom:summary>
+                    <atom:summary type="xhtml">{ $summaryData }</atom:summary>
                 else
                     ()
             }
@@ -72,11 +134,17 @@ declare function store:article() {
                     let $docName := concat($name, if ($contentType eq "xquery") then ".xql" else ".html")
                     let $mediaType := if ($contentType eq "xquery") then "application/xquery" else "text/html"
                     let $stored := 
-                        store:store-resource($dataColl, $docName, $contentParsed, $mediaType)
+                        store:store-resource($dataColl, $docName, $contentData, $mediaType)
                     return
                         <atom:content type="{$contentType}" src="{$docName}"/>
                 else
-                    <atom:content type="{$contentType}">{ $contentParsed }</atom:content>
+                    <atom:content type="{$contentType}">{ $contentData }</atom:content>
+            }
+            {
+                if (request:get-parameter("unlock", "true") = "false") then
+                    <wiki:lock user="{xmldb:get-current-user()}"/>
+                else
+                    ()
             }
         </atom:entry>
     let $atomResource := if ($resource) then $resource else $name || ".atom"
@@ -147,7 +215,12 @@ declare function store:collection() {
         </atom:feed>
     let $stored :=
         xmldb:store($collectionPath, "feed.atom", $data, "application/atom+xml")
-    let $perms := acl:change-permissions($stored)
+    let $owner := sm:get-permissions(xs:anyURI($stored))/@owner
+    let $perms :=
+        if ($owner = xmldb:get-current-user()) then
+            acl:change-permissions($stored)
+        else
+            ()
     return
         request:set-attribute("feed", doc($stored)/*)
 };
@@ -192,16 +265,22 @@ declare function store:validate() {
 let $action := request:get-parameter("action", "store")
 let $id := request:get-parameter("entryId", ())
 return
-    if (request:get-parameter("validate", ())) then
-        store:validate()
-    else
-        switch ($action)
-            case "delete" return
-                store:delete-article()
-            case "store" return
-                if ($id) then 
-                    store:article()
-                else 
-                    store:collection()
-            default return
-                ()
+(:    try {:)
+        if (request:get-parameter("validate", ())) then
+            store:validate()
+        else
+            switch ($action)
+                case "unlock" return
+                    atomic:unlock-for-user()
+                case "delete" return
+                    store:delete-article()
+                case "store" return
+                    if ($id) then 
+                        store:article()
+                    else 
+                        store:collection()
+                default return
+                    ()
+(:    } catch * {:)
+(:        <result><error>{$err:description}</error></result>:)
+(:    }:)

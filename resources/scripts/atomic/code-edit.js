@@ -7,7 +7,7 @@ function Editor(language) {
     var UndoManager = require("ace/undomanager").UndoManager;
     
     var div = document.getElementById("editor");
-    div.style.height = "200px";
+    div.style.height = "100%";
     div.style.width = "100%";
     var content = $(div).text();
     $(div).empty();
@@ -22,7 +22,7 @@ function Editor(language) {
             doc.setMode(new XmlMode());
             break;
         case "xquery":
-            var XQueryMode = require("eXide/mode/xquery").Mode;
+            var XQueryMode = require("ace/mode/xquery").Mode;
             doc.setMode(new XQueryMode());
             break;
         case "javascript":
