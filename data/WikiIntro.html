@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article xmlns="http://www.w3.org/1999/xhtml">
+    <p>Atomic Wiki organizes content into <b>sections</b> and <b>articles</b>. A section may contain several articles. One article may be defined as the entry (or index) page for the section.</p>
+    <p>The URL uniquely identifies a section or an article. A section URL ends with a /. For example, the URL <i>http://localhost:8080/exist/apps/wiki/test/</i> will display the entry page of section "test" or - if no entry page is defined - all articles within the section.</p>
+    <p>To access an article within a section, append the short ID of the article to the section URL. For example: <i>http://localhost:8080/exist/apps/wiki/test/MyTest</i>. A article URL will <b>never</b> end with a /.</p>
+    <h2>Creating a New Section</h2>
+    <p>If you just installed the wiki from the eXist-db repository, you should be able to log in as user "editor" with password "editor". This is the default wiki admin user.</p>
+    <p>To create a new section, log in and enter a section URL into your browsers location bar. If the section does not yet exists (and you&#160; are logged in), you will be presented with a form, asking for a title for the section.</p>
+    <figure class="wysiwyg-text-align-center">
+        <img src="/data/screenshot1.png" width="350" alt="/exist/apps/wiki/data/screenshot1.png"/>
+        <figcaption>Creating a new section</figcaption>
+    </figure>
+    <p>Enter a title and click the store button. The section will be created and the browser will show a new, empty page. To create your first article, select <i>New HTML Article</i> from the <i>Section</i> dropdown menu:</p>
+    <figure class="wysiwyg-text-align-center">
+        <img src="/data/screenshot2.png" alt="/exist/apps/wiki/data/screenshot2.png"/>
+        <figcaption>The section menu</figcaption>
+    </figure>
+    <p>This will open the editor. You must now provide a title and a short name. The <i>short name</i> is used to uniquely identify the article. This is the name which will appear in URLs.</p>
+    <p>If you want to use the article as the entry page for the section, select the <i>Index Page</i> checkbox.</p>
+    <p>The <i>Menu Index</i> determines if an how the article will appear in the main section menu at the head of the page. Leave it empty or set it to 0 to not show the article in the menu. A positive number will render the article heading as a main menu entry. A <i>Menu Index</i> of e.g. "1.1" will show the article as first item in the dropdown menu below the first main menu entry.</p>
+    <figure class="wysiwyg-text-align-center">
+        <img src="/data/screenshot3.png" width="500" alt="/exist/apps/wiki/data/screenshot3.png"/>
+        <figcaption>The editor page</figcaption>
+    </figure>
+    <h1>Storage</h1>
+    <p>All content is stored in the form of Atom feeds in the <code>data</code> collection of the application. Every article consists of two documents, whose file name corresponds to the short name of the article:</p>
+    <ol>
+        <li>
+            <code>shortname.atom</code> contains the article's metadata</li>
+        <li>
+            <code>shortname.html</code> contains the HTML of the article</li>
+    </ol>
+    <p>Due to the simple structure of the data collection it is not a problem to directly edit the HTML using an external editor with WebDAV support (e.g. oXygen).</p>
+</article>

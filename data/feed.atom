@@ -7,4 +7,5 @@
     <atom:author>
         <atom:name>editor</atom:name>
     </atom:author>
+    <category scheme="http://exist-db.org/NS/wiki/type/" term="wiki"/>
 </atom:feed>
