@@ -48,10 +48,13 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label" for="sort-index">Sort Index</label>
+                                <label class="control-label" for="sort-index">Menu Index</label>
                                 <div class="controls">
                                     <input class="span2 app:edit-sort-index" type="text" name="sort-index" placeholder="1" pattern="^\d+(\.\d+)*$"/>
-                                    <span class="help-inline">Determines the position of the article in navigation.</span>
+                                    <span class="help-block">Position of the article in main navigation menu given as a hierarchical, numeric id.
+                                        Articles with a single number, e.g. "1", get a main menu entry. "2.1" means the article will appear as first item
+                                        below the second main menu entry.
+                                    </span>
                                 </div>
                             </div>
                             <div class="accordion">
