@@ -1,0 +1,174 @@
+@import url('bootstrap.min.css');
+
+body {
+    font: 19px/28px Georgia, "Times New Roman", Times, serif !important;
+    color: #555;
+    margin: 10px 8px;
+}
+
+.wysiwyg-float-right {
+    float: right;
+    margin: .5em 0 .5em 1em;
+}
+
+.wysiwyg-float-left {
+    float: left;
+    margin: .5em 1em .5em 0;
+}
+
+.wysiwyg-text-align-justify {
+    text-align: justify;
+}
+
+.wysiwyg-text-align-left {
+    text-align: left;
+}
+
+.wysiwyg-text-align-right {
+    text-align: right;
+}
+
+.wyswig-text-align-center {
+    text-align: center;
+}
+
+.wysiwyg-text-align-center img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+pre:hover {
+    border: 1px solid orange;
+    cursor: pointer;
+}
+
+
+figure {
+    width: auto;
+    margin: 1em 1.5em;
+}
+
+figure.wysiwyg-float-right {
+    width: 48%;
+    margin: 1em 0 1em 1.5em;
+}
+
+figure.wysiwyg-float-left {
+    width: 48%;
+    margin: 1em 1.5em 1em 0;
+}
+
+figure.wysiwyg-img-float-left {
+    display: inline-block;
+    float: left;
+    margin: 1em 1.5em 1em 0;
+}
+
+figure.wysiwyg-img-float-right {
+    display: inline-block;
+    float: right;
+    margin: 1em 0 1em 1.5em;
+}
+
+figure figcaption {
+    font-size: 85%;
+    text-align: left;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #CACACA;
+}
+
+h1 {
+    font-family: "Quicksand", "Arial", Helvetica, sans-serif;
+    font-size: 1.75em;
+    font-weight: bold;
+    margin: .8em 0 0 0;
+}
+
+h2 {
+    font-family: "Quicksand", "Arial", Helvetica, sans-serif;
+    font-size: 1.33em;
+    font-weight: bold;
+    margin: .3em 0 0;
+}
+
+h3 {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+table {
+    margin: .5em 1em;
+}
+
+td, th {
+    padding: 6px 4px;
+}
+
+.strong {
+    font-weight: bold;
+}
+
+em {
+    font-style: italic;
+}
+
+code {
+    font-size: .92em;
+    background-color: transparent;
+    border: 0;
+    color: inherit;
+}
+
+blockquote {
+    margin: .5em 2em;
+    font-style: italic;
+    text-align: justify;
+}
+
+ul, ol {
+    margin: 0pt 1.5em 1.5em;
+}
+
+ul li {
+    list-style: disc;
+    margin-bottom: .4em;
+}
+
+ol li {
+    list-style: decimal;
+    margin-bottom: .4em;
+}
+
+img {
+    margin: 8px 0;
+    max-width: 100%
+}
+
+.img-float-left {
+    float: left;
+    margin-right: 10px;
+}
+
+.img-float-right {
+    float: right;
+    margin-left: 10px;
+}
+
+.code {
+    font-family: "Ubuntu Mono", "Menlo", "Consolas", monospace;
+    font-size: 1em;
+    background: #555555 url(../images/noise.png);
+    margin: 16px 8px;
+    padding: 8px 8px;
+}
+
+div.alert {
+    color: #dd0000 !important;
+    background-color: #ffe4c4;
+    
+}
+
+#content div.alert li {
+    color: inherit;
+}
