@@ -6,7 +6,7 @@
     <wiki:is-index xmlns:wiki="http://exist-db.org/xquery/wiki">false</wiki:is-index>
     <wiki:sort-index xmlns:wiki="http://exist-db.org/xquery/wiki">1</wiki:sort-index>
     <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
-    <atom:updated>2013-04-24T22:56:46.726+02:00</atom:updated>
+    <atom:updated>2013-04-24T23:13:00.212+02:00</atom:updated>
     <atom:author>
         <atom:name>wolf</atom:name>
     </atom:author>
