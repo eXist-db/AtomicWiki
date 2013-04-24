@@ -44,4 +44,4 @@ else
 if (sm:user-exists($config:default-user[1])) then
     ()
 else
-    sm:create-account($config:default-user[1], $config:default-user[2], $config:default-group, ())
+    sm:create-account($config:default-user[1], $config:default-user[2], $config:default-group, $config:admin-group)
