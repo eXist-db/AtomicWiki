@@ -16,6 +16,7 @@ declare namespace atom="http://www.w3.org/2005/Atom";
 
 declare variable $config:default-user := ("editor", "editor");
 declare variable $config:default-group := "wiki";
+declare variable $config:admin-group := "wiki-admin";
 
 (: 
     Determine the application root collection from the current module load path.

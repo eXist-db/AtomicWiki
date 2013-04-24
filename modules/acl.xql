@@ -20,6 +20,7 @@ declare function acl:change-permissions($path as xs:string) {
         (: Change main group :)
         (: Need to switch to the user who created the group :)
         sm:chgrp($path, $config:default-group),
+        sm:add-group-ace($path, $config:admin-group, true(), "rw-"),
         if ($private) then
             sm:chmod($path, "rw-------")
         else
