@@ -1,5 +1,16 @@
 @import url('bootstrap.min.css');
 
+@font-face {
+    font-family: 'QuicksandBook';
+    src: url('Quicksand_Book-webfont.eot');
+    src: url('Quicksand_Book-webfont.eot?#iefix') format('embedded-opentype'),
+         url('Quicksand_Book-webfont.woff') format('woff'),
+         url('Quicksand_Book-webfont.ttf') format('truetype'),
+         url('Quicksand_Book-webfont.svg#QuicksandBook') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     font: 19px/28px Georgia, "Times New Roman", Times, serif !important;
     color: #555;
@@ -79,14 +90,14 @@ figure figcaption {
 }
 
 h1 {
-    font-family: "Quicksand", "Arial", Helvetica, sans-serif;
+    font-family: "QuicksandBook", "Arial", Helvetica, sans-serif;
     font-size: 1.75em;
     font-weight: bold;
     margin: .8em 0 0 0;
 }
 
 h2 {
-    font-family: "Quicksand", "Arial", Helvetica, sans-serif;
+    font-family: "QuicksandBook", "Arial", Helvetica, sans-serif;
     font-size: 1.33em;
     font-weight: bold;
     margin: .3em 0 0;
