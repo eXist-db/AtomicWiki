@@ -38,16 +38,20 @@ declare function theme:locate($feed as xs:string) as xs:string {
     )
 };
 
-declare function theme:locate($feed as xs:string, $resource as xs:string) as xs:string {
+declare function theme:locate($feed as xs:string, $resource as xs:string) as xs:string? {
     let $themeColl := theme:theme-for-feed($feed)
     return (
         request:set-attribute("templating.root", $themeColl),
         if ($themeColl) then
-            let $collection := $themeColl || "/" || $resource
-            let $path :=
-                theme:create-path($collection)
+            let $path := $themeColl || "/" || $resource
+            let $relPath := theme:create-path($path)
             return
-                $path
+                if (util:binary-doc-available($path) or doc-available($path)) then
+                    $relPath
+                else if ($feed != $config:wiki-data) then
+                    theme:locate(theme:parent-collection($feed), $resource)
+                else
+                    ()
         else
             ()
     )

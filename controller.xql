@@ -204,7 +204,7 @@ try {
                         </dispatch>
     
     else if (contains($exist:path, "/theme/")) then
-        let $feedURL := substring-before($exist:path, "/theme/")
+        let $feedURL := substring-before($exist:path, "theme/")
         let $resourcePath := substring-after($exist:path, "/theme/")
         let $relPath := local:extract-feed($feedURL)
         let $url := theme:resolve-relative($relPath[1], $resourcePath, $root, $exist:controller)
