@@ -32,8 +32,13 @@ var wysihtml5ParserRules = {
     b:      {},
     i:      {},
     em:     {},
-    p:      {},
+    p:      {
+        "check_attributes": {
+            id: "id"
+        }
+    },
     div:    {},
+    span:   {},
     pre:    {
         "check_attributes": {
         }

@@ -130,6 +130,9 @@
                                                     <a data-wysihtml5-command="createLink" class="btn" title="Insert/Edit Link">
                                                         <i class="icon-share"/>
                                                     </a>
+                                                    <a data-wysihtml5-command="setAnchor" class="btn" title="Set Anchor">
+                                                        <i class="icon-bookmark"/>
+                                                    </a>
                                                     <a data-wysihtml5-command="insertImage" class="btn" title="Insert/Edit Image">
                                                         <i class="icon-picture"/>
                                                     </a>
@@ -342,6 +345,14 @@
                             <span class="help-inline">Enter absolute URL or select resource from tree</span>
                         </div>
                     </div>
+                    <div class="control-group">
+                        <label class="control-label" for="anchor">Anchor:</label>
+                        <div class="controls">
+                            <input class="span4" type="text" name="anchor" placeholder="http://" required="required"/>
+                            <span class="help-inline">Link to a text block within the target page. This needs to have
+                            an ID with the same text as the anchor.</span>
+                        </div>
+                    </div>
                     <div class="image-settings">
                         <div class="control-group">
                             <label class="control-label" for="width">Width:</label>
@@ -371,6 +382,34 @@
                     </div>
                 </form>
                 <div class="sitemap"/>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn close-button">
+                    <i class="icon-remove"/> Cancel
+                </a>
+                <a class="btn-primary btn apply-button">
+                    <i class="icon-remove"/> Apply
+                </a>
+            </div>
+        </div>
+        <div class="modal hide fade" id="anchor-dialog">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">
+                    <i class="icon-remove"/>
+                </a>
+                <h3 class="title">Set Block ID</h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="">
+                    <div class="control-group">
+                        <label class="control-label" for="id">ID:</label>
+                        <div class="controls">
+                            <input class="span4" type="text" name="id" required="required"/>
+                            <span class="help-inline">Assign an ID to the current text block. This can be used
+                            to link directly to the block (by appending #id to a link).</span>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <a class="btn btn close-button">

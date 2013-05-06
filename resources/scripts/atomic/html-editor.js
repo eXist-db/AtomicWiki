@@ -186,7 +186,7 @@ Atomic.namespace("Atomic.editor.Editor");
 
 Atomic.editor.Editor = (function () {
 
-    Constr = function(contentId, textareaId, toolbarId, sitemap) {
+    Constr = function(contentId, textareaId, toolbarId, sitemap, anchorEditor) {
         this.codeEditors = [];
         
         var content = $("#" + contentId);
@@ -221,11 +221,29 @@ Atomic.editor.Editor = (function () {
             self.initEditors();
         });
         
+        toolbar.find('a[data-wysihtml5-command="setAnchor"]').click(function(ev) {
+            var selected = editor.composer.selection.getSelectedNode();
+            if (!selected) {
+                return true;
+            }
+            var container = wysihtml5.dom.getParentElement(selected, 
+                { nodeName: ["P", "DIV", "ARTICLE", "H1", "H2", "H3", "H4", "H5", "FIGURE"] });
+            if (container) {
+                anchorEditor.open(container.id, function(id) {
+                    container.id = id;
+                });
+            }
+        });
+        
         toolbar.find('a[data-wysihtml5-command="createLink"]').click(function(ev) {
             var activeButton = $(this).hasClass("wysihtml5-command-active");
             if (!activeButton) {
                 dialog.find("input[name=url]").val("");
+                dialog.find("input[name=anchor]").val("");
                 sitemap.open("entries", "Insert Link", function(data) {
+                    if (data.anchor && data.anchor.length > 0) {
+                        data.url = data.url + '#' + data.anchor;
+                    }
                     editor.currentView.element.focus(false);
                     editor.composer.commands.exec("createLink", {
                         href: data.url
@@ -238,9 +256,19 @@ Atomic.editor.Editor = (function () {
                 }
                 var link = $(selected).parents("a")[0];
                 dialog.find("input[name=url]").val(link.pathname);
+                
+                var anchor = "";
+                if (link.hash && link.hash.length > 0) {
+                    anchor = link.hash.substring(1);
+                }
+                dialog.find("input[name=anchor]").val(anchor);
                 sitemap.open("entries", "Edit Link", function(data) {
                     editor.currentView.element.focus(false);
-                    $(link).attr("href", data.url);
+                    if (data.anchor && data.anchor.length > 0) {
+                        $(link).attr("href", data.url + '#' + data.anchor);
+                    } else {
+                        $(link).attr("href", data.url);
+                    }
                 });
             }
             return false;
@@ -351,8 +379,10 @@ $(document).ready(function() {
     
     var form = $("#edit-form");
     var sitemap = new Atomic.editor.EditLink();
+    var anchorEditor = new Atomic.editor.EditAnchor();
     var summaryEditor = null;
-    var contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap);
+    var contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", 
+        sitemap, anchorEditor);
     
     function updateForm() {
         var content = contentEditor.editor.getValue(true);
@@ -369,7 +399,8 @@ $(document).ready(function() {
     $("#summary-editor-tab").click(function (e) {
         e.preventDefault();
         if (!summaryEditor) {
-            summaryEditor = new Atomic.editor.Editor("summary-editor-content", "summary-editor-textarea", "summary-editor-toolbar", sitemap);
+            summaryEditor = new Atomic.editor.Editor("summary-editor-content", "summary-editor-textarea", "summary-editor-toolbar", 
+                sitemap, anchorEditor);
         }
         $(this).tab('show');
     });

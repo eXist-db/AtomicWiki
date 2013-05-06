@@ -51,6 +51,41 @@ Atomic.sitemap = (function () {
     };
 }());
 
+Atomic.namespace("Atomic.editor.EditAnchor");
+
+Atomic.editor.EditAnchor = (function () {
+    
+    Constr = function() {
+        this.dialog = $("#anchor-dialog");
+        this.dialog.modal({
+            keyboard: true,
+            show: false
+        });
+        this.callback = null;
+        this.input = $("input[name = 'id']", this.dialog);
+        var self = this;
+        $(".close-button", this.dialog).click(function(ev) {
+            ev.preventDefault();
+            self.dialog.modal("hide");
+        });
+        $(".apply-button", this.dialog).click(function(ev) {
+            ev.preventDefault();
+            self.dialog.modal("hide");
+            if (self.callback) {
+                self.callback(self.input.val());
+            }
+        });
+    };
+    
+    Constr.prototype.open = function(currentId, callback) {
+        this.input.val(currentId);
+        this.callback = callback;
+        this.dialog.modal("show");
+    };
+    
+    return Constr;
+}());
+    
 Atomic.namespace("Atomic.editor.EditLink");
 
 Atomic.editor.EditLink = (function () {
