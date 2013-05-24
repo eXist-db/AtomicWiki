@@ -20,15 +20,11 @@ declare function menu:site-menu($node as node(), $model as map(*)) {
         let $entries := collection($theme)/atom:entry[matches(wiki:sort-index, "^" || $index || "\.")]
         order by number($index)
         return
-            <li>
-                <span>
-                    <a href="{config:feed-url-from-entry($rootEntry)}/{$rootEntry/wiki:id}" title="{$theme}">
-                    { $rootEntry/atom:title/text() }
-                    </a>
-                </span>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{ $rootEntry/atom:title/text() }</a>
                 {
                     if ($entries) then
-                        <ul>
+                        <ul class="dropdown-menu">
                         {
                             for $entry in $entries
                             order by number(replace($entry/wiki:sort-index, "^.*\.(\d+)", "$1"))

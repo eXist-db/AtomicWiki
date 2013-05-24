@@ -8,56 +8,73 @@
         <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
     </head>
-    <body id="body">
-        <div id="grey-top">
-            <div id="grey-bot">
-                <div id="container">
-                    <div id="header">
-                        <a class="app:home-link" id="logo">eXistDB</a>
+    <body id="body" class="grey-top">
+        <div class="grey-bot">
+            <div class="container-fluid" id="container">
+                <div class="row-fluid">
+                    <div class="span12" id="header">
+                        <a href="/" id="logo">eXistDB</a>
                     </div>
-                    <div class="app:feed">
-                        <div id="navigation">
-                            <ul id="nav" class="dropdown dropdown-horizontal">
-                                <li class="menu:site-menu"/>
-                            </ul>
-                            <div class="app:login">
-                                <div class="actions">
-                                    <a class="atom-link app:atom-link" href="#">
-                                        <img src="theme/resources/images/feed-icon.png"/>
+                </div>
+                <div class="app:feed">
+                    <div class="row-fluid">
+                        <div class="navbar">
+                            <div class="navbar-inner">
+                                <div class="container">
+                                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                                        <span class="icon-bar"/>
+                                        <span class="icon-bar"/>
+                                        <span class="icon-bar"/>
                                     </a>
-                                    <a class="btn btn-inverse" href="#loginDialog" data-toggle="modal">Login</a>
-                                </div>
-                                <div class="actions">
-                                    <div class="btn-group">
-                                        <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-                                            Section <span class="caret"/>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <a href=".?action=addentry&amp;editor=html">
-                                                    <i class="icon-plus"/> New HTML Article</a>
-                                            </li>
-                                            <li>
-                                                <a href="?action=editfeed" class="app:posted-link">
-                                                    <i class="icon-edit"/> Edit Section</a>
-                                            </li>
-                                            <li>
-                                                <a href="#" id="open-sitemap">
-                                                    <i class="icon-home"/> Sitemap</a>
-                                            </li>
+                                    <div class="nav-collapse collapse">
+                                        <ul class="nav menu">
+                                            <li class="menu:site-menu"/>
                                         </ul>
-                                        <a href="?logout=logout" class="btn btn-inverse app:posted-link">
-                                            Logout <span class="app:user">user</span>
-                                        </a>
+                                        <div class="container pull-right">
+                                            <div class="app:login">
+                                                <a class="btn btn-inverse" href="#loginDialog" data-toggle="modal">Login</a>
+                                                <ul class="actions">
+                                                    <li class="dropdown">
+                                                        <a href="#" class="btn dropdown-toggle" data-toggle="dropdown">
+                                                            Admin <span class="caret"/>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li>
+                                                                <a href=".?action=addentry&amp;editor=html">
+                                                                    <i class="icon-plus"/> New HTML Article</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="?action=editfeed" class="app:posted-link">
+                                                                    <i class="icon-edit"/> Edit Section</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" id="open-sitemap">
+                                                                    <i class="icon-home"/> Sitemap</a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>
+                                                        <a href="?logout=logout" class="btn" data-template="app:posted-link">
+                                                            Logout <span class="app:user">user</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="atom-link" data-template="app:atom-link" href="#">
+                                                            <img src="theme/resources/images/feed-icon.png"/>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="container" id="main">
-                        <div class="row" id="container-body">
-                            <div class="span12" id="content"/>
-                        </div>
+                </div>
+                <div class="container" id="main">
+                    <div class="row" id="container-body">
+                        <div class="span12" id="content"/>
                     </div>
                 </div>
             </div>
