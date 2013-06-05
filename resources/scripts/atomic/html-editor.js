@@ -459,4 +459,17 @@ $(document).ready(function() {
         
         return true;
     });
+
+    $("#slideshow-list-tab").click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+    $("#slideshow-detailed-list-tab").click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+    $("#slideshow-gallery-tab").click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
 });

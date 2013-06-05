@@ -1129,3 +1129,26 @@ ul.dropdown-menu li {
   height: 18px;
   background: url(/exist/apps/dashboard/plugins/browsing/images/progressbar.gif);
 }
+
+.slideshow-editor .thumbs li {
+    display:block;
+    width:80%;
+    height:6.5em;
+}
+.slideshow-editor .thumb {
+    float:left;
+    height:6.5em;
+    width:6.5em;
+}
+.slideshow-editor .caption {
+    float:left;
+    display:block;
+    height:6.5em;
+    width:42em;
+}
+.slideshow-editor .thumb-ctrl {
+    float:left;
+    display:block;
+    height:6.5em;
+    width:4em;
+}
