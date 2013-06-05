@@ -460,7 +460,7 @@ $(document).ready(function() {
         return true;
     });
 
-    $("#slideshow-list-tab").click(function (e) {
+     $("#slideshow-list-tab").click(function (e) {
         e.preventDefault();
         $(this).tab('show');
     });
@@ -472,4 +472,11 @@ $(document).ready(function() {
         e.preventDefault();
         $(this).tab('show');
     });
+    $("#gallery-selection" ).selectable();
+    $( ".gallery-draggable" ).draggable();
+    $( "#gallery-droppable" ).droppable({
+        drop: function( event, ui ) {            
+            console.debug("this: ", this, " event: ",event, " ui:",ui);
+        }
+    });        
 });

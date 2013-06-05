@@ -82,21 +82,36 @@
                                         <a id="slideshow-gallery-tab" href="#slideshow-gallery">Gallery</a>
                                     </li>
                                 </ul>
-                                <div style="border:1px solid red;">
-                                    <div class="row" style="border: 1px solid gray;">
-                                        <div class="span6">Test</div>
-                                        <div class="span6">Eins Zwei</div>
+                                <div class="span12 tab-content">
+                                    <div id="slideshow-list" class="slideshow-list tab-pane active content">
+                                        <div class="app:slideshow-editor-list"/>
                                     </div>
-                                    <div class="row" style="border: 1px solid blue;">
-                                        <div class="span12 tab-content">
-                                            <div id="slideshow-list" class="tab-pane active content">
-                                                <div class="app:slideshow-editor-list"/>
+                                    <div id="slideshow-detailed-list" class="slideshow-detailed-list tab-pane content">
+                                        <div class="app:slideshow-editor-detailed-list"/>
+                                    </div>
+                                    <div id="slideshow-gallery" class="slideshow-gallery tab-pane content">
+                                        <div class="gallery-container">
+                                            <div class="header">
+                                                <ul>
+                                                    <li>Header 1</li>
+                                                    <li>Header 2</li>
+                                                </ul>
                                             </div>
-                                            <div id="slideshow-detailed-list" class="tab-pane content">
-                                                <div class="app:slideshow-editor-detailed-list"/>
+                                            <div class="left">
+                                                <ul>
+                                                    <li>Left 1</li>
+                                                    <li>Left 2</li>
+                                                </ul>
+                                                <div id="gallery-droppable" class="ui-widget-header">
+                                                    <p>Drop here</p>
+                                                </div>
                                             </div>
-                                            <div id="slideshow-gallery" class="tab-pane content">
-                                                <div class="app:slideshow-editor-gallery"/>
+                                            <div class="gallery app:slideshow-editor-gallery"/>
+                                            <div class="footer">
+                                                <ul>
+                                                    <li>footer 1</li>
+                                                    <li>footer 2</li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -455,6 +470,7 @@
         </div>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
         <script type="text/javascript" src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"/>
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery.fileupload.js"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery.dynatree.min.js"/>
         <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>

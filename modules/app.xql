@@ -1,4 +1,4 @@
-xquery version "3.0";
+ xquery version "3.0";
 
 module namespace app="http://exist-db.org/xquery/app";
 
@@ -782,7 +782,9 @@ declare %private function app:get-slideshow-editor-dummy-atom-feed() {
     </atom:feed>
 };
 
-declare %private function app:slideshow-editor-list-table() {
+declare 
+    %templates:wrap
+    function app:slideshow-editor-list($node as node(), $model as map(*)) {
         let $entries := app:get-slideshow-editor-dummy-atom-feed()
         let $imageList := 
             for $entry at $index in $entries//atom:entry
@@ -812,27 +814,15 @@ declare %private function app:slideshow-editor-list-table() {
                     </tr>                    
         return 
             <table>{ $imageList }</table>
-
-};
-declare 
-    %templates:wrap
-    function app:slideshow-editor-list($node as node(), $model as map(*)) {
-        app:slideshow-editor-list-table()
 };
 
 declare 
     %templates:wrap function app:slideshow-editor-detailed-list($node as node(), $model as map(*)) {
-    <div>XQuery: slideshow-editor-detailed-list</div>  
-};
-declare 
-    %templates:wrap 
-    function app:slideshow-editor-gallery($node as node(), $model as map(*)) {
-            let $entries := app:get-slideshow-editor-dummy-atom-feed()
-        let $imageList := 
+        let $entries := app:get-slideshow-editor-dummy-atom-feed()
+        let $imageList :=
             for $entry at $index in $entries//atom:entry
-                return 
+                return
                     <li id="{$entry/atom:id/text()}">
-                        <span>{$index}</span>
                         <a title="{$entry/atom:title/text()}" href="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}.jpg" name="leaf" class="thumb" target="blank_">
                             <img alt="{$entries/atom:title}" src="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}_s.jpg"/>
                         </a>
@@ -845,11 +835,55 @@ declare
                             <input type="button" value="+"/>
                         </div>
                     </li>
-        return 
+        return
             <div class="se-list">
-                <h4>XQuery: slideshow-editor-list</h4>
                 <div id="thumbs" class="navigation">
-                    <ul class="thumbs noscript">{ $imageList }</ul>
+                    <ul class="thumbs noscript">
+                        { $imageList }
+                    </ul>
                 </div>
-            </div>  
+            </div>
+};
+
+declare %private function app:gallery-selectable() {
+        let $entries := app:get-slideshow-editor-dummy-atom-feed()
+        let $imageList := 
+            for $entry at $index in $entries//atom:entry
+                return 
+                    <li class="ui-widget-content" image-id="{$entry/atom:id/text()}">
+                        <img alt="{$entries/atom:title}" src="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}_s.jpg"/>
+                    </li>
+        return 
+            <div id="thumbs" class="navigation">
+                <ul id="gallery-selection" class="thumbs noscript">                        
+                    { $imageList }
+                </ul>                
+            </div>
+};
+
+declare %private function app:gallery-draggable() {
+        let $entries := app:get-slideshow-editor-dummy-atom-feed()
+        let $imageList := 
+            for $entry at $index in $entries//atom:entry
+                return 
+                    <div class="gallery-draggable" image-id="{$entry/atom:id/text()}">
+                        <img class="ui-widget-content" alt="{$entries/atom:title}" src="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}_s.jpg"/>
+                    </div>
+        return 
+            <div id="thumbs" class="navigation">
+                <!-- ul id="gallery-selection" class="thumbs noscript">                        
+                    { $imageList }
+                </ul-->
+                <ul id="gallery-dragndrop" class="thumbs noscript">                        
+                    { $imageList }
+                </ul>
+                
+            </div>
+};
+
+declare 
+    %templates:wrap 
+    function app:slideshow-editor-gallery($node as node(), $model as map(*)) {
+        (: app:gallery-draggable() :)
+        app:gallery-selectable()
 };
