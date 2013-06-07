@@ -137,6 +137,31 @@ try {
                                 </view>
                                 { $local:error-handler }
                             </dispatch>
+                  case "editgallery" case "addgallery" return
+                        let $id := request:get-parameter("id", ())
+                        let $entry := config:get-entries($feed, $id, $relPath[2])[1]                        
+                        let $editorParam := request:get-parameter("editor", ())
+
+                        let $template :="html-edit-gallery.html" 
+                        return
+                            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                                {
+                                    if ($editorParam) then
+                                        <forward url="{$exist:controller}/modules/store.xql">
+                                        </forward>
+                                    else
+                                        ()
+                                }
+                                <forward url="{theme:resolve(util:collection-name($feed), $template, $root, $exist:controller)}">
+                                    <set-header name="Cache-Control" value="no-cache"/>
+                                </forward>
+                                <view>
+                                    <forward url="{$exist:controller}/modules/view.xql" absolute="no">
+                                        <add-parameter name="wiki-id" value="{$relPath[2]}"/>
+                                    </forward>
+                                </view>
+                                { $local:error-handler }
+                            </dispatch>                            
                     case "editfeed" return
                         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                             <forward url="{theme:resolve(util:collection-name($feed), 'unknown-feed.html', $root, $exist:controller)}">
