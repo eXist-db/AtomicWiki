@@ -26,7 +26,7 @@ declare
                             <h3>{$entry/atom:title}</h3>
                             <div class="image-desc">{$entry/atom:content}</div>
                             <div class="gallery-item-controls pull-right">
-                                <a class="btn" href="#"><i class="icon-edit"></i></a>
+                                <a class="btn" onclick="showModal('{$entry/atom:id}')"><i class="icon-edit"></i></a>
                                 <a class="btn" onclick="remove('{$entry/atom:id}')"><i class="icon-remove"></i></a>
                                 <a class="btn" onclick="moveUp('{$entry/atom:id}')"><i class="icon-arrow-up"></i></a>
                                 <a class="btn" onclick="moveDown('{$entry/atom:id}')"><i class="icon-arrow-down"></i></a>

@@ -26,6 +26,18 @@ function remove(itemid) {
     item.slideToggle(500, callback);
 }
 
+function showModal(itemid) {
+    var dialog = $('#edit-gallery-item-dialog');
+    var itemTitle = $('#' + itemid + " h3").text();
+    var itemDesc = $('#' + itemid + " .gallery-item-description").contents();    
+    
+    dialog.find("input[name=title]").val(itemTitle);
+    dialog.find("textarea[name=description]").append(itemDesc);
+    
+    dialog.modal('show');
+}
+
+
 function jumpTo(item){
     $('html,body').animate({scrollTop: item.offset().top},'slow');
 }
