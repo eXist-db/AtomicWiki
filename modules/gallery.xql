@@ -13,27 +13,31 @@ declare
         let $imageList :=
             for $entry in $entries//atom:entry
                 return
-                    <li id="{$entry/atom:id}" style="display: list-item">
-                        <a title="{$entry/atom:title/text()}" href="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}.jpg" name="leaf" class="thumb" target="blank_">
-                            <img alt="{$entries/atom:title}" class="img-polaroid" src="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}_s.jpg"/>
-                        </a>
-                        <div class="caption">
-                            <div class="image-title">{$entry/atom:title}</div>
+                <li id="{$entry/atom:id}" class="container gallery-item-row img-rounded">
+                    <div class="row">
+                        <div class="span2 gallery-item-image">
+                            <a title="{$entry/atom:title/text()}" name="{$entry/atom:title/text()}" class="thumb" target="blank_"
+                                href="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}.jpg">
+                                <img alt="{$entries/atom:title}" class="img-polaroid" 
+                                     src="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}_s.jpg"/>
+                            </a>
+                        </div>
+                        <div class="span10 gallery-item-caption">
+                            <h3>{$entry/atom:title}</h3>
                             <div class="image-desc">{$entry/atom:content}</div>
+                            <div class="gallery-item-controls pull-right">
+                                <a class="btn" href="#"><i class="icon-edit"></i></a>
+                                <a class="btn" onclick="remove('{$entry/atom:id}')"><i class="icon-remove"></i></a>
+                                <a class="btn" onclick="moveUp('{$entry/atom:id}')"><i class="icon-arrow-up"></i></a>
+                                <a class="btn" onclick="moveDown('{$entry/atom:id}')"><i class="icon-arrow-down"></i></a>
+                            </div>
                         </div>
-                        <div class="thumb-ctrl btn-group pull-right">
-                            <a class="btn" href="#"><i class="icon-edit"></i></a>
-                            <a class="btn" onclick="remove('{$entry/atom:id}')"><i class="icon-remove"></i></a>
-                            <a class="btn" onclick="moveUp('{$entry/atom:id}')"><i class="icon-arrow-up"></i></a>
-                            <a class="btn" onclick="moveDown('{$entry/atom:id}')"><i class="icon-arrow-down"></i></a>
-                        </div>
-                    </li>
+                    </div>
+                </li>
         return
-            <div class="edit-gallery-items">
-                <ul id="gallery-items">
-                    { $imageList }
-                </ul>
-            </div>
+            <ul id="gallery-items">
+                { $imageList }
+            </ul>
 };
 
 

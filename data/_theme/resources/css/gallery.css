@@ -1,26 +1,32 @@
 
 
-.edit-gallery-items ul {
+#gallery-items {
     list-style: none;
 }
 
-.edit-gallery-items li {
+.gallery-item-row {
+    margin-left: -25px;
+    margin-right: -5px;
+}
+
+#gallery-items li {
     padding: 5px;
-    min-height: 120px;    // fixme
+    margin-bottom: 5px;
+    background-color: #f5f5f5;
+    border: 1px solid #D9D9D9;
 }
 
-.edit-gallery-items img {
-    float: left;
-    height: 110px;
-    width: 110px;
-    margin-right: 5px;
+#gallery-items .gallery-item-image {
+    vertical-align: middle;
+    text-align: center;
+}
+#gallery-items .gallery-item-image img {
+    height: 100%;
+    width: 100%;
 }
 
-.edit-gallery-items .caption {
-    padding-left: 5px;
+#gallery-items .gallery-item-caption {
 }
 
-.edit-gallery-items .image-title {
-    font-weight: bold;
-    font-size: x-large;
+#gallery-items .gallery-item-controls {
 }
