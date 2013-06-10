@@ -468,6 +468,11 @@ $(document).ready(function() {
         });        
     });
     
+     $("#insert-image").click(function (e) {
+            e.preventDefault();            
+            console.log("add image: " + $("#img-id").html() + " to Wiki Entry");
+    });
+    
     $("#gallery-selection" ).selectable({ 
             filter: "li", 
             selecting: function( event, ui ) {
@@ -475,15 +480,15 @@ $(document).ready(function() {
                     $(ui.selecting).removeClass("ui-selecting");
                 }else {
                     console.log("Selected! This: ", this, " Event:  ", event , " ui: ", ui);                                
-                    var atomTitle = "<span class='label title'> Title: </span>"+$(ui.selecting).find('.atom-title').html();
-                    var atomId = "<span class='label id'> Id: </span>"+$(ui.selecting).find('.atom-title').html();
+                    var atomTitle = "<span id='img-title-label' class='label'> Title: </span><span id='img-title'>"+$(ui.selecting).find('.atom-title').html();
+                    var atomId = "<span id='img-id-label' class='label'> Id: </span><span id='img-id'>"+$(ui.selecting).find('.atom-id').html()+"</span>";
                     var uiContent = "<p>" + atomTitle + atomId + "</p>";
-                    $(".footer").html(uiContent);                    
+                    $(".img-selected").html(uiContent);                    
                 }
             },
             unselecting: function( event, ui ) {
                console.log("Unselected! This: ", this, " Event:  ", event , " ui: ", ui);                                
-               $(".footer").html("");
+               $(".img-selected").html("");
             }
     });
     /* 
