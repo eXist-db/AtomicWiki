@@ -39,6 +39,45 @@
                     <a class="app:next-page">Older entries</a>
                 </footer>
             </div>
+            <div class="modal hide fade" id="menu-dialog" style="width: 900px; margin-left: -450px">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">
+                        <i class="icon-remove"/>
+                    </a>
+                    <h3>Edit Menu</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Drag entries from the left into the right tree to create menu item</p>
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <div class="sitemap-tree"/>
+                        </div>
+                        <div class="span6">
+                            <form class="form-inline">
+                                <div class="input-append">
+                                    <input type="text" name="title" placeholder="Add new heading"/>
+                                    <a href="#" class="btn add-heading">
+                                        <i class="icon-plus"/>
+                                    </a>
+                                    <a href="#" class="btn remove-heading">
+                                        <i class="icon-remove"/>
+                                    </a>
+                                </div>
+                                <input type="hidden" name="feed" class="app:feed-path"/>
+                            </form>
+                            <div class="menu-tree"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn apply-button">
+                        <i class="icon-ok"/> Apply
+                    </a>
+                    <a class="btn-primary btn close-button">
+                        <i class="icon-remove"/> Cancel
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="modal hide fade" id="sitemap-dialog">
             <div class="modal-header">
@@ -57,7 +96,7 @@
                 </a>
             </div>
         </div>
-        <div class="modal fade" id="annotationDialog">
+        <div class="modal hide fade" id="annotationDialog">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">
                     <i class="icon-remove"/>

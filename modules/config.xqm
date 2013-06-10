@@ -135,6 +135,17 @@ declare function config:feed-url-from-entry($entry as element(atom:entry)) {
             concat($feed, "/")
 };
 
+declare function config:feed-url($feed as element(atom:feed)) {
+    let $path := substring-after(util:collection-name($feed), $config:wiki-root || "/")
+    let $feed :=
+        concat($config:base-url, "/", $path)
+    return
+        if (ends-with($feed, "/")) then
+            $feed
+        else
+            concat($feed, "/")
+};
+
 declare function config:entry-url-from-entry($entry as element(atom:entry)) {
     concat(config:feed-url-from-entry($entry), $entry/wiki:id)
 };

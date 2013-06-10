@@ -111,6 +111,14 @@ Atomic.util.Dialog = (function () {
 	
 	return {
 		
+        error: function(title, msg) {
+            title = title || "Error";
+            header.html(title);
+            body.html(msg);
+            $(".cancel-button", dialog).hide();
+            dialog.modal("show");
+        },
+        
 		confirm: function (title, msg, ok, cancel) {
             okCallback = ok;
             if (cancel) {
@@ -118,6 +126,7 @@ Atomic.util.Dialog = (function () {
             }
             header.html(title);
             body.html(msg);
+            $(".cancel-button", dialog).show();
             dialog.modal("show");
 		}
 	};

@@ -21,6 +21,15 @@ declare function app:feed($node as node(), $model as map(*)) {
         map { "feed" := $feed }
 };
 
+declare function app:feed-path($node as node(), $model as map(*)) {
+    element { node-name($node) } {
+        $node/@*,
+        attribute value {
+            substring-after(util:collection-name($model("feed")), $config:wiki-data)
+        }
+    }
+};
+
 declare function app:get-or-create-feed($node as node(), $model as map(*)) as map(*) {
     let $feed := request:get-attribute("feed")
     let $data :=
