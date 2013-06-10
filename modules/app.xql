@@ -852,6 +852,14 @@ declare %private function app:gallery-selectable() {
                 return 
                     <li class="ui-widget-content" image-id="{$entry/atom:id/text()}">
                         <img alt="{$entries/atom:title}" src="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}_s.jpg"/>
+                        <div style="display:none">
+                            <p class="atom-id">{$entry/atom:id/text()}</p>
+                            <p class="atom-published">{$entry/atom:published/text()}</p>
+                            <p class="atom-updated">{$entry/atom:updated/text()}</p>
+                            <p class="atom-author">{$entry/atom:author/atom:name/text()}</p>
+                            <p class="atom-title">{$entry/atom:title/text()}</p>
+                            <p class="atom-content">{$entry/atom:content/html:div/text()}</p>
+                        </div>
                     </li>
         return 
             <div id="thumbs" class="navigation">

@@ -12,6 +12,32 @@
             <div class="app:feed">
                 <div class="app:get-or-create-entry?lock=true entries">
                     <div id="edit" class="edit">
+                        <div id="gallery">
+                            <button id="toggleGallerySwitch" class="btn switchGallery">Gallery</button>
+                            <div class="gallery-container">
+                                <div class="header">
+                                    <form class="form-search">
+                                        <select name="filter_selector" class="input-medium">
+                                            <option value="all" selected="selected">All</option>
+                                            <optgroup label="Ziziphus">
+                                                <option value="prya1">Prya1</option>
+                                                <option value="prya2">Prya2</option>
+                                                <option value="prya3">Prya3</option>
+                                            </optgroup>
+                                        </select>
+                                        <input class="input-medium" type="search" placeholder="search"/>
+                                        <button class="btn" type="button">Search</button>
+                                    </form>
+                                </div>
+                                <div class="gallery app:slideshow-editor-gallery">
+                                    <ul>
+                                        <li>Gallery 1</li>
+                                        <li>Gallery 2</li>
+                                    </ul>
+                                </div>
+                                <div class="footer"/>
+                            </div>
+                        </div>
                         <form id="edit-form" class="form-horizontal" action="?" method="POST">
                             <div class="control-group">
                                 <div class="btn-group">
@@ -71,30 +97,9 @@
                             </div>
                             <fieldset id="slideshow-editor" class="accordion">
                                 <h2>Slideshow Editor</h2>
-                                <ul class="nav nav-tabs">
-                                    <li class="active">
-                                        <a id="slideshow-list-tab" href="#slideshow-list">List</a>
-                                    </li>
-                                    <li>
-                                        <a id="slideshow-detailed-list-tab" href="#slideshow-detailed-list">Detailed List</a>
-                                    </li>
-                                    <li>
-                                        <a id="slideshow-gallery-tab" href="#slideshow-gallery">Gallery</a>
-                                    </li>
-                                </ul>
                                 <div class="tab-content" style="border:1px solid black;">
                                     <div id="slideshow-list" class="tab-pane active content">
-                                        <h3>Slideshow List</h3>
-                                        <span>Editor:</span>
                                         <div class="app:slideshow-editor-list"/>
-                                        <div class="app:slideshow-editor-detailed-list"/>
-                                        <div class="app:slideshow-editor-gallery"/>
-                                    </div>
-                                    <div id="slideshow-detailed-list" class="tab-pane content">
-                                        <h3>Slideshow Detailed List</h3>
-                                    </div>
-                                    <div id="slideshow-gallery" class="tab-pane content">
-                                        <h3>Slideshow Gallery</h3>
                                     </div>
                                 </div>
                             </fieldset>
