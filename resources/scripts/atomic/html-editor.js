@@ -474,22 +474,22 @@ $(document).ready(function() {
     });
     
     $("#gallery-selection" ).selectable({ 
-            filter: "li", 
-            selecting: function( event, ui ) {
-                if( $(".ui-selected, .ui-selecting").length > 1){
-                    $(ui.selecting).removeClass("ui-selecting");
-                }else {
-                    console.log("Selected! This: ", this, " Event:  ", event , " ui: ", ui);                                
-                    var atomTitle = "<span id='img-title-label' class='label'> Title: </span><span id='img-title'>"+$(ui.selecting).find('.atom-title').html();
-                    var atomId = "<span id='img-id-label' class='label'> Id: </span><span id='img-id'>"+$(ui.selecting).find('.atom-id').html()+"</span>";
-                    var uiContent = "<p>" + atomTitle + atomId + "</p>";
-                    $(".img-selected").html(uiContent);                    
-                }
-            },
-            unselecting: function( event, ui ) {
-               console.log("Unselected! This: ", this, " Event:  ", event , " ui: ", ui);                                
-               $(".img-selected").html("");
+        filter: "li", 
+        selecting: function( event, ui ) {
+            if( $(".ui-selected, .ui-selecting").length > 1){
+                $(ui.selecting).removeClass("ui-selecting");
+            }else {
+                console.log("Selected! This: ", this, " Event:  ", event , " ui: ", ui);                                
+                var atomTitle = "<span id='img-title-label' class='label'> Title: </span><span id='img-title'>"+$(ui.selecting).find('.atom-title').html();
+                var atomId = "<span id='img-id-label' class='label'> Id: </span><span id='img-id'>"+$(ui.selecting).find('.atom-id').html()+"</span>";
+                var uiContent = "<p>" + atomTitle + atomId + "</p>";
+                $(".img-selected").html(uiContent);                    
             }
+        },
+        unselecting: function( event, ui ) {
+           console.log("Unselected! This: ", this, " Event:  ", event , " ui: ", ui);                                
+           $(".img-selected").html("");
+        }
     });
     /* 
     $( ".gallery-draggable" ).draggable();
@@ -499,4 +499,29 @@ $(document).ready(function() {
         }
     });
     */
+    
+   $("#query-images").click(function (ev) {
+       var searchForm = $(".form-search");
+        ev.preventDefault();
+        console.log("prepare query images");
+        //  if (!form.checkValidity())
+        //  return;
+        contentEditor.deactivate();
+        updateForm();
+        // $("input[name='action']", form).val("store");
+        var data = searchForm.serialize();
+        console.debug("search data: ",data);
+        /* 
+        $.ajax({
+            type: "POST",
+            url: "modules/store.xql",
+            data: data,
+            complete: function() {
+                $.log("Store completed");
+                contentEditor.activate();
+            }
+        });
+        */
+        contentEditor.activate();
+    });
 });

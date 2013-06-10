@@ -17,7 +17,7 @@
                             <div class="gallery-container">
                                 <div class="header">
                                     <form class="form-search">
-                                        <select name="filter_selector" class="input-medium">
+                                        <select name="filter" class="input-medium">
                                             <option value="all" selected="selected">All</option>
                                             <optgroup label="Ziziphus">
                                                 <option value="prya1">Prya1</option>
@@ -25,8 +25,8 @@
                                                 <option value="prya3">Prya3</option>
                                             </optgroup>
                                         </select>
-                                        <input class="input-medium" type="search" placeholder="search"/>
-                                        <button class="btn" type="button">Search</button>
+                                        <input name="query" class="input-medium" type="search" placeholder="search"/>
+                                        <button id="query-images" class="btn" type="button">Search</button>
                                     </form>
                                 </div>
                                 <div class="gallery app:slideshow-editor-gallery">
