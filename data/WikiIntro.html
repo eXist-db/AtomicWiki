@@ -2,7 +2,7 @@
 <article xmlns="http://www.w3.org/1999/xhtml">
     <p>Atomic Wiki organizes content into <b>sections</b> and <b>articles</b>. A section may contain several articles. One article may be defined as the entry (or index) page for the section.</p>
     <p>The URL uniquely identifies a section or an article. A section URL ends with a /. For example, the URL <i>http://localhost:8080/exist/apps/wiki/test/</i> will display the entry page of section "test" or - if no entry page is defined - all articles within the section.</p>
-    <p>To access an article within a section, append the short ID of the article to the section URL. For example: <i>http://localhost:8080/exist/apps/wiki/test/MyTest</i>. A article URL will <b>never</b> end with a /.</p>
+    <p>To access an article within a section, append the short&#160;ID of the article to the section URL. For example: <i>http://localhost:8080/exist/apps/wiki/test/MyTest</i>. A article URL will <b>never</b> end with a /.</p>
     <h2>Creating a New Section</h2>
     <p>If you just installed the wiki from the eXist-db repository, you should be able to log in as user "editor" with password "editor". This is the default wiki admin user.</p>
     <p>To create a new section, log in and enter a section URL into your browsers location bar. If the section does not yet exists (and you&#160; are logged in), you will be presented with a form, asking for a title for the section.</p>
@@ -23,7 +23,7 @@
         <figcaption>The editor page</figcaption>
     </figure>
     <h1>Storage</h1>
-    <p>All content is stored in the form of Atom feeds in the <code>data</code> collection of the application. Every article consists of two documents, whose file name corresponds to the short name of the article:</p>
+    <p id="storage">All content is stored in the form of Atom feeds in the <code>data</code> collection of the application. Every article consists of two documents, whose file name corresponds to the short name of the article:</p>
     <ol>
         <li>
             <code>shortname.atom</code> contains the article's metadata</li>

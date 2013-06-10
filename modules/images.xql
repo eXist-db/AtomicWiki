@@ -9,7 +9,10 @@ return
     if ($image) then
         let $data := util:binary-doc($image)
         return
-            response:stream-binary(image:scale($data, $size, "image/png"), "image/png", ())
+            if ($data) then
+                response:stream-binary(image:scale($data, $size, "image/png"), "image/png", ())
+            else
+                response:set-status-code(404)
     else
         <ul>
         {
