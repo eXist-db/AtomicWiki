@@ -5,6 +5,7 @@
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link href="http://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
+        <link rel="stylesheet" type="text/css" href="theme/resources/css/gallery.css"/>
         <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="templates:surround?with=templates/page.html&amp;at=container-body&amp;using=body">
@@ -69,35 +70,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <fieldset id="slideshow-editor" class="accordion">
-                                <h2>Slideshow Editor</h2>
-                                <ul class="nav nav-tabs">
-                                    <li class="active">
-                                        <a id="slideshow-list-tab" href="#slideshow-list">List</a>
-                                    </li>
-                                    <li>
-                                        <a id="slideshow-detailed-list-tab" href="#slideshow-detailed-list">Detailed List</a>
-                                    </li>
-                                    <li>
-                                        <a id="slideshow-gallery-tab" href="#slideshow-gallery">Gallery</a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content" style="border:1px solid black;">
-                                    <div id="slideshow-list" class="tab-pane active content">
-                                        <h3>Slideshow List</h3>
-                                        <span>Editor:</span>
-                                        <div class="app:slideshow-editor-list"/>
-                                        <div class="app:slideshow-editor-detailed-list"/>
-                                        <div class="app:slideshow-editor-gallery"/>
-                                    </div>
-                                    <div id="slideshow-detailed-list" class="tab-pane content">
-                                        <h3>Slideshow Detailed List</h3>
-                                    </div>
-                                    <div id="slideshow-gallery" class="tab-pane content">
-                                        <h3>Slideshow Gallery</h3>
-                                    </div>
-                                </div>
-                            </fieldset>
+
+                            <div class="gallery:edit-gallery-items"/>
+
                             <fieldset id="content">
                                 <ul class="nav nav-tabs">
                                     <li class="active">
