@@ -47,16 +47,6 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <label class="control-label" for="sort-index">Menu Index</label>
-                                <div class="controls">
-                                    <input class="span2 app:edit-sort-index" type="text" name="sort-index" placeholder="1" pattern="^\d+(\.\d+)*$"/>
-                                    <span class="help-block">Position of the article in main navigation menu given as a hierarchical, numeric id.
-                                        Articles with a single number, e.g. "1", get a main menu entry. "2.1" means the article will appear as first item
-                                        below the second main menu entry.
-                                    </span>
-                                </div>
-                            </div>
                             <div class="accordion">
                                 <div class="accordion-group">
                                     <div class="accordion-heading">
@@ -134,6 +124,9 @@
                                                         <i class="icon-bookmark"/>
                                                     </a>
                                                     <a data-wysihtml5-command="insertImage" class="btn" title="Insert/Edit Image">
+                                                        <i class="icon-picture"/>
+                                                    </a>
+                                                    <a data-wysihtml5-command="insertGallery" class="btn" title="Insert Gallery">
                                                         <i class="icon-picture"/>
                                                     </a>
                                                 </li>
@@ -327,6 +320,35 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="modal hide fade" id="gallery-dialog">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">
+                    <i class="icon-remove"/>
+                </a>
+                <h3 class="title">Insert Image Gallery</h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="">
+                    <div class="control-group">
+                        <label class="control-label" for="gallery">Select gallery:</label>
+                        <div class="controls">
+                            <select class="span4" name="gallery">
+                                <option value="a918effb-589a-494a-809b-cd77a762b1e7">Blümchen</option>
+                            </select>
+                            <span class="help-inline">Select an existing gallery to include in the article.</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn close-button">
+                    <i class="icon-remove"/> Cancel
+                </a>
+                <a class="btn-primary btn apply-button">
+                    <i class="icon-remove"/> Apply
+                </a>
             </div>
         </div>
         <div class="modal hide fade" id="link-dialog">

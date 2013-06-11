@@ -186,7 +186,7 @@ Atomic.namespace("Atomic.editor.Editor");
 
 Atomic.editor.Editor = (function () {
 
-    Constr = function(contentId, textareaId, toolbarId, sitemap, anchorEditor) {
+    Constr = function(contentId, textareaId, toolbarId, sitemap, anchorEditor, addGallery) {
         this.codeEditors = [];
         
         var content = $("#" + contentId);
@@ -273,6 +273,14 @@ Atomic.editor.Editor = (function () {
             }
             return false;
         });
+        toolbar.find('a[data-wysihtml5-command="insertGallery"]').click(function(ev) {
+            addGallery.show(function(value, title) {
+                editor.composer.commands.exec("insertHTML", 
+                    "<div class='gallery:show-catalog gallery-placeholder' id='" + value + "'>Image Gallery: " + title + "</div>");
+            });
+            return false;
+        });
+        
         toolbar.find('a[data-wysihtml5-command="insertImage"]').click(function(ev) {
             var activeButton = $(this).hasClass("wysihtml5-command-active");
             if (!activeButton) {
@@ -380,9 +388,10 @@ $(document).ready(function() {
     var form = $("#edit-form");
     var sitemap = new Atomic.editor.EditLink();
     var anchorEditor = new Atomic.editor.EditAnchor();
+    var addGallery = new Atomic.editor.AddGalleryLink();
     var summaryEditor = null;
     var contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", 
-        sitemap, anchorEditor);
+        sitemap, anchorEditor, addGallery);
     
     function updateForm() {
         var content = contentEditor.editor.getValue(true);

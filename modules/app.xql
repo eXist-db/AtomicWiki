@@ -346,7 +346,7 @@ function app:edit-content($node as node(), $model as map(*), $mode as xs:string)
             if ($content instance of element()) then
                 switch ($mode)
                     case "html" return
-                        app:process-content($contentElem/@type, $content, $model, true())
+                        app:process-content($contentElem/@type, $content, $model, false())
                     default return
                         let $wiki := html2wiki:html2wiki($content)
                         return
