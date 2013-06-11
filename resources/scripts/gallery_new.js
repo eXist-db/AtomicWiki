@@ -14,14 +14,6 @@ Galleria.loadTheme('resources/scripts/galleria/themes/classic/galleria.classic.j
             
             });
             
-            Galleria.run('#galleria', {
-                dataConfig: function(img) {
-                    return {
-                        title: $(img).siblings('h1').html(),
-                        description: $(img).siblings(".description").html() // tell Galleria to grab the content from the .description div as caption
-                    };
-                }
-            });
             
             Galleria.ready(function() {
                 var self = this; // galleria is ready and the gallery is assigned
@@ -58,6 +50,14 @@ Galleria.loadTheme('resources/scripts/galleria/themes/classic/galleria.classic.j
                 });
                 
                 this.addIdleState(this.get('info-link'), {
+                    opacity: 0
+                });
+                
+                this.addIdleState(this.get('thumb-nav-left'), {
+                    opacity: 0
+                });
+                
+                this.addIdleState(this.get('thumb-nav-right'), {
                     opacity: 0
                 });
                 
@@ -110,6 +110,16 @@ Galleria.loadTheme('resources/scripts/galleria/themes/classic/galleria.classic.j
                 */
 
             });
+            
+            Galleria.run('.galleria', {
+                dataConfig: function(img) {
+                    return {
+                        title: $(img).siblings('h1').html(),
+                        description: $(img).siblings(".description").html() // tell Galleria to grab the content from the .description div as caption
+                    };
+                }
+            });
+            
             
         
             

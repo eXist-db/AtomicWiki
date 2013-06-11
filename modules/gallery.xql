@@ -8,7 +8,7 @@ declare namespace atom="http://www.w3.org/2005/Atom";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
 declare function gallery:show-catalog($node as node(), $model as map(*)) {
-    <div id="galleria">
+    <div class="galleria">
         <div class="gallery-images">
             <ul>
             {

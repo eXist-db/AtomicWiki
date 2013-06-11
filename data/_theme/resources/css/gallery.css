@@ -1,19 +1,19 @@
 /* Application styles could go here */
 
-#galleria { width: 100%; height: 650px; background: #fff; border: solid 2px; }
+.galleria { width: 100%; height: 650px; background: #fff; border: solid 2px; }
 
-#galleria ::-webkit-scrollbar
+.galleria ::-webkit-scrollbar
 {
   width: 12px;  /* for vertical scrollbars */
   height: 12px; /* for horizontal scrollbars */
 }
 
-#galleria ::-webkit-scrollbar-track
+.galleria ::-webkit-scrollbar-track
 {
   background: rgba(0, 0, 0, 0.6);
 }
 
-#galleria ::-webkit-scrollbar-thumb
+.galleria ::-webkit-scrollbar-thumb
 {
   background: rgba(0, 0, 0, 0.9);
 }
