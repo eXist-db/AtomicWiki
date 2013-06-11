@@ -20,9 +20,12 @@ function moveUp(itemid) {
 
 function removeItem(itemid) {
     var gitem = $("#gallery-items #" + itemid);
-    gitem.slideToggle(500, function() {
-       gitem.remove();
-    });
+    var confirmed = confirm("Do you really want to delete this item?");
+    if (confirmed) {
+        gitem.slideToggle(500, function() {
+           gitem.remove();
+        });
+    }
 }
 
 function showModal(itemid) {
