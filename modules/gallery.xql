@@ -40,6 +40,52 @@ declare
             </ul>
 };
 
+declare %private function gallery:gallery-selectable() {
+        let $entries := gallery:get-slideshow-editor-dummy-atom-feed()
+        let $imageList := 
+            for $entry at $index in $entries//atom:entry
+                return 
+                    <li class="ui-widget-content" image-id="{$entry/atom:id/text()}">
+                        <img alt="{$entries/atom:title}" src="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}_s.jpg"/>
+                        <div style="display:none">
+                            <p class="atom-id">{$entry/atom:id/text()}</p>
+                            <p class="atom-published">{$entry/atom:published/text()}</p>
+                            <p class="atom-updated">{$entry/atom:updated/text()}</p>
+                            <p class="atom-author">{$entry/atom:author/atom:name/text()}</p>
+                            <p class="atom-title">{$entry/atom:title/text()}</p>
+                            <p class="atom-content">{$entry/atom:content/html:div/text()}</p>
+                        </div>
+                    </li>
+        return 
+            <div id="thumbs" class="navigation">
+                <ul id="gallery-selection" class="thumbs noscript">
+                    { $imageList }
+                </ul>
+            </div>
+};
+
+declare %private function gallery:gallery-draggable() {
+        let $entries := gallery:get-slideshow-editor-dummy-atom-feed()
+        let $imageList := 
+            for $entry at $index in $entries//atom:entry
+                return 
+                    <div class="gallery-draggable" image-id="{$entry/atom:id/text()}">
+                        <img class="ui-widget-content" alt="{$entries/atom:title}" src="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}_s.jpg"/>
+                    </div>
+        return 
+            <div id="thumbs" class="navigation">
+                <ul id="gallery-dragndrop" class="thumbs noscript">
+                    { $imageList }
+                </ul>
+            </div>
+};
+
+declare 
+    %templates:wrap 
+    function gallery:slideshow-editor-gallery($node as node(), $model as map(*)) {
+        gallery:gallery-selectable()
+};
+
 
 declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {    
     <atom:feed>
