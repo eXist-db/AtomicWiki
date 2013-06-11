@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Atomic Wiki Gallery</title>
+        <title>Insert Slideshow</title>
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link href="http://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
@@ -23,40 +23,51 @@
                                         <i class="icon-ok"/> Save and Close</button>
                                 </div>
                             </div>
+                            <h1>Insert Slideshow</h1>
                             <div class="control-group title">
-                                <label class="control-label" for="title">Title</label>
+                                <label class="control-label" for="width">Width</label>
                                 <div class="controls">
-                                    <input class="span6 app:edit-title" type="text" name="title" placeholder="Title" required="required"/>
-                                    <p class="help-block">A short, unique name for this entry which will be used in
-                                        URLs.</p>
+                                    <input class="span3" type="text" name="width" placeholder="200px"/>
+                                    <span class="help-inline">Width</span>
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label" for="name">Short Name</label>
+                                <label class="control-label" for="height">Height</label>
                                 <div class="controls">
-                                    <input class="span3 app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="^[\w-.:]+$"/>
-                                    <span class="help-inline">Only letters and -.: are allowed. No spaces.</span>
-                                </div>
-                            </div>
-                            <div class="control-group options">
-                                <label class="control-label" for="is-index">Index Page</label>
-                                <div class="controls">
-                                    <label class="checkbox">
-                                        <input type="checkbox" class="app:edit-use-index" name="is-index"/>
-                                        Check to use this page as the index page for the section
-                                    </label>
+                                    <input class="span3" type="text" name="height"  placeholder="200px"/>
+                                    <span class="help-inline">Height</span>
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label" for="sort-index">Menu Index</label>
+                                <label class="control-label" for="align">Alignment</label>
                                 <div class="controls">
-                                    <input class="span2 app:edit-sort-index" type="text" name="sort-index" placeholder="1" pattern="^\d+(\.\d+)*$"/>
-                                    <span class="help-block">Position of the article in main navigation menu given as a hierarchical, numeric id.
-                                        Articles with a single number, e.g. "1", get a main menu entry. "2.1" means the article will appear as first item
-                                        below the second main menu entry.
-                                    </span>
+                                    <input class="span3" type="text" name="height"  placeholder="center"/>
+                                    <span class="help-inline">Alignment</span>
                                 </div>
                             </div>
+                            <div class="control-group">
+                                <label class="control-label" for="intervall">Switch After</label>
+                                <div class="controls">
+                                    <input class="span3" type="number" name="intervall"  placeholder="7500"/>
+                                    <span class="help-inline">Switch After</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="autoplay">Autoplay</label>
+                                <div class="controls">
+                                    <input class="span3" type="checkbox" name="autoplay"/>
+                                    <span class="help-inline">Autoplay</span>
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label class="control-label" for="style">Image Caption Style</label>
+                                <div class="controls">
+                                    <input class="span3" type="text" name="style"/>
+                                    <span class="help-inline">Image Caption Style</span>
+                                </div>
+                            </div>
+                            
                             <div class="accordion">
                                 <div class="accordion-group">
                                     <div class="accordion-heading">
@@ -409,12 +420,12 @@
                         <label class="control-label" for="title">Title:</label>
                         <div class="controls">
                             <input class="span4" type="text" name="title" id="title" required="required"/>
-                            <span class="help-inline">Assign an meaningful title to this gallery item.</span>
+                            <span class="help-inline">Title of this gallery item</span>
                         </div>
                         <label class="control-label" for="description">Description:</label>
                         <div class="controls">
                             <textarea name="description" id="description" placeholder="Article text..."/>
-                            <span class="help-inline">Assign an meaningful description to this gallery item.</span>
+                            <span class="help-inline">The description to this gallery item</span>
                         </div>
                     </div>
                 </form>
