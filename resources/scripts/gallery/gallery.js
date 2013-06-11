@@ -18,18 +18,17 @@ function moveUp(itemid) {
     jumpTo(item.prev());
 }
 
-function remove(itemid) {
-    var item = $("#gallery-items #" + itemid),
-        callback = function() {
-           item.remove();
-        };
-    item.slideToggle(500, callback);
+function removeItem(itemid) {
+    var gitem = $("#gallery-items #" + itemid);
+    gitem.slideToggle(500, function() {
+       gitem.remove();
+    });
 }
 
 function showModal(itemid) {
     var dialog = $('#edit-gallery-item-dialog');
     var itemTitle = $('#' + itemid + " h3").text();
-    var itemDesc = $('#' + itemid + " .gallery-item-description").contents();    
+    var itemDesc = $('#' + itemid + " .image-desc").contents();
     
     dialog.find("input[name=title]").val(itemTitle);
     dialog.find("textarea[name=description]").append(itemDesc);
