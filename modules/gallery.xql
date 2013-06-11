@@ -5,6 +5,7 @@ module namespace gallery="http://exist-db.org/xquery/gallery";
 import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
+declare namespace html="http://www.w3.org/1999/xhtml";
 
 
 declare 
