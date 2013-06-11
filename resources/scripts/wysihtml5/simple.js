@@ -24,7 +24,10 @@ var wysihtml5ParserRules = {
         "ext:code?lang=plain": 1,
         "ext:code?lang=java": 1,
         "alert": 1,
-        "alert-info": 1
+        "alert-info": 1,
+        "gallery:show-catalog gallery-placeholder": 1,
+        "gallery:show-catalog": 1,
+        "gallery-placeholder": 1
     },
   tags: {
     strong: {},
@@ -37,7 +40,11 @@ var wysihtml5ParserRules = {
             id: "id"
         }
     },
-    div:    {},
+    div:    {
+        "check_attributes": {
+            id: "id"
+        }
+    },
     span:   {},
     pre:    {
         "check_attributes": {

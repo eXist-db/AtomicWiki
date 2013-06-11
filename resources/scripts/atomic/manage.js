@@ -81,13 +81,17 @@ Atomic.menu = (function () {
             var xml = "<menu>";
             for (var i = 0; i < entries.length; i++) {
                 var entry = entries[i];
-                xml += "<entry title='" + entry.data.title + "'>";
-                var children = entry.getChildren();
-                if (children) {
-                    for (var j = 0; j < children.length; j++) {
-                        xml += "<link title='" + children[j].data.title + "' path='" +
-                            children[j].data.feed + "'/>";
+                xml += "<entry title='" + entry.data.title + "' folder='" + entry.data.isFolder + "'>";
+                if (entry.data.isFolder) {
+                    var children = entry.getChildren();
+                    if (children) {
+                        for (var j = 0; j < children.length; j++) {
+                            xml += "<link title='" + children[j].data.title + "' path='" +
+                                children[j].data.feed + "'/>";
+                        }
                     }
+                } else {
+                    xml += "<link path='" + entry.data.path + "'/>";
                 }
                 xml += "</entry>";
             }
@@ -143,6 +147,13 @@ Atomic.menu = (function () {
             dnd: {
                 autoExpandMS: 1000,
                 preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+                onDragStart: function(node) {
+                    $.log("target.onDragStart(%o)", node);
+                    return true;
+                },
+                onDragStop: function(node) {
+                    $.log("target.onDragStop(%o)", node);
+                },
                 onDragEnter: function(node, sourceNode) {
                     /** sourceNode may be null for non-dynatree droppables.
                      *  Return false to disallow dropping on node. In this case
@@ -150,7 +161,7 @@ Atomic.menu = (function () {
                      *  Return 'over', 'before, or 'after' to force a hitMode.
                      *  Any other return value will calc the hitMode from the cursor position.
                      */
-                    $.log("tree.onDragEnter(%o, %o)", node, sourceNode);
+                    $.log("target.onDragEnter(%o, %o)", node, sourceNode);
                     //        if(node.data.isFolder)
                     //          return false;
                     return true;
@@ -158,9 +169,11 @@ Atomic.menu = (function () {
                 onDragOver: function(node, sourceNode, hitMode) {
                     /** Return false to disallow dropping this node.
                      */
-                    $.log("tree.onDragOver(%o, %o, %o)", node, sourceNode, hitMode);
-                    if (node.data.isFolder) {
-                        return hitMode == "over";
+                    $.log("target.onDragOver(%o, %o, %o)", node, sourceNode, hitMode);
+                    if (node.tree == sourceNode.tree) {
+                        return true;
+                    // } else if (node.data.isFolder) {
+                    //     return hitMode == "over";
                     } else {
                         return hitMode == "before" || hitMode == "after";
                     }
@@ -169,15 +182,22 @@ Atomic.menu = (function () {
                     /**This function MUST be defined to enable dropping of items on the tree.
                      * sourceNode may be null, if it is a non-Dynatree droppable.
                      */
-                    logMsg("tree.onDrop(%o, %o)", node, sourceNode);
+                    logMsg("target.onDrop(%o, %o, %s)", node, sourceNode, sourceNode.tree == node.tree);
                     var newNode;
                     if(sourceNode) {
-                        newNode = {
-                            title: sourceNode.data.title,
-                            feed: sourceNode.data.feed,
-                            path: sourceNode.data.path,
-                            isFolder: false
-                        };
+                        if (sourceNode.tree == node.tree) {
+                            newNode = sourceNode.toDict(true, function(dict) {
+                                delete dict.key; // Remove key, so a new one will be created
+                            });
+                            sourceNode.remove();
+                        } else {
+                            newNode = {
+                                title: sourceNode.data.title,
+                                feed: sourceNode.data.feed,
+                                path: sourceNode.data.path,
+                                isFolder: false
+                            };
+                        }
                     } else {
                       newNode = {
                           title: "This node was dropped here (" + ui.helper + ").",
@@ -189,10 +209,10 @@ Atomic.menu = (function () {
                       node.addChild(newNode);
                       // expand the drop target
                       node.expand(true);
-                    }else if(hitMode == "before") {
+                    } else if(hitMode == "before") {
                       // Add before this, i.e. as child of current parent
                       node.parent.addChild(newNode, node);
-                    }else if(hitMode == "after") {
+                    } else if(hitMode == "after") {
                       // Add after this, i.e. as child of current parent
                       node.parent.addChild(newNode, node.getNextSibling());
                     }
@@ -273,6 +293,39 @@ Atomic.menu = (function () {
     };
 }());
 
+Atomic.namespace("Atomic.editor.AddGalleryLink");
+
+Atomic.editor.AddGalleryLink = (function () {
+    
+    Constr = function() {
+        this.dialog = $("#gallery-dialog");
+        this.dialog.modal({
+            keyboard: true,
+            show: false
+        });
+        var select = this.dialog.find("select");
+        var self = this;
+        $(".close-button", this.dialog).click(function(ev) {
+            ev.preventDefault();
+            self.dialog.modal("hide");
+        });
+        $(".apply-button", this.dialog).click(function(ev) {
+            ev.preventDefault();
+            self.dialog.modal("hide");
+            if (self.callback) {
+                self.callback(select.val(), select.find("option:selected").text());
+            }
+        });
+    };
+    
+    Constr.prototype.show = function(callback) {
+        this.dialog.modal("show");
+        this.callback = callback;
+    };
+    
+    return Constr;
+}());
+    
 Atomic.namespace("Atomic.editor.EditAnchor");
 
 Atomic.editor.EditAnchor = (function () {

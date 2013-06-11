@@ -183,3 +183,9 @@ div.alert {
 #content div.alert li {
     color: inherit;
 }
+
+.gallery-placeholder {
+    border: 1px solid orange;
+    padding: 4px 4px;
+    color: orange;
+}
