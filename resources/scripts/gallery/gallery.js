@@ -25,10 +25,12 @@ function removeItem(itemid) {
 function showModal(itemid) {
     var dialog = $('#edit-gallery-item-dialog');
     var itemTitle = $('#' + itemid + " h3").text();
-    var itemDesc = $('#' + itemid + " .image-desc").children();
+    var itemDesc = $('#' + itemid + "-desc").children();
     
     dialog.find("input[name=title]").val(itemTitle);
-    dialog.find("textarea[name=description]").append(itemDesc);
+    
+    var anchorEditor = new Atomic.editor.EditAnchor();
+    var editor = new Atomic.editor.Editor(itemid + "-desc", "description", "editor-toolbar", sitemap, anchorEditor);
     
     dialog.modal('show');
 }

@@ -30,3 +30,13 @@
 
 #gallery-items .gallery-item-controls {
 }
+
+#edit-gallery-item-dialog {
+    width: 1050px;
+    left: 35%;
+}
+
+.description-editor-pane {
+    height: 250px;
+    width: 800px;
+}

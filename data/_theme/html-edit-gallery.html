@@ -24,6 +24,29 @@
                                 </div>
                             </div>
                             <h1>Insert Slideshow</h1>
+                            <div class="control-group title">
+                                <label class="control-label" for="title">Title</label>
+                                <div class="controls">
+                                    <input class="span6 app:edit-title" type="text" name="title" placeholder="Title" required="required"/>
+                                    <p class="help-block">A short, unique name for this entry which will be used in
+                                        URLs.</p>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="name">Short Name</label>
+                                <div class="controls">
+                                    <input class="span3 app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="^[\w-.:]+$"/>
+                                    <span class="help-inline">Only letters and -.: are allowed. No spaces.</span>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="accordion">
+                                <div class="accordion-group">
+                                    <div class="accordion-heading">
+                                        <a href="#options" class="accordion-toggle" data-toggle="collapse">Options</a>
+                                    </div>
+                                    <div class="accordion-body collapse" id="options">
                             <div class="control-group">
                                 <label class="control-label" for="width">Width</label>
                                 <div class="controls">
@@ -68,6 +91,10 @@
                                 </div>
                             </div>
                             
+                            </div>
+                            </div>
+                            </div>
+                            
                             <div class="accordion">
                                 <div class="accordion-group">
                                     <div class="accordion-heading">
@@ -83,213 +110,6 @@
                             
                             <div class="gallery:edit-gallery-items"/>
                             
-                            <fieldset id="content">
-                                <ul class="nav nav-tabs">
-                                    <li class="active">
-                                        <a id="content-editor-tab" href="#content-editor-html">Body</a>
-                                    </li>
-                                    <li>
-                                        <a id="summary-editor-tab" href="#summary-editor-html">Summary</a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content">
-                                    <div id="content-editor-html" class="tab-pane active content">
-                                        <div id="content-editor-toolbar" style="display: none;" class="wysihtml5-toolbar">
-                                            <ul>
-                                                <li class="dropdown">
-                                                    <a class="btn dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-                                                        <i class="icon-font"/>&#160;
-                                                        <span class="current-font">Normal</span>
-                                                        <b class="caret"/>
-                                                    </a>
-                                                    <ul class="dropdown-menu" role="menu">
-                                                        <li>
-                                                            <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="p">Normal</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">Heading 1</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h2">Heading 2</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h3">Heading 3</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="xquery">XQuery Code</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="xml">XML Code</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="javascript">Javascript Code</a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a data-wysihtml5-command="bold" class="btn">
-                                                        <i class="icon-bold"/>
-                                                    </a>
-                                                    <a data-wysihtml5-command="italic" class="btn">
-                                                        <i class="icon-italic"/>
-                                                    </a>
-                                                    <a data-wysihtml5-command="underline" class="btn">
-                                                        <i class="icon-underline"/>
-                                                    </a>
-                                                    <a data-wysihtml5-command="formatInline" data-wysihtml5-command-value="code" class="btn" title="Code">
-                                                        <i class="icon-barcode"/>
-                                                    </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a data-wysihtml5-command="createLink" class="btn" title="Insert/Edit Link">
-                                                        <i class="icon-share"/>
-                                                    </a>
-                                                    <a data-wysihtml5-command="setAnchor" class="btn" title="Set Anchor">
-                                                        <i class="icon-bookmark"/>
-                                                    </a>
-                                                    <a data-wysihtml5-command="insertImage" class="btn" title="Insert/Edit Image">
-                                                        <i class="icon-picture"/>
-                                                    </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a class="btn" data-wysihtml5-command="justifyLeft" title="Align Left">
-                                                        <i class="icon-align-left"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="justifyRight" title="Align Right">
-                                                        <i class="icon-align-right"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="justifyCenter" title="Center">
-                                                        <i class="icon-align-center"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="justifyFull" title="Justify">
-                                                        <i class="icon-align-justify"/>
-                                                    </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a class="btn" data-wysihtml5-command="insertUnorderedList" title="Insert/Toggle Unordered List">
-                                                        <i class="icon-list"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="insertOrderedList" title="Insert/Toggle Ordered List">
-                                                        <i class="icon-th-list"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="info" title="Insert/Toggle an Info Box">
-                                                        <i class="icon-info-sign"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="alert" title="Insert/Toggle an Alert Box">
-                                                        <i class="icon-warning-sign"/>
-                                                    </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a class="btn" data-wysihtml5-command="undo" title="Undo">
-                                                        <i class="icon-undo"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="redo" title="Redo">
-                                                        <i class="icon-redo"/>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <pre id="content-editor-content" class="app:edit-content?mode=html"/>
-                                        <textarea name="content" id="content-editor-textarea" placeholder="Article text..."/>
-                                    </div>
-                                    <div id="summary-editor-html" class="tab-pane content">
-                                        <div id="summary-editor-toolbar" style="display: none;" class="wysihtml5-toolbar">
-                                            <ul>
-                                                <li class="dropdown">
-                                                    <a class="btn dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-                                                        <i class="icon-font"/>&#160;
-                                                        <span class="current-font">Normal</span>
-                                                        <b class="caret"/>
-                                                    </a>
-                                                    <ul class="dropdown-menu" role="menu">
-                                                        <li>
-                                                            <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="p">Normal</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">Heading 1</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h2">Heading 2</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h3">Heading 3</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="xquery">XQuery Code</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="xml">XML Code</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="javascript">Javascript Code</a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a data-wysihtml5-command="bold" class="btn">
-                                                        <i class="icon-bold"/>
-                                                    </a>
-                                                    <a data-wysihtml5-command="italic" class="btn">
-                                                        <i class="icon-italic"/>
-                                                    </a>
-                                                    <a data-wysihtml5-command="underline" class="btn">
-                                                        <i class="icon-underline"/>
-                                                    </a>
-                                                    <a data-wysihtml5-command="formatInline" data-wysihtml5-command-value="code" class="btn" title="Code">
-                                                        <i class="icon-barcode"/>
-                                                    </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a data-wysihtml5-command="createLink" class="btn" title="Insert/Edit Link">
-                                                        <i class="icon-share"/>
-                                                    </a>
-                                                    <a data-wysihtml5-command="insertImage" class="btn" title="Insert/Edit Image">
-                                                        <i class="icon-picture"/>
-                                                    </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a class="btn" data-wysihtml5-command="justifyLeft" title="Align Left">
-                                                        <i class="icon-align-left"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="justifyRight" title="Align Right">
-                                                        <i class="icon-align-right"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="justifyCenter" title="Center">
-                                                        <i class="icon-align-center"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="justifyFull" title="Justify">
-                                                        <i class="icon-align-justify"/>
-                                                    </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a class="btn" data-wysihtml5-command="insertUnorderedList" title="Insert/Toggle Unordered List">
-                                                        <i class="icon-list"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="insertOrderedList" title="Insert/Toggle Ordered List">
-                                                        <i class="icon-th-list"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="info" title="Insert/Toggle an Info Box">
-                                                        <i class="icon-info-sign"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="alert" title="Insert/Toggle an Alert Box">
-                                                        <i class="icon-warning-sign"/>
-                                                    </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a class="btn" data-wysihtml5-command="undo" title="Undo">
-                                                        <i class="icon-undo"/>
-                                                    </a>
-                                                    <a class="btn" data-wysihtml5-command="redo" title="Redo">
-                                                        <i class="icon-redo"/>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <pre id="summary-editor-content" class="app:edit-summary?mode=html"/>
-                                        <textarea name="summary" id="summary-editor-textarea" placeholder="Article text..."/>
-                                    </div>
-                                </div>
-                            </fieldset>
                             <input type="hidden" name="ctype" value="html"/>
                             <input type="hidden" name="entryId" class="app:edit-id"/>
                             <input type="hidden" name="author" class="app:edit-author"/>
@@ -419,12 +239,75 @@
                     <div class="control-group">
                         <label class="control-label" for="title">Title:</label>
                         <div class="controls">
-                            <input class="span4" type="text" name="title" id="title" required="required"/>
+                            <input class="span6 title" type="text" name="title" id="title" required="required"/>
                             <span class="help-inline">Title of this gallery item</span>
                         </div>
                         <label class="control-label" for="description">Description:</label>
-                        <div class="controls">
-                            <textarea name="description" id="description" placeholder="Article text..."/>
+                        <div class="controls" id="description-ctrl">
+                        
+                        <div id="editor-toolbar" style="display: none;" class="wysihtml5-toolbar">
+                          <ul>
+                              <li class="dropdown">
+                                  <a class="btn dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+                                      <i class="icon-font">&#160;</i>
+                                      <span class="current-font">Normal</span>
+                                      <b class="caret"></b>
+                                  </a>
+                                  <ul class="dropdown-menu" role="menu">
+                                      <li><a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="p">Normal</a></li>
+                                      <li><a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">Heading 1</a></li>
+                                      <li><a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h2">Heading 2</a></li>
+                                      <li><a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h3">Heading 3</a></li>
+                                      <li><a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="xquery">XQuery Code</a></li>
+                                      <li><a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="xml">XML Code</a></li>
+                                      <li><a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="javascript">Javascript Code</a></li>
+                                  </ul>
+                              </li>
+                              <li class="btn-group">
+                                  <a data-wysihtml5-command="bold" class="btn"><i class="icon-bold"/> </a>
+                                  <a data-wysihtml5-command="italic" class="btn"><i class="icon-italic"/> </a>
+                                  <a data-wysihtml5-command="underline" class="btn"><i class="icon-underline"/></a>
+                                  <a data-wysihtml5-command="formatInline" data-wysihtml5-command-value="code" class="btn" title="Code"><i class="icon-barcode"/></a>
+                              </li>
+                              <li class="btn-group">
+                                  <a class="btn" data-wysihtml5-command="justifyLeft" title="Align Left">
+                                      <i class="icon-align-left"/>
+                                  </a>
+                                  <a class="btn" data-wysihtml5-command="justifyRight" title="Align Right">
+                                      <i class="icon-align-right"/>
+                                  </a>
+                                  <a class="btn" data-wysihtml5-command="justifyCenter" title="Center">
+                                      <i class="icon-align-center"/>
+                                  </a>
+                                  <a class="btn" data-wysihtml5-command="justifyFull" title="Justify">
+                                      <i class="icon-align-justify"/>
+                                  </a>
+                              </li>
+                              <li class="btn-group">
+                                  <a class="btn" data-wysihtml5-command="insertUnorderedList" title="Insert/Toggle Unordered List">
+                                      <i class="icon-list"/>
+                                  </a>
+                                  <a class="btn" data-wysihtml5-command="insertOrderedList" title="Insert/Toggle Ordered List">
+                                      <i class="icon-th-list"/>
+                                  </a>
+                                  <a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="info" title="Insert/Toggle an Info Box">
+                                      <i class="icon-info-sign"/>
+                                  </a>
+                                  <a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="alert" title="Insert/Toggle an Alert Box">
+                                      <i class="icon-warning-sign"/>
+                                  </a>
+                              </li>
+                              <li class="btn-group">
+                                  <a class="btn" data-wysihtml5-command="undo" title="Undo">
+                                      <i class="icon-undo"/>
+                                  </a>
+                                  <a class="btn" data-wysihtml5-command="redo" title="Redo">
+                                      <i class="icon-redo"/>
+                                  </a>
+                              </li>
+                          </ul>
+                      </div>
+                            <textarea name="description" id="description" class="span6 description-editor-pane" placeholder="Article text..."></textarea>
                             <span class="help-inline">The description to this gallery item</span>
                         </div>
                     </div>
@@ -439,37 +322,6 @@
                 </a>
             </div>
         </div>
-        
-        <div class="modal hide fade" id="anchor-dialog">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">
-                    <i class="icon-remove"/>
-                </a>
-                <h3 class="title">Set Block ID</h3>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" action="">
-                    <div class="control-group">
-                        <label class="control-label" for="id">ID:</label>
-                        <div class="controls">
-                            <input class="span4" type="text" name="id" required="required"/>
-                            <span class="help-inline">Assign an ID to the current text block. This can be used
-                            to link directly to the block (by appending #id to a link).</span>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn close-button">
-                    <i class="icon-remove"/> Cancel
-                </a>
-                <a class="btn-primary btn apply-button">
-                    <i class="icon-remove"/> Apply
-                </a>
-            </div>
-        </div>
-        
-        
         <div id="gallery">
           <button id="toggleGallerySwitch" class="btn switchGallery">Gallery</button>
           <div class="gallery-container">

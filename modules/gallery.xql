@@ -25,7 +25,7 @@ declare
                         </div>
                         <div class="span10 gallery-item-caption">
                             <h3>{$entry/atom:title}</h3>
-                            <div class="image-desc">{$entry/atom:content}</div>
+                            <div id="{$entry/atom:id}-desc"class="image-desc">{$entry/atom:content/*}</div>
                             <div class="gallery-item-controls pull-right">
                                 <a class="btn" onclick="showModal('{$entry/atom:id}')"><i class="icon-edit"></i></a>
                                 <a class="btn" onclick="removeItem('{$entry/atom:id}')"><i class="icon-remove"></i></a>

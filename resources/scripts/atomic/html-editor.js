@@ -381,8 +381,16 @@ $(document).ready(function() {
     var sitemap = new Atomic.editor.EditLink();
     var anchorEditor = new Atomic.editor.EditAnchor();
     var summaryEditor = null;
-    var contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", 
-        sitemap, anchorEditor);
+    
+    var contentEditor = null;
+    if ($("#content-editor-tab").length) {
+        contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap, anchorEditor);
+    }
+    
+    var contentEditor = null;
+    if ($("#content-editor-tab").length) {
+        contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap, anchorEditor);
+    }
     
     function updateForm() {
         var content = contentEditor.editor.getValue(true);
@@ -465,7 +473,7 @@ $(document).ready(function() {
         console.log("open / close gallery");
         $(".gallery-container").slideToggle('fast', function() {
                 // Animation complete.
-        });        
+        });
     });
     
      $("#insert-image").click(function (e) {
