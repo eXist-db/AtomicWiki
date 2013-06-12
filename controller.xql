@@ -54,6 +54,12 @@ try {
             <forward url="{$exist:controller}/data/_theme/code-edit.html"/>
         </dispatch>
         
+    else if ($exist:resource = "ImageSelector.html") then 
+         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <view>
+                <forward url="{$exist:controller}/modules/view.xql"/>
+            </view>
+        </dispatch>
     else if (ends-with($exist:resource, ".xql")) then
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$exist:controller}/modules/{$exist:resource}">

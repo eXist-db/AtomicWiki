@@ -40,3 +40,73 @@
     height: 250px;
     width: 800px;
 }
+
+#gallery {
+    position: fixed;
+    right: 0;
+    top: 160px;
+    width: 630px;
+    z-index: 100;
+}
+
+.switchGallery {
+    position: absolute;
+    float: right;
+    top: 0;
+    right: 0;
+    z-index: 5;
+}
+
+.gallery-container {
+    display:block;
+    position:relative;
+    background:blue;
+    border: thin solid #000000;
+    box-shadow: 10px 10px 5px gray;
+    font-size: 0.9em;
+    border-radius: 4px 4px 4px 4px;
+
+}
+.gallery-container .footer ul li {
+    display: inline;
+}
+
+.gallery-container .footer ul li a {
+    padding: 2px 4px; color: #ffcb05;
+}
+.footer ul li a:hover {
+    background: #333;
+}
+
+.gallery-container .header {
+    background:yellow;
+    padding-bottom: 1px;
+    padding-left: 4px;
+    padding-top: 4px;
+}
+.gallery-container .footer {
+    background: none repeat scroll 0 0 orange;
+    clear: both;
+    height: 30px;
+    margin: 0 auto;
+    padding: 1em;
+}
+
+.gallery-container .gallery {
+    display:block;
+    margin:0;
+    padding:0;
+    background:green;
+}
+
+#gallery-selection .ui-selecting { background: #FECA40; }
+#gallery-selection .ui-selected { background: #F39814; color: white; }
+#gallery-selection { list-style-type: none; margin: 0; padding: 0;  }
+#gallery-selection li { margin: 3px; padding: 0.4em; font-size: 1.4em; float:left;}
+
+/*
+.gallery-draggable { width: 80px; height: 80px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
+#gallery-droppable {  height: 40px; padding: 0.5em; float: left; margin: 10px; }
+*/
+
+

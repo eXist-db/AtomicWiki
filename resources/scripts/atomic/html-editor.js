@@ -385,13 +385,7 @@ $(document).ready(function() {
     var contentEditor = null;
     if ($("#content-editor-tab").length) {
         contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap, anchorEditor);
-    }
-    
-    var contentEditor = null;
-    if ($("#content-editor-tab").length) {
-        contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap, anchorEditor);
-    }
-    
+    }    
     function updateForm() {
         var content = contentEditor.editor.getValue(true);
         var summary = null;
@@ -466,70 +460,5 @@ $(document).ready(function() {
         }
         
         return true;
-    });
-
-     $("#toggleGallerySwitch").click(function (e) {
-        e.preventDefault();
-        console.log("open / close gallery");
-        $(".gallery-container").slideToggle('fast', function() {
-                // Animation complete.
-        });
-    });
-    
-     $("#insert-image").click(function (e) {
-            e.preventDefault();            
-            console.log("add image: " + $("#img-id").html() + " to Wiki Entry");
-    });
-    
-    $("#gallery-selection" ).selectable({ 
-        filter: "li", 
-        selecting: function( event, ui ) {
-            if( $(".ui-selected, .ui-selecting").length > 1){
-                $(ui.selecting).removeClass("ui-selecting");
-            }else {
-                console.log("Selected! This: ", this, " Event:  ", event , " ui: ", ui);                                
-                var atomTitle = "<span id='img-title-label' class='label'> Title: </span><span id='img-title'>"+$(ui.selecting).find('.atom-title').html();
-                var atomId = "<span id='img-id-label' class='label'> Id: </span><span id='img-id'>"+$(ui.selecting).find('.atom-id').html()+"</span>";
-                var uiContent = "<p>" + atomTitle + atomId + "</p>";
-                $(".img-selected").html(uiContent);                    
-            }
-        },
-        unselecting: function( event, ui ) {
-           console.log("Unselected! This: ", this, " Event:  ", event , " ui: ", ui);                                
-           $(".img-selected").html("");
-        }
-    });
-    /* 
-    $( ".gallery-draggable" ).draggable();
-    $( "#gallery-droppable" ).droppable({
-        drop: function( event, ui ) {            
-            console.debug("this: ", this, " event: ",event, " ui:",ui);
-        }
-    });
-    */
-    
-   $("#query-images").click(function (ev) {
-       var searchForm = $(".form-search");
-        ev.preventDefault();
-        console.log("prepare query images");
-        //  if (!form.checkValidity())
-        //  return;
-        contentEditor.deactivate();
-        updateForm();
-        // $("input[name='action']", form).val("store");
-        var data = searchForm.serialize();
-        console.debug("search data: ",data);
-        /* 
-        $.ajax({
-            type: "POST",
-            url: "modules/store.xql",
-            data: data,
-            complete: function() {
-                $.log("Store completed");
-                contentEditor.activate();
-            }
-        });
-        */
-        contentEditor.activate();
     });
 });

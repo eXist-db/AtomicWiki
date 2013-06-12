@@ -4,6 +4,7 @@ module namespace gallery="http://exist-db.org/xquery/gallery";
 
 import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
 
+declare namespace vra="http://www.vraweb.org/vracore4.htm";
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace html="http://www.w3.org/1999/xhtml";
 
@@ -65,26 +66,133 @@ declare %private function gallery:gallery-selectable() {
             </div>
 };
 
-declare %private function gallery:gallery-draggable() {
-        let $entries := gallery:get-slideshow-editor-dummy-atom-feed()
-        let $imageList := 
-            for $entry at $index in $entries//atom:entry
-                return 
-                    <div class="gallery-draggable" image-id="{$entry/atom:id/text()}">
-                        <img class="ui-widget-content" alt="{$entries/atom:title}" src="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}_s.jpg"/>
-                    </div>
-        return 
-            <div id="thumbs" class="navigation">
-                <ul id="gallery-dragndrop" class="thumbs noscript">
-                    { $imageList }
-                </ul>
-            </div>
+
+declare 
+    %templates:wrap
+    %templates:default("collection", "c_b9827ec8-6b66-5d98-9f5e-ca12b58044c4") 
+    function gallery:search($node as node(), $model as map(*), $collection as xs:string, $query as xs:string?, $cached as item()*) {
+    if ($query or $cached) then
+        let $result := 
+            if ($query) then
+                (: @TODO  :)
+                collection('/db/resources/commons')//vra:vra/vra:work[@refid=$collection]
+            else
+                $cached
+        return (
+            map {
+                "result" := $result,
+                "query" := $query
+            },
+            session:set-attribute("cached", $result)
+        )
+    else
+        (
+            map {
+                "result" := collection('/db/resources/commons')//vra:vra/vra:work[@refid=$collection]
+            }
+        )
 };
+(: 
+declare %templates:wrap 
+        %templates:default("collection", "c_b9827ec8-6b66-5d98-9f5e-ca12b58044c4") 
+        function gallery:search($node as node(), $model as map(*), $collection as xs:string, $query as xs:string?, $cached as item()*) {
+    if ($query or $cached) then
+        let $result := 
+            if ($query) then
+               collection('/db/resources/commons')//vra:vra/vra:work[@refid="c_b9827ec8-6b66-5d98-9f5e-ca12b58044c4"]
+            else
+                $cached
+        return (
+            templates:process($node/node(), map:new(map {"result" := $result,"query" := $query})),
+            session:set-attribute("cached", $result)
+        )
+    else
+        ()
+};
+ :)
+
+declare
+    %templates:wrap
+    %templates:default("start", 1)
+    %templates:default("max", 10)
+function gallery:search-result($node as node(), $model as map(*), $start as xs:integer, $max as xs:integer) {
+    let $filteredResult := subsequence($model("result"), $start, $max)
+    for $entry at $index in $filteredResult
+        return
+            templates:process($node/node(), map:new(($model, map {"entry" := $entry, "index" := ($start + $index -1)})))            
+};
+
+declare 
+    %templates:default("start", 1)
+    %templates:default("max", 10)
+function gallery:pagination-previous($node as node(), $model as map(*), $start as xs:integer, $max as xs:integer) {
+    let $total := count($model("result"))
+    return
+        if ($start > 1) then
+            element { node-name($node) } {
+                $node/@* except $node/@href,
+                attribute href { "?start=" || $start - $max },
+                $node/node()
+            }
+        else
+            ()
+};
+
+declare 
+    %templates:default("start", 1)
+    %templates:default("max", 10)
+function gallery:pagination-next($node as node(), $model as map(*), $start as xs:integer, $max as xs:integer) {
+    let $total := count($model("result"))
+    return
+        if ($start + $max < $total) then
+            element { node-name($node) } {
+                $node/@* except $node/@href,
+                attribute href { "?start=" || $start + $max },
+                $node/node()
+            }
+        else
+            ()
+};
+
+declare
+    %templates:wrap
+    function gallery:result-image($node as node(), $model as map(*)) {    
+        let $entry := $model("entry")    
+        return 
+            for $image in $entry//vra:relationSet
+                let $imageId := substring($image/vra:relation[1]/@relids , 3)
+                return 
+                    if($imageId) 
+                    then (
+                            <img src="http://kjc-ws2.kjc.uni-heidelberg.de:83/images/service/download_uuid/priya_paul/{$imageId}?width=100&amp;height=100&amp;crop_type=middle" class="relatedImage"/>,                           
+                            <div style="display:none">
+                                <p class="ref-id">{$imageId}</p>
+                            </div>
+                    )else ()
+    };
+
 
 declare 
     %templates:wrap 
     function gallery:slideshow-editor-gallery($node as node(), $model as map(*)) {
-        gallery:gallery-selectable()
+        let $vraWorkRecords  := collection('/db/resources/commons/Priya_Paul_Collection')/vra:vra/vra:work
+        let $imageList := for $vraWorkRecord in $vraWorkRecords[position() le 10]
+            for $image in $vraWorkRecord//vra:relationSet
+                let $imageId := substring($image/vra:relation[1]/@relids , 3)
+                    return 
+                        <li class="ui-widget-content" image-id="{$imageId}">                
+                            <img src="http://kjc-ws2.kjc.uni-heidelberg.de:83/images/service/download_uuid/priya_paul/{$imageId}?width=100&amp;height=100&amp;crop_type=middle" class="relatedImage"/>                            
+                            <div style="display:none">
+                                <p class="ref-id">{$imageId}</p>
+                            </div>
+                        </li>
+    return 
+        <div id="thumbs" class="navigation">
+            <ul id="gallery-selection" class="thumbs noscript">
+                { $imageList }
+            </ul>
+        </div>
+        
 };
 
 
@@ -288,4 +396,20 @@ declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {
             </atom:content>
         </atom:entry>
     </atom:feed>
+};
+
+declare %private function gallery:gallery-draggable() {
+        let $entries := gallery:get-slideshow-editor-dummy-atom-feed()
+        let $imageList := 
+            for $entry at $index in $entries//atom:entry
+                return 
+                    <div class="gallery-draggable" image-id="{$entry/atom:id/text()}">
+                        <img class="ui-widget-content" alt="{$entries/atom:title}" src="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}_s.jpg"/>
+                    </div>
+        return 
+            <div id="thumbs" class="navigation">
+                <ul id="gallery-dragndrop" class="thumbs noscript">
+                    { $imageList }
+                </ul>
+            </div>
 };
