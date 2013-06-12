@@ -92,24 +92,6 @@ declare
             }
         )
 };
-(: 
-declare %templates:wrap 
-        %templates:default("collection", "c_b9827ec8-6b66-5d98-9f5e-ca12b58044c4") 
-        function gallery:search($node as node(), $model as map(*), $collection as xs:string, $query as xs:string?, $cached as item()*) {
-    if ($query or $cached) then
-        let $result := 
-            if ($query) then
-               collection('/db/resources/commons')//vra:vra/vra:work[@refid="c_b9827ec8-6b66-5d98-9f5e-ca12b58044c4"]
-            else
-                $cached
-        return (
-            templates:process($node/node(), map:new(map {"result" := $result,"query" := $query})),
-            session:set-attribute("cached", $result)
-        )
-    else
-        ()
-};
- :)
 
 declare
     %templates:wrap
@@ -131,7 +113,7 @@ function gallery:pagination-previous($node as node(), $model as map(*), $start a
         if ($start > 1) then
             element { node-name($node) } {
                 $node/@* except $node/@href,
-                attribute href { "?start=" || $start - $max },
+                attribute href { "javascript:loadImages("||$start - $max || "," || $max || ")" },
                 $node/node()
             }
         else
@@ -147,7 +129,7 @@ function gallery:pagination-next($node as node(), $model as map(*), $start as xs
         if ($start + $max < $total) then
             element { node-name($node) } {
                 $node/@* except $node/@href,
-                attribute href { "?start=" || $start + $max },
+                attribute href { "javascript:loadImages("||$start + $max || "," || $max || ")" },
                 $node/node()
             }
         else
@@ -396,20 +378,4 @@ declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {
             </atom:content>
         </atom:entry>
     </atom:feed>
-};
-
-declare %private function gallery:gallery-draggable() {
-        let $entries := gallery:get-slideshow-editor-dummy-atom-feed()
-        let $imageList := 
-            for $entry at $index in $entries//atom:entry
-                return 
-                    <div class="gallery-draggable" image-id="{$entry/atom:id/text()}">
-                        <img class="ui-widget-content" alt="{$entries/atom:title}" src="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}_s.jpg"/>
-                    </div>
-        return 
-            <div id="thumbs" class="navigation">
-                <ul id="gallery-dragndrop" class="thumbs noscript">
-                    { $imageList }
-                </ul>
-            </div>
 };
