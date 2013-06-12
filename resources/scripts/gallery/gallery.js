@@ -45,8 +45,8 @@ $(document).ready(function() {
         console.log("prepare query images");
         //  if (!form.checkValidity())
         //  return;
-        contentEditor.deactivate();
-        updateForm();
+        // contentEditor.deactivate();
+        // updateForm();
         // $("input[name='action']", form).val("store");
         var data = searchForm.serialize();
         console.debug("search data: ",data);
@@ -56,7 +56,7 @@ $(document).ready(function() {
             data:data,
             complete: function() {
                 $.log("updating gallery completed");
-                contentEditor.activate();
+                // contentEditor.activate();
             }
         }).done(function( html ) {
             // console.log("ajax.done html:",html)
