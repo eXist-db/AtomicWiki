@@ -7,11 +7,6 @@ $(document).ready(function() {
         });        
     });
     
-     $("#insert-image").click(function (e) {
-            e.preventDefault();            
-            console.log("add image: " + $("#img-id").html() + " to Wiki Entry");
-    });
-    
    $("#query-images").click(function (ev) {   
        loadImages()
    });
@@ -53,9 +48,10 @@ function loadImages(start, max) {
                     $(ui.selecting).removeClass("ui-selecting");
                 }else {
                     console.log("Selected! This: ", this, " Event:  ", event , " ui: ", ui);                                
-                    var atomTitle = "<span id='img-title-label' class='label'> Title: </span><span id='img-title'>"+$(ui.selecting).find('.atom-title').html();
-                    var atomId = "<span id='img-id-label' class='label'> Id: </span><span id='img-id'>"+$(ui.selecting).find('.atom-id').html()+"</span>";
-                    var uiContent = "<p>" + atomTitle + atomId + "</p>";
+                    var atomTitle = "<span id='img-title-label' class='label'> Title: </span><span id='img-title'>"+$(ui.selecting).find('.image-title').html()+"</span>";
+                    var atomId = "<span id='img-id-label' class='label'> Id: </span><span id='img-id'>"+$(ui.selecting).find('.image-id').html()+"</span>";
+                    var atomURL = "<span id='img-url-label' class='label'> URL: </span><span id='img-url'>"+$(ui.selecting).find('.image-url').html()+"</span>";
+                    var uiContent = "<p>" + atomTitle + atomId + atomURL + "</p>";
                     $(".img-selected").html(uiContent);                    
                 }
             },
@@ -67,6 +63,44 @@ function loadImages(start, max) {
         
     });
     
+}
+
+/*
+ * Clones the template 'image' entry and populates it with data
+*/
+function addImage(){
+    console.log("add image: " + $("#img-id").html() + " to Wiki Entry");
+    var liTemplate = $("#li-template").clone()
+    
+    var imageTitle = $("#img-title").html();
+    var imageURL = $("#img-url").html();
+    var imageId = $("#img-id").html();
+    
+    liTemplate.attr("id", imageId)    
+    liTemplate.find(".thumb").attr("href",imageURL)
+    liTemplate.find(".img-polaroid").attr("alt",imageTitle )
+    liTemplate.find(".img-polaroid").attr("src",imageURL)    
+    
+    liTemplate.find(".image-title").html(imageTitle)    
+    liTemplate.find(".image-desc").attr("id", imageId + "-desc")
+    
+    liTemplate.find(".btn-edit").click(function() {   
+        console.debug("liTemplate.find('btn-edit')")
+       showModal(imageId);
+    });    
+    liTemplate.find(".btn-remove").click(function() {   
+        console.debug("liTemplate.find('btn-remove')")
+       removeItem(imageId);
+    });    
+    liTemplate.find(".btn-arrow-up").click(function() {   
+       moveUp(imageId);
+    });    
+    liTemplate.find(".btn-arrow-down").click(function() {   
+       moveDown(imageId);
+    });    
+    
+    // append the clonde and setup template into the gallery    
+    liTemplate.appendTo("#gallery-items")
 }
 
 function moveDown(itemid) {

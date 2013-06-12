@@ -13,59 +13,63 @@ declare
     %templates:wrap function gallery:edit-gallery-items($node as node(), $model as map(*)) {
         let $entries := gallery:get-slideshow-editor-dummy-atom-feed()
         let $imageList :=
-            for $entry in $entries//atom:entry
-                return
-                <li id="{$entry/atom:id}" class="container gallery-item-row img-rounded">
-                    <div class="row">
-                        <div class="span2 gallery-item-image">
-                            <a title="{$entry/atom:title/text()}" name="{$entry/atom:title/text()}" class="thumb" target="blank_"
-                                href="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}.jpg">
-                                <img alt="{$entries/atom:title}" class="img-polaroid" 
-                                     src="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}_s.jpg"/>
-                            </a>
-                        </div>
-                        <div class="span10 gallery-item-caption">
-                            <h3>{$entry/atom:title}</h3>
-                            <div id="{$entry/atom:id}-desc"class="image-desc">{$entry/atom:content/*}</div>
-                            <div class="gallery-item-controls pull-right">
-                                <a class="btn" onclick="showModal('{$entry/atom:id}')"><i class="icon-edit"></i></a>
-                                <a class="btn" onclick="removeItem('{$entry/atom:id}')"><i class="icon-remove"></i></a>
-                                <a class="btn" onclick="moveUp('{$entry/atom:id}')"><i class="icon-arrow-up"></i></a>
-                                <a class="btn" onclick="moveDown('{$entry/atom:id}')"><i class="icon-arrow-down"></i></a>
+            for $entry in $entries//atom:entry                
+                let $imageURL := "http://farm3.static.flickr.com/" || data($entry/atom:link/@href) || "_s.jpg"
+                return 
+                    gallery:feed-to-html-image($imageURL, $entry/atom:id, $entry/atom:title/text(), $entry/atom:content/*)
+        return
+            (
+                <ul id="gallery-items">
+                    { $imageList }
+                </ul>,
+                <ul style="display:none" name="hidden-ul">
+                    <li id="li-template" class="container gallery-item-row img-rounded">
+                        <div class="row">
+                            <div class="span2 gallery-item-image">
+                                <a title="" name="" class="thumb" target="blank_"
+                                    href="">
+                                    <img alt="" class="img-polaroid" src=""/>
+                                </a>
+                            </div>
+                            <div class="span10 gallery-item-caption">
+                                <h3 class="image-title"></h3>
+                                <div class="image-desc" id="" ></div>
+                                <div class="gallery-item-controls pull-right">
+                                    <a class="btn btn-edit"><i class="icon-edit"></i></a>
+                                    <a class="btn btn-remove"><i class="icon-remove"></i></a>
+                                    <a class="btn btn-arrow-up"><i class="icon-arrow-up"></i></a>
+                                    <a class="btn btn-arrow-down"><i class="icon-arrow-down"></i></a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </li>
-        return
-            <ul id="gallery-items">
-                { $imageList }
-            </ul>
-};
-
-declare %private function gallery:gallery-selectable() {
-        let $entries := gallery:get-slideshow-editor-dummy-atom-feed()
-        let $imageList := 
-            for $entry at $index in $entries//atom:entry
-                return 
-                    <li class="ui-widget-content" image-id="{$entry/atom:id/text()}">
-                        <img alt="{$entries/atom:title}" src="http://farm3.static.flickr.com/{data($entry/atom:link/@href)}_s.jpg"/>
-                        <div style="display:none">
-                            <p class="atom-id">{$entry/atom:id/text()}</p>
-                            <p class="atom-published">{$entry/atom:published/text()}</p>
-                            <p class="atom-updated">{$entry/atom:updated/text()}</p>
-                            <p class="atom-author">{$entry/atom:author/atom:name/text()}</p>
-                            <p class="atom-title">{$entry/atom:title/text()}</p>
-                            <p class="atom-content">{$entry/atom:content/html:div/text()}</p>
-                        </div>
                     </li>
-        return 
-            <div id="thumbs" class="navigation">
-                <ul id="gallery-selection" class="thumbs noscript">
-                    { $imageList }
                 </ul>
-            </div>
+            )
 };
 
+declare %private function gallery:feed-to-html-image($imageURL as xs:string, $id as xs:string, $title as xs:string, $description as item()*) {
+    <li id="{$id}" class="container gallery-item-row img-rounded">
+        <div class="row">
+            <div class="span2 gallery-item-image">
+                <a class="thumb" target="blank_" href="{$imageURL}">
+                    <img alt="{$title}" class="img-polaroid" 
+                         src="{$imageURL}"/>
+                </a>
+            </div>
+            <div class="span10 gallery-item-caption">
+                <h3 class="image-title">{$title}</h3>
+                <div id="{$id}-desc"class="image-desc">{$description}</div>
+                <div class="gallery-item-controls pull-right">
+                    <a class="btn btn-edit" onclick="showModal('{$id}')"><i class="icon-edit"></i></a>
+                    <a class="btn btn-remove" onclick="removeItem('{$id}')"><i class="icon-remove"></i></a>
+                    <a class="btn btn-arrow-up" onclick="moveUp('{$id}')"><i class="icon-arrow-up"></i></a>
+                    <a class="btn btn-arrow-down" onclick="moveDown('{$id}')"><i class="icon-arrow-down"></i></a>
+                </div>
+            </div>
+        </div>
+    </li>
+  
+};
 
 declare 
     %templates:wrap
@@ -140,42 +144,26 @@ declare
     %templates:wrap
     function gallery:result-image($node as node(), $model as map(*)) {    
         let $entry := $model("entry")    
+        let $image := $entry//vra:relationSet/vra:relation[@pref='true']
+        let $imageId := substring($image/@relids , 3)
+        
+        let $serverPath := "http://kjc-ws2.kjc.uni-heidelberg.de:83/images/service/download_uuid/priya_paul/"
+        let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
+        let $imageURL :=  $serverPath || $imageId || $imageOption
+        
         return 
-            for $image in $entry//vra:relationSet
-                let $imageId := substring($image/vra:relation[1]/@relids , 3)
-                return 
-                    if($imageId) 
-                    then (
-                            <img src="http://kjc-ws2.kjc.uni-heidelberg.de:83/images/service/download_uuid/priya_paul/{$imageId}?width=100&amp;height=100&amp;crop_type=middle" class="relatedImage"/>,                           
-                            <div style="display:none">
-                                <p class="ref-id">{$imageId}</p>
-                            </div>
-                    )else ()
+            if($imageId) 
+            then (
+                <img src="{$imageURL}" class="relatedImage"/>,                           
+                <div style="display:none">                    
+                    <div class="image-id">{$imageId}</div>
+                    <div class="image-title">{$entry//vra:titleSet/vra:title[@pref='true']/text()}</div>
+                    <div class="image-work-record">{$entry/@id}</div>
+                    <div class="image-url">{$imageURL}</div>
+                </div>
+            )else ()
     };
 
-
-declare 
-    %templates:wrap 
-    function gallery:slideshow-editor-gallery($node as node(), $model as map(*)) {
-        let $vraWorkRecords  := collection('/db/resources/commons/Priya_Paul_Collection')/vra:vra/vra:work
-        let $imageList := for $vraWorkRecord in $vraWorkRecords[position() le 10]
-            for $image in $vraWorkRecord//vra:relationSet
-                let $imageId := substring($image/vra:relation[1]/@relids , 3)
-                    return 
-                        <li class="ui-widget-content" image-id="{$imageId}">                
-                            <img src="http://kjc-ws2.kjc.uni-heidelberg.de:83/images/service/download_uuid/priya_paul/{$imageId}?width=100&amp;height=100&amp;crop_type=middle" class="relatedImage"/>                            
-                            <div style="display:none">
-                                <p class="ref-id">{$imageId}</p>
-                            </div>
-                        </li>
-    return 
-        <div id="thumbs" class="navigation">
-            <ul id="gallery-selection" class="thumbs noscript">
-                { $imageList }
-            </ul>
-        </div>
-        
-};
 
 
 declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {    
