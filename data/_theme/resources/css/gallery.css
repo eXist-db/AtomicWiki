@@ -25,12 +25,6 @@
     width: 100%;
 }
 
-#gallery-items .gallery-item-caption {
-}
-
-#gallery-items .gallery-item-controls {
-}
-
 #edit-gallery-item-dialog {
     width: 1050px;
     left: 35%;
@@ -64,15 +58,18 @@
     display: block;
     font-size: 0.9em;
     height: 350px;
-    position: relative;
+    position: absolute;
     right: 0;
     width: 630px;
 }
-
+#toggleGallerySwitch {
+       top:100px;
+        position: relative;
+}
 .galleryOpen #toggleGallerySwitch {
    float: left;
     left: -35px;
-    position: absolute;
+
 }
 
 .gallery-container .footer ul li {
@@ -98,6 +95,9 @@
     height: 30px;
     margin: 0 auto;
     padding: 1em;
+    position: absolute;
+    width: 96%;
+    bottom:0;
 }
 
 .gallery-container .gallery {

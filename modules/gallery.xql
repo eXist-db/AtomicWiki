@@ -78,8 +78,8 @@ declare
     if ($query or $cached) then
         let $result := 
             if ($query) then
-                (: @TODO  :)
-                collection('/db/resources/commons')//vra:vra/vra:work[@refid=$collection]
+                (: @TODO  :)                
+                collection('/db/resources/commons')//vra:vra/vra:work[@refid=$collection][ft:query(.//*, $query)]
             else
                 $cached
         return (
@@ -95,6 +95,13 @@ declare
                 "result" := collection('/db/resources/commons')//vra:vra/vra:work[@refid=$collection]
             }
         )
+};
+declare
+    %templates:wrap
+    function gallery:hit-count($node as node(), $model as map(*), $start as xs:integer, $max as xs:integer) {
+        let $resultCount:= count($model("result"))
+        let $text := "Page " || ceiling($start div $max) || " of " || ceiling($resultCount div $max)
+        return $text
 };
 
 declare
