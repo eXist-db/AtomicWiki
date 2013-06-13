@@ -37,6 +37,8 @@
                 <include name="resources/**"/>
                 <include name="templates/**"/>
                 <include name="data/_theme/**"/>
+                <include name="data/_galleries/**"/>
+		<include name="data/_nav.html"/>
                 <include name="data/annotations"/>
                 <include name="data/help/**"/>
                 <include name="data/util/**"/>

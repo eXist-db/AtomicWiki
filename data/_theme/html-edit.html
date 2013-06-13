@@ -127,7 +127,7 @@
                                                         <i class="icon-picture"/>
                                                     </a>
                                                     <a data-wysihtml5-command="insertGallery" class="btn" title="Insert Gallery">
-                                                        <i class="icon-picture"/>
+                                                        <i class="icon-th-large"/>
                                                     </a>
                                                 </li>
                                                 <li class="btn-group">
@@ -330,17 +330,17 @@
                 <h3 class="title">Insert Image Gallery</h3>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" action="">
-                    <div class="control-group">
-                        <label class="control-label" for="gallery">Select gallery:</label>
-                        <div class="controls">
-                            <select class="span4" name="gallery">
-                                <option value="a918effb-589a-494a-809b-cd77a762b1e7">Blümchen</option>
-                            </select>
-                            <span class="help-inline">Select an existing gallery to include in the article.</span>
+                <div class="app:feed">
+                    <form class="form-horizontal" action="">
+                        <div class="control-group">
+                            <label class="control-label" for="gallery">Select gallery:</label>
+                            <div class="controls">
+                                <div class="gallery:select-gallery"/>
+                                <span class="help-inline">Select an existing gallery to include in the article.</span>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
             <div class="modal-footer">
                 <a class="btn btn close-button">
