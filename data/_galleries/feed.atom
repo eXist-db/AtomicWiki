@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<atom:feed xmlns:atom="http://www.w3.org/2005/Atom">
+    <atom:id>5aa0483e-5b47-414e-a933-1ffde57637f9</atom:id>
+    <atom:updated>2013-01-02T23:48:44.167+01:00</atom:updated>
+    <atom:title>Example</atom:title>
+    <atom:subtitle>Example</atom:subtitle>
+    <atom:author>
+        <atom:name>editor</atom:name>
+    </atom:author>
+    <category scheme="http://exist-db.org/NS/wiki/type/" term="wiki"/>
+    <atom:entry>
+        <atom:id>b918effb-589a-494a-801b-cd77a762b1e7</atom:id>
+        <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
+        <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
+        <atom:author>
+            <atom:name>bine</atom:name>
+        </atom:author>
+        <atom:title>Der Grundlsee</atom:title>
+        <atom:link type="image/jpeg" href="grundlsee.jpg"/>
+        <atom:link type="vra/xml" href="vra_entries/i_01e5e6ef-faf9-597e-8a0c-fc5d11a9331f.xml"/>
+        <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
+            <div>
+                Lorem ipsum dolor sit amet, Grundlsee consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                Lorem ipsum dolor sit amet, blume1 consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                Lorem ipsum dolor sit amet, blume1 consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                Lorem ipsum dolor sit amet, blume1 consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                Lorem ipsum dolor sit amet, blume1 consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                Lorem ipsum dolor sit amet, blume1 consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                Lorem ipsum dolor sit amet, blume1 consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                Lorem ipsum dolor sit amet, blume1 consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                Lorem ipsum dolor sit amet, blume1 consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                Lorem ipsum dolor sit amet, blume1 consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                Lorem ipsum dolor sit amet, blume1 consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                Lorem ipsum dolor sit amet, blume1 consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+            </div>
+        </atom:content>
+    </atom:entry>
+    <atom:entry>
+        <atom:id>c918effb-589a-494a-802b-cd77a762b1e7</atom:id>
+        <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
+        <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
+        <atom:author>
+            <atom:name>bine</atom:name>
+        </atom:author>
+        <atom:title>Die Trisselwand</atom:title>
+        <atom:link type="image/jpeg" href="trisselwand.jpg"/>
+        <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
+            <div>
+                Lorem ipsum dolor sit amet, Trisselwand consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+            </div>
+        </atom:content>
+    </atom:entry>
+    <atom:entry>
+        <atom:id>d918effb-589a-494a-803b-cd77a762b1e7</atom:id>
+        <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
+        <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
+        <atom:author>
+            <atom:name>bine</atom:name>
+        </atom:author>
+        <atom:title>Altaussee</atom:title>
+        <atom:link type="image/jpeg" href="london.jpg"/>
+        <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
+            <div>
+                Lorem ipsum dolor sit amet, London consetetur sadipscing elitr, 
+                sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+                sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+            </div>
+        </atom:content>
+    </atom:entry>
+</atom:feed>
