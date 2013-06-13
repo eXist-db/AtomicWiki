@@ -40,33 +40,41 @@
     height: 250px;
     width: 800px;
 }
-
 #gallery {
     position: fixed;
-    right: 0;
-    top: 160px;
-    width: 630px;
-    z-index: 100;
+    right: 3px;    
+    top: 180px;
+    z-index: 1;
+    
 }
-
-.switchGallery {
-    position: absolute;
-    float: right;
-    top: 0;
-    right: 0;
-    z-index: 5;
+#gallery.galleryOpen {
+    width: 630px; 
 }
 
 .gallery-container {
-    display:block;
-    position:relative;
+    display: none;
+}
+
+
+.galleryOpen .gallery-container {
     background:blue;
     border: thin solid #000000;
-    box-shadow: 10px 10px 5px gray;
-    font-size: 0.9em;
     border-radius: 4px 4px 4px 4px;
-
+    box-shadow: 10px 10px 5px gray;
+    display: block;
+    font-size: 0.9em;
+    height: 350px;
+    position: relative;
+    right: 0;
+    width: 630px;
 }
+
+.galleryOpen #toggleGallerySwitch {
+   float: left;
+    left: -35px;
+    position: absolute;
+}
+
 .gallery-container .footer ul li {
     display: inline;
 }

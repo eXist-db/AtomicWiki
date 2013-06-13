@@ -1,15 +1,38 @@
 $(document).ready(function() {
-     $("#toggleGallerySwitch").click(function (e) {
+    $("#toggleGallerySwitch").click(function (e) {
         e.preventDefault();
-        console.log("open / close gallery");
-        $(".gallery-container").slideToggle('fast', function() {
-                // Animation complete.
-        });        
+        var gallery = $("#gallery");
+        var  container = $(".gallery-container");
+        if(gallery.hasClass("galleryOpen")){
+            console.log("close image gallery picker");
+            /*
+            container.animate({
+                    opacity: 0.25,                
+                }, 1500, function() {
+                            console.log("Closed Image Gallery picker")
+                            gallery.toggleClass("galleryOpen");
+                })
+            */
+        }
+        else {
+            console.log("open image gallery picker");
+            /*
+             container.show().animate({                
+                opacity: 1,                
+                }, 1500 , function() {
+                    console.log("Opened Image Gallery picker")
+                    gallery.toggleClass("galleryOpen");
+                }
+            );
+            */
+        }
+        gallery.toggleClass("galleryOpen");
+        
     });
-    
-   $("#query-images").click(function (ev) {   
+    loadImages();
+    $("#query-images").click(function (ev) {   
        loadImages()
-   });
+    });
 })
 
 function loadImages(start, max) {
