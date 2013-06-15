@@ -5,10 +5,10 @@ Atomic.sitemap = (function () {
     var dialog;
     var body;
     var onSelect = null;
+    var initialized = false;
     
     $(document).ready(function() {
         dialog = $("#sitemap-dialog");
-        sitemap = $(".sitemap", dialog);
         dialog.modal({
             keyboard: true,
             show: false
@@ -23,6 +23,13 @@ Atomic.sitemap = (function () {
                 window.location = url;
             });
         });
+    });
+    
+    function init() {
+        if (initialized) {
+            return false;
+        }
+        sitemap = $(".sitemap", dialog);
         sitemap.dynatree({
             persist: false,
             minExpandLevel: 2,
@@ -39,9 +46,11 @@ Atomic.sitemap = (function () {
                 }
             }
         });
-    });
+        initialized = true;
+    }
     
     function open(callback) {
+        init();
         onSelect = callback;
         dialog.modal("show");
     }
@@ -60,6 +69,7 @@ Atomic.menu = (function () {
     var feed;
     var menu;
     var sitemap;
+    var initialized = false;
     
     $(document).ready(function() {
         dialog = $("#menu-dialog");
@@ -110,6 +120,42 @@ Atomic.menu = (function () {
                 }
             });
         });
+        
+        dialog.find(".add-heading").click(function(ev) {
+            ev.preventDefault();
+            var title = dialog.find("input[name='title']").val();
+            var newNode = {
+                title: title,
+                isFolder: true
+            };
+            var current = menu.dynatree("getActiveNode");
+            if (current) {
+                current.parent.addChild(newNode);
+            } else {
+                current = menu.dynatree("getRoot");
+                if (current.hasChildren()) {
+                    var first = current.getChildren()[0];
+                    current.addChild(newNode, first);
+                } else {
+                    current.addChild(newNode);
+                }
+            }
+        });
+        dialog.find(".remove-heading").click(function(ev) {
+            var current = menu.dynatree("getActiveNode");
+            current.remove();
+        });
+        $("#edit-menu").click(function(ev) {
+            ev.preventDefault();
+            open();
+        });
+    });
+    
+    function init() {
+        if (initialized) {
+            return;
+        }
+        initialized = true;
         sitemap.dynatree({
             persist: false,
             minExpandLevel: 2,
@@ -224,38 +270,10 @@ Atomic.menu = (function () {
                 }
             }
         });
-        
-        dialog.find(".add-heading").click(function(ev) {
-            ev.preventDefault();
-            var title = dialog.find("input[name='title']").val();
-            var newNode = {
-                title: title,
-                isFolder: true
-            };
-            var current = menu.dynatree("getActiveNode");
-            if (current) {
-                current.parent.addChild(newNode);
-            } else {
-                current = menu.dynatree("getRoot");
-                if (current.hasChildren()) {
-                    var first = current.getChildren()[0];
-                    current.addChild(newNode, first);
-                } else {
-                    current.addChild(newNode);
-                }
-            }
-        });
-        dialog.find(".remove-heading").click(function(ev) {
-            var current = menu.dynatree("getActiveNode");
-            current.remove();
-        });
-        $("#edit-menu").click(function(ev) {
-            ev.preventDefault();
-            open();
-        });
-    });
+    }
     
     function show() {
+        init();
         dialog.find("input[name='title']").val("");
         
         var tree = menu.dynatree("getTree");
