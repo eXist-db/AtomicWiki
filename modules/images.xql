@@ -7,12 +7,16 @@ let $image := request:get-parameter("image", ())
 let $size := request:get-parameter("size", 128)
 return
     if ($image) then
-        let $data := util:binary-doc($image)
-        return
-            if ($data) then
-                response:stream-binary(image:scale($data, $size, "image/png"), "image/png", ())
-            else
-                response:set-status-code(404)
+        if (util:binary-doc-available($image)) then
+            let $data := util:binary-doc($image)
+            return
+                try {
+                    response:stream-binary(image:scale($data, $size, "image/png"), "image/png", ())
+                } catch * {
+                    response:set-status-code(404)
+                }
+        else
+            response:set-status-code(404)
     else
         <ul>
         {
