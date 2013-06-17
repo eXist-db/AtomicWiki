@@ -38,6 +38,11 @@ Atomic.sitemap = (function () {
             clickFolderMode: 1,
             autoFocus: true,
             keyboard: false,
+            onPostInit: function() {
+                var uuid = $("input[name='uuid']").val();
+                var node = this.activateKey(uuid);
+                node.expand(true);
+            },
             onDblClick: function(dtnode) {
                 var key = dtnode.data.key;
                 console.log("path: %o", dtnode.data.url);
@@ -165,6 +170,11 @@ Atomic.menu = (function () {
             clickFolderMode: 1,
             autoFocus: true,
             keyboard: false,
+            onPostInit: function() {
+                var uuid = $("input[name='uuid']").val();
+                var node = this.activateKey(uuid);
+                node.expand(true);
+            },
             dnd: {
                 onDragStart: function(node) {
                     /** This function MUST be defined to enable dragging for the tree.
@@ -427,6 +437,13 @@ Atomic.editor.EditLink = (function () {
             clickFolderMode: 1,
             autoFocus: true,
             keyboard: false,
+            onPostInit: function() {
+                var uuid = $("input[name='uuid']").val();
+                var node = this.activateKey(uuid);
+                if (node) {
+                    node.expand(true);
+                }
+            },
             onActivate: function(dtnode) {
                 var key = dtnode.data.key;
                 input.val(dtnode.data.url);
