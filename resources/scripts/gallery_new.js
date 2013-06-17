@@ -10,11 +10,10 @@ if ($('.galleria').length !== 0) {
         carousel: true,
         carouselSteps: 'auto',
         carouselSpeed: 1234,
-        imagePosition: '50% 50%',
+        imagePosition: 'center center',
         trueFullscreen: true,
         keepSource: false,
-        idleTime: 1234
-            
+        idleTime: 1234            
     });
             
             
@@ -23,7 +22,7 @@ if ($('.galleria').length !== 0) {
         // creates a new element with the id 'mystuff':
         self.addElement('fscr');
         // appends the element to the container
-        self.appendChild('container','fscr');
+        self.appendChild('stage','fscr');
         //self.$('galleria-fscr').css({position:'absolute',right:0,top:0,'z-index':4});
         self.$('fscr').click(function() {
             self.toggleFullscreen(); // toggles the fullscreen
@@ -31,7 +30,11 @@ if ($('.galleria').length !== 0) {
                 
         self.addElement('splay');
         // appends the element to the container
-        self.appendChild('container','splay');
+        self.appendChild('stage','splay');
+        /*
+        self.addElement('meta-block');
+        self.appendChild('container','meta-block');
+        */
                 
         self.$('splay').click(function() {
             self.setPlaytime(4000);
@@ -49,11 +52,11 @@ if ($('.galleria').length !== 0) {
         self.addIdleState(self.get('fscr'), {
             opacity: 0
         });
-                
+              
         self.addIdleState(self.get('info-link'), {
             opacity: 0
         });
-                
+             
         self.addIdleState(self.get('thumb-nav-left'), {
             opacity: 0
         });
@@ -61,6 +64,7 @@ if ($('.galleria').length !== 0) {
         self.addIdleState(self.get('thumb-nav-right'), {
             opacity: 0
         });
+
                 
         /* togle playbutton to indicate the current slideshow status */
         self.bind("play", function(e) {
@@ -69,7 +73,13 @@ if ($('.galleria').length !== 0) {
         self.bind("pause", function(e) {
             self.$("splay").css('background-image','url("resources/scripts/galleria/themes/classic/play_w.png")');
         });
-                
+        
+        /*
+        self.bind("idle_exit", function(e) {
+            self.removeIdleState(self.get('info'));
+        });
+        */
+        
         /*
         self.bind("idle_enter", function(e) {
             self.$("thumbnails-container").fadeOut(100);
@@ -83,27 +93,32 @@ if ($('.galleria').length !== 0) {
         });
         */
                 
-        /*
+        var info = self.$('info-link,info-close,info-text');
         self.bind("fullscreen_enter", function(e) {
-            self.$("info").css('width','200px');
-            self.$("info").css('height','500px');
-            self.$("info").show();
-                    
-            Galleria.configure({
-                transition: 'fade',
-                imageCrop: false,
-                easing: 'galleriaOut',
-                carousel: true,
-                carouselSteps: 'auto',
-                carouselSpeed: 1234,
-                imagePosition: '50% 50%',
-                trueFullscreen: true,
-                keepSource: false,
-                idleTime: 1234
-            });
-                
+            //info.toggle(true);
+            self.$('info-link').click(true);
+            //self.removeIdleState(self.get('info'));
+            var my_h = $(".galleria-stage").height();
+            $(".galleria-info").height(my_h - 100);
+            $(".galleria-info-link").height(my_h - 100);
+            $(".galleria-info-text").height(my_h - 110);
+            
         });
-        */
+        
+        self.bind("fullscreen_exit", function(e) {
+            //info.toggle(false);
+            //self.$('info-close').click();
+            $('.galleria-stage').css({"padding-left":"0px"});
+            //self.delay(100).resize();
+            self.addIdleState(self.get('info-link'), {
+                opacity: 0
+            });
+            var my_h = $(".galleria-stage").height();
+            $(".galleria-info").height(my_h - 100);
+            $(".galleria-info-link").height(my_h - 100);
+            $(".galleria-info-text").height(my_h - 110);
+        });
+        
 
     }); /* end of: Galleria.ready() */
     
@@ -111,6 +126,9 @@ if ($('.galleria').length !== 0) {
     Galleria.run('.galleria', {
         dataConfig: function(img) {
         return {
+                thumb: $(img).attr('src'),
+                image: $(img).attr('src'),
+                big: $(img).attr('src'),
                 title: $(img).siblings('h1').html(),
                 description: $(img).siblings(".description").html() // tell Galleria to grab the content from the .description div as caption
             };
