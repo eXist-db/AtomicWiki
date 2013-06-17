@@ -276,7 +276,7 @@ Atomic.editor.Editor = (function () {
         toolbar.find('a[data-wysihtml5-command="insertGallery"]').click(function(ev) {
             addGallery.show(function(value, title) {
                 editor.composer.commands.exec("insertHTML", 
-                    "<div class='gallery:show-catalog gallery-placeholder' id='" + value + "'>Image Gallery: " + title + "</div>");
+                    "<div class='gallery:show-catalog gallery-placeholder' id='" + value + "'>Image Gallery: " + title + "</div><p></p>");
             });
             return false;
         });
