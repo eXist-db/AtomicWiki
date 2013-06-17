@@ -80,6 +80,7 @@ Atomic.menu = (function () {
             keyboard: true,
             show: false
         });
+        dialog.find(".modal-header h3").html("Edit menu for section '/" + feed + "'");
         $(".close-button", dialog).click(function(ev) {
             ev.preventDefault();
             dialog.modal("hide");
@@ -91,17 +92,17 @@ Atomic.menu = (function () {
             var xml = "<menu>";
             for (var i = 0; i < entries.length; i++) {
                 var entry = entries[i];
-                xml += "<entry title='" + entry.data.title + "' folder='" + entry.data.isFolder + "'>";
-                if (entry.data.isFolder) {
-                    var children = entry.getChildren();
-                    if (children) {
-                        for (var j = 0; j < children.length; j++) {
-                            xml += "<link title='" + children[j].data.title + "' path='" +
-                                children[j].data.feed + "'/>";
-                        }
+                $.log("entry: %o", entry);
+                var children = entry.getChildren();
+                var isFolder = entry.hasChildren();
+                xml += "<entry title='" + entry.data.title + "' folder='" + isFolder + "'>";
+                if (isFolder) {
+                    for (var j = 0; j < children.length; j++) {
+                        xml += "<link title='" + children[j].data.title + "' path='" +
+                            children[j].data.feed + "'/>";
                     }
                 } else {
-                    xml += "<link path='" + entry.data.path + "'/>";
+                    xml += "<link path='" + (entry.data.feed == null ? "/" : entry.data.feed) + "'/>";
                 }
                 xml += "</entry>";
             }
@@ -215,14 +216,18 @@ Atomic.menu = (function () {
                 onDragOver: function(node, sourceNode, hitMode) {
                     /** Return false to disallow dropping this node.
                      */
-                    $.log("target.onDragOver(%o, %o, %o)", node, sourceNode, hitMode);
-                    if (node.tree == sourceNode.tree) {
-                        return true;
-                    // } else if (node.data.isFolder) {
-                    //     return hitMode == "over";
-                    } else {
-                        return hitMode == "before" || hitMode == "after";
-                    }
+                    $.log("target.onDragOver(%o, %o, %o, %d)", node, sourceNode, hitMode, node.getLevel());
+                    // if (node.tree == sourceNode.tree && !(node.data.isFolder && sourceNode.data.isFolder)) {
+                    //     return true;
+                    // } else {
+                        switch (hitMode) {
+                            case "before":
+                            case "after":
+                                return !sourceNode.data.isFolder || node.getLevel() == 1;
+                            case "over":
+                                return !sourceNode.data.isFolder && node.data.isFolder;
+                        }
+                    // }
                 },
                 onDrop: function(node, sourceNode, hitMode, ui, draggable) {
                     /**This function MUST be defined to enable dropping of items on the tree.
@@ -241,7 +246,7 @@ Atomic.menu = (function () {
                                 title: sourceNode.data.title,
                                 feed: sourceNode.data.feed,
                                 path: sourceNode.data.path,
-                                isFolder: false
+                                isFolder: sourceNode.data.isFolder
                             };
                         }
                     } else {
