@@ -644,6 +644,7 @@ table.permissions td {
 }
 
 #menu-dialog .menu-tree {
+    height: 300px;
     padding: 4px;
     border: 1px dashed #D0D0D0;
 }
