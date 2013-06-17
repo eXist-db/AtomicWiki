@@ -1,4 +1,11 @@
+var editor;
+
+
 $(document).ready(function() {
+    editor = new wysihtml5.Editor("description", { // id of textarea element
+        toolbar:      "editor-toolbar", // id of toolbar element
+    });
+    
     $("#toggleGallerySwitch").click(function (e) {
         e.preventDefault();
         var gallery = $("#gallery");
@@ -151,12 +158,21 @@ function removeItem(itemid) {
 function showModal(itemid) {
     var dialog = $('#edit-gallery-item-dialog');
     var itemTitle = $('#' + itemid + " h3").text();
-    var itemDesc = $('#' + itemid + "-desc").children();
+    var itemDesc = $('#' + itemid + "desc").html();
     
     dialog.find("input[name=title]").val(itemTitle);
-    
+    /*
     var anchorEditor = new Atomic.editor.EditAnchor();
-    var editor = new Atomic.editor.Editor(itemid + "-desc", "description", "editor-toolbar", sitemap, anchorEditor);
+    var editor = new Atomic.editor.Editor(itemid + "desc", "description", "editor-toolbar", sitemap, anchorEditor);
+    */
+    editor.setValue(itemDesc, true);
+    
+    $('#edit-gallery-item-dialog .apply-button').unbind('click');
+    $('#edit-gallery-item-dialog .apply-button').click(function() {
+        $('#' + itemid + "desc").html(editor.getValue());
+        dialog.modal('hide');
+    });
+    
     
     dialog.modal('show');
 }
