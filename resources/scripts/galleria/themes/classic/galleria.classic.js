@@ -48,18 +48,51 @@ Galleria.addTheme({
         }
 
         // toggle info
-        info.show();
-        info.delay(3000).fadeOut('slow');
-        this.$('info-link').fadeIn("fast");
+        //info.show();
+        //info.delay(3000).fadeOut('slow');
+        self = this;
+        //this.$('info-link').fadeIn(1);
+        //$('.galleria-info-link').show();
         if ( options._toggleInfo === true ) {
-            info.bind( click, function() {
-                info.toggle();
+            $('.galleria-info-link').bind( click,function(e) {
+                if( ! $(this).hasClass('galleria-active')){
+                    $('.galleria-info-link').addClass('galleria-active');
+      
+                    $('.galleria-stage').stop().animate({"padding-left":"210px"}, 500, function() {
+                        $('.galleria-stage').css({"padding-left":"210px"});
+                        self.refreshImage();
+                    });
+                    $('.galleria-info').stop().animate({"left":"15px"}, 500, function() {
+                        $('.galleria-info').css({"left":"15px"});
+                    });
+                } else {
+                    $('.galleria-info-link').removeClass('galleria-active');
+                    $('.galleria-stage').stop().animate({"padding-left":"0px"}, 500, function() {
+                        $('.galleria-stage').css({"padding-left":"0px"});
+                        self.refreshImage();
+                    });
+                    $('.galleria-info').stop().animate({"left":"-200px"}, 500, function() {
+                            $('.galleria-info').css({"left":"-200px"});
+                        });
+                }
             });
+            /*
+            this.$('info').bind( click, function() {
+                //info.toggle(false);
+                    $('.galleria-stage').stop().animate({"padding-left":"0px"}, 500, function() {
+                        self.refreshImage();
+                    }); 
+                $('.galleria-info').stop().animate({"left":"-200px"}, 500, function() {
+                        $('.galleria-info').css({"left":"-200px"});
+                    });
+            });
+            */
+            
         } else {
             info.show();
             this.$('info-link, info-close').hide();
         }
-
+        
         
         // bind some stuff
         this.bind('thumbnail', function(e) {
@@ -85,7 +118,7 @@ Galleria.addTheme({
                 this.$('loader').show().fadeTo(200, 0.4);
             }
 
-            this.$('info').toggle( this.hasInfo() );
+            //this.$('info').toggle( this.hasInfo() );
 
             $(e.thumbTarget).css('opacity',1).parent().siblings().children().css('opacity', 0.6);
         });
