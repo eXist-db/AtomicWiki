@@ -112,7 +112,7 @@ function addImage(){
     liTemplate.find(".img-polaroid").attr("src",imageURL); 
     
     liTemplate.find(".image-title").html(imageTitle); 
-    liTemplate.find(".image-desc").attr("id", imageId + "-desc"); 
+    liTemplate.find(".image-desc").attr("id", imageId + "desc"); 
     
     liTemplate.find(".btn-edit").click(function() {   
        showModal(imageId);
