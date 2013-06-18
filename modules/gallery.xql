@@ -58,7 +58,7 @@ declare %private function gallery:feed-to-html-image($imageURL as xs:string, $id
             </div>
             <div class="span10 gallery-item-caption">
                 <h3 class="image-title">{$title}</h3>
-                <div id="{$id}desc"class="image-desc">{$description}</div>
+                <div id="{$id}-desc"class="image-desc">{$description}</div>
                 <div class="gallery-item-controls pull-right">
                     <a class="btn btn-edit" onclick="showModal('{$id}')"><i class="icon-edit"></i></a>
                     <a class="btn btn-remove" onclick="removeItem('{$id}')"><i class="icon-remove"></i></a>
@@ -68,6 +68,7 @@ declare %private function gallery:feed-to-html-image($imageURL as xs:string, $id
             </div>
         </div>
     </li>
+  
 };
 
 declare 
@@ -153,9 +154,9 @@ declare
         let $image := $entry//vra:relationSet/vra:relation[@pref='true']
         let $imageId := substring($image/@relids , 3)
         
-        let $serverPath := "http://kjc-ws2.kjc.uni-heidelberg.de:83/images/service/download_uuid/"
+        let $serverPath := "http://kjc-ws2.kjc.uni-heidelberg.de:83/images/service/download_uuid/priya_paul/"
         let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
-        let $imageURL :=  $serverPath || 'i_' || $imageId || $imageOption
+        let $imageURL :=  $serverPath || $imageId || $imageOption
         
         return 
             if($imageId) 
@@ -175,7 +176,7 @@ declare
 declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {    
     <atom:feed>
         <atom:entry>
-            <atom:id>1111111</atom:id>
+            <atom:id>b918effb-589a-494a-801b-cd77a762b1e7</atom:id>
             <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
             <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
             <atom:author>
@@ -192,7 +193,7 @@ declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {
             </atom:content>
         </atom:entry>
         <atom:entry>
-            <atom:id>1111112</atom:id>
+            <atom:id>c918effb-589a-494a-802b-cd77a762b1e7</atom:id>
             <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
             <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
             <atom:author>
@@ -219,7 +220,7 @@ declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {
             </atom:content>
         </atom:entry>
         <atom:entry>
-            <atom:id>1111113</atom:id>
+            <atom:id>d918effb-589a-494a-803b-cd77a762b1e7</atom:id>
             <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
             <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
             <atom:author>
@@ -253,7 +254,7 @@ declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {
             </atom:content>
         </atom:entry>
         <atom:entry>
-            <atom:id>1111411</atom:id>
+            <atom:id>e918effb-589a-494a-805b-cd77a762b1e99</atom:id>
             <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
             <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
             <atom:author>
@@ -270,7 +271,7 @@ declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {
             </atom:content>
         </atom:entry>
         <atom:entry>
-            <atom:id>1111115</atom:id>
+            <atom:id>b918effb-589a-494a-811b-cd77a762b1e7</atom:id>
             <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
             <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
             <atom:author>
@@ -287,7 +288,7 @@ declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {
             </atom:content>
         </atom:entry>
         <atom:entry>
-            <atom:id>1111116</atom:id>
+            <atom:id>c918effb-589a-494a-812b-cd77a762b1e7</atom:id>
             <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
             <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
             <atom:author>
@@ -304,7 +305,7 @@ declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {
             </atom:content>
         </atom:entry>
         <atom:entry>
-            <atom:id>1111161</atom:id>
+            <atom:id>d918effb-589a-494a-813b-cd77a762b1e7</atom:id>
             <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
             <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
             <atom:author>
@@ -321,7 +322,7 @@ declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {
             </atom:content>
         </atom:entry>
         <atom:entry>
-            <atom:id>1111117</atom:id>
+            <atom:id>e918effb-589a-494a-814b-cd77a762b1e7</atom:id>
             <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
             <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
             <atom:author>
@@ -338,7 +339,7 @@ declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {
             </atom:content>
         </atom:entry>
         <atom:entry>
-            <atom:id>1111118</atom:id>
+            <atom:id>e918effb-589a-494a-815b-cd77a762b1e99</atom:id>
             <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
             <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
             <atom:author>
@@ -355,7 +356,7 @@ declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {
             </atom:content>
         </atom:entry>
         <atom:entry>
-            <atom:id>1111119</atom:id>
+            <atom:id>e918effb-589a-494a-816b-cd77a762b1e99</atom:id>
             <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
             <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
             <atom:author>

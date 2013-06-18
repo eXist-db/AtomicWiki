@@ -24,7 +24,7 @@ declare function store:store-resource($collection, $name, $content, $mediaType) 
             ()
 };
 
-declare function store:process-content($editType as xs:string, $content as xs:string) {
+declare function store:process-content($editType as xs:string, $content as xs:string?) {
     if (string-length(normalize-space($content)) = 0) then
         ()
     else
@@ -86,35 +86,43 @@ declare function store:process-html($content as xs:string?) {
 :)
 declare function store:parse-gallery() {
     let $title := request:get-parameter("title", ())
-    let $content := request:get-parameter("content", ())
-    
+    let $name := request:get-parameter("name", ())
+    let $content := util:parse-html(request:get-parameter("content", ()))
+    let $log := util:log("ERROR", $content)
     return 
-        <gallery title="{$title}">
+        <gallery title="{$title}" name="{$name}">
         {
-            for $entry in $content/li
+            for $entry in $content/HTML/BODY/li
             return 
-                <entry title="{$entry//h3/text()}" ctype="html" imageLink="{$entry//*[@class='gallery-item-image']/a/@href}">
-                    <content>{$entry//*[@class='image-desc']/*}</content>
+                <entry title="{$entry//h3[@class='image-title']/text()}" ctype="html" imageLink="{$entry//*[contains(@class, 'gallery-item-image')]/a/@href}">
+                    <content>{$entry//*[@class='image-desc']}</content>
                 </entry>
         }
         </gallery>
 };
 
 declare function store:gallery($gallery as node()) {
+    let $collection := request:get-parameter("collection", ())
+    
     let $feed := 
      <atom:feed>
         <atom:id>{util:uuid()}</atom:id>
         <atom:updated>{current-dateTime()}</atom:updated>
-        <atom:title>{$gallery/@title}</atom:title>
+        <atom:title>{data($gallery/@title)}</atom:title>
         <atom:author>
             <atom:name>{ xmldb:get-current-user() }</atom:name>
         </atom:author>
         <category scheme="http://exist-db.org/NS/wiki/type/" term="wiki"/>
-        {
-            for $entry in $gallery return store:gallery-entry($entry)
-        }
+        { 
+            for $entry in $gallery/entry return store:gallery-entry($entry)
+        }        
      </atom:feed>
-    return $feed
+     
+    let $atomResource := $gallery/@name || ".atom"
+    let $stored :=
+        store:store-resource(store:create-collection($collection || "/_galleries"), $atomResource, $feed, "application/atom+xml")
+    return
+        <result status="ok"/>
 };
 
 declare function store:gallery-entry($entry as node()) {
@@ -128,8 +136,8 @@ declare function store:gallery-entry($entry as node()) {
             <atom:author>
                 <atom:name>{xmldb:get-current-user()}</atom:name>
             </atom:author>
-            <atom:title>{$entry/@title}</atom:title>
-            <atom:link type="image/jpeg" href="{$entry/@imageLink}"/>
+            <atom:title>{data($entry/@title)}</atom:title>
+            <atom:link type="image/jpeg" href="{data($entry/@imageLink)}"/>
             <atom:link href="{$entry/@vraLink}"/>
             <atom:content xmlns="http://www.w3.org/1999/xhtml" type="{$contentType}">
                 {$parsed}

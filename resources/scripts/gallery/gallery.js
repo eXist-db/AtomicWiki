@@ -2,10 +2,41 @@ var editor;
 
 
 $(document).ready(function() {
+    var form = $("#edit-form");
+    
     editor = new wysihtml5.Editor("description", { // id of textarea element
         toolbar:      "editor-toolbar", // id of toolbar element
     });
     
+    $("#edit-form-tbd").click(function (e){        
+        e.preventDefault();
+        /*
+        if (editor) {
+            editor.deactivate();
+        }
+        */
+            
+        $("input[name='action']", form).val("store");
+        $("input[name='ctype']", form).val("gallery");
+        
+        var feedContent = $("#gallery-items").html();
+        $("input[name='content']", form).val(feedContent);
+        console.dirxml(feedContent);
+        var data = form.serialize() + "&unlock=false";
+        $.ajax({
+            type: "POST",
+            url: "modules/store.xql",
+            data: data,
+            complete: function() {
+                $.log("Store completed");
+                /* if (contentEditor) {
+                    contentEditor.activate();
+                }
+                */
+            }
+        });        
+    
+    })
     $("#toggleGallerySwitch").click(function (e) {
         e.preventDefault();
         var gallery = $("#gallery");
@@ -104,8 +135,12 @@ function addImage(){
     
     var imageTitle = $("#img-title").html();
     var imageURL = $("#img-url").html();
-    var imageId = Atomic.util.uuid();
     
+    var imageId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                return v.toString(16);
+    });
+                    
     liTemplate.attr("id", imageId);    
     liTemplate.find(".thumb").attr("href",imageURL);
     liTemplate.find(".img-polaroid").attr("alt",imageTitle);
