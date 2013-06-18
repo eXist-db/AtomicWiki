@@ -129,6 +129,8 @@ function addImage(){
     
     // append the clonde and setup template into the gallery    
     liTemplate.appendTo("#gallery-items")
+    
+    jumpTo(liTemplate);
 }
 
 function moveDown(itemid) {
