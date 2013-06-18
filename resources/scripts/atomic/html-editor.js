@@ -387,7 +387,10 @@ $(document).ready(function() {
         contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap, anchorEditor);
     }    
     function updateForm() {
-        var content = contentEditor.editor.getValue(true);
+        var content = null;
+        if (contentEditor) {
+            content = contentEditor.editor.getValue(true);
+        }
         var summary = null;
         if (summaryEditor) {
             summary = summaryEditor.editor.getValue(true);
@@ -415,7 +418,9 @@ $(document).ready(function() {
 //        if (!form.checkValidity()) {
 //            return;
 //        }
-        contentEditor.deactivate();
+        if (contentEditor) {
+            contentEditor.deactivate();
+        }
         updateForm();
         $("input[name='action']", form).val("store");
         form.submit();
@@ -426,7 +431,9 @@ $(document).ready(function() {
         
 //        if (!form.checkValidity())
 //            return;
-        contentEditor.deactivate();
+        if (contentEditor) {
+            contentEditor.deactivate();
+        }
         updateForm();
         $("input[name='action']", form).val("store");
         var data = form.serialize() + "&unlock=false";
@@ -436,7 +443,9 @@ $(document).ready(function() {
             data: data,
             complete: function() {
                 $.log("Store completed");
-                contentEditor.activate();
+                if (contentEditor) {
+                    contentEditor.activate();
+                }
             }
         });
     });

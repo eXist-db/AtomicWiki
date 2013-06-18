@@ -145,19 +145,13 @@ try {
                             </dispatch>
                   case "editgallery" case "addgallery" return
                         let $id := request:get-parameter("id", ())
-                        let $entry := config:get-entries($feed, $id, $relPath[2])[1]                        
-                        let $editorParam := request:get-parameter("editor", ())
+                        let $entry := config:get-entries($feed, $id, $relPath[2])[1]
 
                         let $template :="html-edit-gallery.html" 
                         return
                             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                                {
-                                    if ($editorParam) then
-                                        <forward url="{$exist:controller}/modules/store.xql">
-                                        </forward>
-                                    else
-                                        ()
-                                }
+                                <forward url="{$exist:controller}/modules/store.xql">
+                                </forward>
                                 <forward url="{theme:resolve(util:collection-name($feed), $template, $root, $exist:controller)}">
                                     <set-header name="Cache-Control" value="no-cache"/>
                                 </forward>

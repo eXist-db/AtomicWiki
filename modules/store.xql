@@ -77,6 +77,66 @@ declare function store:process-html($content as xs:string?) {
         ()
 };
 
+(: 
+ <gallery title="galleryTitle" subtitle="gallerySubtitle">
+     <entry title="title" ctype="wiki|html" imageLink="link-to-the-webimage" vraLink="link-to-the-work-record>
+        <content>...</content>
+     </entry>
+ </gallery>
+:)
+declare function store:parse-gallery() {
+    let $title := request:get-parameter("title", ())
+    let $content := request:get-parameter("content", ())
+    
+    return 
+        <gallery title="{$title}">
+        {
+            for $entry in $content/li
+            return 
+                <entry title="{$entry//h3/text()}" ctype="html" imageLink="{$entry//*[@class='gallery-item-image']/a/@href}">
+                    <content>{$entry//*[@class='image-desc']/*}</content>
+                </entry>
+        }
+        </gallery>
+};
+
+declare function store:gallery($gallery as node()) {
+    let $feed := 
+     <atom:feed>
+        <atom:id>{util:uuid()}</atom:id>
+        <atom:updated>{current-dateTime()}</atom:updated>
+        <atom:title>{$gallery/@title}</atom:title>
+        <atom:author>
+            <atom:name>{ xmldb:get-current-user() }</atom:name>
+        </atom:author>
+        <category scheme="http://exist-db.org/NS/wiki/type/" term="wiki"/>
+        {
+            for $entry in $gallery return store:gallery-entry($entry)
+        }
+     </atom:feed>
+    return $feed
+};
+
+declare function store:gallery-entry($entry as node()) {
+    let $parsed := store:process-content($entry/@ctype, $entry/content)
+    let $contentType := if ($entry/@ctype = ("wiki", "html")) then "html" else $entry/@ctype
+    return
+        <atom:entry>
+            <atom:id>{util:uuid()}</atom:id>
+            <atom:published>{current-dateTime()}</atom:published>
+            <atom:updated>{current-dateTime()}</atom:updated>
+            <atom:author>
+                <atom:name>{xmldb:get-current-user()}</atom:name>
+            </atom:author>
+            <atom:title>{$entry/@title}</atom:title>
+            <atom:link type="image/jpeg" href="{$entry/@imageLink}"/>
+            <atom:link href="{$entry/@vraLink}"/>
+            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="{$contentType}">
+                {$parsed}
+            </atom:content>
+        </atom:entry>
+};
+
 declare function store:article() {
     let $name := request:get-parameter("name", ())
     let $id := request:get-parameter("entryId", ())
@@ -255,6 +315,7 @@ declare function store:validate() {
 
 let $action := request:get-parameter("action", "store")
 let $id := request:get-parameter("entryId", ())
+let $type := request:get-parameter("ctype", "html")
 return
 (:    try {:)
         if (request:get-parameter("validate", ())) then
@@ -267,7 +328,10 @@ return
                     store:delete-article()
                 case "store" return
                     if ($id) then 
-                        store:article()
+                        if ($type eq 'gallery') then
+                            store:gallery(store:parse-gallery())                        
+                        else
+                            store:article()
                     else 
                         store:collection()
                 default return

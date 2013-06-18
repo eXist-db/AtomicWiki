@@ -104,22 +104,20 @@ function addImage(){
     
     var imageTitle = $("#img-title").html();
     var imageURL = $("#img-url").html();
-    var imageId = $("#img-id").html();
+    var imageId = Atomic.util.uuid();
     
-    liTemplate.attr("id", imageId)    
-    liTemplate.find(".thumb").attr("href",imageURL)
-    liTemplate.find(".img-polaroid").attr("alt",imageTitle )
-    liTemplate.find(".img-polaroid").attr("src",imageURL)    
+    liTemplate.attr("id", imageId);    
+    liTemplate.find(".thumb").attr("href",imageURL);
+    liTemplate.find(".img-polaroid").attr("alt",imageTitle);
+    liTemplate.find(".img-polaroid").attr("src",imageURL); 
     
-    liTemplate.find(".image-title").html(imageTitle)    
-    liTemplate.find(".image-desc").attr("id", imageId + "-desc")
+    liTemplate.find(".image-title").html(imageTitle); 
+    liTemplate.find(".image-desc").attr("id", imageId + "-desc"); 
     
     liTemplate.find(".btn-edit").click(function() {   
-        console.debug("liTemplate.find('btn-edit')")
        showModal(imageId);
     });    
     liTemplate.find(".btn-remove").click(function() {   
-        console.debug("liTemplate.find('btn-remove')")
        removeItem(imageId);
     });    
     liTemplate.find(".btn-arrow-up").click(function() {   
@@ -170,6 +168,7 @@ function showModal(itemid) {
     $('#edit-gallery-item-dialog .apply-button').unbind('click');
     $('#edit-gallery-item-dialog .apply-button').click(function() {
         $('#' + itemid + "desc").html(editor.getValue());
+        $('#' + itemid + " h3").html(dialog.find("input[name=title]").val());
         dialog.modal('hide');
     });
     

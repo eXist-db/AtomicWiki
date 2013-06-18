@@ -4,14 +4,11 @@
     list-style: none;
 }
 
-.gallery-item-row {
+#gallery-items .gallery-item-row {
+    padding: 5px;
     margin-left: -25px;
     margin-right: -5px;
-}
-
-#gallery-items li {
-    padding: 5px;
-    margin-bottom: 5px;
+    margin-top: 2px;
     background-color: #f5f5f5;
     border: 1px solid #D9D9D9;
 }
@@ -69,7 +66,6 @@
 .galleryOpen #toggleGallerySwitch {
    float: left;
     left: -35px;
-
 }
 
 .gallery-container .footer ul li {
