@@ -153,9 +153,9 @@ declare
         let $image := $entry//vra:relationSet/vra:relation[@pref='true']
         let $imageId := substring($image/@relids , 3)
         
-        let $serverPath := "http://kjc-ws2.kjc.uni-heidelberg.de:83/images/service/download_uuid/priya_paul/"
+        let $serverPath := "http://kjc-ws2.kjc.uni-heidelberg.de:83/images/service/download_uuid/"
         let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
-        let $imageURL :=  $serverPath || $imageId || $imageOption
+        let $imageURL :=  $serverPath || 'i_' || $imageId || $imageOption
         
         return 
             if($imageId) 
