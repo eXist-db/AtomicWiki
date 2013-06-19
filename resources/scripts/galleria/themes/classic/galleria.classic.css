@@ -7,6 +7,7 @@
     overflow: hidden;
     background: #000;
 }
+
 .galleria-container img {
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -92,7 +93,8 @@
     background-color: #000;
     padding: 10px;
     display: block;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     height: 520px;
     margin-right: 25px;
     /* IE7 */ zoom:1;
