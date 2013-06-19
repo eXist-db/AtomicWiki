@@ -1,85 +1,49 @@
 xquery version "3.0";
 
-module namespace login="http://exist-db.org/xquery/app/wiki/session";
+module namespace login="http://exist-db.org/xquery/login";
 
-import module namespace cache="http://exist-db.org/xquery/cache" at "java:org.exist.xquery.modules.cache.CacheModule";
-
-declare %private function login:store-credentials($user as xs:string, $password as xs:string,
-    $maxAge as xs:dayTimeDuration?) as xs:string {
-    let $token := util:uuid($password)
-    let $expires := if (empty($maxAge)) then () else util:system-dateTime() + $maxAge
-    let $newEntry := map {
-        "token" := $token, 
-        "user" := $user, 
-        "password" := $password, 
-        "expires" := $expires
-    }
-    return (
-        $token,
-        cache:put("xquery.login.users", $token, $newEntry)
-    )[1]
-};
-
-declare %private function login:is-valid($entry as map(*)) {
-    empty($entry("expires")) or util:system-dateTime() < $entry("expires")
-};
-
-declare %private function login:with-login($user as xs:string, $password as xs:string, $func as function() as item()*) {
-    let $loggedIn := xmldb:login("/db", $user, $password)
-    return
-        if ($loggedIn) then
-            $func()
-        else
-            ()
-};
-
-declare %private function login:get-credentials($domain as xs:string, $token as xs:string) as element()* {
-    let $entry := cache:get("xquery.login.users", $token)
-    return
-        if (exists($entry) and login:is-valid($entry)) then
-            login:with-login($entry("user"), $entry("password"), function() {
-                <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="xquery.user" value="{$entry('user')}"/>,
-                <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="xquery.password" value="{$entry('password')}"/>,
-                <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="{$domain}.user" value="{$entry('user')}"/>
-            })
-        else
-            util:log("INFO", ("No login entry found for user hash: ", $token))
-};
-
-declare %private function login:create-login-session($domain as xs:string, $user as xs:string, $password as xs:string,
-    $maxAge as xs:dayTimeDuration?) {
-    util:log("WARN", ("Duration: ", empty($maxAge))),
-    login:with-login($user, $password, function() {
-        let $token := login:store-credentials($user, $password, $maxAge)
-        return (
-            <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="{$domain}.user" value="{$user}"/>,
-            <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="xquery.user" value="{$user}"/>,
-            <set-attribute xmlns="http://exist.sourceforge.net/NS/exist" name="xquery.password" value="{$password}"/>,
-            if (empty($maxAge)) then
-                response:set-cookie($domain, $token)
-            else
-                response:set-cookie($domain, $token, $maxAge, false())
-        )
-    })
-};
-
-declare %private function login:clear-credentials($token as xs:string) {
-    let $removed := cache:remove("xquery.login.users", $token)
-    return
-        ()
-};
+import module namespace plogin="http://exist-db.org/xquery/persistentlogin" 
+    at "java:org.exist.xquery.modules.persistentlogin.PersistentLoginModule";
 
 (:~
-    Check if login parameters were passed in the request. If yes, try to authenticate
-    the user and store credentials into the session. Clear the session if parameter
-    "logout" is set.
+    Main entry point into the login module. Checks request parameters to determine the action
+    to take. If a parameter "user" is given, try to authenticate this user with the password
+    specified in parameter "password". If there's a parameter "logout", clear the current
+    user credentials. Without a parameter: check if a user is registered with the persistent
+    login module.
     
-    The function returns an XML fragment to be included into the dispatch XML or
-    the empty set if the user could not be authenticated or the
-    session is empty.
+    The persistent login module implements a one-time login token approach as described in
+    <a href="http://jaspan.com/improved_persistent_login_cookie_best_practice">Improved Persistent Login Cookie
+    Best Practice</a> and implemented in <a href="https://github.com/SpringSource/spring-security">Spring Security</a>.
+    This approach make it more difficult to attackers to steal a cookie, though users should be aware
+    that persistent logins will never be completely secure.
+    
+    A cookie is generated with a unique token upon successfull login, which can be used for the next login without
+    requiring credentials. The token is only valid for a single login though and is deleted afterwards.
+    This means a new cookie is set by each request. For the next request, the browser has to send the
+    cookie returned by the previous request - if not, we assume the cookie has been stolen and the session
+    is invalidated. Request thus have to be send in sequence, which requires particular attention
+    when using AJAX.
+    
+    An expiration date can be set when the user logs in through request parameter "duration". The
+    specified value has to be a valid instance of xs:dayTimeDuration. If no parameter is present,
+    the method will use the value of $maxAge.
+    
+    If no expiration date was set ($maxAge is empty), the function will fall back to the
+    default session-based logins, which will time out depending on webserver settings.
+
+    After evaluation of the function, the logged in user name will be available in request 
+    attribute $domain.user. If the user could not be logged in, this attribute will be empty.
+    You can use this to check if the function was successful or not.
+    
+    @param $domain arbitrary string to be used for the name of the cookie
+    @param $path the path for which the cookie will be valid (e.g. /exist by default)
+    @param $maxAge default max duration for the session. User will need to re-login afterwards. Can be overwritten
+    by request parameter "duration".
+    @param $asDba  if true, require the user to be a member of the dba administrators group
 :)
-declare function login:set-user($domain as xs:string, $maxAge as xs:dayTimeDuration?) as element()* {
-    session:create(),
+declare function login:set-user($domain as xs:string, $path as xs:string?, $maxAge as xs:dayTimeDuration?, $asDba as xs:boolean,
+    $onLogin as function(*)) as empty() {
     let $user := request:get-parameter("user", ())
     let $password := request:get-parameter("password", ())
     let $logout := request:get-parameter("logout", ())
@@ -87,16 +51,93 @@ declare function login:set-user($domain as xs:string, $maxAge as xs:dayTimeDurat
     let $duration :=
         if ($durationParam) then
             xs:dayTimeDuration($durationParam)
-        else
+        else if (exists($maxAge)) then
             $maxAge
-    let $cookie := request:get-cookie-value($domain)
-    return
-        if ($logout eq "logout") then
-            login:clear-credentials($cookie)
-        else if ($user) then
-            login:create-login-session($domain, $user, $password, $duration)
-        else if (exists($cookie)) then
-            login:get-credentials($domain, $cookie)
         else
             ()
+    let $cookie := request:get-cookie-value($domain)
+    return
+        if ($logout) then
+            login:clear-credentials($cookie, $domain, $path)
+        else if ($user) then
+            login:create-login-session($domain, $path, $user, $password, $duration, $asDba, $onLogin)
+        else if (exists($cookie) and $cookie != "deleted") then
+            login:get-credentials($domain, $path, $cookie, $asDba, $onLogin)
+        else
+            login:get-credentials-from-session($domain)
+};
+
+(:~
+    Same as login:set-user#4 but $path set to the default (use context path).
+:)
+declare function login:set-user($domain as xs:string, $maxAge as xs:dayTimeDuration?, $asDba as xs:boolean, $onLogin as function(*)) as empty() {
+    login:set-user($domain, (), $maxAge, $asDba, $onLogin)
+};
+
+declare %private function login:callback($newToken as xs:string?, $user as xs:string, $password as xs:string, 
+    $expiration as xs:duration, $domain as xs:string, $path as xs:string?, $asDba as xs:boolean, $onLogin as function(*)) {
+    if (not($asDba) or xmldb:is-admin-user($user)) then (
+        let $checkUser := $onLogin($user)
+        return 
+            if ($checkUser) then
+            (
+                request:set-attribute($domain || ".user", $user),
+                request:set-attribute("xquery.user", $user),
+                request:set-attribute("xquery.password", $password),
+                if ($newToken) then
+                    response:set-cookie($domain, $newToken, $expiration, false(), (), 
+                        if (exists($path)) then $path else request:get-context-path())
+                else
+                    ()
+            ) else
+                ()
+    ) else
+        ()
+};
+
+declare %private function login:get-credentials($domain as xs:string, $path as xs:string?, $token as xs:string, $asDba as xs:boolean,
+    $onLogin as function(*)) as empty() {
+    plogin:login($token, login:callback(?, ?, ?, ?, $domain, $path, $asDba, $onLogin))
+};
+
+declare %private function login:create-login-session($domain as xs:string, $path as xs:string?, $user as xs:string, $password as xs:string,
+    $maxAge as xs:dayTimeDuration?, $asDba as xs:boolean, $onLogin as function(*)) as empty() {
+    if (exists($maxAge)) then (
+        plogin:register($user, $password, $maxAge, login:callback(?, ?, ?, ?, $domain, $path, $asDba, $onLogin)),
+        session:invalidate()
+    ) else
+        login:fallback-to-session($domain, $user, $password, $asDba)
+};
+
+declare %private function login:clear-credentials($token as xs:string?, $domain as xs:string, $path as xs:string?) as empty() {
+    response:set-cookie($domain, "deleted", xs:dayTimeDuration("-P1D"), false(), (), 
+        if (exists($path)) then $path else request:get-context-path()),
+    if ($token and $token != "deleted") then
+        plogin:invalidate($token)
+    else
+        (),
+    session:invalidate()
+};
+
+(:~
+ : If "remember me" is not enabled (no duration passed), fall back to the usual
+ : session-based login mechanism.
+ :)
+declare %private function login:fallback-to-session($domain as xs:string, $user as xs:string, $password as xs:string?, $asDba as xs:boolean) {
+    let $isLoggedIn := xmldb:login("/db", $user, $password, true())
+    return
+        if ($isLoggedIn and (not($asDba) or xmldb:is-admin-user($user))) then (
+            session:set-attribute($domain || ".user", $user),
+            request:set-attribute($domain || ".user", $user),
+            request:set-attribute("xquery.user", $user),
+            request:set-attribute("xquery.password", $password)
+        ) else
+            ()
+};
+
+declare %private function login:get-credentials-from-session($domain as xs:string) {
+    let $userFromSession := session:get-attribute($domain || ".user")
+    return (
+        request:set-attribute($domain || ".user", $userFromSession)
+    )
 };
