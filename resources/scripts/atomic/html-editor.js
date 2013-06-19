@@ -31,7 +31,6 @@ Atomic.command.figure = (function () {
                 }
             }
             image.id = Atomic.util.uuid();
-            $.log("ID: %s", image.id);
             
             figure.appendChild(image);
             
@@ -40,12 +39,28 @@ Atomic.command.figure = (function () {
             caption.appendChild(document.createTextNode(text));
             figure.appendChild(caption);
             
-            composer.selection.insertNode(figure);
-            composer.selection.setAfter(figure);
+            composer.selection.executeAndRestore(function() {
+                composer.selection.insertNode(figure);
+            
+                var para = document.createElement("p");
+                composer.selection.insertNode(para);
+                composer.selection.setAfter(figure);
+            });
         },
     
         state: function(composer) {
-            return false;
+            var selectedNode = composer.selection.getSelectedNode();
+            var parent = wysihtml5.dom.getParentElement(selectedNode, { nodeName: "FIGURE" });
+            if (parent) {
+                return parent;
+            }
+            return null;
+        },
+        
+        update: function(composer) {
+            var selectedNode = composer.selection.getSelectedNode();
+            var parent = wysihtml5.dom.getParentElement(selectedNode, { nodeName: "FIGCAPTION" });
+            $.log("Parent: %o", parent);
         }
     };
     
@@ -62,11 +77,9 @@ Atomic.command.alert = (function () {
             
             if (box) {
                 var type = box.className.replace(/^.*alert-([^\s]+).*$/, "$1");
-                $.log("type: %s", type);
                 if (type !== value) {
                     box.className = "alert alert-" + value;
                 } else {
-                    $.log("Removing alert box");
                     composer.selection.executeAndRestore(function() {
                         wysihtml5.dom.replaceWithChildNodes(box);
                     });
@@ -82,7 +95,9 @@ Atomic.command.alert = (function () {
     
                 div.appendChild(selectedNodes);
                 
-                range.insertNode(div);
+                composer.selection.executeAndRestore(function() {
+                    range.insertNode(div);
+                });
                 
                 composer.selection.selectNode(div);
             }
@@ -195,6 +210,7 @@ Atomic.editor.Editor = (function () {
         content.remove();
         
         wysihtml5.commands.alertBlock = Atomic.command.alert;
+        wysihtml5.commands.insertImage = Atomic.command.figure;
         
         var editor = new wysihtml5.Editor(textarea, { // id of textarea element
             useLineBreaks: false,
@@ -350,9 +366,10 @@ Atomic.editor.Editor = (function () {
             $.log("editor.load");
             self.activate();
         });
-        editor.on("newword:composer", function() {
-            $.log("newword:composer");
+        editor.on("beforecommand:composer", function(data) {
             self.activate();
+            $.log("data: %o", data);
+            Atomic.command.figure.update(editor.composer);
         });
         editor.on("paste", function() {
             $.log("editor.paste");
