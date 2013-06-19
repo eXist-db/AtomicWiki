@@ -29,14 +29,21 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                             $href
                         else
                             substring-after($config:wiki-data, "/") || "/_galleries/" || $href
+                    (:
+                    let $src_thumb := $src || "thumb.jpg"
+                    let $src_big := $src || "big.jpg"
+                    :)
                     return
                         <li>
                         {
                             if($pos = 1) then
                                 attribute class { "active" }
                             else
-                                (),
-                            <img src="{$src}"/>,
+                                ()
+                        
+                            (:<a href="{$src}"><img data-big="{$src_big}" src="{$src_thumb}" /></a>:)
+                        }
+                            <a href="{$src}"><img data-big="{$src}" src="{$src}" /></a>
                             <span class="description" style="display: none;">
                                 <h1>{$entry/atom:title/text()}</h1>
                                 {$entry/atom:content/*}
@@ -47,7 +54,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                                 </ul>
                                 
                             </span>
-                        }
+                        
                         </li>
                     }
                     </ul>
