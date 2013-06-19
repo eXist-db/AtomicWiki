@@ -96,7 +96,8 @@ if ($('.galleria').length !== 0) {
         var info = self.$('info-link,info-close,info-text');
         self.bind("fullscreen_enter", function(e) {
             //info.toggle(true);
-            self.$('info-link').click(true);
+            $('.galleria-info-link').removeClass('galleria-active');
+            self.$('info-link').click();
             //self.removeIdleState(self.get('info'));
             var my_h = $(".galleria-stage").height();
             $(".galleria-info").height(my_h - 100);
@@ -110,19 +111,18 @@ if ($('.galleria').length !== 0) {
             //self.$('info-close').click();
             $('.galleria-stage').css({"padding-left":"0px"});
             //self.delay(100).resize();
-            self.addIdleState(self.get('info-link'), {
-                opacity: 0
-            });
             var my_h = $(".galleria-stage").height();
             $(".galleria-info").height(my_h - 100);
             $(".galleria-info-link").height(my_h - 100);
             $(".galleria-info-text").height(my_h - 110);
         });
         
+        /* show infotext on startup */
+        self.$('info-link').click();
 
     }); /* end of: Galleria.ready() */
     
-    /* here we go. fire up galliera */
+    /* here we go. fire up galleria */
     Galleria.run('.galleria', {
         dataConfig: function(img) {
         return {

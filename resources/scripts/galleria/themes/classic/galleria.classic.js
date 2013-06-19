@@ -119,7 +119,12 @@ Galleria.addTheme({
             }
 
             //this.$('info').toggle( this.hasInfo() );
-
+            /*
+            if (this.hasInfo()) {
+                $('.galleria-info-link').removeClass('galleria-active');
+                self.$('info-link').click();
+            }
+            */
             $(e.thumbTarget).css('opacity',1).parent().siblings().children().css('opacity', 0.6);
         });
 
