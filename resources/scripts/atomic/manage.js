@@ -107,17 +107,34 @@ Atomic.menu = (function () {
                             children[j].data.feed + "'/>";
                     }
                 } else {
-                    xml += "<link path='" + (entry.data.feed == null ? "/" : entry.data.feed) + "'/>";
+                    xml += "<link path='" + (entry.data.feed === undefined ? "/" : entry.data.feed) + "'/>";
                 }
                 xml += "</entry>";
             }
             xml += "</menu>";
+            
+            /*
+            var fd = new FormData();    
+            fd.append( 'data', xml );
+            fd.append( 'feed', (entry.data.feed == null ? "/" : entry.data.feed) );
+            */
+            
             $.ajax({
+                /*
+                beforeSend: function (request)
+                {
+                    request.setRequestHeader("X-AtomicFeed", (entry.data.feed === undefined ? "/" : entry.data.feed));
+                },
+                */
+                headers: {"X-AtomicFeed": (entry.data.feed === undefined ? "/" : entry.data.feed)},
                 url: "modules/edit-menu.xql",
                 type: "PUT",
-                contentType: "application/xml",
-                headers: { "X-AtomicFeed": feed },
+                //processData: false,
+                //contentType: false,               
+                //data: {"data": xml, "feed": (entry.data.feed === undefined ? "/" : entry.data.feed)},
+                //data: fd,
                 data: xml,
+                contentType: "application/xml",
                 success: function(data) {
                     window.location.reload();
                 },

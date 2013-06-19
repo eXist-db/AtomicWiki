@@ -54,9 +54,12 @@ return
     switch ($action)
         case "PUT" return
             let $feedParam := request:get-header("X-AtomicFeed")
+            (:let $feedParam := request:get-parameter("feed", ""):)
             let $feed := config:resolve-feed($feedParam)
+            (:let $data := request:get-parameter("data", ""):)
             let $data := request:get-data()
             return
+                (:local:store($feed, util:parse($data)/*):)
                 local:store($feed, $data/*)
         default return
             let $feedParam := request:get-parameter("feed", "")
