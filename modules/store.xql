@@ -52,14 +52,21 @@ declare function store:relativize-links($node as node()) {
                     ( $node/@*, for $child in $node/node() return store:relativize-links($child) )
             }
         else if ($node/@src) then
-            element { node-name($node) } {
-                if (starts-with($node/@src, $config:base-url)) then (
-                    attribute src { substring-after($node/@src, $config:base-url) },
-                    $node/@* except $node/@src,
-                    for $child in $node/node() return store:relativize-links($child)
-                ) else
-                    ( $node/@*, for $child in $node/node() return store:relativize-links($child) )
-            }
+            let $host := "http://" || request:get-server-name() || ":" || request:get-server-port()
+            let $src :=
+                if (starts-with($node/@src, $host)) then
+                    substring-after($node/@src, $host)
+                else
+                    $node/@src
+            return
+                element { node-name($node) } {
+                    if (starts-with($src, $config:base-url)) then (
+                        attribute src { substring-after($src, $config:base-url) },
+                        $node/@* except $node/@src,
+                        for $child in $node/node() return store:relativize-links($child)
+                    ) else
+                        ( $node/@*, for $child in $node/node() return store:relativize-links($child) )
+                }
         else
             element { node-name($node) } {
                 $node/@*, for $child in $node/node() return store:relativize-links($child)
@@ -72,6 +79,7 @@ declare function store:process-html($content as xs:string?) {
     if ($content) then
         let $parsed := cleanup:clean(util:parse-html($content)//*:article)
         return
+(:            $parsed:)
             store:relativize-links($parsed)
     else
         ()
