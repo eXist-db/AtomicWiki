@@ -2,7 +2,7 @@ xquery version "3.0";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "modules/config.xqm";
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "modules/themes.xql";
-import module namespace login="http://exist-db.org/xquery/login" at "resource:org/exist/xquery/modules/persistentlogin/login.xql";
+import module namespace login="http://exist-db.org/xquery/login" at "modules/login.xql";
 import module namespace restxq="http://exist-db.org/xquery/restxq" at "modules/restxq.xql";
 import module namespace anno="http://exist-db.org/annotations" at "modules/annotations.xql";
 
@@ -31,17 +31,26 @@ declare function local:extract-feed($path as xs:string) {
         xmldb:decode-uri($cmp)
 };
 
+declare function local:check-user($user as xs:string) {
+    let $users := $config:wiki-config/configuration/users
+    return
+        if ($users) then
+            ($users/allow/@user = $user)    
+        else
+            true()
+};
+
 try {
     let $root := substring-after($exist:root, "xmldb:exist://")
     return
     if (contains($exist:path, "/_annotations") or contains($exist:path, "/_get")) then (
         util:log("DEBUG", "Processing annotations..."),
-        login:set-user("org.exist.wiki.login", (), false()),
+        login:set-user("org.exist.wiki.login", (), false(), local:check-user#1),
         let $path := replace($exist:path, "^.*(/_annotations.*)$", "$1")
         return
             restxq:process($path, util:list-functions("http://exist-db.org/annotations"))
     )
-        
+    
     (: preview edited articles :)
     else if (ends-with($exist:resource, "preview.html")) then
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -55,11 +64,16 @@ try {
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$exist:controller}/data/_theme/code-edit.html"/>
         </dispatch>
+    
+    else if ($exist:resource = "images.xql") then
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$exist:controller}/modules/images.xql"/>
+        </dispatch>
         
     else if (ends-with($exist:resource, ".xql")) then
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$exist:controller}/modules/{$exist:resource}">
-            { login:set-user("org.exist.wiki.login", (), false()) }
+            { login:set-user("org.exist.wiki.login", (), false(), local:check-user#1) }
             </forward>
         </dispatch>
     
@@ -71,13 +85,13 @@ try {
         return
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward url="{$exist:controller}/modules/feeds.xql">
-                { login:set-user("org.exist.wiki.login", (), false()) }
+                { login:set-user("org.exist.wiki.login", (), false(), local:check-user#1) }
                 </forward>
             </dispatch>
     
     (: URL addresses a collection or article :)
     else if (matches($exist:path, ".*/[^\./]*/?$")) then
-        let $user := login:set-user("org.exist.wiki.login", (), false())
+        let $user := login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)
         let $editCollection := request:get-parameter("collection", ())
         let $relPath := local:extract-feed($exist:path)
         (: Try to determine the feed collection, either by looking at the URL or a parameter 'collection' :)
@@ -96,7 +110,7 @@ try {
                     case "store" case "delete" case "unlock" return
                         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                             <forward url="{$exist:controller}/modules/store.xql">
-                            { login:set-user("org.exist.wiki.login", (), false()) }
+                            { login:set-user("org.exist.wiki.login", (), false(), local:check-user#1) }
                             </forward>
                             <view>
                                 <forward url="{$template}" method="GET">
@@ -232,12 +246,12 @@ try {
             </dispatch>
     
     else
-            (: everything else is passed through :)
-            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                <cache-control cache="yes"/>
-            </dispatch>
+        (: everything else is passed through :)
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <cache-control cache="yes"/>
+        </dispatch>
 } catch * {
-    login:set-user("org.exist.wiki.login", (), false()),
+    login:set-user("org.exist.wiki.login", (), false(), local:check-user#1),
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
     { $local:error-handler }
     </dispatch>

@@ -40,7 +40,7 @@ Atomic.sitemap = (function () {
             keyboard: false,
             onPostInit: function() {
                 var uuid = $("input[name='uuid']").val();
-                var node = this.activateKey(uuid);
+                var node = this.selectKey(uuid);
                 node.expand(true);
             },
             onDblClick: function(dtnode) {
@@ -107,34 +107,17 @@ Atomic.menu = (function () {
                             children[j].data.feed + "'/>";
                     }
                 } else {
-                    xml += "<link path='" + (entry.data.feed === undefined ? "/" : entry.data.feed) + "'/>";
+                    xml += "<link path='" + (entry.data.feed == null ? "/" : entry.data.feed) + "'/>";
                 }
                 xml += "</entry>";
             }
             xml += "</menu>";
-            
-            /*
-            var fd = new FormData();    
-            fd.append( 'data', xml );
-            fd.append( 'feed', (entry.data.feed == null ? "/" : entry.data.feed) );
-            */
-            
             $.ajax({
-                /*
-                beforeSend: function (request)
-                {
-                    request.setRequestHeader("X-AtomicFeed", (entry.data.feed === undefined ? "/" : entry.data.feed));
-                },
-                */
-                headers: {"X-AtomicFeed": (entry.data.feed === undefined ? "/" : entry.data.feed)},
                 url: "modules/edit-menu.xql",
                 type: "PUT",
-                //processData: false,
-                //contentType: false,               
-                //data: {"data": xml, "feed": (entry.data.feed === undefined ? "/" : entry.data.feed)},
-                //data: fd,
-                data: xml,
                 contentType: "application/xml",
+                headers: { "X-AtomicFeed": feed },
+                data: xml,
                 success: function(data) {
                     window.location.reload();
                 },
@@ -456,7 +439,7 @@ Atomic.editor.EditLink = (function () {
             keyboard: false,
             onPostInit: function() {
                 var uuid = $("input[name='uuid']").val();
-                var node = this.activateKey(uuid);
+                var node = this.selectKey(uuid);
                 if (node) {
                     node.expand(true);
                 }
