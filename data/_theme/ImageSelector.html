@@ -2,23 +2,17 @@
 <div id="imageSelector" class="gallery:search">
     <div id="thumbs" class="gallery navigation">
         <ul id="gallery-selection" class="thumbs noscript gallery:search-result">
-            <li class="ui-widget-content gallery:result-image"/>
+            <li class="ui-widget-content gallery:result-image" tabindex="0"/>
         </ul>
     </div>
-    <div class="footer">
-        <div class="span1">
-            <p class="gallery:hit-count"/>
-        </div>
-        <div class="span1">
+    <div class="footer pager">
+        <div class="section">
             <a href="#" class="gallery:pagination-previous">Previous</a>
         </div>
-        <div class="span2">
-            <span class="img-selected"/>
+        <div class="section">
+            <p class="gallery:hit-count"/>
         </div>
-        <div class="span1">
-            <button id="insert-image" onclick="addImage()" type="button" class="btn">Add</button>
-        </div>
-        <div class="span1">
+        <div class="section">
             <a href="#" class="gallery:pagination-next">Next</a>
         </div>
     </div>

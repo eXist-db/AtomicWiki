@@ -8,20 +8,22 @@ $(document).ready(function() {
         toolbar:      "editor-toolbar", // id of toolbar element
     });
     
-    $("#edit-form-tbd").click(function (e){        
+     function updateForm() {
+        var feedContent = $("#gallery-items").html();
+        $("input[name='content']", form).val(feedContent);
+        // console.dirxml(feedContent);        
+    }
+        
+    $(document).tooltip();
+    
+    
+    $("#edit-form-save").click(function (e){        
         e.preventDefault();
-        /*
-        if (editor) {
-            editor.deactivate();
-        }
-        */
             
         $("input[name='action']", form).val("store");
         $("input[name='ctype']", form).val("gallery");
         
-        var feedContent = $("#gallery-items").html();
-        $("input[name='content']", form).val(feedContent);
-        console.dirxml(feedContent);
+        updateForm();
         var data = form.serialize() + "&unlock=false";
         $.ajax({
             type: "POST",
@@ -29,41 +31,23 @@ $(document).ready(function() {
             data: data,
             complete: function() {
                 $.log("Store completed");
-                /* if (contentEditor) {
-                    contentEditor.activate();
-                }
-                */
             }
         });        
     
-    })
+    });
+    
+    $("#edit-form-saveAndClose").click(function(ev) {
+        $("input[name='action']", form).val("store");
+        $("input[name='ctype']", form).val("gallery");
+        updateForm();
+        form.submit();
+        return false;
+    });    
+    
     $("#toggleGallerySwitch").click(function (e) {
         e.preventDefault();
         var gallery = $("#gallery");
         var  container = $(".gallery-container");
-        if(gallery.hasClass("galleryOpen")){
-            console.log("close image gallery picker");
-            /*
-            container.animate({
-                    opacity: 0.25,                
-                }, 1500, function() {
-                            console.log("Closed Image Gallery picker")
-                            gallery.toggleClass("galleryOpen");
-                })
-            */
-        }
-        else {
-            console.log("open image gallery picker");
-            /*
-             container.show().animate({                
-                opacity: 1,                
-                }, 1500 , function() {
-                    console.log("Opened Image Gallery picker")
-                    gallery.toggleClass("galleryOpen");
-                }
-            );
-            */
-        }
         gallery.toggleClass("galleryOpen");
         
     });
@@ -84,11 +68,7 @@ function loadImages(start, max) {
 
     var searchForm = $(".form-search");
     console.log("prepare query images");
-    //  if (!form.checkValidity())
-    //  return;
-    // contentEditor.deactivate();
-    // updateForm();
-    // $("input[name='action']", form).val("store");
+
     var data = searchForm.serialize();
     console.debug("search data: ",data);
     $.ajax({
@@ -109,11 +89,12 @@ function loadImages(start, max) {
                     $(ui.selecting).removeClass("ui-selecting");
                 }else {
                     console.log("Selected! This: ", this, " Event:  ", event , " ui: ", ui);                                
-                    var atomTitle = "<span id='img-title-label' class='label'> Title: </span><span id='img-title'>"+$(ui.selecting).find('.image-title').html()+"</span>";
+                    /* var atomTitle = "<span id='img-title-label' class='label'> Title: </span><span id='img-title'>"+$(ui.selecting).find('.image-title').html()+"</span>";
                     var atomId = "<span id='img-id-label' class='label'> Id: </span><span id='img-id'>"+$(ui.selecting).find('.image-id').html()+"</span>";
                     var atomURL = "<span id='img-url-label' class='label'> URL: </span><span id='img-url'>"+$(ui.selecting).find('.image-url').html()+"</span>";
                     var uiContent = "<p>" + atomTitle + atomId + atomURL + "</p>";
                     $(".img-selected").html(uiContent);                    
+                    */
                 }
             },
             unselecting: function( event, ui ) {
@@ -121,6 +102,7 @@ function loadImages(start, max) {
                $(".img-selected").html("");
             }
         });
+        $( "#gallery img" ).tooltip();
         
     });
     

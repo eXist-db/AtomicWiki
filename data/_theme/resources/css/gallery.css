@@ -47,17 +47,17 @@
 }
 
 
-.galleryOpen .gallery-container {
-    background:blue;
+.galleryOpen .gallery-container {    
     border: thin solid #000000;
     border-radius: 4px 4px 4px 4px;
     box-shadow: 10px 10px 5px gray;
     display: block;
     font-size: 0.9em;
-    height: 350px;
+    height: 356px;
     position: absolute;
     right: 0;
     width: 630px;
+    z-index:5;
 }
 #toggleGallerySwitch {
        top:100px;
@@ -68,25 +68,22 @@
     left: -35px;
 }
 
-.gallery-container .footer ul li {
-    display: inline;
+.gallery-container .imageSelector{
+    background:whitesmoke;
+}
+.gallery-container .header,
+.gallery-container .footer {
+    background: url("../images/bubble.gif") #F3F3F3;    
 }
 
-.gallery-container .footer ul li a {
-    padding: 2px 4px; color: #ffcb05;
-}
-.footer ul li a:hover {
-    background: #333;
-}
-
-.gallery-container .header {
-    background:yellow;
+.gallery-container .header {    
     padding-bottom: 1px;
     padding-left: 4px;
     padding-top: 4px;
+    border-bottom:thin solid #DDD;
 }
+
 .gallery-container .footer {
-    background: none repeat scroll 0 0 orange;
     clear: both;
     height: 30px;
     margin: 0 auto;
@@ -94,13 +91,22 @@
     position: absolute;
     width: 96%;
     bottom:0;
+    text-align:center;
+    border-top:thin solid #DDD;
+}
+.footer  .section{
+    float:left;
+    width:33%;
+}
+.footer  p {
+    margin:0;
+    padding:0;
 }
 
 .gallery-container .gallery {
     display:block;
     margin:0;
     padding:0;
-    background:green;
 }
 
 #gallery-selection .ui-selecting { background: #FECA40; }
@@ -108,9 +114,31 @@
 #gallery-selection { list-style-type: none; margin: 0; padding: 0;  }
 #gallery-selection li { margin: 3px; padding: 0.4em; font-size: 1.4em; float:left;}
 
-/*
-.gallery-draggable { width: 80px; height: 80px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
-#gallery-droppable {  height: 40px; padding: 0.5em; float: left; margin: 10px; }
-*/
 
+.thumbs img {
+    border:thin solid #DDD
+}
 
+.footer .section a ,
+.footer .section p {
+    background-color: #FFFFFF;
+    border: 1px solid #999;
+    border-radius: 15px 15px 15px 15px;
+    display: inline-block;
+    padding: 5px 14px;    
+    text-decoration:none;
+}
+.footer .section a:hover {
+   background-color: #DDD;
+   color:#333;
+}
+
+#imageSelector #thumbs {
+    padding-left: 9px;
+    float: left;
+    background:whitesmoke;
+}
+
+#imageSelector #thumbs .ui-widget-content {
+    border:0;   
+}

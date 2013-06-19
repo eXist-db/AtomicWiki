@@ -154,14 +154,15 @@ declare
         let $image := $entry//vra:relationSet/vra:relation[@pref='true']
         let $imageId := substring($image/@relids , 3)
         
-        let $serverPath := "http://kjc-ws2.kjc.uni-heidelberg.de:83/images/service/download_uuid/priya_paul/"
+        let $serverPath := "http://kjc-ws2.kjc.uni-heidelberg.de:83/images/service/download_uuid/"
         let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
         let $imageURL :=  $serverPath || $imageId || $imageOption
         
         return 
             if($imageId) 
             then (
-                <img src="{$imageURL}" class="relatedImage"/>,                           
+                <img src="{$imageURL}" class="relatedImage" title="{$entry//vra:titleSet/vra:title[@pref='true']/text()}"/>                         
+                ,
                 <div style="display:none">                    
                     <div class="image-id">{$imageId}</div>
                     <div class="image-title">{$entry//vra:titleSet/vra:title[@pref='true']/text()}</div>
