@@ -30,6 +30,16 @@ declare function app:feed-path($node as node(), $model as map(*)) {
     }
 };
 
+declare function app:feed-id($node as node(), $model as map(*)) {
+    element { node-name($node) } {
+        $node/@*,
+        attribute value {
+            $model("feed")/atom:id/string()
+        }
+    }
+
+};
+
 declare function app:get-or-create-feed($node as node(), $model as map(*)) as map(*) {
     let $feed := request:get-attribute("feed")
     let $data :=
