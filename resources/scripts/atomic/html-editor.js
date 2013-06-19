@@ -399,6 +399,8 @@ $(document).ready(function() {
         if (summaryEditor) {
             summary = summaryEditor.editor.getValue(true);
         }
+        var name = $("input[name='name']", form).val();
+        form.attr("action", name);
         $("textarea[name='content']", form).val(content);
         if (summary) {
             $("textarea[name='summary']", form).val(summary);

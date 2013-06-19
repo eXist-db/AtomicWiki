@@ -24,7 +24,8 @@ declare function menu:site-menu($node as node(), $model as map(*)) {
     let $menu := menu:site-menu-for-feed($feed, true())
     return
         if ($menu) then
-            let $path := $config:base-url || substring-after(util:collection-name($menu), $config:wiki-root)
+(:            let $path := $config:base-url || substring-after(util:collection-name($menu), $config:wiki-root):)
+            let $path := $config:base-url
             return
                 menu:relativize-links($menu, $path)
         else
