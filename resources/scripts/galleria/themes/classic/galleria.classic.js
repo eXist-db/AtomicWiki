@@ -58,18 +58,20 @@ Galleria.addTheme({
                 if( ! $(this).hasClass('galleria-active')){
                     $('.galleria-info-link').addClass('galleria-active');
       
-                    $('.galleria-stage').stop().animate({"padding-left":"210px"}, 500, function() {
-                        $('.galleria-stage').css({"padding-left":"210px"});
+                    $('.galleria-stage').stop().animate({"margin-left":"220"}, 500, function() {
+                        //$('.galleria-stage').css({"margin-left":"220"});
                         self.refreshImage();
+                        $('.galleria-stage').resize();
                     });
                     $('.galleria-info').stop().animate({"left":"15px"}, 500, function() {
                         $('.galleria-info').css({"left":"15px"});
                     });
                 } else {
                     $('.galleria-info-link').removeClass('galleria-active');
-                    $('.galleria-stage').stop().animate({"padding-left":"0px"}, 500, function() {
-                        $('.galleria-stage').css({"padding-left":"0px"});
+                    $('.galleria-stage').stop().animate({"margin-left":"0"}, 500, function() {
+                        //$('.galleria-stage').css({"margin-left":"0"});
                         self.refreshImage();
+                        $('.galleria-stage').resize();
                     });
                     $('.galleria-info').stop().animate({"left":"-200px"}, 500, function() {
                             $('.galleria-info').css({"left":"-200px"});
