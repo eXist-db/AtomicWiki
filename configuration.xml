@@ -6,4 +6,12 @@
         Relative paths will be resolved relative to the app root.
     -->
     <root>data</root>
+    <!--
+    	If a user element is present, only database users listed in an allow element can
+    	log into the wiki.
+    -->
+    <!--users>
+        <allow user="editor"/>
+        <allow user="admin"/>
+    </users-->
 </configuration>
