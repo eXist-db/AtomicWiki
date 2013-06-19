@@ -13,7 +13,8 @@ if ($('.galleria').length !== 0) {
         imagePosition: 'center center',
         trueFullscreen: true,
         keepSource: false,
-        idleTime: 1234            
+        idleTime: 1234
+        //lightbox: true
     });
             
             
@@ -94,11 +95,10 @@ if ($('.galleria').length !== 0) {
         */
                 
         var info = self.$('info-link,info-close,info-text');
+        
         self.bind("fullscreen_enter", function(e) {
-            //info.toggle(true);
             $('.galleria-info-link').removeClass('galleria-active');
             self.$('info-link').click();
-            //self.removeIdleState(self.get('info'));
             var my_h = $(".galleria-stage").height();
             $(".galleria-info").height(my_h - 100);
             $(".galleria-info-link").height(my_h - 100);
@@ -107,10 +107,6 @@ if ($('.galleria').length !== 0) {
         });
         
         self.bind("fullscreen_exit", function(e) {
-            //info.toggle(false);
-            //self.$('info-close').click();
-            $('.galleria-stage').css({"padding-left":"0px"});
-            //self.delay(100).resize();
             var my_h = $(".galleria-stage").height();
             $(".galleria-info").height(my_h - 100);
             $(".galleria-info-link").height(my_h - 100);
@@ -127,10 +123,10 @@ if ($('.galleria').length !== 0) {
         dataConfig: function(img) {
         return {
                 thumb: $(img).attr('src'),
-                image: $(img).attr('src'),
-                big: $(img).attr('src'),
-                title: $(img).siblings('h1').html(),
-                description: $(img).siblings(".description").html() // tell Galleria to grab the content from the .description div as caption
+                image: $(img).attr('href'),
+                big: $(img).attr('data-big'),
+                title: $('a').siblings('h1').html(),
+                description: $('a').siblings(".description").html() // tell Galleria to grab the content from the .description div as caption
             };
         }
     });
