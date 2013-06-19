@@ -52,6 +52,13 @@
     float: left;
     cursor: pointer;
 }
+
+.galleria-thumbnails {
+    margin:auto;
+    left:0;
+    right:0;
+}
+
 .galleria-counter {
     position: absolute;
     bottom: 10px;
