@@ -38,8 +38,16 @@
     z-index: 1;
     
 }
-#gallery.galleryOpen {
-    width: 630px; 
+
+#toggleGallerySwitch {
+    background: url("../images/arrow-left.png") no-repeat scroll center 0 transparent;     
+    padding-top:8px;
+    float: left;    
+}
+.galleryOpen #toggleGallerySwitch {
+    background: url("../images/arrow-right.png") no-repeat scroll center 0 transparent;
+    padding-top:8px;
+    float: left;
 }
 
 .gallery-container {
@@ -52,20 +60,15 @@
     border-radius: 4px 4px 4px 4px;
     box-shadow: 10px 10px 5px gray;
     display: block;
-    font-size: 0.9em;
-    height: 356px;
-    position: absolute;
+    font-size: 0.9em;    
     right: 0;
     width: 630px;
     z-index:5;
+    float:left;
 }
-#toggleGallerySwitch {
-       top:100px;
-        position: relative;
-}
+
 .galleryOpen #toggleGallerySwitch {
-   float: left;
-    left: -35px;
+    float: left;    
 }
 
 .gallery-container .imageSelector{
@@ -77,23 +80,32 @@
 }
 
 .gallery-container .header {    
-    padding-bottom: 1px;
-    padding-left: 4px;
-    padding-top: 4px;
+    width:98%;
+    height:30px;
+    padding:5px;
+    display:inline-block;
     border-bottom:thin solid #DDD;
+    text-align:center;
+}
+#filterCollection{
+    width:33%;
+}
+#query{
+    width:323px;
+}
+#query:valid{
+    background-image:none !important;
+}
+.gallery-container .footer {
+   border-top: thin solid #DDDDDD;    
+    float: left;
+    height: 40px;
+    margin: 0 auto;
+    padding: 10px 0 0;
+    text-align: center;
+    width: 100%;
 }
 
-.gallery-container .footer {
-    clear: both;
-    height: 30px;
-    margin: 0 auto;
-    padding: 1em;
-    position: absolute;
-    width: 96%;
-    bottom:0;
-    text-align:center;
-    border-top:thin solid #DDD;
-}
 .footer  .section{
     float:left;
     width:33%;
@@ -108,15 +120,54 @@
     margin:0;
     padding:0;
 }
+#gallery-selection { 
+    list-style-type: none; 
+    margin: 0; 
+    padding: 0;
+    min-height:244px;
+}
+#gallery-selection li {
+    margin: 5px;
+    padding: 5px;
+    font-size: 1.4em; 
+    float:left;
+    position: relative;
+}
 
-#gallery-selection .ui-selecting { background: #FECA40; }
-#gallery-selection .ui-selected { background: #F39814; color: white; }
-#gallery-selection { list-style-type: none; margin: 0; padding: 0;  }
-#gallery-selection li { margin: 3px; padding: 0.4em; font-size: 1.4em; float:left;}
+#gallery-selection li {
+
+}
+
+#gallery-selection li:hover a {
+    display:inline-block;
+}
+#gallery-selection a {
+    display: none;
+    position: absolute !important;
+    right:-8px;
+    top:-9px;
+    height:16px;
+    width:16px;
+    z-index:10;
+    background:url("../images/plus-with-circle.png");
+}
+
+#gallery-selection .ui-selected { 
+    background: #cfe2ed; 
+}
+
+#gallery-selection .ui-selected img {
+    opacity:1;
+}
+
+#gallery-selection img:hover {    
+    opacity:1;
+}
 
 
-.thumbs img {
-    border:thin solid #DDD
+#gallery-selection img {
+    border:thin solid #DDD;
+    opacity:0.7;
 }
 
 .footer .section a ,

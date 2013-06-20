@@ -152,19 +152,18 @@ declare
     function gallery:result-image($node as node(), $model as map(*)) {    
         let $entry := $model("entry")    
         let $image := $entry//vra:relationSet/vra:relation[@pref='true']
-        let $imageId := substring($image/@relids , 3)
         
-        let $serverPath := "http://kjc-ws2.kjc.uni-heidelberg.de:83/images/service/download_uuid/"
+        let $serverPath := "http://kjc-ws2.kjc.uni-heidelberg.de/images/service/download_uuid/"
         let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
-        let $imageURL :=  $serverPath || $imageId || $imageOption
+        let $imageURL :=  $serverPath || $image/@relids || $imageOption
         
         return 
-            if($imageId) 
+            if($image/@relids) 
             then (
-                <img src="{$imageURL}" class="relatedImage" title="{$entry//vra:titleSet/vra:title[@pref='true']/text()}"/>                         
-                ,
+                <a href="#" class="icon-plus-sign"> </a>,  
+                <img src="{$imageURL}" class="relatedImage" title="{$entry//vra:titleSet/vra:title[@pref='true']/text()}"/>,                                       
                 <div style="display:none">                    
-                    <div class="image-id">{$imageId}</div>
+                    <div class="image-id">{data($image/@relids)}</div>
                     <div class="image-title">{$entry//vra:titleSet/vra:title[@pref='true']/text()}</div>
                     <div class="image-work-record">{$entry/@id}</div>
                     <div class="image-url">{$imageURL}</div>

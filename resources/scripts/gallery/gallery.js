@@ -16,7 +16,10 @@ $(document).ready(function() {
         
     $(document).tooltip();
     
-    
+    $(".addImage").on("click",function(e){
+        console.debug("adding an image...");
+        addImage();                
+    });
     $("#edit-form-save").click(function (e){        
         e.preventDefault();
             
@@ -34,7 +37,7 @@ $(document).ready(function() {
             }
         });        
     
-    });
+    })
     
     $("#edit-form-saveAndClose").click(function(ev) {
         $("input[name='action']", form).val("store");
@@ -97,12 +100,13 @@ function loadImages(start, max) {
                     */
                 }
             },
+            
             unselecting: function( event, ui ) {
                console.log("Unselected! This: ", this, " Event:  ", event , " ui: ", ui);                                
                $(".img-selected").html("");
             }
         });
-        $( "#gallery img" ).tooltip();
+        // $( "#gallery img" ).tooltip({ my: "right bottom+5", at: "right top" } );
         
     });
     

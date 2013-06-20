@@ -21,7 +21,7 @@
                                         <i class="icon-ban-circle"/> Cancel</button>
                                     <button id="edit-form-save" class="btn">
                                         <i class="icon-download-alt"/> Save</button>
-                                    <button id="edit-form-saveAndClose" class="btn btn-primary" type="submit">
+                                    <button id="edit-form-saveAndClose" class="btn btn-primary" type="button">
                                         <i class="icon-ok"/> Save and Close</button>
                                 </div>
                             </div>
@@ -339,20 +339,24 @@
             </div>
         </div>
         <div id="gallery" class="">
-            <img id="toggleGallerySwitch" src="theme/resources/images/gallery-black-small.png" alt="Gallery" height="30px"/>
+            <a href="#" id="toggleGallerySwitch">
+                <img src="theme/resources/images/gallery-black-small.png" height="30px"/>
+            </a>
             <div class="gallery-container">
                 <div class="header">
                     <form class="form-search">
-                        <select name="filter" class="input-medium">
+                        <select name="filter" id="filterCollection">
                             <option value="all" selected="selected">All</option>
                             <optgroup label="Ziziphus">
                                 <option value="c_b9827ec8-6b66-5d98-9f5e-ca12b58044c4">Priya Paul</option>
                             </optgroup>
                         </select>
-                        <input name="query" class="input-medium" type="search" placeholder="search"/>
+                        <div class="input-append">
+                            <input name="query" id="query" type="search" placeholder="search"/>
+                            <button id="query-images" class="btn" type="button">Search</button>
+                        </div>
                         <input name="start" id="imagePickerStart" value="1" type="hidden"/>
                         <input name="max" id="imagePickerMax" value="10" type="hidden"/>
-                        <button id="query-images" class="btn" type="button">Search</button>
                     </form>
                 </div>
                 <div id="imageSelector"/>
