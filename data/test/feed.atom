@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<atom:feed xmlns:atom="http://www.w3.org/2005/Atom">
+    <atom:id>48d557c5-9820-441e-a41a-f318e7b12f3c</atom:id>
+    <atom:updated>2013-06-20T11:16:11.35+02:00</atom:updated>
+    <atom:title>Test Collection</atom:title>
+    <atom:subtitle>testcollection</atom:subtitle>
+    <atom:author>
+        <atom:name>admin</atom:name>
+    </atom:author>
+</atom:feed>

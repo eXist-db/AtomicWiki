@@ -137,7 +137,7 @@ function addImage(){
     liTemplate.find(".img-polaroid").attr("src",imageURL); 
     
     liTemplate.find(".image-title").html(imageTitle); 
-    liTemplate.find(".image-desc").attr("id", imageId + "desc"); 
+    liTemplate.find(".image-desc").attr("id", imageId + "-desc"); 
     
     liTemplate.find(".btn-edit").click(function() {   
        showModal(imageId);
@@ -183,7 +183,7 @@ function removeItem(itemid) {
 function showModal(itemid) {
     var dialog = $('#edit-gallery-item-dialog');
     var itemTitle = $('#' + itemid + " h3").text();
-    var itemDesc = $('#' + itemid + "desc").html();
+    var itemDesc = $('#' + itemid + "-desc article").html();
     
     dialog.find("input[name=title]").val(itemTitle);
     /*
@@ -194,7 +194,7 @@ function showModal(itemid) {
     
     $('#edit-gallery-item-dialog .apply-button').unbind('click');
     $('#edit-gallery-item-dialog .apply-button').click(function() {
-        $('#' + itemid + "desc").html(editor.getValue());
+        $('#' + itemid + "-desc").html(editor.getValue());
         $('#' + itemid + " h3").html(dialog.find("input[name=title]").val());
         dialog.modal('hide');
     });

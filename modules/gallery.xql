@@ -10,13 +10,26 @@ declare namespace html="http://www.w3.org/1999/xhtml";
 
 
 declare 
+    %templates:wrap function gallery:gallery-title($node as node(), $model as map(*)) {
+    
+    attribute value { request:get-attribute("feed")/atom:feed/atom:title }
+};
+
+declare 
+    %templates:wrap function gallery:gallery-subtitle($node as node(), $model as map(*)) {
+        
+    attribute value { request:get-attribute("galleryName") }
+};
+
+declare 
     %templates:wrap function gallery:edit-gallery-items($node as node(), $model as map(*)) {
-        let $entries := gallery:get-slideshow-editor-dummy-atom-feed()
+        let $entries := request:get-attribute("feed")
+        let $log := util:log("WARN", "ENTRIES: "|| $entries)
+        
         let $imageList :=
-            for $entry in $entries//atom:entry                
-                let $imageURL := "http://farm3.static.flickr.com/" || data($entry/atom:link/@href) || "_s.jpg"
+            for $entry in $entries/atom:feed/atom:entry
                 return 
-                    gallery:feed-to-html-image($imageURL, $entry/atom:id, $entry/atom:title/text(), $entry/atom:content/*)
+                    gallery:feed-to-html-image(data($entry/atom:link[1]/@href), $entry/atom:id, $entry/atom:title/text(), util:parse-html($entry/atom:content/text()))
         return
             (
                 <ul id="gallery-items">
@@ -128,7 +141,7 @@ function gallery:pagination-previous($node as node(), $model as map(*), $start a
                 $node/node()
             }
         else
-            <div style="height:1px;width:1px"> </div>
+            ()
 };
 
 declare 
@@ -170,207 +183,3 @@ declare
                 </div>
             )else ()
     };
-
-
-
-declare %private function gallery:get-slideshow-editor-dummy-atom-feed() {    
-    <atom:feed>
-        <atom:entry>
-            <atom:id>b918effb-589a-494a-801b-cd77a762b1e7</atom:id>
-            <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
-            <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
-            <atom:author>
-                <atom:name>bine</atom:name>
-            </atom:author>
-            <atom:title>Blume 1</atom:title>
-            <atom:link type="image/jpeg" href="3261/2538183196_8baf9a8015"/>
-            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
-                <div>
-                    Lorem ipsum dolor sit amet, blume1 consetetur sadipscing elitr, 
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                </div>
-            </atom:content>
-        </atom:entry>
-        <atom:entry>
-            <atom:id>c918effb-589a-494a-802b-cd77a762b1e7</atom:id>
-            <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
-            <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
-            <atom:author>
-                <atom:name>bine</atom:name>
-            </atom:author>
-            <atom:title>Blume 2</atom:title>
-            <atom:link type="image/jpeg" href="2404/2538171134_2f77bc00d9"/>
-            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
-                <div>
-                    Lorem ipsum dolor sit amet, Blume 2 consetetur sadipscing elitr, 
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                </div>
-                <div>
-                    Lorem ipsum dolor sit amet, Blume 2 consetetur sadipscing elitr, 
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                </div>
-                <div>
-                    Lorem ipsum dolor sit amet, Blume 2 consetetur sadipscing elitr, 
-                    sed diam nonumy eirmod tempor ut labore et dolore magna aliquyam erat, 
-                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                </div>
-            </atom:content>
-        </atom:entry>
-        <atom:entry>
-            <atom:id>d918effb-589a-494a-803b-cd77a762b1e7</atom:id>
-            <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
-            <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
-            <atom:author>
-                <atom:name>bine</atom:name>
-            </atom:author>
-            <atom:title>Blume 3</atom:title>
-            <atom:link type="image/jpeg" href="2093/2538168854_f75e408156"/>
-            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
-                <div>
-                    Lorem ipsum dolor sit amet, blume 3 consetetur sadipscing elitr, 
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                </div>
-            </atom:content>
-        </atom:entry>
-        <atom:entry>
-            <atom:id>e918effb-589a-494a-804b-cd77a762b1e7</atom:id>
-            <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
-            <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
-            <atom:author>
-                <atom:name>bine</atom:name>
-            </atom:author>
-            <atom:title>Blume 4</atom:title>
-            <atom:link type="image/jpeg" href="3153/2538167690_c812461b7b"/>
-            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
-                <div>
-                    Lorem ipsum dolor sit amet, blume 4 consetetur sadipscing elitr, 
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                </div>
-            </atom:content>
-        </atom:entry>
-        <atom:entry>
-            <atom:id>e918effb-589a-494a-805b-cd77a762b1e99</atom:id>
-            <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
-            <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
-            <atom:author>
-                <atom:name>bine</atom:name>
-            </atom:author>
-            <atom:title>Blume 5</atom:title>
-            <atom:link type="image/jpeg" href="3150/2538167224_0a6075dd18"/>
-            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
-                <div>
-                    Lorem ipsum dolor sit amet, blume 5 consetetur sadipscing elitr, 
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                </div>
-            </atom:content>
-        </atom:entry>
-        <atom:entry>
-            <atom:id>b918effb-589a-494a-811b-cd77a762b1e7</atom:id>
-            <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
-            <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
-            <atom:author>
-                <atom:name>bine</atom:name>
-            </atom:author>
-            <atom:title>Rose 1</atom:title>
-            <atom:link type="image/jpeg" href="3204/2537348699_bfd38bd9fd"/>
-            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
-                <div>
-                    Lorem ipsum dolor sit amet, rose 1 consetetur sadipscing elitr, 
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                </div>
-            </atom:content>
-        </atom:entry>
-        <atom:entry>
-            <atom:id>c918effb-589a-494a-812b-cd77a762b1e7</atom:id>
-            <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
-            <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
-            <atom:author>
-                <atom:name>bine</atom:name>
-            </atom:author>
-            <atom:title>Rose 2</atom:title>
-            <atom:link type="image/jpeg" href="3124/2538164582_b9d18f9d1b"/>
-            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
-                <div>
-                    Lorem ipsum dolor sit amet, rose 2 consetetur sadipscing elitr, 
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                </div>
-            </atom:content>
-        </atom:entry>
-        <atom:entry>
-            <atom:id>d918effb-589a-494a-813b-cd77a762b1e7</atom:id>
-            <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
-            <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
-            <atom:author>
-                <atom:name>bine</atom:name>
-            </atom:author>
-            <atom:title>Rose 3</atom:title>
-            <atom:link type="image/jpeg" href="3205/2538164270_4369bbdd23"/>
-            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
-                <div>
-                    Lorem ipsum dolor sit amet, rose 3 consetetur sadipscing elitr, 
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                </div>
-            </atom:content>
-        </atom:entry>
-        <atom:entry>
-            <atom:id>e918effb-589a-494a-814b-cd77a762b1e7</atom:id>
-            <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
-            <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
-            <atom:author>
-                <atom:name>bine</atom:name>
-            </atom:author>
-            <atom:title>Rose 4</atom:title>
-            <atom:link type="image/jpeg" href="3211/2538163540_c2026243d2"/>
-            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
-                <div>
-                    Lorem ipsum dolor sit amet, rose 4 consetetur sadipscing elitr, 
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                </div>
-            </atom:content>
-        </atom:entry>
-        <atom:entry>
-            <atom:id>e918effb-589a-494a-815b-cd77a762b1e99</atom:id>
-            <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
-            <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
-            <atom:author>
-                <atom:name>bine</atom:name>
-            </atom:author>
-            <atom:title>Rose 5</atom:title>
-            <atom:link type="image/jpeg" href="2315/2537343449_f933be8036"/>
-            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
-                <div>
-                    Lorem ipsum dolor sit amet, rose 5 consetetur sadipscing elitr, 
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                </div>
-            </atom:content>
-        </atom:entry>
-        <atom:entry>
-            <atom:id>e918effb-589a-494a-816b-cd77a762b1e99</atom:id>
-            <atom:published>2013-01-15T09:04:14.452+01:00</atom:published>
-            <atom:updated>2013-04-24T23:27:02.251+02:00</atom:updated>
-            <atom:author>
-                <atom:name>bine</atom:name>
-            </atom:author>
-            <atom:title>Rose 6</atom:title>
-            <atom:link type="image/jpeg" href="2167/2082738157_436d1eb280"/>
-            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="xhtml">
-                <div>
-                    Lorem ipsum dolor sit amet, rose 6 consetetur sadipscing elitr, 
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-                    sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                </div>
-            </atom:content>
-        </atom:entry>
-    </atom:feed>
-};

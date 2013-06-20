@@ -93,7 +93,7 @@ try {
         (: The feed XML will be saved to a request attribute :)
         let $setAttr := request:set-attribute("feed", $feed)
         let $action := request:get-parameter("action", "view")
-        let $template := if ($feed) then theme:resolve(util:collection-name($feed), "feed.html", $root, $exist:controller) else ()
+        let $template := if ($feed) then theme:resolve-relative(util:collection-name($feed), "feed.html", $root, $exist:controller) else ()
         return
             if ($feed) then
                 switch ($action)
@@ -144,10 +144,17 @@ try {
                                 { $local:error-handler }
                             </dispatch>
                   case "editgallery" case "addgallery" return
-                        let $id := request:get-parameter("id", ())
-                        let $entry := config:get-entries($feed, $id, $relPath[2])[1]
-
-                        let $template :="html-edit-gallery.html" 
+                        let $template :="html-edit-gallery.html"
+                        let $gallery := request:get-parameter("gallery", ())
+                        let $feedCol := request:get-parameter("collection", "/db/apps/wiki/data" ) || "/_galleries"
+                        let $log := util:log("WARN", "URL: " || $feedCol)
+                        let $feed := if ($gallery) then 
+                            let $foo := $feedCol || '/' || $gallery || ".atom"
+                            let $log := util:log("WARN", "Opening Gallery: " || $foo)
+                            return doc($foo)
+                         else $feed
+                        let $setAttr := request:set-attribute("feed", $feed)
+                        let $setAttr := request:set-attribute("galleryName", $gallery)
                         return
                             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                                 <forward url="{$exist:controller}/modules/store.xql">
