@@ -160,7 +160,7 @@ declare
         return 
             if($image/@relids) 
             then (
-                <a href="#" class="icon-plus-sign"> </a>,  
+                <a href="#" class="add-image"> </a>,  
                 <img src="{$imageURL}" class="relatedImage" title="{$entry//vra:titleSet/vra:title[@pref='true']/text()}"/>,                                       
                 <div style="display:none">                    
                     <div class="image-id">{data($image/@relids)}</div>

@@ -138,18 +138,18 @@
 
 }
 
-#gallery-selection li:hover a {
+#gallery-selection .ui-selected a {
     display:inline-block;
 }
 #gallery-selection a {
+    background: url("../images/plus-with-circle.png") no-repeat scroll 0% 0% transparent;
     display: none;
-    position: absolute !important;
-    right:-8px;
-    top:-9px;
-    height:16px;
-    width:16px;
-    z-index:10;
-    background:url("../images/plus-with-circle.png");
+    height: 30px;
+    width: 30px;
+    position: absolute ! important;
+    right: -8px;
+    top: -9px;    
+    z-index: 10;
 }
 
 #gallery-selection .ui-selected { 
