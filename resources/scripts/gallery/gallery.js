@@ -14,9 +14,7 @@ $(document).ready(function() {
         // console.dirxml(feedContent);        
     }
         
-    $(document).tooltip();
-    
-    $("#gallery").on("click", ".add-image", function(event){        
+    $("#gallery").on("click", ".add-image", function(event){
         event.preventDefault();
         addImage();                
     }); 
@@ -38,7 +36,7 @@ $(document).ready(function() {
             }
         });        
     
-    })
+    });
     
     $("#edit-form-saveAndClose").click(function(ev) {
         $("input[name='action']", form).val("store");
@@ -59,7 +57,7 @@ $(document).ready(function() {
     $("#query-images").click(function (ev) {   
        loadImages()
     });
-})
+});
 
 function loadImages(start, max) {
     if(start) {
@@ -116,6 +114,7 @@ function loadImages(start, max) {
                // $(".img-selected").html("");
             }
         });
+        $( "#gallery").find("img" ).tooltip();
         // $( "#gallery img" ).tooltip({ my: "right bottom+5", at: "right top" } );
         
     });
