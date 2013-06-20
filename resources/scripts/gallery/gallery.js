@@ -74,9 +74,13 @@ function loadImages(start, max) {
 
     var data = searchForm.serialize();
     console.debug("search data: ",data);
+    
+    // FIXME CHANGE THIS URL 
+    // a relative url does not work here since we 
+    // are creating collections for wiki sections
     $.ajax({
         type: "POST",
-        url: "data/_theme/ImageSelector.html",
+        url: "/exist/apps/wiki/data/_theme/ImageSelector.html",
         data:data,
         complete: function() {
             $.log("updating gallery completed");
