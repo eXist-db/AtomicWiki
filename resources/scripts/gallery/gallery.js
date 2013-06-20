@@ -3,7 +3,7 @@ var editor;
 
 $(document).ready(function() {
     var form = $("#edit-form");
-    
+
     editor = new wysihtml5.Editor("description", { // id of textarea element
         toolbar:      "editor-toolbar", // id of toolbar element
     });
@@ -14,12 +14,13 @@ $(document).ready(function() {
         // console.dirxml(feedContent);        
     }
         
-    $(document).tooltip();
+    // $(document).tooltip();
     
-    $(".addImage").on("click",function(e){
-        console.debug("adding an image...");
+    $("#gallery").on("click", ".add-image", function(event){        
+        event.preventDefault();
         addImage();                
-    });
+    }); 
+    
     $("#edit-form-save").click(function (e){        
         e.preventDefault();
             
@@ -37,7 +38,7 @@ $(document).ready(function() {
             }
         });        
     
-    })
+    });
     
     $("#edit-form-saveAndClose").click(function(ev) {
         $("input[name='action']", form).val("store");
@@ -56,11 +57,20 @@ $(document).ready(function() {
     });
     loadImages();
     $("#query-images").click(function (ev) {   
+        console.debug("clicke on load images button!")
        loadImages()
     });
-})
+    
+    $('.form-search').submit(function(e) {
+        e.preventDefault;
+        loadImages();
+        return false;
+    });
+    
+});
 
 function loadImages(start, max) {
+    // console.debug("load images!")
     if(start) {
         // update hidden input name="start"
         $('#imagePickerStart').val(start);
@@ -90,26 +100,43 @@ function loadImages(start, max) {
         // console.log("ajax.done html:",html)
         $("#imageSelector").replaceWith(html);
         $("#gallery-selection" ).selectable({ 
-            filter: "li", 
+            filter: "li",
+            tolerance: "fit" ,
+            cancel: 'a',
             selecting: function( event, ui ) {
+                console.debug("selecting event target " + event.target);
                 if( $(".ui-selected, .ui-selecting").length > 1){
                     $(ui.selecting).removeClass("ui-selecting");
-                }else {
+                }
+                /* 
+                else {
                     console.log("Selected! This: ", this, " Event:  ", event , " ui: ", ui);                                
-                    /* var atomTitle = "<span id='img-title-label' class='label'> Title: </span><span id='img-title'>"+$(ui.selecting).find('.image-title').html()+"</span>";
+                    var atomTitle = "<span id='img-title-label' class='label'> Title: </span><span id='img-title'>"+$(ui.selecting).find('.image-title').html()+"</span>";
                     var atomId = "<span id='img-id-label' class='label'> Id: </span><span id='img-id'>"+$(ui.selecting).find('.image-id').html()+"</span>";
                     var atomURL = "<span id='img-url-label' class='label'> URL: </span><span id='img-url'>"+$(ui.selecting).find('.image-url').html()+"</span>";
                     var uiContent = "<p>" + atomTitle + atomId + atomURL + "</p>";
-                    $(".img-selected").html(uiContent);                    
-                    */
+                    $(".img-selected").html(uiContent);                                       
                 }
+                 */
             },
             
             unselecting: function( event, ui ) {
-               console.log("Unselected! This: ", this, " Event:  ", event , " ui: ", ui);                                
-               $(".img-selected").html("");
+               // console.log("Unselected! This: ", this, " Event:  ", event , " ui: ", ui);                                
+               // $(".img-selected").html("");
             }
         });
+        $("#gallery").find("img" ).tooltip();
+        /*
+        $("#gallery").find("img" ).tooltip({
+            position: {
+                my: "center bottom+50",
+                at: "center bottom"
+            },
+            open: function( event, ui ) {                
+                ui.tooltip.animate({ top: ui.tooltip.position().bottom - 10 }, "fast" );
+            }
+        });
+        */
         // $( "#gallery img" ).tooltip({ my: "right bottom+5", at: "right top" } );
         
     });
@@ -120,11 +147,11 @@ function loadImages(start, max) {
  * Clones the template 'image' entry and populates it with data
 */
 function addImage(){
-    console.log("add image: " + $("#img-id").html() + " to Wiki Entry");
+    console.log("add image: " + $(".ui-selected .image-id").html() + " to Wiki Entry");
     var liTemplate = $("#li-template").clone()
     
-    var imageTitle = $("#img-title").html();
-    var imageURL = $("#img-url").html();
+    var imageTitle = $(".ui-selected .image-title").html();
+    var imageURL = $(".ui-selected .image-url").html();
     
     var imageId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                 var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
