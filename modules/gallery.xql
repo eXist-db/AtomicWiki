@@ -128,7 +128,7 @@ function gallery:pagination-previous($node as node(), $model as map(*), $start a
                 $node/node()
             }
         else
-            ()
+            <div style="height:1px;width:1px"> </div>
 };
 
 declare 
