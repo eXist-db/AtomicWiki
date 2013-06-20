@@ -3,7 +3,7 @@ var editor;
 
 $(document).ready(function() {
     var form = $("#edit-form");
-    
+
     editor = new wysihtml5.Editor("description", { // id of textarea element
         toolbar:      "editor-toolbar", // id of toolbar element
     });
@@ -14,7 +14,9 @@ $(document).ready(function() {
         // console.dirxml(feedContent);        
     }
         
-    $("#gallery").on("click", ".add-image", function(event){
+    // $(document).tooltip();
+    
+    $("#gallery").on("click", ".add-image", function(event){        
         event.preventDefault();
         addImage();                
     }); 
@@ -55,11 +57,20 @@ $(document).ready(function() {
     });
     loadImages();
     $("#query-images").click(function (ev) {   
+        console.debug("clicke on load images button!")
        loadImages()
     });
+    
+    $('.form-search').submit(function(e) {
+        e.preventDefault;
+        loadImages();
+        return false;
+    });
+    
 });
 
 function loadImages(start, max) {
+    // console.debug("load images!")
     if(start) {
         // update hidden input name="start"
         $('#imagePickerStart').val(start);
@@ -114,7 +125,18 @@ function loadImages(start, max) {
                // $(".img-selected").html("");
             }
         });
-        $( "#gallery").find("img" ).tooltip();
+        $("#gallery").find("img" ).tooltip();
+        /*
+        $("#gallery").find("img" ).tooltip({
+            position: {
+                my: "center bottom+50",
+                at: "center bottom"
+            },
+            open: function( event, ui ) {                
+                ui.tooltip.animate({ top: ui.tooltip.position().bottom - 10 }, "fast" );
+            }
+        });
+        */
         // $( "#gallery img" ).tooltip({ my: "right bottom+5", at: "right top" } );
         
     });
