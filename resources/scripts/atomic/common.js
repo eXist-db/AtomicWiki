@@ -68,7 +68,8 @@ Atomic.app = (function () {
                     $("#perm-private").attr("checked", false);
                 }
             });
-            $(".login button").click(function(e) {
+            
+            function checkSubmit(e) {
                 e.preventDefault();
                 var my_form = $(".login");
                 $.ajax({
@@ -78,15 +79,23 @@ Atomic.app = (function () {
                     success: function(data) {
                         my_form.find(".error-msg").hide();
                         my_form.submit();
-                        //window.location.reload();
                     },
                     error: function (xhr, textStatus) {
-                        //$("#loginDialog").modal("show");
-                        //$(".error-msg").show();
                         my_form.find(".error-msg").show();
                     }
                 });
-            }); 
+            }
+            
+            $(".login button").click(function(e) {
+                checkSubmit(e);
+            });
+            $(".login").keypress(function(e) {
+                if (e.keyCode == 13) {
+                    checkSubmit(e);
+                    return false;
+                }
+            });
+
 //            prettyPrint();
         }
     };
