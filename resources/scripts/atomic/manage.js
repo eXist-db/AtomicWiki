@@ -107,7 +107,7 @@ Atomic.menu = (function () {
                             children[j].data.feed + "'/>";
                     }
                 } else {
-                    xml += "<link path='" + (entry.data.feed == null ? "/" : entry.data.feed) + "'/>";
+                    xml += "<link path='" + (entry.data.feed === undefined ? "/" : entry.data.feed) + "'/>";
                 }
                 xml += "</entry>";
             }
@@ -116,7 +116,7 @@ Atomic.menu = (function () {
                 url: "modules/edit-menu.xql",
                 type: "PUT",
                 contentType: "application/xml",
-                headers: { "X-AtomicFeed": feed },
+                headers: { "X-AtomicFeed": (entry.data.feed === undefined ? "/" : entry.data.feed) },
                 data: xml,
                 success: function(data) {
                     window.location.reload();
