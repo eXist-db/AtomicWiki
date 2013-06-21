@@ -68,6 +68,25 @@ Atomic.app = (function () {
                     $("#perm-private").attr("checked", false);
                 }
             });
+            $(".login button").click(function(e) {
+                e.preventDefault();
+                var my_form = $(".login");
+                $.ajax({
+                    url: "modules/checklogin.xql",
+                    dataType: "json",
+                    data: my_form.serialize(),
+                    success: function(data) {
+                        my_form.find(".error-msg").hide();
+                        my_form.submit();
+                        //window.location.reload();
+                    },
+                    error: function (xhr, textStatus) {
+                        //$("#loginDialog").modal("show");
+                        //$(".error-msg").show();
+                        my_form.find(".error-msg").show();
+                    }
+                });
+            }); 
 //            prettyPrint();
         }
     };
