@@ -207,6 +207,18 @@ Atomic.Form = (function () {
     };
 }());
 
+
+/* extend String object with encodeHTML function, if not exist */
+if (!String.prototype.encodeHTML) {
+  String.prototype.encodeHTML = function () {
+    return this.replace(/&/g, '&amp;')
+               .replace(/</g, '&lt;')
+               .replace(/>/g, '&gt;')
+               .replace(/"/g, '&quot;')
+               .replace(/'/g, '&apos;');
+  };
+}
+
 /* Debug and logging functions */
 (function($) {
     $.log = function() {
