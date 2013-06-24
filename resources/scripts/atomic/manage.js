@@ -100,10 +100,10 @@ Atomic.menu = (function () {
                 $.log("entry: %o", entry);
                 var children = entry.getChildren();
                 var isFolder = entry.hasChildren();
-                xml += "<entry title='" + entry.data.title + "' folder='" + isFolder + "'>";
+                xml += "<entry title='" + entry.data.title.encodeHTML() + "' folder='" + isFolder + "'>";
                 if (isFolder) {
                     for (var j = 0; j < children.length; j++) {
-                        xml += "<link title='" + children[j].data.title + "' path='" +
+                        xml += "<link title='" + children[j].data.title.encodeHTML() + "' path='" +
                             children[j].data.feed + "'/>";
                     }
                 } else {
