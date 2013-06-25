@@ -89,6 +89,9 @@ figure figcaption {
     border-bottom: 1px solid #CACACA;
 }
 
+p {
+    min-height: 1em;
+}
 h1 {
     font-family: "QuicksandBook", "Arial", Helvetica, sans-serif;
     font-size: 1.75em;

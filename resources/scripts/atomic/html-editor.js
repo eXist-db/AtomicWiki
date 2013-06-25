@@ -225,6 +225,14 @@ Atomic.editor.Editor = (function () {
         
         this.editor = editor;
         
+        /* workaround for missing paragraph at the end of the eidtor-area */
+        editor.on("focus", function(e) {
+            var my_body = $(".wysihtml5-sandbox").contents().find('body');
+            if (my_body.find('> :last-child').prop("nodeName") != "P") {
+                my_body.append("<p></p>");
+            }
+        });
+        
         var toolbar = $("#" + toolbarId);
         var dialog = $("#link-dialog");
         
@@ -423,7 +431,8 @@ $(document).ready(function() {
             $("textarea[name='summary']", form).val(summary);
         }
     }
-
+    
+    
     $("#summary-editor-tab").click(function (e) {
         e.preventDefault();
         if (!summaryEditor) {
