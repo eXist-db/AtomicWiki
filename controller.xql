@@ -70,6 +70,12 @@ try {
             <forward url="{$exist:controller}/modules/images.xql"/>
         </dispatch>
         
+    else if ($exist:resource = "ImageSelector.html") then 
+         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <view>
+                <forward url="{$exist:controller}/modules/view.xql"/>
+            </view>
+        </dispatch>
     else if (ends-with($exist:resource, ".xql")) then
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$exist:controller}/modules/{$exist:resource}">
@@ -103,7 +109,7 @@ try {
         (: The feed XML will be saved to a request attribute :)
         let $setAttr := request:set-attribute("feed", $feed)
         let $action := request:get-parameter("action", "view")
-        let $template := if ($feed) then theme:resolve(util:collection-name($feed), "feed.html", $root, $exist:controller) else ()
+        let $template := if ($feed) then theme:resolve-relative(util:collection-name($feed), "feed.html", $root, $exist:controller) else ()
         return
             if ($feed) then
                 switch ($action)
@@ -153,6 +159,32 @@ try {
                                 </view>
                                 { $local:error-handler }
                             </dispatch>
+                  case "editgallery" case "addgallery" return
+                        let $template :="html-edit-gallery.html"
+                        let $gallery := request:get-parameter("gallery", ())
+                        let $feedCol := request:get-parameter("collection", "/db/apps/wiki/data" ) || "/_galleries"
+                        let $log := util:log("WARN", "URL: " || $feedCol)
+                        let $feed := if ($gallery) then 
+                            let $foo := $feedCol || '/' || $gallery || ".atom"
+                            let $log := util:log("WARN", "Opening Gallery: " || $foo)
+                            return doc($foo)
+                         else $feed
+                        let $setAttr := request:set-attribute("feed", $feed)
+                        let $setAttr := request:set-attribute("galleryName", $gallery)
+                        return
+                            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                                <forward url="{$exist:controller}/modules/store.xql">
+                                </forward>
+                                <forward url="{theme:resolve(util:collection-name($feed), $template, $root, $exist:controller)}">
+                                    <set-header name="Cache-Control" value="no-cache"/>
+                                </forward>
+                                <view>
+                                    <forward url="{$exist:controller}/modules/view.xql" absolute="no">
+                                        <add-parameter name="wiki-id" value="{$relPath[2]}"/>
+                                    </forward>
+                                </view>
+                                { $local:error-handler }
+                            </dispatch>                            
                     case "editfeed" return
                         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                             <forward url="{theme:resolve(util:collection-name($feed), 'unknown-feed.html', $root, $exist:controller)}">

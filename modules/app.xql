@@ -1,4 +1,4 @@
-xquery version "3.0";
+ xquery version "3.0";
 
 module namespace app="http://exist-db.org/xquery/app";
 
@@ -108,8 +108,7 @@ function app:previous-page($node as node(), $model as map(*), $start as xs:int) 
         let $prev := if ($start - $model("perPage") gt 1) then $start - $model("perPage") else 1
         return
             <a href="?start={$prev}" class="prev-page">{ templates:process($node/node(), $model) }</a>
-    else
-        ()
+    else ()
 };
 
 declare function app:entry($node as node(), $model as map(*), $feed as xs:string, $entry as xs:string) {
@@ -608,3 +607,4 @@ declare function app:ajax($node as node(), $model as map(*), $href as xs:anyURI)
     return
         <a id="{$id}" href="{$href}" class="load-async">{ $node/node() }</a>
 };
+
