@@ -5,10 +5,16 @@ $(document).ready(function() {
     var anchorEditor = new Atomic.editor.EditAnchor();
     var addGallery = new Atomic.editor.AddGalleryLink();
     var summaryEditor = null;
-    var contentEditor = new Atomic.editor.Editor("content-editor", sitemap, anchorEditor, addGallery);
     
+    var contentEditor = null;
+    if ($("#content-editor-tab").length) {
+        contentEditor = new Atomic.editor.Editor("content-editor", sitemap, anchorEditor, addGallery);
+    }    
     function updateForm() {
-        var content = contentEditor.editor.getValue(true);
+        var content = null;
+        if (contentEditor) {
+            content = contentEditor.editor.getValue(true);
+        }
         var summary = null;
         if (summaryEditor) {
             summary = summaryEditor.editor.getValue(true);
@@ -38,7 +44,9 @@ $(document).ready(function() {
 //        if (!form.checkValidity()) {
 //            return;
 //        }
-        contentEditor.deactivate();
+        if (contentEditor) {
+            contentEditor.deactivate();
+        }
         updateForm();
         $("input[name='action']", form).val("store");
         form.submit();
@@ -49,7 +57,9 @@ $(document).ready(function() {
         
 //        if (!form.checkValidity())
 //            return;
-        contentEditor.deactivate();
+        if (contentEditor) {
+            contentEditor.deactivate();
+        }
         updateForm();
         $("input[name='action']", form).val("store");
         var data = form.serialize() + "&unlock=false";
@@ -59,7 +69,9 @@ $(document).ready(function() {
             data: data,
             complete: function() {
                 $.log("Store completed");
-                contentEditor.activate();
+                if (contentEditor) {
+                    contentEditor.activate();
+                }
             }
         });
     });

@@ -9,12 +9,17 @@ import module namespace atomic="http://atomic.exist-db.org/xquery/atomic" at "at
 
 declare namespace store="http://atomic.exist-db.org/xquery/store";
 declare namespace atom="http://www.w3.org/2005/Atom";
+declare namespace html="http://www.w3.org/1999/xhtml";
 
 declare option exist:serialize "method=json media-type=text/javascript";
 
 declare variable $store:ERROR := xs:QName("store:error");
 
 declare function store:store-resource($collection, $name, $content, $mediaType) {
+    let $delete-if-exists := if (doc-available($collection || '/' || $name)) then 
+            xmldb:remove($collection, $name)
+            else ()
+        
     let $stored := xmldb:store($collection, $name, $content, $mediaType)
     let $owner := sm:get-permissions(xs:anyURI($stored))/@owner
     return
@@ -24,7 +29,7 @@ declare function store:store-resource($collection, $name, $content, $mediaType) 
             ()
 };
 
-declare function store:process-content($editType as xs:string, $content as xs:string) {
+declare function store:process-content($editType as xs:string, $content as xs:string?) {
     if (string-length(normalize-space($content)) = 0) then
         ()
     else
@@ -84,6 +89,83 @@ declare function store:process-html($content as xs:string?) {
             store:relativize-links($parsed)
     else
         ()
+};
+
+(: 
+ <gallery title="galleryTitle" subtitle="gallerySubtitle">
+     <entry title="title" ctype="wiki|html" imageLink="link-to-the-webimage" vraLink="link-to-the-work-record>
+        <content>...</content>
+     </entry>
+ </gallery>
+:)
+declare function store:parse-gallery() {
+    let $data := request:get-parameter-names()
+    let $title := request:get-parameter("title", ())
+    let $name := request:get-parameter("name", ())
+    let $content := util:parse-html(request:get-parameter("content", ()))
+    let $log := if (false()) then
+        util:log("ERROR", $content)
+    else ()
+    return 
+        <gallery title="{$title}" name="{$name}">
+        {
+            for $entry in $content/HTML/BODY/li
+            return 
+                <entry title="{$entry//h3[@class='image-title']/text()}" ctype="html" imageLink="{$entry//*[contains(@class, 'gallery-item-image')]/a/@href}">
+                    <content>{$entry//*[@class='image-desc']}</content>
+                </entry>
+        }
+        </gallery>
+};
+
+declare function store:gallery($gallery as node()) {
+    let $collection := request:get-parameter("collection", ())
+    
+    let $feed := 
+     <atom:feed>
+        <atom:id>{util:uuid()}</atom:id>
+        <atom:updated>{current-dateTime()}</atom:updated>
+        <atom:title>{data($gallery/@title)}</atom:title>
+        <atom:author>
+            <atom:name>{ xmldb:get-current-user() }</atom:name>
+        </atom:author>
+        <category scheme="http://exist-db.org/NS/wiki/type/" term="wiki"/>
+        { 
+            for $entry in $gallery/entry 
+            let $gallery := store:gallery-entry($entry)
+            let $log := if (false()) then
+                util:log("ERROR", "GALLERY: " || $gallery)
+            else ()
+            return $gallery
+        }        
+     </atom:feed>
+    
+    let $atomResource := $gallery/@name || ".atom"
+    let $coll := store:create-collection(replace($collection, '/_galleries', '')) || "/_galleries"
+    let $log := util:log("WARN", ("Creating Gallery: " || $atomResource || " at " || $coll))
+    let $stored := store:store-resource($coll, $atomResource, $feed, "application/atom+xml")
+    return
+        <result status="ok"/>
+};
+
+declare function store:gallery-entry($entry as node()) {
+    let $parsed := store:process-content($entry/@ctype, util:serialize($entry//content/div/*, ()))
+    let $contentType := if ($entry/@ctype = ("wiki", "html")) then "html" else $entry/@ctype
+    return
+        <atom:entry>
+            <atom:id>{util:uuid()}</atom:id>
+            <atom:published>{current-dateTime()}</atom:published>
+            <atom:updated>{current-dateTime()}</atom:updated>
+            <atom:author>
+                <atom:name>{xmldb:get-current-user()}</atom:name>
+            </atom:author>
+            <atom:title>{data($entry/@title)}</atom:title>
+            <atom:link type="image/jpeg" href="{data($entry/@imageLink)}"/>
+            <atom:link href="{$entry/@vraLink}"/>
+            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="{$contentType}">
+                {$parsed}
+            </atom:content>
+        </atom:entry>
 };
 
 declare function store:article() {
@@ -264,6 +346,7 @@ declare function store:validate() {
 
 let $action := request:get-parameter("action", "store")
 let $id := request:get-parameter("entryId", ())
+let $type := request:get-parameter("ctype", "html")
 return
 (:    try {:)
         if (request:get-parameter("validate", ())) then
@@ -276,7 +359,10 @@ return
                     store:delete-article()
                 case "store" return
                     if ($id) then 
-                        store:article()
+                        if ($type eq 'gallery') then
+                            store:gallery(store:parse-gallery())                        
+                        else
+                            store:article()
                     else 
                         store:collection()
                 default return
