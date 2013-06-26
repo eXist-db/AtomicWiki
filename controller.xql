@@ -109,7 +109,7 @@ try {
         (: The feed XML will be saved to a request attribute :)
         let $setAttr := request:set-attribute("feed", $feed)
         let $action := request:get-parameter("action", "view")
-        let $template := if ($feed) then theme:resolve-relative(util:collection-name($feed), "feed.html", $root, $exist:controller) else ()
+	let $template := if ($feed) then theme:resolve(util:collection-name($feed), "feed.html", $root, $exist:controller) else ()
         return
             if ($feed) then
                 switch ($action)
