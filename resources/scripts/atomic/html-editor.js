@@ -25,8 +25,7 @@ $(document).ready(function() {
     $("#summary-editor-tab").click(function (e) {
         e.preventDefault();
         if (!summaryEditor) {
-            summaryEditor = new Atomic.editor.Editor("summary-editor-content", "summary-editor-textarea", "summary-editor-toolbar", 
-                sitemap, anchorEditor);
+            summaryEditor = new Atomic.editor.Editor("summary-editor", sitemap, anchorEditor);
         }
         $(this).tab('show');
     });

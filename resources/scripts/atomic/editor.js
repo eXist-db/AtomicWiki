@@ -210,8 +210,8 @@ Atomic.editor.Editor = (function () {
 
         var content = document.getElementById(contentId);
         var textarea = document.getElementById(textareaId);
-        textarea.value = content.html;
-        content.remove;
+        textarea.value = content.innerHTML;
+        $(content).remove();
         
         
         wysihtml5.commands.alertBlock = Atomic.command.alert;
