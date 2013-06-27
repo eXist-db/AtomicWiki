@@ -227,7 +227,7 @@ Atomic.editor.Editor = (function () {
         this.editor = editor;
         
         /* workaround for missing paragraph at the end of the eidtor-area */
-        editor.on("focus", function(e) {
+        this.editor.on("focus", function(e) {
             var my_body = $(".wysihtml5-sandbox").contents().find('body');
             if (my_body.find('> :last-child').prop("nodeName") != "P") {
                 my_body.append("<p></p>");

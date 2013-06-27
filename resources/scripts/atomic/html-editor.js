@@ -15,7 +15,9 @@ $(document).ready(function() {
         content = contentEditor.editor.getValue(true);
         
         var summary = null;
-        summary = summaryEditor.editor.getValue(true);
+        if (summaryEditor) {
+            summary = summaryEditor.editor.getValue(true);
+        }
         
         var name = $("input[name='name']", form).val();
         form.attr("action", name);
@@ -56,7 +58,9 @@ $(document).ready(function() {
         
 //        if (!form.checkValidity())
 //            return;
-        contentEditor.deactivate();
+        if (contentEditor) {
+            contentEditor.deactivate();
+        }
         updateForm();
         $("input[name='action']", form).val("store");
         var data = form.serialize() + "&unlock=false";

@@ -220,7 +220,7 @@ function showModal(itemid) {
     
     $('#edit-gallery-item-dialog .apply-button').unbind('click');
     $('#edit-gallery-item-dialog .apply-button').click(function() {
-        $('#' + itemid + "-content").html(atomicEditor.editor.getValue());
+        $('#' + itemid + "-content").html(dialog.find("textarea[name=description]").val());
         $('#' + itemid + " h3").html(dialog.find("input[name=title]").val());
         dialog.modal('hide');
     });

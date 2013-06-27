@@ -168,7 +168,7 @@ declare %private function gallery:feed-to-html-image($imageURL as xs:string, $id
             </div>
             <div class="span10 gallery-item-caption">
                 <h3 class="image-title">{$title}</h3>
-                <div id="{$id}-desc"class="image-desc">{$description}</div>
+                <div id="{$id}-content"class="image-desc">{$description}</div>
                 <div class="gallery-item-controls pull-right">
                     <a class="btn btn-edit" onclick="showModal('{$id}')"><i class="icon-edit"></i></a>
                     <a class="btn btn-remove" onclick="removeItem('{$id}')"><i class="icon-remove"></i></a>
