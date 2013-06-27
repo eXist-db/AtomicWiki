@@ -661,6 +661,19 @@ table.permissions td {
     height: 600px;
 }
 
+#link-dialog {
+    min-width:600px;
+    min-height:600px;
+}
+
+#anchor-dialog {
+    min-width:600px;
+}
+
+#gallery-dialog {
+    min-width:600px;
+}
+
 #link-dialog .sitemap {
     height: 260px;
 }
