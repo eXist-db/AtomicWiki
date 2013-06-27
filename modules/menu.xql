@@ -38,7 +38,7 @@ declare function menu:site-menu($node as node(), $model as map(*)) {
             </nav>
 };
 
-declare function menu:site-menu-for-feed($feed as element(atom:feed)?, $recursive as xs:boolean) {
+declare function menu:site-menu-for-feed($feed as node()?, $recursive as xs:boolean) {
     if (exists($feed)) then
         let $nav := menu:find-nav(util:collection-name($feed), $recursive)
         let $nav :=
