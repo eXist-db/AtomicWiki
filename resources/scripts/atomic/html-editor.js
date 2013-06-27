@@ -5,8 +5,6 @@ $(document).ready(function() {
     var anchorEditor = new Atomic.editor.EditAnchor();
     var addGallery = new Atomic.editor.AddGalleryLink();
     var summaryEditor = null;
-    summaryEditor = new Atomic.editor.Editor("summary-editor-content", "summary-editor-textarea", "summary-editor-toolbar", sitemap, anchorEditor, addGallery);
-    $("#summary-editor-content").remove();
     
     var contentEditor = null;
     contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap, anchorEditor, addGallery);
@@ -31,7 +29,8 @@ $(document).ready(function() {
     $("#summary-editor-tab").click(function (e) {
         e.preventDefault();
         if (!summaryEditor) {
-            summaryEditor = new Atomic.editor.Editor("summary-editor", sitemap, anchorEditor);
+            summaryEditor = new Atomic.editor.Editor("summary-editor-content", "summary-editor-textarea", "summary-editor-toolbar", sitemap, anchorEditor, addGallery);
+            $("#summary-editor-content").remove();
         }
         $(this).tab('show');
     });
