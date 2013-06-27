@@ -306,7 +306,7 @@ Atomic.editor.Editor = (function () {
             if(addGallery){
                 addGallery.show(function(value, title) {
                     editor.composer.commands.exec("insertHTML", 
-                        "<div class='gallery:show-catalog gallery-placeholder' id='" + value + "'>Image Gallery: " + title + "</div><p></p>");
+                        "<div class='gallery:show-catalog gallery-placeholder' id='" + value + "'>Image Slideshow: " + title + "</div><p></p>");
                 });
                 return false;
             }
