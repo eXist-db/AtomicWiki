@@ -119,7 +119,7 @@ declare function store:parse-gallery() {
 };
 
 declare function store:gallery($gallery as node()) {
-    let $collection := request:get-parameter("collection", ())
+    let $collection := request:get-parameter("gallery-coll", ())
     
     let $feed := 
      <atom:feed>
