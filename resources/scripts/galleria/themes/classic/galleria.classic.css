@@ -86,9 +86,9 @@
 }
 
 .galleria-info {
-    width: 220px;
+    width: 340px;
     top: 15px;
-    left: -200px;
+    left: -320px;
     z-index: 7;
     opacity: .7;
     filter: alpha(opacity=70);
@@ -96,6 +96,7 @@
     overflow: none;
     height: 530px;
 }
+
 .galleria-info-text {
     background-color: #000;
     padding: 10px;
