@@ -5,20 +5,20 @@ $(document).ready(function() {
     var anchorEditor = new Atomic.editor.EditAnchor();
     var addGallery = new Atomic.editor.AddGalleryLink();
     var summaryEditor = null;
+    summaryEditor = new Atomic.editor.Editor("summary-editor-content", "summary-editor-textarea", "summary-editor-toolbar", sitemap, anchorEditor, addGallery);
+    $("#summary-editor-content").remove();
     
     var contentEditor = null;
-    if ($("#content-editor-tab").length) {
-        contentEditor = new Atomic.editor.Editor("content-editor", sitemap, anchorEditor, addGallery);
-    }    
+    contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap, anchorEditor, addGallery);
+    $("#content-editor-content").remove();
+        
     function updateForm() {
         var content = null;
-        if (contentEditor) {
-            content = contentEditor.editor.getValue(true);
-        }
+        content = contentEditor.editor.getValue(true);
+        
         var summary = null;
-        if (summaryEditor) {
-            summary = summaryEditor.editor.getValue(true);
-        }
+        summary = summaryEditor.editor.getValue(true);
+        
         var name = $("input[name='name']", form).val();
         form.attr("action", name);
         $("textarea[name='content']", form).val(content);
@@ -57,9 +57,7 @@ $(document).ready(function() {
         
 //        if (!form.checkValidity())
 //            return;
-        if (contentEditor) {
-            contentEditor.deactivate();
-        }
+        contentEditor.deactivate();
         updateForm();
         $("input[name='action']", form).val("store");
         var data = form.serialize() + "&unlock=false";

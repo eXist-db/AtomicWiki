@@ -199,20 +199,16 @@ Atomic.editor.CodeEditor = (function () {
     
 Atomic.namespace("Atomic.editor.Editor");
 
+
 Atomic.editor.Editor = (function () {
 
-    Constr = function(ID, sitemap, anchorEditor, addGallery) {
+    Constr = function(contentId, textareaId, toolbarId, sitemap, anchorEditor, addGallery) {
         this.codeEditors = [];
         
-        var contentId = (ID + "-content");
-        var textareaId = (ID + "-textarea");
-        var toolbarId = (ID + "-toolbar");
-
         var content = document.getElementById(contentId);
         var textarea = document.getElementById(textareaId);
         textarea.value = content.innerHTML;
-        $(content).remove();
-        
+        //$(content).remove();
         
         wysihtml5.commands.alertBlock = Atomic.command.alert;
         wysihtml5.commands.insertImage = Atomic.command.figure;
