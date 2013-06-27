@@ -97,22 +97,44 @@ if ($('.galleria').length !== 0) {
         var info = self.$('info-link,info-close,info-text');
         
         self.bind("fullscreen_enter", function(e) {
-            $('.galleria-info-link').removeClass('galleria-active');
+            self.$('info-link').removeClass('galleria-active');
             self.$('info-link').click();
-            var my_h = $(".galleria-stage").height();
-            $(".galleria-info").height(my_h - 100);
-            $(".galleria-info-link").height(my_h - 100);
-            $(".galleria-info-text").height(my_h - 110);
+            var my_h = self.$("stage").height();
+            self.$("info").height(my_h - 100);
+            self.$("info-link").height(my_h - 100);
+            self.$("info-text").height(my_h - 110);
             
         });
         
         self.bind("fullscreen_exit", function(e) {
-            var my_h = $(".galleria-stage").height();
-            $(".galleria-info").height(my_h - 100);
-            $(".galleria-info-link").height(my_h - 100);
-            $(".galleria-info-text").height(my_h - 110);
+            self.resize();
+            var my_h = self.$("stage").height();
+            self.$("info").height(my_h - 100);
+            self.$("info-link").height(my_h - 100);
+            self.$("info-text").height(my_h - 110);
         });
         
+        self.$('info-link').bind( 'click',function(e) {
+            if( ! self.$('info-link').hasClass('galleria-active')){
+                self.$('info-link').addClass('galleria-active');
+  
+                self.$('stage').stop().animate({"margin-left":"360"}, 500, function() {
+                    self.refreshImage().resize();
+                });
+                self.$('info').stop().animate({"left":"15px"}, 400, function() {
+                    self.$('info').css({"left":"15px"});
+                });
+            } else {
+                self.$('info-link').removeClass('galleria-active');
+                self.$('stage').stop().animate({"margin-left":"0"}, 500, function() {
+                    self.refreshImage().resize();
+                });
+                self.$('info').stop().animate({"left":"-320px"}, 400, function() {
+                    self.$('info').css({"left":"-320px"});
+                });
+            }
+        });
+            
         /* show infotext on startup */
         self.$('info-link').click();
 
