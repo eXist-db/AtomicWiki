@@ -1,13 +1,16 @@
-var editor;
+var atomicEditor;
+var sitemap;
+var anchorEditor;
+var addGallery;
 
 
 $(document).ready(function() {
     var form = $("#edit-form");
 
-    editor = new wysihtml5.Editor("description", { // id of textarea element
-        toolbar:      "editor-toolbar", // id of toolbar element
-    });
-    
+    sitemap = new Atomic.editor.EditLink();
+    anchorEditor = new Atomic.editor.EditAnchor();
+    addGallery = new Atomic.editor.AddGalleryLink();
+
      function updateForm() {
         var feedContent = $("#gallery-items").html();
         $("input[name='content']", form).val(feedContent);
@@ -153,18 +156,16 @@ function addImage(){
     var imageTitle = $(".ui-selected .image-title").html();
     var imageURL = $(".ui-selected .image-url").html();
     
-    var imageId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-                return v.toString(16);
-    });
-                    
+    var imageId = Atomic.util.uuid();
+    
     liTemplate.attr("id", imageId);    
     liTemplate.find(".thumb").attr("href",imageURL);
     liTemplate.find(".img-polaroid").attr("alt",imageTitle);
     liTemplate.find(".img-polaroid").attr("src",imageURL); 
     
     liTemplate.find(".image-title").html(imageTitle); 
-    liTemplate.find(".image-desc").attr("id", imageId + "-desc"); 
+    liTemplate.find(".image-desc").attr("id", imageId + "-content"); 
+    liTemplate.find(".image-desc").html($("<div><p>Enter your description here ...</p></div>")); 
     
     liTemplate.find(".btn-edit").click(function() {   
        showModal(imageId);
@@ -210,18 +211,16 @@ function removeItem(itemid) {
 function showModal(itemid) {
     var dialog = $('#edit-gallery-item-dialog');
     var itemTitle = $('#' + itemid + " h3").text();
-    var itemDesc = $('#' + itemid + "-desc article").html();
+    var itemDesc = $('#' + itemid + "-content article").html();
     
     dialog.find("input[name=title]").val(itemTitle);
-    /*
-    var anchorEditor = new Atomic.editor.EditAnchor();
-    var editor = new Atomic.editor.Editor(itemid + "desc", "description", "editor-toolbar", sitemap, anchorEditor);
-    */
-    editor.setValue(itemDesc, true);
+    
+    var atomicEditor = new Atomic.editor.Editor(itemid + "-content", "description", "editor-toolbar", sitemap, anchorEditor, addGallery);
+    atomicEditor.editor.setValue(itemDesc, true);
     
     $('#edit-gallery-item-dialog .apply-button').unbind('click');
     $('#edit-gallery-item-dialog .apply-button').click(function() {
-        $('#' + itemid + "-desc").html(editor.getValue());
+        $('#' + itemid + "-content").html(atomicEditor.editor.getValue());
         $('#' + itemid + " h3").html(dialog.find("input[name=title]").val());
         dialog.modal('hide');
     });

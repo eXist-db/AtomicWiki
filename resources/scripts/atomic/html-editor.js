@@ -7,18 +7,16 @@ $(document).ready(function() {
     var summaryEditor = null;
     
     var contentEditor = null;
-    if ($("#content-editor-tab").length) {
-        contentEditor = new Atomic.editor.Editor("content-editor", sitemap, anchorEditor, addGallery);
-    }    
+    contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap, anchorEditor, addGallery);
+    $("#content-editor-content").remove();
+        
     function updateForm() {
         var content = null;
-        if (contentEditor) {
-            content = contentEditor.editor.getValue(true);
-        }
+        content = contentEditor.editor.getValue(true);
+        
         var summary = null;
-        if (summaryEditor) {
-            summary = summaryEditor.editor.getValue(true);
-        }
+        summary = summaryEditor.editor.getValue(true);
+        
         var name = $("input[name='name']", form).val();
         form.attr("action", name);
         $("textarea[name='content']", form).val(content);
@@ -31,7 +29,8 @@ $(document).ready(function() {
     $("#summary-editor-tab").click(function (e) {
         e.preventDefault();
         if (!summaryEditor) {
-            summaryEditor = new Atomic.editor.Editor("summary-editor", sitemap, anchorEditor);
+            summaryEditor = new Atomic.editor.Editor("summary-editor-content", "summary-editor-textarea", "summary-editor-toolbar", sitemap, anchorEditor, addGallery);
+            $("#summary-editor-content").remove();
         }
         $(this).tab('show');
     });
@@ -57,9 +56,7 @@ $(document).ready(function() {
         
 //        if (!form.checkValidity())
 //            return;
-        if (contentEditor) {
-            contentEditor.deactivate();
-        }
+        contentEditor.deactivate();
         updateForm();
         $("input[name='action']", form).val("store");
         var data = form.serialize() + "&unlock=false";
