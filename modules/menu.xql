@@ -20,7 +20,7 @@ declare function menu:find-nav($collection as xs:string?, $recursive as xs:boole
 };
 
 declare function menu:site-menu($node as node(), $model as map(*)) {
-    let $feed := $model("feed")/atom:feed
+    let $feed := $model("feed")
     let $menu := menu:site-menu-for-feed($feed, true())
     return
         if ($menu) then
@@ -38,7 +38,7 @@ declare function menu:site-menu($node as node(), $model as map(*)) {
             </nav>
 };
 
-declare function menu:site-menu-for-feed($feed as element(atom:feed)?, $recursive as xs:boolean) {
+declare function menu:site-menu-for-feed($feed as node()?, $recursive as xs:boolean) {
     if (exists($feed)) then
         let $nav := menu:find-nav(util:collection-name($feed), $recursive)
         let $nav :=
