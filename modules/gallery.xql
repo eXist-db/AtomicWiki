@@ -86,6 +86,25 @@ declare function gallery:select-gallery($node as node(), $model as map(*)) {
 (:        :)
 (:};:)
 
+declare function gallery:build-gallery-edit-menu($node as node(), $model as map(*)) {
+    let $galleryCol := util:collection-name($model("feed"))
+    let $galleries := collection($galleryCol || "/_galleries")/atom:feed/atom:title
+    return
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"> Edit Slideshows </a>
+            <ul class="dropdown-menu pull-left">   
+                {
+                for $gallery in $galleries
+                let $feedname := replace(util:document-name($gallery),"(.*)\.atom","$1")
+                return
+                    <li>
+                    <a href=".?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery," "}</a>
+                    </li>
+                }  
+            </ul>
+        </li>
+};
+
 
 declare 
     %templates:wrap function gallery:gallery-title($node as node(), $model as map(*)) {
