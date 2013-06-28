@@ -220,7 +220,9 @@ declare
     %templates:wrap
     function gallery:hit-count($node as node(), $model as map(*), $start as xs:integer, $max as xs:integer) {
         let $resultCount:= count($model("result"))
-        let $text := "Page " || ceiling($start div $max) || " of " || ceiling($resultCount div $max)
+        let $text :=    if($resultCount = 0)
+                        then ("Found 0 matches")
+                        else ("Page " || ceiling($start div $max) || " of " || ceiling($resultCount div $max))
         return $text
 };
 
@@ -290,3 +292,13 @@ declare
                 </div>
             )else ()
     };
+    
+    declare 
+        %templates:wrap
+    function gallery:get-ziziphus-collections($node as node(), $model as map(*)) {
+        let $workRecords := distinct-values(data(collection('/db/resources/commons')//vra:vra/vra:work/@refid))
+        for $workRecord in $workRecords
+            return 
+                <option value="{$workRecord}">{data(collection('/db/resources/commons')//vra:vra/vra:work[@refid=$workRecord][1]/@source)}</option>
+    };
+    
