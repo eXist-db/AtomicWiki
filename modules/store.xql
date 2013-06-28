@@ -93,6 +93,9 @@ declare function store:process-html($content as xs:string?) {
 
 (: 
  <gallery title="galleryTitle" subtitle="gallerySubtitle">
+     <config>
+        <height>200px</heigth>
+     </config>
      <entry title="title" ctype="wiki|html" imageLink="link-to-the-webimage" vraLink="link-to-the-work-record">
         <content>...</content>
      </entry>
@@ -108,6 +111,14 @@ declare function store:parse-gallery() {
     else ()
     return 
         <gallery title="{$title}" name="{$name}">
+            <config>
+                <width>{request:get-parameter("width", ())}</width>
+                <height>{request:get-parameter("height", ())}</height>
+                <align>{request:get-parameter("align", ())}</align>
+                <intervall>{request:get-parameter("intervall", ())}</intervall>
+                <autoplay>{request:get-parameter("autoplay", ())}</autoplay>
+                <style>{request:get-parameter("style", ())}</style>
+            </config>
         {
             for $entry in $content/HTML/BODY/li
             return 
@@ -130,6 +141,10 @@ declare function store:gallery($gallery as node()) {
             <atom:name>{ xmldb:get-current-user() }</atom:name>
         </atom:author>
         <category scheme="http://exist-db.org/NS/wiki/type/" term="wiki"/>
+        {
+            for $entry in $gallery/config/*
+                return <wiki:config xmlns:wiki="http://exist-db.org/xquery/wiki" key="{local-name($entry)}" value="{$entry/text()}" />
+        }
         { 
             for $entry in $gallery/entry 
             let $gallery := store:gallery-entry($entry)
