@@ -1,13 +1,13 @@
-var atomicEditor;
+var linkEditor;
 var sitemap;
 var anchorEditor;
 var addGallery;
-
+var atomicEditor;
 
 $(document).ready(function() {
     var form = $("#edit-form");
 
-    sitemap = new Atomic.editor.EditLink();
+    linkEditor = new Atomic.editor.EditLink()
     anchorEditor = new Atomic.editor.EditAnchor();
     addGallery = new Atomic.editor.AddGalleryLink();
 
@@ -208,27 +208,9 @@ function removeItem(itemid) {
     }
 }
 
-function showModal(itemid) {
-    var dialog = $('#edit-gallery-item-dialog');
-    var itemTitle = $('#' + itemid + " h3").text();
-    var itemDesc = $('#' + itemid + "-content article").html();
-    
-    dialog.find("input[name=title]").val(itemTitle);
-    
-    var atomicEditor = new Atomic.editor.Editor(itemid + "-content", "description", "editor-toolbar", sitemap, anchorEditor, addGallery);
-    atomicEditor.editor.setValue(itemDesc, true);
-    
-    $('#edit-gallery-item-dialog .apply-button').unbind('click');
-    $('#edit-gallery-item-dialog .apply-button').click(function() {
-        $('#' + itemid + "-content").html(dialog.find("textarea[name=description]").val());
-        $('#' + itemid + " h3").html(dialog.find("input[name=title]").val());
-        dialog.modal('hide');
-    });
-    
-    
-    dialog.modal('show');
+function showSitemap(itemid) {
+    linkEditor.open();
 }
-
 
 function jumpTo(item){
     $('html,body').animate({scrollTop: item.offset().top},'slow');

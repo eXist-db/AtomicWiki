@@ -12,21 +12,28 @@ declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace html="http://www.w3.org/1999/xhtml";
 
 declare option exist:serialize "method=json media-type=text/javascript";
-
 declare variable $store:ERROR := xs:QName("store:error");
 
-declare function store:store-resource($collection, $name, $content, $mediaType) {
-    let $delete-if-exists := if (doc-available($collection || '/' || $name)) then 
-            xmldb:remove($collection, $name)
+
+declare function store:store-resource($nonono, $name, $content, $mediaType) {
+    let $deleted := if (doc-available($nonono || '/' || $name)) then 
+            xmldb:remove($nonono, $name)
             else ()
+            
+    let $found := collection($config:wiki-root)//atom:feed[atom:id = $content/atom:feed/atom:id]
+    let $delete-if-exists := for $item in $found 
+        return
+            xmldb:remove(util:collection-name($item), util:document-name($item))
         
-    let $stored := xmldb:store($collection, $name, $content, $mediaType)
+    let $stored := xmldb:store($nonono, $name, $content, $mediaType)
+    
     let $owner := sm:get-permissions(xs:anyURI($stored))/@owner
-    return
-        if ($owner = xmldb:get-current-user()) then
-            acl:change-permissions($stored)
-        else
-            ()
+    let $permissions :=                    
+                        if ($owner = xmldb:get-current-user()) then
+                            acl:change-permissions($stored)
+                        else
+                            ()
+    return $permissions
 };
 
 declare function store:process-content($editType as xs:string, $content as xs:string?) {
@@ -106,11 +113,12 @@ declare function store:parse-gallery() {
     let $title := request:get-parameter("title", ())
     let $name := request:get-parameter("name", ())
     let $content := util:parse-html(request:get-parameter("content", ()))
+    let $id := request:get-parameter("galleryId", util:uuid()) 
     let $log := if (false()) then
         util:log("ERROR", $content)
     else ()
     return 
-        <gallery title="{$title}" name="{$name}">
+        <gallery title="{$title}" name="{$name}" id="{$id}">
             <config>
                 <width>{request:get-parameter("width", ())}</width>
                 <height>{request:get-parameter("height", ())}</height>
@@ -130,11 +138,11 @@ declare function store:parse-gallery() {
 };
 
 declare function store:gallery($gallery as node()) {
-    let $collection := request:get-parameter("gallery-coll", "/db/apps/wiki/data")
+    let $collection1 := request:get-parameter("gallery-coll", "/db/apps/wiki/data")
     
     let $feed := 
      <atom:feed>
-        <atom:id>{util:uuid()}</atom:id>
+        <atom:id>{data($gallery/@id)}</atom:id>
         <atom:updated>{current-dateTime()}</atom:updated>
         <atom:title>{data($gallery/@title)}</atom:title>
         <atom:author>
@@ -142,23 +150,22 @@ declare function store:gallery($gallery as node()) {
         </atom:author>
         <category scheme="http://exist-db.org/NS/wiki/type/" term="wiki"/>
         {
+            (: do not copy if empty :)
             for $entry in $gallery/config/*
-                return <wiki:config xmlns:wiki="http://exist-db.org/xquery/wiki" key="{local-name($entry)}" value="{$entry/text()}" />
-        }
-        { 
+                return <wiki:config xmlns:wiki="http://exist-db.org/xquery/wiki" key="{local-name($entry)}" value="{$entry/text()}" />,
             for $entry in $gallery/entry 
-            let $gallery := store:gallery-entry($entry)
-            let $log := if (false()) then
-                util:log("ERROR", "GALLERY: " || $gallery)
-            else ()
-            return $gallery
-        }        
+                let $gallery := store:gallery-entry($entry)
+                let $log := if (false()) then
+                    util:log("ERROR", "GALLERY: " || $gallery)
+                else ()
+                return $gallery
+        }
      </atom:feed>
     
     let $atomResource := $gallery/@name || ".atom"
-    let $coll := store:create-collection(replace($collection, '/_galleries', '') || "/_galleries")
-    let $log := util:log("WARN", ("Creating Gallery: " || $atomResource || " at " || $coll))
-    let $stored := store:store-resource($coll, $atomResource, $feed, "application/atom+xml")
+    let $coll4 := store:create-collection(replace($collection1, '/_galleries', '') || "/_galleries")
+    let $log := util:log("WARN", ("Creating Gallery: " || $atomResource || " at " || $coll4))
+    let $stored := store:store-resource($coll4, $atomResource, $feed, "application/atom+xml")
     return
         <result status="ok"/>
 };
