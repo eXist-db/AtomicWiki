@@ -113,6 +113,16 @@ declare
 };
 
 declare 
+    %templates:wrap function gallery:gallery-id($node as node(), $model as map(*)) {
+    let $id := request:get-attribute("feed")/atom:feed/atom:id
+    return 
+        if ( $id ) then
+            attribute value { $id }
+        else 
+        attribute value { util:uuid() }
+};
+
+declare 
     %templates:wrap function gallery:gallery-subtitle($node as node(), $model as map(*)) {
         
     attribute value { request:get-attribute("galleryName") }
@@ -145,7 +155,7 @@ declare
                                 <h3 class="image-title"></h3>
                                 <div class="image-desc" id="" ></div>
                                 <div class="gallery-item-controls pull-right">
-                                    <a class="btn btn-edit"><i class="icon-edit"></i></a>
+                                    <a class="btn btn-edit" onclick="showSitemap('id')"><i class="icon-share-alt"></i></a>
                                     <a class="btn btn-remove"><i class="icon-remove"></i></a>
                                     <a class="btn btn-arrow-up"><i class="icon-arrow-up"></i></a>
                                     <a class="btn btn-arrow-down"><i class="icon-arrow-down"></i></a>
@@ -170,7 +180,7 @@ declare %private function gallery:feed-to-html-image($imageURL as xs:string, $id
                 <h3 class="image-title">{$title}</h3>
                 <div id="{$id}-content"class="image-desc">{$description}</div>
                 <div class="gallery-item-controls pull-right">
-                    <a class="btn btn-edit" onclick="showModal('{$id}')"><i class="icon-edit"></i></a>
+                    <a class="btn btn-edit"><i class="icon-share-alt"></i></a>
                     <a class="btn btn-remove" onclick="removeItem('{$id}')"><i class="icon-remove"></i></a>
                     <a class="btn btn-arrow-up" onclick="moveUp('{$id}')"><i class="icon-arrow-up"></i></a>
                     <a class="btn btn-arrow-down" onclick="moveDown('{$id}')"><i class="icon-arrow-down"></i></a>
