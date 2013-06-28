@@ -93,7 +93,7 @@ declare function store:process-html($content as xs:string?) {
 
 (: 
  <gallery title="galleryTitle" subtitle="gallerySubtitle">
-     <entry title="title" ctype="wiki|html" imageLink="link-to-the-webimage" vraLink="link-to-the-work-record>
+     <entry title="title" ctype="wiki|html" imageLink="link-to-the-webimage" vraLink="link-to-the-work-record">
         <content>...</content>
      </entry>
  </gallery>
@@ -119,7 +119,7 @@ declare function store:parse-gallery() {
 };
 
 declare function store:gallery($gallery as node()) {
-    let $collection := request:get-parameter("gallery-coll", ())
+    let $collection := request:get-parameter("gallery-coll", "/db/apps/wiki/data")
     
     let $feed := 
      <atom:feed>
@@ -141,7 +141,7 @@ declare function store:gallery($gallery as node()) {
      </atom:feed>
     
     let $atomResource := $gallery/@name || ".atom"
-    let $coll := store:create-collection(replace($collection, '/_galleries', '')) || "/_galleries"
+    let $coll := store:create-collection(replace($collection, '/_galleries', '') || "/_galleries")
     let $log := util:log("WARN", ("Creating Gallery: " || $atomResource || " at " || $coll))
     let $stored := store:store-resource($coll, $atomResource, $feed, "application/atom+xml")
     return
