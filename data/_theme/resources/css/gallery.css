@@ -80,6 +80,7 @@
 
 
 .galleryOpen .gallery-container {    
+    background-color:#F3F3F3 !important;    
     border: thin solid #000000;
     border-radius: 4px 4px 4px 4px;
     box-shadow: 10px 10px 5px gray;
@@ -145,6 +146,7 @@
     padding:0;
 }
 #gallery-selection { 
+    
     list-style-type: none; 
     margin: 0; 
     padding: 0;
