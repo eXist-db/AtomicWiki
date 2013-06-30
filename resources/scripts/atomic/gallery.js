@@ -8,7 +8,7 @@ var form;
 $(document).ready(function() {
     form = $("#edit-form");
 
-    linkEditor = new Atomic.editor.EditLink()    
+    linkEditor = new Atomic.editor.LinkToText();
     anchorEditor = new Atomic.editor.EditAnchor();
     addGallery = new Atomic.editor.AddGalleryLink();
 
@@ -145,14 +145,16 @@ function addImage(){
     liTemplate.find(".img-polaroid").attr("src",imageURL); 
     
     liTemplate.find(".image-title").html(imageTitle); 
-    liTemplate.find(".image-desc").attr("id", imageId + "-content"); 
-    liTemplate.find(".image-desc").html($("<div><p>Enter your description here ...</p></div>")); 
+    liTemplate.find(".image-desc span").attr("id", imageId + "-content");
+    liTemplate.find(".image-desc span").data("description", ""); 
+    liTemplate.find(".image-desc span").text("No description"); 
     
     liTemplate.find(".btn-edit").click(function() {   
         console.log("btn-edit clicked: imageId: ", imageId);
+        showSitemap(imageId);
        // showModal(imageId);
        // console.debug("show sitemap");
-    });    
+    });
     liTemplate.find(".btn-remove").click(function() {   
        removeItem(imageId);
     });    
@@ -193,13 +195,18 @@ function removeItem(itemid) {
 
 function showSitemap(imageEntryId, feedId) {
     console.log("opened sitemap: itemId: ", imageEntryId, " feed: ",feedId);
+    linkEditor.open(function(node) {
+        console.log("selected: %o", node);
+        $("#" + imageEntryId + "-content").text(node.data.title);
+        $("#" + imageEntryId + "-content").attr("data-description", node.data.key);
+    });
     /* linkEditor.open(imageEntryId, function() {
         console.debug("open xyz: itemId: ",imageEntryId);
     });*/
-    linkEditor.onSelect = function(data){
-        console.debug("selected item arguments: url:", data.url, " align: ", data.align);          
-        saveGallery(data.url, feedId, imageEntryId);        
-    };
+    // linkEditor.onSelect = function(data){
+    //     console.debug("selected item arguments: url:", data.url, " align: ", data.align);          
+    //     saveGallery(data.url, feedId, imageEntryId);        
+    // };
 
 }
 

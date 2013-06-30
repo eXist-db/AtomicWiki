@@ -393,7 +393,60 @@ Atomic.editor.EditAnchor = (function () {
     
     return Constr;
 }());
+
+Atomic.namespace("Atomic.editor.LinkToText");
+
+Atomic.editor.LinkToText = (function () {
     
+    Constr = function() {
+        var self = this;
+        this.dialog = $("#text-link-dialog");
+        this.dialog.modal({
+            keyboard: true,
+            show: false
+        });
+        this.sitemap = $(".sitemap", this.dialog);
+        this.sitemap.dynatree({
+            persist: false,
+            rootVisible: true,
+            minExpandLevel: 2,
+            initAjax: { url: "" },
+            clickFolderMode: 1,
+            autoFocus: true,
+            keyboard: false,
+            onPostInit: function() {
+                // var uuid = $("input[name='uuid']").val();
+                // var node = this.selectKey(uuid);
+                // if (node) {
+                //     node.expand(true);
+                // }
+            }
+        });
+        $(".close-button", this.dialog).click(function(ev) {
+            ev.preventDefault();
+            self.dialog.modal("hide");
+        });
+        $(".apply-button", this.dialog).click(function(ev) {
+            ev.preventDefault();
+            self.dialog.modal("hide");
+            if (self.onSelect) {
+                var current = self.sitemap.dynatree("getActiveNode");
+                self.onSelect(current);
+            }
+        });
+    };
+    
+    Constr.prototype.open = function(onSelect) {
+        this.onSelect = onSelect;
+        var tree = this.sitemap.dynatree("getTree");
+        tree.options.initAjax = { url: "modules/sitemap.xql?mode=gallery" };
+        tree.reload();
+        this.dialog.modal("show");
+    };
+    
+    return Constr;
+}());
+
 Atomic.namespace("Atomic.editor.EditLink");
 
 Atomic.editor.EditLink = (function () {
