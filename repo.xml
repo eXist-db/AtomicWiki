@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<repo:meta xmlns="http://exist-db.org/xquery/repo" xmlns:repo="http://exist-db.org/xquery/repo">
-    <repo:description>Redesign of AtomicWiki</repo:description>
-    <repo:author>Wolfgang Meier</repo:author>
-    <repo:website>http://atomic.exist-db.org</repo:website>
-    <repo:status>alpha</repo:status>
-    <repo:license>GNU-LGPL</repo:license>
-    <repo:copyright>true</repo:copyright>
-    <repo:type>application</repo:type>
-    <repo:target>/db/wiki</repo:target>
-    <repo:prepare>pre-install.xql</repo:prepare>
-    <repo:finish/>
-    <repo:permissions user="editor" password="editor" group="editors" mode="0664"/>
-    <deployed>2012-02-22T12:52:53.75+01:00</deployed>
-</repo:meta>
+<meta xmlns="http://exist-db.org/xquery/repo">
+    <description>Redesign of AtomicWiki</description>
+    <author>Wolfgang Meier</author>
+    <author>Denis Richter</author>
+    <author>Sabine Meier</author>
+    <author>Maciek Jerominek</author>
+    <author>Lars Windauer</author>
+    <author>Robert Netzschwitz</author>
+    <website>http://atomic.exist-db.org</website>
+    <status>alpha</status>
+    <license>GNU-LGPL</license>
+    <copyright>true</copyright>
+    <type>application</type>
+    <target>/db/wiki</target>
+    <prepare>pre-install.xql</prepare>
+    <finish/>
+    <permissions user="editor" password="editor" group="wiki" mode="0664"/>
+</meta>

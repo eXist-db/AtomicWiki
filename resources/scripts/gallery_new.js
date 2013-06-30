@@ -143,13 +143,15 @@ if ($('.galleria').length !== 0) {
     /* here we go. fire up galleria */
     Galleria.run('.galleria', {
         dataConfig: function(img) {
-        return {
+            var data = {
                 thumb: $(img).attr('src'),
                 image: $(img).attr('href'),
                 big: $(img).attr('data-big'),
-                title: $('a').siblings('h1').html(),
-                description: $('a').siblings(".description").html() // tell Galleria to grab the content from the .description div as caption
+                title: $(img).parent().siblings('h1').html(),
+                description: $(img).parent().siblings(".description").html() // tell Galleria to grab the content from the .description div as caption
             };
+            console.log("data: %o", data);
+            return data;
         }
     });
             

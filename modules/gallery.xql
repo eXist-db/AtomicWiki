@@ -15,6 +15,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
         if (empty($gallery-id)) then
             ()
         else
+            let $div :=
             <div class="galleria">
                 <div class="gallery-images">
                     <ul>
@@ -35,6 +36,9 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                     let $src_thumb := $src || "thumb.jpg"
                     let $src_big := $src || "big.jpg"
                     :)
+                    let $contentSrc := $entry/atom:content/@src
+                    let $contentEntry := collection($config:wiki-root)/atom:entry[atom:id = $contentSrc]
+                    let $contentHtml := doc(util:collection-name($contentEntry) || "/" || $contentEntry/atom:content/@src)/*/*
                     return
                         <li>
                         {
@@ -48,7 +52,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                             <a href="{$src}"><img data-big="{$src}" src="{$src}" /></a>
                             <span class="description" style="display: none;">
                                 <h1>{$entry/atom:title/text()}</h1>
-                                {$entry/atom:content/*}
+                                {$contentHtml}
                                 <ul><h3>Meta Daten:</h3>
                                     <li>vra-ID:{$vraMetaID}</li>
                                     <li>agent: {$vraMetaImageAgentName}</li>
@@ -62,6 +66,8 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                     </ul>
                 </div>
             </div>
+        return
+            $div
 };
 
 declare function gallery:select-gallery($node as node(), $model as map(*)) {
@@ -135,8 +141,14 @@ declare
         
         let $imageList :=
             for $entry in $entries/atom:feed/atom:entry
-                return 
-                    gallery:feed-to-html-image($entries/atom:feed/atom:id, data($entry/atom:link[1]/@href), $entry/atom:id, $entry/atom:title/text(), util:parse-html($entry/atom:content/text()))
+            return 
+                gallery:feed-to-html-image(
+                    $entries/atom:feed/atom:id, 
+                    data($entry/atom:link[1]/@href), 
+                    $entry/atom:id, 
+                    $entry/atom:title/text(), 
+                    $entry/atom:content/@src
+                )
         return
             (
                 <ul id="gallery-items">
@@ -167,28 +179,31 @@ declare
             )
 };
 
-declare %private function gallery:feed-to-html-image($feedId as xs:string, $imageURL as xs:string, $id as xs:string, $title as xs:string, $description as item()*) {
-    <li id="{$id}" class="container gallery-item-row img-rounded">
-        <div class="row">
-            <div class="span2 gallery-item-image">
-                <a class="thumb" target="blank_" href="{$imageURL}" data-image-id="{$id}">
-                    <img alt="{$title}" class="img-polaroid"  
-                         src="{$imageURL}"/>
-                </a>
-            </div>
-            <div class="span10 gallery-item-caption">
-                <h3 class="image-title">{$title}</h3>
-                <div id="{$id}-content"class="image-desc">{$description}</div>
-                <div class="gallery-item-controls pull-right">                
-                    <a class="btn btn-edit" onclick="showSitemap('{$id}','{$feedId}')"><i class="icon-share-alt"></i></a>
-                    <a class="btn btn-remove" onclick="removeItem('{$id}')"><i class="icon-remove"></i></a>
-                    <a class="btn btn-arrow-up" onclick="moveUp('{$id}')"><i class="icon-arrow-up"></i></a>
-                    <a class="btn btn-arrow-down" onclick="moveDown('{$id}')"><i class="icon-arrow-down"></i></a>
+declare %private function gallery:feed-to-html-image($feedId as xs:string, $imageURL as xs:string, $id as xs:string, $title as xs:string, $src as item()*) {
+    let $description := collection($config:wiki-root)/atom:entry[atom:id = $src]
+    return
+        <li id="{$id}" class="container gallery-item-row img-rounded">
+            <div class="row">
+                <div class="span2 gallery-item-image">
+                    <a class="thumb" target="blank_" href="{$imageURL}" data-image-id="{$id}">
+                        <img alt="{$title}" class="img-polaroid"  
+                             src="{$imageURL}"/>
+                    </a>
+                </div>
+                <div class="span10 gallery-item-caption">
+                    <h3 class="image-title">{$title}</h3>
+                    <div class="image-desc">
+                        Image description taken from entry: <span id="{$id}-content" data-description="{$src}">{$description/atom:title/text()}</span>
+                    </div>
+                    <div class="gallery-item-controls pull-right">                
+                        <a class="btn btn-edit" onclick="showSitemap('{$id}','{$feedId}')"><i class="icon-share-alt"></i></a>
+                        <a class="btn btn-remove" onclick="removeItem('{$id}')"><i class="icon-remove"></i></a>
+                        <a class="btn btn-arrow-up" onclick="moveUp('{$id}')"><i class="icon-arrow-up"></i></a>
+                        <a class="btn btn-arrow-down" onclick="moveDown('{$id}')"><i class="icon-arrow-down"></i></a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </li>
-  
+        </li>
 };
 
 declare 

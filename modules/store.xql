@@ -118,7 +118,7 @@ declare function store:parse-gallery() {
     let $log := if (false()) then
         util:log("ERROR", $content)
     else ()
-    return 
+    let $result := 
         <gallery title="{$title}" name="{$name}" id="{$id}">
             <config>
                 <width>{request:get-parameter("width", ())}</width>
@@ -131,11 +131,13 @@ declare function store:parse-gallery() {
         {
             for $entry in $content/HTML/BODY/li
             return 
-                <entry title="{$entry//h3[@class='image-title']/text()}" ctype="html" imageLink="{$entry//*[contains(@class, 'gallery-item-image')]/a/@href}" imageId="{$entry//*[contains(@class, 'gallery-item-image')]/a/@data-image-id}">
-                    <content>{$entry//*[@class='image-desc']}</content>
+                <entry title="{$entry//h3[@class='image-title']/text()}" ctype="html" imageLink="{$entry//*[contains(@class, 'gallery-item-image')]/a/@href}" imageId="{$entry//*[contains(@class, 'gallery-item-image')]/a/@data-image-id}"
+                    contentLink="{$entry//*[@class='image-desc']/span/@data-description}">
                 </entry>
         }
         </gallery>
+    return
+        $result
 };
 
 declare function store:gallery($gallery as node()) {
@@ -172,7 +174,6 @@ declare function store:gallery($gallery as node()) {
 };
 
 declare function store:gallery-entry($entry as node()) {
-    let $parsed := store:process-content($entry/@ctype, util:serialize($entry//content/div/*, ()))
     let $contentType := if ($entry/@ctype = ("wiki", "html")) then "html" else $entry/@ctype
     let $imageId := if(string-length($entry/@imageId) gt 0) then data($entry/@imageId) else util:uuid()
     return
@@ -187,9 +188,7 @@ declare function store:gallery-entry($entry as node()) {
             <atom:link type="image/jpeg" href="{data($entry/@imageLink)}"/>
             <atom:link href="{$entry/@vraLink}"/>
             <atom:link href="{$entry/@wikiLink}" />
-            <atom:content xmlns="http://www.w3.org/1999/xhtml" type="{$contentType}">
-                {$parsed}
-            </atom:content>
+            <atom:content type="html" src="{$entry/@contentLink}"/>
         </atom:entry>
 };
 
