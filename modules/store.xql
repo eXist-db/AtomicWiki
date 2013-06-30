@@ -15,17 +15,18 @@ declare option exist:serialize "method=json media-type=text/javascript";
 declare variable $store:ERROR := xs:QName("store:error");
 
 
-declare function store:store-resource($nonono, $name, $content, $mediaType) {
-    let $deleted := if (doc-available($nonono || '/' || $name)) then 
-            xmldb:remove($nonono, $name)
+declare function store:store-resource($collection, $name, $content, $mediaType) {
+    let $log1 := util:log("ERROR", "collection: " || $collection|| " name: " || $name)
+    let $deleted := if (doc-available($collection || '/' || $name)) then
+            xmldb:remove($collection, $name)
             else ()
             
-    let $found := collection($config:wiki-root)//atom:feed[atom:id = $content/atom:feed/atom:id]
+    let $found := collection($config:wiki-root)//atom:feed[atom:id = $content/atom:id]
     let $delete-if-exists := for $item in $found 
         return
             xmldb:remove(util:collection-name($item), util:document-name($item))
         
-    let $stored := xmldb:store($nonono, $name, $content, $mediaType)
+    let $stored := xmldb:store($collection, $name, $content, $mediaType)
     
     let $owner := sm:get-permissions(xs:anyURI($stored))/@owner
     let $permissions :=                    
@@ -184,6 +185,7 @@ declare function store:gallery-entry($entry as node()) {
             <atom:title>{data($entry/@title)}</atom:title>
             <atom:link type="image/jpeg" href="{data($entry/@imageLink)}"/>
             <atom:link href="{$entry/@vraLink}"/>
+            <atom:link href="{$entry/@wikiLink}" />
             <atom:content xmlns="http://www.w3.org/1999/xhtml" type="{$contentType}">
                 {$parsed}
             </atom:content>

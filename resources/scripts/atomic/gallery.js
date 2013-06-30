@@ -7,7 +7,11 @@ var atomicEditor;
 $(document).ready(function() {
     var form = $("#edit-form");
 
-    linkEditor = new Atomic.editor.EditLink()
+    linkEditor = new Atomic.editor.EditLink()    
+    linkEditor.onSelect = function(data){
+        console.debug("selected item arguments: ", data);  
+    };
+    
     anchorEditor = new Atomic.editor.EditAnchor();
     addGallery = new Atomic.editor.AddGalleryLink();
 
@@ -168,7 +172,9 @@ function addImage(){
     liTemplate.find(".image-desc").html($("<div><p>Enter your description here ...</p></div>")); 
     
     liTemplate.find(".btn-edit").click(function() {   
-       showModal(imageId);
+        console.log("btn-edit clicked: imageId: ", imageId);
+       // showModal(imageId);
+       // console.debug("show sitemap");
     });    
     liTemplate.find(".btn-remove").click(function() {   
        removeItem(imageId);
@@ -209,7 +215,14 @@ function removeItem(itemid) {
 }
 
 function showSitemap(itemid) {
-    linkEditor.open();
+    console.log("opened sitemap: itemId: ", itemid);
+    linkEditor.open(itemid, function() {
+        console.debug("open xyz: itemId: ",itemid);
+    });
+    linkEditor.onSelect = function(data){
+        console.debug("selected item arguments: ", data);  
+    };
+
 }
 
 function jumpTo(item){
