@@ -40,14 +40,14 @@ declare function acl:show-permissions($node as node(), $model as map(*)) {
             let $permissions := sm:get-permissions($doc)
             let $owner := $permissions/@owner/string()
             return
-                if ($owner = xmldb:get-current-user()) then
-                    let $processed := templates:copy-node($node, $model)
-                    return
-                        acl:process-permissions($processed, $permissions/*)
-                else
+                if ($owner != xmldb:get-current-user()) then
                     <tr>
                         <td>Only the user who created an article is allowed to change permissions.</td>
                     </tr>
+                else
+                    let $processed := templates:copy-node($node, $model)
+                    return
+                        acl:process-permissions($processed, $permissions/*)
         else
             templates:copy-node($node, $model)
 };

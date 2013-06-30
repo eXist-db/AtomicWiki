@@ -30,10 +30,10 @@ declare function store:store-resource($collection, $name, $content, $mediaType) 
     
     let $owner := sm:get-permissions(xs:anyURI($stored))/@owner
     let $permissions :=                    
-                        if ($owner = xmldb:get-current-user()) then
-                            acl:change-permissions($stored)
-                        else
-                            ()
+        if ($owner != xmldb:get-current-user()) then
+            ()
+        else
+            acl:change-permissions($stored)
     return $permissions
 };
 
