@@ -98,13 +98,13 @@ declare function gallery:build-gallery-edit-menu($node as node(), $model as map(
     return
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"> Edit Slideshows </a>
-            <ul class="dropdown-menu pull-left">   
+            <ul class="dropdown-menu">   
                 {
                 for $gallery in $galleries
                 let $feedname := replace(util:document-name($gallery),"(.*)\.atom","$1")
                 return
                     <li>
-                    <a href=".?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery," "}</a>
+                    <a href=".?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery/text()," "}</a>
                     </li>
                 }  
             </ul>
@@ -165,7 +165,7 @@ declare
                             </div>
                             <div class="span10 gallery-item-caption">
                                 <h3 class="image-title"></h3>
-                                <div class="image-desc" id="" ></div>
+                                <div class="image-desc">Image description taken from entry: <span id="" data-description=""></span></div>
                                 <div class="gallery-item-controls pull-right">
                                     <a class="btn btn-edit"><i class="icon-share-alt"></i></a>
                                     <a class="btn btn-remove"><i class="icon-remove"></i></a>

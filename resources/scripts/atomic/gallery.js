@@ -146,7 +146,7 @@ function addImage(){
     
     liTemplate.find(".image-title").html(imageTitle); 
     liTemplate.find(".image-desc span").attr("id", imageId + "-content");
-    liTemplate.find(".image-desc span").data("description", ""); 
+    liTemplate.find(".image-desc span").attr("data-description", ""); 
     liTemplate.find(".image-desc span").text("No description"); 
     
     liTemplate.find(".btn-edit").click(function() {   
