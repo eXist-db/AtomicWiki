@@ -8,10 +8,6 @@ $(document).ready(function() {
     var form = $("#edit-form");
 
     linkEditor = new Atomic.editor.EditLink()    
-    linkEditor.onSelect = function(data){
-        console.debug("selected item arguments: ", data);  
-    };
-    
     anchorEditor = new Atomic.editor.EditAnchor();
     addGallery = new Atomic.editor.AddGalleryLink();
 
@@ -220,7 +216,8 @@ function showSitemap(itemid) {
         console.debug("open xyz: itemId: ",itemid);
     });
     linkEditor.onSelect = function(data){
-        console.debug("selected item arguments: ", data);  
+        console.debug("selected item arguments: url:", data.url, " align: ", data.align);  
+        window.location = data.url + "?action=edit&image="+itemid;
     };
 
 }
