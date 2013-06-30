@@ -16,7 +16,7 @@ declare variable $store:ERROR := xs:QName("store:error");
 
 
 declare function store:store-resource($collection, $name, $content, $mediaType) {
-    let $log1 := util:log("ERROR", "collection: " || $collection|| " name: " || $name)
+    (: let $log1 := util:log("ERROR", "collection: " || $collection|| " name: " || $name):)
     let $deleted := if (doc-available($collection || '/' || $name)) then
             xmldb:remove($collection, $name)
             else ()
