@@ -3,44 +3,25 @@ var sitemap;
 var anchorEditor;
 var addGallery;
 var atomicEditor;
+var form;
 
 $(document).ready(function() {
-    var form = $("#edit-form");
+    form = $("#edit-form");
 
     linkEditor = new Atomic.editor.EditLink()    
     anchorEditor = new Atomic.editor.EditAnchor();
     addGallery = new Atomic.editor.AddGalleryLink();
 
-     function updateForm() {
-        var feedContent = $("#gallery-items").html();
-        $("input[name='content']", form).val(feedContent);
-        // console.dirxml(feedContent);        
-    }
-        
-    // $(document).tooltip();
+// $(document).tooltip();
     
     $("#gallery").on("click", ".add-image", function(event){        
         event.preventDefault();
         addImage();                
     }); 
     
-    $("#edit-form-save").click(function (e){        
+    $("#edit-form-save").click(function (e){                
         e.preventDefault();
-            
-        $("input[name='action']", form).val("store");
-        $("input[name='ctype']", form).val("gallery");
-        
-        updateForm();
-        var data = form.serialize() + "&unlock=false";
-        $.ajax({
-            type: "POST",
-            url: "modules/store.xql",
-            data: data,
-            complete: function() {
-                $.log("Store completed");
-            }
-        });        
-    
+        saveGallery();    
     });
     
     $("#edit-form-saveAndClose").click(function(ev) {
@@ -210,16 +191,40 @@ function removeItem(itemid) {
     }
 }
 
-function showSitemap(itemid) {
-    console.log("opened sitemap: itemId: ", itemid);
-    linkEditor.open(itemid, function() {
-        console.debug("open xyz: itemId: ",itemid);
-    });
+function showSitemap(imageEntryId, feedId) {
+    console.log("opened sitemap: itemId: ", imageEntryId, " feed: ",feedId);
+    /* linkEditor.open(imageEntryId, function() {
+        console.debug("open xyz: itemId: ",imageEntryId);
+    });*/
     linkEditor.onSelect = function(data){
-        console.debug("selected item arguments: url:", data.url, " align: ", data.align);  
-        window.location = data.url + "?action=edit&image="+itemid;
+        console.debug("selected item arguments: url:", data.url, " align: ", data.align);          
+        saveGallery(data.url, feedId, imageEntryId);        
     };
 
+}
+
+function saveGallery(feedURL, feedId, imageEntryId) {
+    $.log("save Gallery feedURL:",feedURL, " imageEntryId: ",imageEntryId, " feedId: ",feedId);
+    $("input[name='action']", form).val("store");
+    $("input[name='ctype']", form).val("gallery");
+    
+    updateForm();
+    var data = form.serialize() + "&unlock=false";
+    $.ajax({
+        type: "POST",
+        url: "modules/store.xql",
+        data: data,
+        complete: function() {
+            $.log("Store completed feedURL: ",feedURL, " imageEntryId: ",imageEntryId, " feedId: ",feedId);
+            window.location = feedURL + "?action=edit&image="+imageEntryId+"&feed=" + feedId;
+        }
+    });            
+
+}
+function updateForm() {
+    var feedContent = $("#gallery-items").html();
+    $("input[name='content']", form).val(feedContent);
+    // console.dirxml(feedContent);        
 }
 
 function jumpTo(item){

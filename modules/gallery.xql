@@ -136,7 +136,7 @@ declare
         let $imageList :=
             for $entry in $entries/atom:feed/atom:entry
                 return 
-                    gallery:feed-to-html-image(data($entry/atom:link[1]/@href), $entry/atom:id, $entry/atom:title/text(), util:parse-html($entry/atom:content/text()))
+                    gallery:feed-to-html-image($entries/atom:feed/atom:id, data($entry/atom:link[1]/@href), $entry/atom:id, $entry/atom:title/text(), util:parse-html($entry/atom:content/text()))
         return
             (
                 <ul id="gallery-items">
@@ -167,7 +167,7 @@ declare
             )
 };
 
-declare %private function gallery:feed-to-html-image($imageURL as xs:string, $id as xs:string, $title as xs:string, $description as item()*) {
+declare %private function gallery:feed-to-html-image($feedId as xs:string, $imageURL as xs:string, $id as xs:string, $title as xs:string, $description as item()*) {
     <li id="{$id}" class="container gallery-item-row img-rounded">
         <div class="row">
             <div class="span2 gallery-item-image">
@@ -180,7 +180,7 @@ declare %private function gallery:feed-to-html-image($imageURL as xs:string, $id
                 <h3 class="image-title">{$title}</h3>
                 <div id="{$id}-content"class="image-desc">{$description}</div>
                 <div class="gallery-item-controls pull-right">                
-                    <a class="btn btn-edit" onclick="showSitemap('{$id}')"><i class="icon-share-alt"></i></a>
+                    <a class="btn btn-edit" onclick="showSitemap('{$id}','{$feedId}')"><i class="icon-share-alt"></i></a>
                     <a class="btn btn-remove" onclick="removeItem('{$id}')"><i class="icon-remove"></i></a>
                     <a class="btn btn-arrow-up" onclick="moveUp('{$id}')"><i class="icon-arrow-up"></i></a>
                     <a class="btn btn-arrow-down" onclick="moveDown('{$id}')"><i class="icon-arrow-down"></i></a>
