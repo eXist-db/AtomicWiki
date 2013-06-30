@@ -171,8 +171,8 @@ declare %private function gallery:feed-to-html-image($imageURL as xs:string, $id
     <li id="{$id}" class="container gallery-item-row img-rounded">
         <div class="row">
             <div class="span2 gallery-item-image">
-                <a class="thumb" target="blank_" href="{$imageURL}">
-                    <img alt="{$title}" class="img-polaroid" 
+                <a class="thumb" target="blank_" href="{$imageURL}" data-image-id="{$id}">
+                    <img alt="{$title}" class="img-polaroid"  
                          src="{$imageURL}"/>
                 </a>
             </div>
