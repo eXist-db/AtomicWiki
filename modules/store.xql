@@ -131,7 +131,7 @@ declare function store:parse-gallery() {
         {
             for $entry in $content/HTML/BODY/li
             return 
-                <entry title="{$entry//h3[@class='image-title']/text()}" ctype="html" imageLink="{$entry//*[contains(@class, 'gallery-item-image')]/a/@href}">
+                <entry title="{$entry//h3[@class='image-title']/text()}" ctype="html" imageLink="{$entry//*[contains(@class, 'gallery-item-image')]/a/@href}" imageId="{$entry//*[contains(@class, 'gallery-item-image')]/a/@data-image-id}">
                     <content>{$entry//*[@class='image-desc']}</content>
                 </entry>
         }
@@ -174,9 +174,10 @@ declare function store:gallery($gallery as node()) {
 declare function store:gallery-entry($entry as node()) {
     let $parsed := store:process-content($entry/@ctype, util:serialize($entry//content/div/*, ()))
     let $contentType := if ($entry/@ctype = ("wiki", "html")) then "html" else $entry/@ctype
+    let $imageId := if(string-length($entry/@imageId) gt 0) then data($entry/@imageId) else util:uuid()
     return
         <atom:entry>
-            <atom:id>{util:uuid()}</atom:id>
+            <atom:id>{$imageId}</atom:id>
             <atom:published>{current-dateTime()}</atom:published>
             <atom:updated>{current-dateTime()}</atom:updated>
             <atom:author>
