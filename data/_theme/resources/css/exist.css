@@ -114,6 +114,16 @@ body { color: #222; background: url(../images/body.gif) repeat 50% 100%; }
         border: 0;
     }
     
+    .dropdown-submenu>.dropdown-menu {
+        top: 0;
+        left: 0;
+        margin-top: -32px;
+        margin-left: -160px;
+        -webkit-border-radius: 6px 0 6px 6px;
+        -moz-border-radius: 6px 0 6px 6px;
+        border-radius: 6px 0 6px 6px;
+    }
+    
     .menu .dropdown-menu>li>a {
         color: #FFF;
         font-size: 0.92em;
