@@ -29,7 +29,7 @@
                             <div class="control-group title">
                                 <label class="control-label" for="title">Title</label>
                                 <div class="controls">
-                                    <input class="span6 gallery:gallery-title" type="text" name="title" placeholder="Title" required="required"/>
+                                    <input class="span6 gallery:gallery-title" id="title" type="text" name="title" placeholder="Title" required="required"/>
                                     <p class="help-block">A short, unique name for this entry which will be used in
                                 URLs.</p>
                                 </div>
@@ -37,7 +37,7 @@
                             <div class="control-group">
                                 <label class="control-label" for="name">Short Name</label>
                                 <div class="controls">
-                                    <input class="span3 gallery:gallery-subtitle" type="text" name="name" placeholder="ShortName" required="required" pattern="^[\w-.:]+$"/>
+                                    <input class="span3 gallery:gallery-subtitle" id="name" type="text" name="name" placeholder="ShortName" required="required" pattern="^[\w-.:]+$"/>
                                     <span class="help-inline">Only letters and -.: are allowed. No spaces.</span>
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
                                         <div class="control-group">
                                             <label class="control-label" for="style">Image Caption Style</label>
                                             <div class="controls">
-                                                <input class="span3" type="text" name="style"/>
+                                                <input id="style" class="span3" type="text" name="style"/>
                                                 <span class="help-inline">Image Caption Style</span>
                                             </div>
                                         </div>
