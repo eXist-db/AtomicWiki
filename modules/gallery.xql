@@ -10,6 +10,10 @@ declare namespace vra="http://www.vraweb.org/vracore4.htm";
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace html="http://www.w3.org/1999/xhtml";
 
+declare variable $gallery:IMAGE_BIG := "?width=1024";
+declare variable $gallery:IMAGE_THUMB := "?width=100&amp;height=100&amp;crop_type=middle";
+declare variable $gallery:IMAGE_THUMB_LARGE := "?width=256&amp;height=256&amp;crop_type=middle";
+
 declare function gallery:show-catalog($node as node(), $model as map(*)) {
     let $gallery-id := $node/@id
     return
@@ -47,10 +51,9 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                                 attribute class { "active" }
                             else
                                 ()
-                        
-                            (:<a href="{$src}"><img data-big="{$src_big}" src="{$src_thumb}" /></a>:)
                         }
-                            <a href="{$src}"><img data-big="{$src}" src="{$src}" /></a>
+                            <a href="{$src}"><img data-big="{$src}/{$gallery:IMAGE_BIG}" src="{$src}/{$gallery:IMAGE_THUMB}" /></a>
+                            <!--a href="{$src}"><img data-big="{$src}" src="{$src}" /></a-->
                             <span class="description" style="display: none;">
                                 <h1>{$entry/atom:title/text()}</h1>
                                 {$contentHtml}
@@ -86,7 +89,7 @@ declare function gallery:select-gallery($node as node(), $model as map(*)) {
 
 (:declare function gallery:select-options($node as node(), $model as map(*)) {:)
 (:    let $galleryCol := util:collection-name($model("feed")) || "/_galleries":)
-(:    let $galleries := collection($galleryCol)/atom:feed:)
+(:    let $galleries := collection($galleryCol)/atom:fee d:)
 (:    for $gallery in $galleries:)
 (:    return:)
 (:        <option value="{$gallery/atom:id}">{$gallery/atom:title} huhu</option>:)
@@ -99,13 +102,13 @@ declare function gallery:build-gallery-edit-menu($node as node(), $model as map(
     return
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"> Edit Slideshows </a>
-            <ul class="dropdown-menu">   
+            <ul class="dropdown-menu pull-left">   
                 {
                 for $gallery in $galleries
                 let $feedname := replace(util:document-name($gallery),"(.*)\.atom","$1")
                 return
                     <li>
-                    <a href=".?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery/text()," "}</a>
+                    <a href="?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery/text()," "}</a>
                     </li>
                 }  
             </ul>
@@ -138,7 +141,6 @@ declare
 declare 
     %templates:wrap function gallery:edit-gallery-items($node as node(), $model as map(*)) {
         let $entries := request:get-attribute("feed")
-        let $log := util:log("WARN", "ENTRIES: "|| $entries)
         
         let $imageList :=
             for $entry in $entries/atom:feed/atom:entry
@@ -193,7 +195,8 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
                 <div class="span2 gallery-item-image">
                     <a class="thumb" target="blank_" href="{$imageURL}" data-image-id="{$id}">
                         <img alt="{$title}" class="img-polaroid"  
-                             src="{$imageURL}"/>
+                             src="{$imageURL}{$gallery:IMAGE_THUMB_LARGE}"
+                             data-src="{$imageURL}"/>
                     </a>
                 </div>
                 <div class="span10 gallery-item-caption">
@@ -304,13 +307,13 @@ declare
         
         let $serverPath := "http://kjc-ws2.kjc.uni-heidelberg.de/images/service/download_uuid/"
         let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
-        let $imageURL :=  $serverPath || $image/@relids || $imageOption
+        let $imageURL :=  $serverPath || $image/@relids
         
         return 
             if($image/@relids) 
             then (
                 <a href="#" class="add-image"> </a>,  
-                <img src="{$imageURL}" class="relatedImage" title="{$entry//vra:titleSet/vra:title[@pref='true']/text()}"/>,                                       
+                <img src="{$imageURL}{$imageOption}" class="relatedImage" title="{$entry//vra:titleSet/vra:title[@pref='true']/text()}"/>,                                       
                 <div style="display:none">                    
                     <div class="image-id">{data($image/@relids)}</div>
                     <div class="image-title">{$entry//vra:titleSet/vra:title[@pref='true']/text()}</div>
