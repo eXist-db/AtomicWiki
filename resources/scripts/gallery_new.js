@@ -99,6 +99,10 @@ if ($('.galleria').length !== 0) {
         self.bind("fullscreen_enter", function(e) {
             self.$('info-link').removeClass('galleria-active');
             self.$('info-link').click();
+            //var w = $(window).width();
+            //var h = $(window).height() + 150;
+            //self.resize(w,h);
+            //alert(w + " " +h);
             var my_h = self.$("stage").height();
             self.$("info").height(my_h - 100);
             self.$("info-link").height(my_h - 100);
@@ -114,23 +118,31 @@ if ($('.galleria').length !== 0) {
             self.$("info-text").height(my_h - 110);
         });
         
+        /*
+        self.bind("rescale", function(e) {
+            //self.resize();
+            console.log("rescale done");
+        });
+        */
         self.$('info-link').bind( 'click',function(e) {
             if( ! self.$('info-link').hasClass('galleria-active')){
                 self.$('info-link').addClass('galleria-active');
   
-                self.$('stage').stop().animate({"margin-left":"360"}, 500, function() {
-                    self.refreshImage().resize();
-                });
+                
                 self.$('info').stop().animate({"left":"15px"}, 400, function() {
                     self.$('info').css({"left":"15px"});
+                    self.$('stage').stop().animate({"margin-left":"360"}, 400, function() {
+                        self.resize();
+                    });
                 });
             } else {
                 self.$('info-link').removeClass('galleria-active');
-                self.$('stage').stop().animate({"margin-left":"0"}, 500, function() {
-                    self.refreshImage().resize();
-                });
+
                 self.$('info').stop().animate({"left":"-320px"}, 400, function() {
                     self.$('info').css({"left":"-320px"});
+                    self.$('stage').stop().animate({"margin-left":"0"}, 400, function() {
+                        self.resize();
+                    });
                 });
             }
         });
@@ -145,12 +157,12 @@ if ($('.galleria').length !== 0) {
         dataConfig: function(img) {
             var data = {
                 thumb: $(img).attr('src'),
-                image: $(img).attr('href'),
+                image: $(img).parent().attr('href'),
                 big: $(img).attr('data-big'),
                 title: $(img).parent().siblings('h1').html(),
                 description: $(img).parent().siblings(".description").html() // tell Galleria to grab the content from the .description div as caption
             };
-            console.log("data: %o", data);
+            //console.log("data: %o", data);
             return data;
         }
     });
