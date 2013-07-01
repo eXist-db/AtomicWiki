@@ -115,9 +115,6 @@ declare function store:parse-gallery() {
     let $name := request:get-parameter("name", ())
     let $content := util:parse-html(request:get-parameter("content", ()))
     let $id := request:get-parameter("galleryId", util:uuid()) 
-    let $log := if (false()) then
-        util:log("ERROR", $content)
-    else ()
     let $result := 
         <gallery title="{$title}" name="{$name}" id="{$id}">
             <config>
@@ -131,13 +128,15 @@ declare function store:parse-gallery() {
         {
             for $entry in $content/HTML/BODY/li
             return 
-                <entry title="{$entry//h3[@class='image-title']/text()}" ctype="html" imageLink="{$entry//*[contains(@class, 'gallery-item-image')]/a/@href}" imageId="{$entry//*[contains(@class, 'gallery-item-image')]/a/@data-image-id}"
-                    contentLink="{$entry//*[@class='image-desc']/span/@data-description}">
+                <entry title="{$entry//h3[@class='image-title']/text()}" ctype="html" 
+                    imageLink="{$entry//*[contains(@class, 'gallery-item-image')]/a/@href}" 
+                    imageId="{$entry//*[contains(@class, 'gallery-item-image')]/a/@data-image-id}"
+                    contentLink="{$entry//*[@class='image-desc']//span/@data-description}">
                 </entry>
         }
         </gallery>
     return
-        $result
+        ($result)
 };
 
 declare function store:gallery($gallery as node()) {

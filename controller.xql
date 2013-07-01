@@ -180,7 +180,6 @@ try {
                                 </forward>
                                 <view>
                                     <forward url="{$exist:controller}/modules/view.xql" absolute="no">
-                                        <add-parameter name="wiki-id" value="{$relPath[2]}"/>
                                     </forward>
                                 </view>
                                 { $local:error-handler }
@@ -285,6 +284,6 @@ try {
 } catch * {
     login:set-user("org.exist.wiki.login", (), false(), local:check-user#1),
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-    { $local:error-handler }
+        <cache-control cache="no"/>
     </dispatch>
 }
