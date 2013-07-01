@@ -146,15 +146,15 @@ function addImage(){
     
     liTemplate.find(".image-title").html(imageTitle); 
     liTemplate.find(".image-desc span").attr("id", imageId + "-content");
-    liTemplate.find(".image-desc span").attr("data-description", ""); 
-    liTemplate.find(".image-desc span").text("No description"); 
+    liTemplate.find(".image-desc span").attr("data-description", "");
+    liTemplate.find(".image-desc span").text("No description");
     
     liTemplate.find(".btn-edit").click(function() {   
         console.log("btn-edit clicked: imageId: ", imageId);
         showSitemap(imageId);
        // showModal(imageId);
        // console.debug("show sitemap");
-    });
+    });    
     liTemplate.find(".btn-remove").click(function() {   
        removeItem(imageId);
     });    
@@ -204,8 +204,8 @@ function showSitemap(imageEntryId, feedId) {
         console.debug("open xyz: itemId: ",imageEntryId);
     });*/
     // linkEditor.onSelect = function(data){
-    //     console.debug("selected item arguments: url:", data.url, " align: ", data.align);          
-    //     saveGallery(data.url, feedId, imageEntryId);        
+    //     console.debug("selected item arguments: url:", data.url, " align: ", data.align);
+    //     saveGallery(data.url, feedId, imageEntryId);
     // };
 
 }
@@ -222,8 +222,12 @@ function saveGallery(feedURL, feedId, imageEntryId) {
         url: "modules/store.xql",
         data: data,
         complete: function() {
-            $.log("Store completed feedURL: ",feedURL, " imageEntryId: ",imageEntryId, " feedId: ",feedId);
-            window.location = feedURL + "?action=edit&image="+imageEntryId+"&feed=" + feedId;
+            if(feedURL && imageEntryId){
+                $.log("Store completed feedURL: ",feedURL, " imageEntryId: ",imageEntryId, " feedId: ",feedId);
+                window.location = feedURL + "?action=edit&image="+imageEntryId+"&feed=" + feedId;
+            }else {
+                $.log("Successfully save Slideshow Feed");
+            }
         }
     });            
 

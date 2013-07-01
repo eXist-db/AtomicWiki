@@ -208,13 +208,14 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
 
 declare 
     %templates:wrap
-    %templates:default("collection", "c_b9827ec8-6b66-5d98-9f5e-ca12b58044c4") 
-    function gallery:search($node as node(), $model as map(*), $collection as xs:string, $query as xs:string?, $cached as item()*) {
+    function gallery:search($node as node(), $model as map(*), $filterCollection as xs:string?, $query as xs:string?, $cached as item()*) {
     if ($query or $cached) then
         let $result := 
-            if ($query) then
+            if ($query and $filterCollection and not($filterCollection eq "all")) then
                 (: @TODO  :)                
-                collection('/db/resources/commons')//vra:vra/vra:work[@refid=$collection][ft:query(.//*, $query)]
+                collection('/db/resources/commons')//vra:vra/vra:work[@refid=$filterCollection][ft:query(.//*, $query)]
+            else if($query) then 
+                collection('/db/resources/commons')//vra:vra/vra:work[ft:query(.//*, $query)]
             else
                 $cached
         return (
@@ -227,7 +228,7 @@ declare
     else
         (
             map {
-                "result" := collection('/db/resources/commons')//vra:vra/vra:work[@refid=$collection]
+                "result" := collection('/db/resources/commons')//vra:vra/vra:work
             }
         )
 };
@@ -258,7 +259,7 @@ declare
 function gallery:pagination-previous($node as node(), $model as map(*), $start as xs:integer, $max as xs:integer) {
     let $total := count($model("result"))
     return
-        if ($start > 1) then
+        if ($start gt 1 and $total gt 1) then
             element { node-name($node) } {
                 $node/@* except $node/@href,
                 attribute href { "javascript:loadImages("||$start - $max || "," || $max || ")" },

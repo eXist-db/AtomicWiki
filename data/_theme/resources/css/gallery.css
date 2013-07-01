@@ -131,9 +131,10 @@
     width: 100%;
 }
 
-.footer  .section{
+.footer  .section {
     float:left;
     width:33%;
+    min-height:1px;
 }
 .footer  p {
     margin:0;
