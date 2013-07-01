@@ -49,7 +49,7 @@ if ($('.galleria').length !== 0) {
         self.addIdleState(self.get('splay'), {
             opacity: 0
         });
-                
+        
         self.addIdleState(self.get('fscr'), {
             opacity: 0
         });
@@ -96,8 +96,9 @@ if ($('.galleria').length !== 0) {
                 
         var info = self.$('info-link,info-close,info-text');
         
+        
         self.bind("fullscreen_enter", function(e) {
-            self.$('info-link').removeClass('galleria-active');
+            self.$('info-link').removeClass('galleria-info-link-active');
             self.$('info-link').click();
             //var w = $(window).width();
             //var h = $(window).height() + 150;
@@ -125,9 +126,8 @@ if ($('.galleria').length !== 0) {
         });
         */
         self.$('info-link').bind( 'click',function(e) {
-            if( ! self.$('info-link').hasClass('galleria-active')){
-                self.$('info-link').addClass('galleria-active');
-  
+            if( ! self.$('info-link').hasClass('galleria-info-link-active')){
+                self.$('info-link').addClass('galleria-info-link-active');
                 
                 self.$('info').stop().animate({"left":"15px"}, 400, function() {
                     self.$('info').css({"left":"15px"});
@@ -136,7 +136,7 @@ if ($('.galleria').length !== 0) {
                     });
                 });
             } else {
-                self.$('info-link').removeClass('galleria-active');
+                self.$('info-link').removeClass('galleria-info-link-active');
 
                 self.$('info').stop().animate({"left":"-320px"}, 400, function() {
                     self.$('info').css({"left":"-320px"});
@@ -149,7 +149,7 @@ if ($('.galleria').length !== 0) {
             
         /* show infotext on startup */
         self.$('info-link').click();
-
+                
     }); /* end of: Galleria.ready() */
     
     /* here we go. fire up galleria */
