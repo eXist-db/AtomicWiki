@@ -3,6 +3,8 @@
         <fulltext default="none" attributes="false"/>
         <lucene>
             <text qname="vra:title"/>
+            <text match="vra:agent/vra:name"/>
+            <text qname="vra:term"/>
         </lucene>
     </index>
 </collection>
