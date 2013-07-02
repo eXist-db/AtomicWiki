@@ -57,11 +57,11 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                             <span class="description" style="display: none;">
                                 <h1>{$entry/atom:title/text()}</h1>
                                 {$contentHtml}
-                                <ul><h3>Meta Daten:</h3>
+                               <!-- <ul><h3>Meta Daten:</h3>
                                     <li>vra-ID:{$vraMetaID}</li>
-                                    <li>agent: {$vraMetaImageAgentName}</li>
+                                    <li>agent: {$vraMetaImageAgentName}</li> 
                                     
-                                </ul>
+                                </ul> -->
                                 
                             </span>
                         
