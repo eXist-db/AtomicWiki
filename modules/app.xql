@@ -268,6 +268,13 @@ declare function app:edit-link($node as node(), $model as map(*), $action as xs:
 };
 
 declare function app:action-button($node as node(), $model as map(*), $action as xs:string?) {
+ 
+    let $lockedBy := $model('entry')/wiki:lock/@user
+    return
+    if ($lockedBy and $lockedBy != xmldb:get-current-user()) then
+(:            <span><i class="icon-lock"></i> Locked by {$lockedBy/string()}</span>:)
+        ()
+    else
     element { node-name($node) } {
         $node/@*,
         templates:process($node/node(), $model)
