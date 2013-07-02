@@ -40,14 +40,16 @@ $(document).ready(function() {
         
     });
     loadImages();
-    $("#query-images").click(function (ev) {   
-        console.debug("clicke on load images button!")
-       loadImages()
+    $("#query-images").click(function (e) {
+        // console.debug("clicke on load images button!");
+        e.preventDefault();
+        loadImages(1);
+        return false;
     });
     
     $('.form-search').submit(function(e) {
         e.preventDefault;
-        loadImages();
+        loadImages(1);
         return false;
     });
     
