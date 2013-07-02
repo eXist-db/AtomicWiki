@@ -97,4 +97,6 @@ $(document).ready(function() {
         
         return true;
     });
+    
+    $("ul.dropdown-menu").hide();
 });
