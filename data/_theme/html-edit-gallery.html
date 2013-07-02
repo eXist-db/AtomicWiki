@@ -99,7 +99,26 @@
                                     </div>
                                     <div class="accordion-body collapse" id="permissions">
                                         <div class="accordion-inner">
-                                            <div class="templates:include?path=templates/permissions.html"/>
+                                            <table class="permissions acl:show-permissions?modelItem=feed">
+                                                <tr>
+                                                    <td colspan="3" class="perm-private">
+                                                        <input id="perm-private" type="checkbox" name="perm-private" checked="checked" title="Uncheck for more access control options"/> Private
+                                                    </td>
+                                                </tr>
+                                                <tr class="perm-detail">
+                                                    <td>Everyone:</td>
+                                                    <td>
+                                                        <input id="perm-public-read" type="checkbox" name="perm-public-read"/> read</td>
+                                                    <td/>
+                                                </tr>
+                                                <tr class="perm-detail">
+                                                    <td>Registered users:</td>
+                                                    <td>
+                                                        <input id="perm-reg-read" type="checkbox" name="perm-reg-read"/> read</td>
+                                                    <td>
+                                                        <input id="perm-reg-write" type="checkbox" name="perm-reg-write"/> write</td>
+                                                </tr>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
