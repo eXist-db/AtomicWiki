@@ -984,3 +984,18 @@ ul.dropdown-menu li {
   height: 18px;
   background: url(/exist/apps/dashboard/plugins/browsing/images/progressbar.gif);
 }
+
+/* force overwrite color settings in galleria */
+#content .galleria-info-text p,
+#content .galleria-info-text div,
+#content .galleria-info-text ul,
+#content .galleria-info-text li {
+    color: #fff;
+}
+
+#content .galleria-info-description p,
+#content .galleria-info-description div,
+#content .galleria-info-description ul,
+#content .galleria-info-description li {
+    color: #fff;
+}
