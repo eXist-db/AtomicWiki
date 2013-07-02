@@ -79,11 +79,15 @@ $(document).ready(function() {
     $("#edit-form-cancel").click(function(ev) {
         $("input[name='action']", form).val("unlock");
         form.submit();
+        return true;
     });
     
     Atomic.Form.validator(form, ["name"]);
     
     form.submit(function () {
+        if ($("input[name='action']", form).val() == "unlock") {
+            return true;
+        }
         var wikiId = $("input[name='name']", this).val();
         var filename = $("input[name='resource']", this).val();
         
