@@ -5,6 +5,7 @@ module namespace gallery="http://exist-db.org/apps/wiki/gallery";
 import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace dbutil="http://exist-db.org/xquery/dbutil";
+import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "themes.xql";
 
 declare namespace vra="http://www.vraweb.org/vracore4.htm";
 declare namespace atom="http://www.w3.org/2005/Atom";
@@ -75,14 +76,20 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
 };
 
 declare function gallery:select-gallery($node as node(), $model as map(*)) {
-    let $galleryCol := util:collection-name($model("feed")) || "/_galleries"
-    let $galleries := collection($galleryCol)/atom:feed
+    let $theme := theme:theme-for-feed(util:collection-name($model("feed")))
+    let $theme := substring-before($theme, "/_theme")
+    let $galleries := 
+        for $feed in collection($theme)/atom:feed
+        where ends-with(util:collection-name($feed), "_galleries")
+        return
+            $feed
     return
         <select class="span4" name="gallery">
             {
             for $gallery in $galleries
+            let $galleryCol := substring-before(util:collection-name($gallery), "/_galleries")
             return
-                <option value="{$gallery/atom:id}" >{$gallery/atom:title}</option>
+                <option value="{$gallery/atom:id}" >{$gallery/atom:title/string()}</option>
             }
         </select>
 };
@@ -97,20 +104,26 @@ declare function gallery:select-gallery($node as node(), $model as map(*)) {
 (:};:)
 
 declare function gallery:build-gallery-edit-menu($node as node(), $model as map(*)) {
-    let $galleryCol := util:collection-name($model("feed"))
-    let $galleries := collection($galleryCol || "/_galleries")/atom:feed/atom:title
+    let $theme := theme:theme-for-feed(util:collection-name($model("feed")))
+    let $theme := substring-before($theme, "/_theme")
+    let $galleries := 
+        for $feed in collection($theme)/atom:feed
+        where ends-with(util:collection-name($feed), "_galleries")
+        return
+            $feed/atom:title
     return
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"> Edit Slideshows </a>
-            <ul class="dropdown-menu pull-left">   
+            <ul class="dropdown-menu">   
                 {
                 for $gallery in $galleries
                 let $feedname := replace(util:document-name($gallery),"(.*)\.atom","$1")
+                let $galleryCol := substring-before(util:collection-name($gallery), "/_galleries")
                 return
                     <li>
-                    <a href="?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery/text()," "}</a>
+                        <a href="?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery/text()," "}</a>
                     </li>
-                }  
+                }
             </ul>
         </li>
 };
