@@ -13,18 +13,21 @@ declare function theme:parent-collection($collection as xs:string) as xs:string?
         replace($collection, "^(.*)/[^/]+/?$", "$1")
 };
 
-declare function theme:theme-for-feed($feed as xs:string) as xs:string? {
-    let $coll := $feed || "/" || $theme:feed-collection
-    return
-        if (xmldb:collection-available($coll)) then
-            $coll
-        else
-            let $parent := theme:parent-collection($feed)
-            return
-                if ($parent) then
-                    theme:theme-for-feed($parent)
-                else
-                    ()
+declare function theme:theme-for-feed($feed as xs:string?) as xs:string? {
+    if (exists($feed)) then
+        let $coll := $feed || "/" || $theme:feed-collection
+        return
+            if (xmldb:collection-available($coll)) then
+                $coll
+            else
+                let $parent := theme:parent-collection($feed)
+                return
+                    if ($parent) then
+                        theme:theme-for-feed($parent)
+                    else
+                        ()
+    else
+        ()
 };
 
 declare function theme:locate($feed as xs:string) as xs:string {

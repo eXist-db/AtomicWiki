@@ -33,8 +33,10 @@ declare function acl:change-collection-permissions($path as xs:string) {
     sm:chgrp($path, $config:default-group)
 };
 
-declare function acl:show-permissions($node as node(), $model as map(*)) {
-    let $doc := document-uri(root($model("entry")))
+declare 
+    %templates:default("modelItem", "entry")
+function acl:show-permissions($node as node(), $model as map(*), $modelItem as xs:string?) {
+    let $doc := document-uri(root($model($modelItem)))
     return
         if (doc-available($doc)) then
             let $permissions := sm:get-permissions($doc)
