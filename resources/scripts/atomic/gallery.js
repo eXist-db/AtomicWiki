@@ -4,6 +4,7 @@ var anchorEditor;
 var addGallery;
 var atomicEditor;
 var form;
+var isDirty = false;
 
 $(document).ready(function() {
     form = $("#edit-form");
@@ -13,13 +14,34 @@ $(document).ready(function() {
     addGallery = new Atomic.editor.AddGalleryLink();
 
 // $(document).tooltip();
+    $(".control-group").on("change","#title,#name", function(e) {
+        e.preventDefault();
+        console.log("title or name was changed");
+        isDirty = true;
+        return false;
+    });
     
+    $("body").on("click", "#dialog-cancel-action", function(e){
+        console.log("close dialog");
+        $("#unsaved-changes-dialog").modal('hide');        
+    })
+
+    $("body").on("click", "#dialog-save-action", function(e){
+        console.log("persist unsaved changes");
+        var feedURL = $("#dialog-form-url").val();        
+        console.log("feed entry to open: ", feedURL);
+        $("#unsaved-changes-dialog").modal('hide');
+        saveGallery(feedURL);
+    })
+
+
     $("#gallery").on("click", ".add-image", function(event){        
         event.preventDefault();
         addImage();                
     }); 
     
-    $("#edit-form-save").click(function (e){                
+    $("body").on("click", "#edit-form-save", function (e){                
+        console.log("clicked #edit-form-save")
         e.preventDefault();
         saveGallery();    
     });
@@ -40,11 +62,9 @@ $(document).ready(function() {
         
     });
     loadImages();
-    $("#query-images").click(function (e) {
-        // console.debug("clicke on load images button!");
-        e.preventDefault();
-        loadImages(1);
-        return false;
+    $("#query-images").click(function (ev) {   
+        console.debug("clicke on load images button!")
+        loadImages(1)
     });
     
     $('.form-search').submit(function(e) {
@@ -134,6 +154,7 @@ function loadImages(start, max) {
 */
 function addImage(){
     console.log("add image: " + $(".ui-selected .image-id").html() + " to Wiki Entry");
+    isDirty = true;
     var liTemplate = $("#li-template").clone()
     
     var imageTitle = $(".ui-selected .image-title").html();
@@ -150,20 +171,25 @@ function addImage(){
     liTemplate.find(".image-desc span").attr("id", imageId + "-content");
     liTemplate.find(".image-desc span").attr("data-description", "");
     liTemplate.find(".image-desc span").text("No description");
+
+    /* liTemplate.find(".edit-pic").click(function() {   
+       removeItem(imageId);
+    });*/        
     
-    liTemplate.find(".btn-edit").click(function() {   
-        console.log("btn-edit clicked: imageId: ", imageId);
+    liTemplate.find(".connect-pic").click(function() {   
+        console.log("connect-pic clicked: imageId: ", imageId);
         showSitemap(imageId);
        // showModal(imageId);
        // console.debug("show sitemap");
     });    
-    liTemplate.find(".btn-remove").click(function() {   
+    
+    liTemplate.find(".remove-pic").click(function() {   
        removeItem(imageId);
     });    
-    liTemplate.find(".btn-arrow-up").click(function() {   
+    liTemplate.find(".move-pic-up").click(function() {   
        moveUp(imageId);
     });    
-    liTemplate.find(".btn-arrow-down").click(function() {   
+    liTemplate.find(".move-pic-down").click(function() {   
        moveDown(imageId);
     });    
     
@@ -174,18 +200,21 @@ function addImage(){
 }
 
 function moveDown(itemid) {
+    isDirty = true;
     var item = $("#gallery-items #" + itemid);
     item.insertAfter(item.next());
     jumpTo(item);
 }
 
 function moveUp(itemid) {
+    isDirty = true;
     var item = $("#gallery-items #" + itemid);
    item.insertBefore(item.prev());
     jumpTo(item);
 }
 
 function removeItem(itemid) {
+    isDirty = true;
     var gitem = $("#gallery-items #" + itemid);
     var confirmed = confirm("Do you really want to delete this item?");
     if (confirmed) {
@@ -198,9 +227,10 @@ function removeItem(itemid) {
 function showSitemap(imageEntryId, feedId) {
     console.log("opened sitemap: itemId: ", imageEntryId, " feed: ",feedId);
     linkEditor.open(function(node) {
-        console.log("selected: %o", node);
+        console.log("selected: %o", node, " isDiry:", isDirty);
         $("#" + imageEntryId + "-content").text(node.data.title);
         $("#" + imageEntryId + "-content").attr("data-description", node.data.key);
+        isDirty = true;
     });
     /* linkEditor.open(imageEntryId, function() {
         console.debug("open xyz: itemId: ",imageEntryId);
@@ -214,6 +244,7 @@ function showSitemap(imageEntryId, feedId) {
 
 function saveGallery(feedURL, feedId, imageEntryId) {
     $.log("save Gallery feedURL:",feedURL, " imageEntryId: ",imageEntryId, " feedId: ",feedId);
+    isDirty = true;
     $("input[name='action']", form).val("store");
     $("input[name='ctype']", form).val("gallery");
     
@@ -224,16 +255,29 @@ function saveGallery(feedURL, feedId, imageEntryId) {
         url: "modules/store.xql",
         data: data,
         complete: function() {
-            if(feedURL && imageEntryId){
+            if(feedURL){
                 $.log("Store completed feedURL: ",feedURL, " imageEntryId: ",imageEntryId, " feedId: ",feedId);
-                window.location = feedURL + "?action=edit&image="+imageEntryId+"&feed=" + feedId;
+                window.location = "?id=" + feedURL + "&action=edit";
             }else {
-                $.log("Successfully save Slideshow Feed");
+                $.log("Successfully saved Slideshow Feed");
             }
         }
     });            
-
 }
+
+function openWikiArticle(feedURL, feedId, imageId ) {
+    // console.log("openWikiArticle: feedURL: ", feedURL, " feedId: ", feedId, " imageId: ", imageId);
+    console.log("isDirty:", isDirty, " feedURL: ",feedURL);
+    if(isDirty === true){
+        $("#unsaved-changes-dialog").modal('show');
+        $("#dialog-form-url").val(feedURL);
+    }
+    else {
+        window.location = "?id=" + feedURL + "&action=edit";
+    }
+}
+
+
 function updateForm() {
     var feedContent = $("#gallery-items").html();
     $("input[name='content']", form).val(feedContent);

@@ -60,7 +60,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                                 {$contentHtml}
                                <!-- <ul><h3>Meta Daten:</h3>
                                     <li>vra-ID:{$vraMetaID}</li>
-                                    <li>agent: {$vraMetaImageAgentName}</li> 
+                                    <li>agent: {$vraMetaImageAgentName}</li>
                                     
                                 </ul> -->
                                 
@@ -78,10 +78,10 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
 declare function gallery:select-gallery($node as node(), $model as map(*)) {
     let $theme := theme:theme-for-feed(util:collection-name($model("feed")))
     let $theme := substring-before($theme, "/_theme")
-    let $galleries := 
+    let $galleries :=
         for $feed in collection($theme)/atom:feed
         where ends-with(util:collection-name($feed), "_galleries")
-        return
+    return
             $feed
     return
         <select class="span4" name="gallery">
@@ -106,32 +106,32 @@ declare function gallery:select-gallery($node as node(), $model as map(*)) {
 declare function gallery:build-gallery-edit-menu($node as node(), $model as map(*)) {
     let $theme := theme:theme-for-feed(util:collection-name($model("feed")))
     let $theme := substring-before($theme, "/_theme")
-    let $galleries := 
+    let $galleries :=
         for $feed in collection($theme)/atom:feed
         where ends-with(util:collection-name($feed), "_galleries")
-        return
+    return
             $feed/atom:title
     return
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"> Edit Slideshows </a>
-            <ul class="dropdown-menu">   
+            <ul class="dropdown-menu">
                 {
                 for $gallery in $galleries
                 let $feedname := replace(util:document-name($gallery),"(.*)\.atom","$1")
                 let $galleryCol := substring-before(util:collection-name($gallery), "/_galleries")
                 return
                     <li>
-                        <a href="?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery/text()," "}</a>
+                    <a href="?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery/text()," "}</a>
                     </li>
-                }
+                }  
             </ul>
         </li>
 };
 
 
 declare 
-    %templates:wrap function gallery:gallery-title($node as node(), $model as map(*)) {
-    
+    %templates:wrap function gallery:gallery-title($node as node(), $model as map(*)) {    
+
     attribute value { request:get-attribute("feed")/atom:feed/atom:title }
 };
 
@@ -181,12 +181,14 @@ declare
                             </div>
                             <div class="span10 gallery-item-caption">
                                 <h3 class="image-title"></h3>
-                                <div class="image-desc">Image description taken from entry: <span id="" data-description=""></span></div>
+                                <div class="image-desc">Image description taken from entry: <span id="" data-description=""></span></div> 
+                                <input type="hidden" id="formURL"> </input>
                                 <div class="gallery-item-controls pull-right">
-                                    <a class="btn btn-edit"><i class="icon-share-alt"></i></a>
-                                    <a class="btn btn-remove"><i class="icon-remove"></i></a>
-                                    <a class="btn btn-arrow-up"><i class="icon-arrow-up"></i></a>
-                                    <a class="btn btn-arrow-down"><i class="icon-arrow-down"></i></a>
+                                    <a class="btn" disabled="disabled"><i class="icon-pencil"></i></a>
+                                    <a class="btn btn-edit connect-pic" ><i class="icon-share-alt"></i></a>
+                                    <a class="btn btn-remove remove-pic"><i class="icon-remove"></i></a>
+                                    <a class="btn btn-arrow-up move-pic-up"><i class="icon-arrow-up"></i></a>
+                                    <a class="btn btn-arrow-down move-pic-down"><i class="icon-arrow-down"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -195,13 +197,14 @@ declare
             )
 };
 
-declare %private function gallery:feed-to-html-image($feedId as xs:string, $imageURL as xs:string, $id as xs:string, $title as xs:string?, $src as item()*) {
+declare %private function gallery:feed-to-html-image($feedId as xs:string, $imageURL as xs:string, $id as xs:string, $title as xs:string?, $src as item()*) {    
     let $description := collection($config:wiki-root)/atom:entry[atom:id = $src]
     let $html := 
         if ($description/atom:content/@src) then
             doc(util:collection-name($description) || "/" || $description/atom:content/@src)/*
-        else
-            ()
+        else()        
+    let $entryId := data($description/atom:content/@src)
+                
     return
         <li id="{$id}" class="container gallery-item-row img-rounded">
             <div class="row">
@@ -219,6 +222,7 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
                         { $html }
                     </div>
                     <div class="gallery-item-controls pull-right">                
+                        <a class="btn btn-pencil" onclick="openWikiArticle('{$entryId}','{$feedId}', '{$id}')"><i class="icon-pencil"></i></a>
                         <a class="btn btn-edit" onclick="showSitemap('{$id}','{$feedId}')"><i class="icon-share-alt"></i></a>
                         <a class="btn btn-remove" onclick="removeItem('{$id}')"><i class="icon-remove"></i></a>
                         <a class="btn btn-arrow-up" onclick="moveUp('{$id}')"><i class="icon-arrow-up"></i></a>

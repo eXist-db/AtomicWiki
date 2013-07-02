@@ -137,45 +137,6 @@
                             <input type="hidden" name="content" value=""/>
                         </form>
                     </div>
-                    <div class="accordion">
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a href="#attachments" class="accordion-toggle" data-toggle="collapse">Attachments</a>
-                            </div>
-                            <div class="accordion-body collapse" id="attachments">
-                                <div class="accordion-inner">
-                                    <div class="attachment-list">
-                                        <table>
-                                            <thead>
-                                                <th>Name</th>
-                                                <th>Thumbnail</th>
-                                                <th>Type</th>
-                                            </thead>
-                                            <tbody class="app:attachments attachments"/>
-                                        </table>
-                                    </div>
-                                    <div id="image-upload">
-                                        <p>To upload: drop one or more files on this dialog or click on the button below.</p>
-                                        <form class="file_upload" action="modules/upload.xql" method="POST" enctype="multipart/form-data">
-                                            <div class="file_upload_body">
-                                                <input type="file" name="uploadedfiles[]" multiple="multiple"/>
-                                                <input name="collection" value="/db/abc" type="hidden"/>
-                                                <button>Upload</button>
-                                                <div class="file_upload_label">Upload</div>
-                                            </div>
-                                        </form>
-                                        <div class="overall-progress" style="opacity: 0">
-                                            <div class="bar" style="width: 0%;"/>
-                                            <div class="progress-label">0%</div>
-                                        </div>
-                                        <div class="queue">
-                                            <table class="files"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -220,16 +181,30 @@
                 <div id="imageSelector"/>
             </div>
         </div>
+        <div id="unsaved-changes-dialog" class="modal hide fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h3>Unsaved Changed</h3>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="dialog-form-url"/>
+                <p>There are unsaved changes. Click "Save" to save them and proceed or "Cancel" to abort.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="dialog-cancel-action" type="button">
+                    <i class="icon-ban-circle"/> Cancel</button>
+                <button class="btn btn-primary" id="dialog-save-action" type="button">
+                    <i class="icon-ok"/> Save and Proceed</button>
+            </div>
+        </div>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery-ui.min.js"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery.fileupload.js"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery.dynatree.min.js"/>
         <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
-        <script type="text/javascript" src="resources/scripts/wysihtml5/wysihtml5-0.4.0pre.min.js"/>
         <script type="text/javascript" src="resources/scripts/atomic/common.js" charset="utf-8"/>
         <script type="text/javascript" src="resources/scripts/atomic/manage.js" charset="utf-8"/>
         <script type="text/javascript" src="resources/scripts/atomic/attachments.js" charset="utf-8"/>
-        <script type="text/javascript" src="resources/scripts/wysihtml5/simple.js"/>
         <script type="text/javascript" src="resources/scripts/atomic/editor.js" charset="utf-8"/>
         <script type="text/javascript" src="resources/scripts/atomic/gallery.js" charset="utf-8"/>
     </body>
