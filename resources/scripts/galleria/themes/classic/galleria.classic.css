@@ -142,14 +142,17 @@
     cursor: pointer;
     display: none;
 }
+
 .notouch .galleria-info-close:hover{
     opacity:1;
     filter: alpha(opacity=100);
 }
+
 .touch .galleria-info-close:active{
     opacity:1;
     filter: alpha(opacity=100);
 }
+
 .galleria-info-link {
     opacity: .7;
     filter: alpha(opacity=70);
@@ -167,8 +170,8 @@
 }
 
 .galleria-info-link-active {
-    opacity: 1;
-    filter: alpha(opacity=100);
+    /*opacity: 1;*/
+    /*filter: alpha(opacity=100);*/
     background-position: center;
     background-image: url(arrow-left.png);
 }
@@ -275,8 +278,7 @@
     background-repeat: no-repeat;
 }
 
-
-.galleria-fscr{
+.galleria-fscr {
     width:22px;
     height:22px;
     position:absolute;
@@ -290,12 +292,13 @@
     opacity: .6;
     filter: alpha(opacity=60);
 }
-.galleria-fscr:hover{
+
+.galleria-fscr:hover {
     opacity:1;
     filter: alpha(opacity=100);
 }
 
-.galleria-splay{
+.galleria-splay {
     width:48px;
     height:48px;
     position:absolute;

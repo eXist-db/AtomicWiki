@@ -25,13 +25,14 @@ if ($('.galleria').length !== 0) {
         // appends the element to the container
         self.appendChild('stage','fscr');
         //self.$('galleria-fscr').css({position:'absolute',right:0,top:0,'z-index':4});
+        //self.$('fscr').addClass('galleria-fscr');
         self.$('fscr').click(function() {
             self.toggleFullscreen(); // toggles the fullscreen
         });
                 
         self.addElement('splay');
         // appends the element to the container
-        self.appendChild('stage','splay');
+        self.appendChild('image-nav','splay');
         /*
         self.addElement('meta-block');
         self.appendChild('container','meta-block');
@@ -46,25 +47,25 @@ if ($('.galleria').length !== 0) {
             opacity: 0
         });
                 
-        self.addIdleState(self.get('splay'), {
+        self.addIdleState(self.get('image-nav'), {
             opacity: 0
         });
         
-        self.addIdleState(self.get('fscr'), {
-            opacity: 0
-        });
+        // self.addIdleState(self.get('fscr'), {
+        //     opacity: 0
+        // });
               
-        self.addIdleState(self.get('info-link'), {
-            opacity: 0
-        });
+        // self.addIdleState(self.get('info-link'), {
+        //     opacity: 0
+        // });
              
-        self.addIdleState(self.get('thumb-nav-left'), {
-            opacity: 0
-        });
+        // self.addIdleState(self.get('thumb-nav-left'), {
+        //     opacity: 0
+        // });
                 
-        self.addIdleState(self.get('thumb-nav-right'), {
-            opacity: 0
-        });
+        // self.addIdleState(self.get('thumb-nav-right'), {
+        //     opacity: 0
+        // });
 
                 
         /* togle playbutton to indicate the current slideshow status */
@@ -81,18 +82,16 @@ if ($('.galleria').length !== 0) {
         });
         */
         
-        /*
+        
         self.bind("idle_enter", function(e) {
-            self.$("thumbnails-container").fadeOut(100);
-            self.$("splay").fadeOut(100);
+            self.$("info-link").fadeOut(100);
             self.$("fscr").fadeOut(100);
         });
         self.bind("idle_exit", function(e) {
-            self.$("thumbnails-container").fadeIn(500);
-            self.$("splay").fadeIn(500);
-            self.$("fscr").fadeIn(500);
+            self.$("info-link").fadeIn(300);
+            self.$("fscr").fadeIn(300);
         });
-        */
+        
                 
         var info = self.$('info-link,info-close,info-text');
         
@@ -146,9 +145,45 @@ if ($('.galleria').length !== 0) {
                 });
             }
         });
-            
+        
+        // self.bind('thumbnail', function(e) {
+
+        //     $(e.thumbTarget).hover(self.proxy(function() {
+        
+        //         self.setInfo(e.index); // sets the caption to display data from the hovered image
+        //         self.setCounter(e.index); // sets the counter to display the index of the hovered image
+        
+        //     }, self.proxy(function() {
+    
+        //         self.setInfo(); // reset the caption to display the currently active data
+        //         self.setCounter(); // reset the caption to display the currently active data
+        //     })));
+        // });
+        
+        // self.bind('thumbnail', function(e) {
+
+        //     $(e.thumbTarget).mouseout(self.proxy(function() {
+        
+        //         self.setInfo(); // sets the caption to display data from the hovered image
+        //         self.setCounter(); // sets the counter to display the index of the hovered image
+        //         //self.setIndex(e.index);
+        
+        //     }));
+        // });
+        
+        // self.bind('thumbnail', function(e) {
+        //     var desc = self.getData( e.index ).description;
+        //     if (desc) {
+        //         self.bindTooltip( e.thumbTarget, desc );
+        //     }
+        // });
+        
         /* show infotext on startup */
-        self.$('info-link').click();
+        //console.log("%o",self.getData( 0 ));
+        if (!!self.getData(0)[ "description" ]) {
+            //console.log(self.getData( 0 )[ "description" ]);
+            self.$('info-link').click();
+        }
                 
     }); /* end of: Galleria.ready() */
     
@@ -159,10 +194,10 @@ if ($('.galleria').length !== 0) {
                 thumb: $(img).attr('src'),
                 image: $(img).parent().attr('href'),
                 big: $(img).attr('data-big'),
-                title: $(img).parent().siblings('h1').html(),
+                //title: $(img).parent().siblings('.title').html(),
+                //title: $(img).parent().siblings(".description").html(),
                 description: $(img).parent().siblings(".description").html() // tell Galleria to grab the content from the .description div as caption
             };
-            //console.log("data: %o", data);
             return data;
         }
     });
