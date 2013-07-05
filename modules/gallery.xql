@@ -55,8 +55,10 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                         }
                             <a href="{$src}"><img data-big="{$src}/{$gallery:IMAGE_BIG}" src="{$src}/{$gallery:IMAGE_THUMB}" /></a>
                             <!--a href="{$src}"><img data-big="{$src}" src="{$src}" /></a-->
+                            {
+                            if ($contentHtml)
+                            then
                             <span class="description" style="display: none;">
-                                <h1>{$entry/atom:title/text()}</h1>
                                 {$contentHtml}
                                <!-- <ul><h3>Meta Daten:</h3>
                                     <li>vra-ID:{$vraMetaID}</li>
@@ -65,7 +67,9 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                                 </ul> -->
                                 
                             </span>
-                        
+                            else
+                                ()
+                            }
                         </li>
                     }
                     </ul>
