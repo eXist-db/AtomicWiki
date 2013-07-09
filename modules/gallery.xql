@@ -17,7 +17,7 @@ declare variable $gallery:IMAGE_THUMB_LARGE := "?width=256&amp;height=256&amp;cr
 
 declare function gallery:show-catalog($node as node(), $model as map(*)) {
     let $gallery-id := $node/@id
-    return
+    return 
         if (empty($gallery-id)) then
             ()
         else
@@ -188,7 +188,7 @@ declare
                                 <div class="image-desc">Image description taken from entry: <span id="" data-description=""></span></div> 
                                 <input type="hidden" id="formURL"> </input>
                                 <div class="gallery-item-controls pull-right">
-                                    <a class="btn" disabled="disabled"><i class="icon-pencil"></i></a>
+                                    <a class="btn btn-pencil" disabled="disabled"><i class="icon-pencil"></i></a>
                                     <a class="btn btn-edit connect-pic" ><i class="icon-share-alt"></i></a>
                                     <a class="btn btn-remove remove-pic"><i class="icon-remove"></i></a>
                                     <a class="btn btn-arrow-up move-pic-up"><i class="icon-arrow-up"></i></a>
@@ -226,8 +226,16 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
                         { $html }
                     </div>
                     <div class="gallery-item-controls pull-right">                
-                        <a class="btn btn-pencil" onclick="openWikiArticle('{$entryId}','{$feedId}', '{$id}')"><i class="icon-pencil"></i></a>
-                        <a class="btn btn-edit" onclick="showSitemap('{$id}','{$feedId}')"><i class="icon-share-alt"></i></a>
+                        {
+                            if($entryId)
+                            then (
+                                <a class="btn btn-pencil" onclick="openWikiArticle('{$entryId}','{$feedId}', '{$id}')"><i class="icon-pencil"></i></a>
+                            )else (
+                                <a class="btn btn-pencil" disabled="disabled"><i class="icon-pencil"></i></a>
+                            )                            
+                        }
+                        
+                        <a class="btn btn-edit" onclick="showSitemap('{$id}')"><i class="icon-share-alt"></i></a>
                         <a class="btn btn-remove" onclick="removeItem('{$id}')"><i class="icon-remove"></i></a>
                         <a class="btn btn-arrow-up" onclick="moveUp('{$id}')"><i class="icon-arrow-up"></i></a>
                         <a class="btn btn-arrow-down" onclick="moveDown('{$id}')"><i class="icon-arrow-down"></i></a>

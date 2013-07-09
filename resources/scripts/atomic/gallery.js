@@ -20,19 +20,19 @@ $(document).ready(function() {
         isDirty = true;
         return false;
     });
-    
+
     $("body").on("click", "#dialog-cancel-action", function(e){
         console.log("close dialog");
         $("#unsaved-changes-dialog").modal('hide');        
-    })
+    });
 
-    $("body").on("click", "#dialog-save-action", function(e){
+    $('body').on("click", "#dialog-save-action", function(e){
         console.log("persist unsaved changes");
         var feedURL = $("#dialog-form-url").val();        
         console.log("feed entry to open: ", feedURL);
         $("#unsaved-changes-dialog").modal('hide');
         saveGallery(feedURL);
-    })
+    });
 
 
     $("#gallery").on("click", ".add-image", function(event){        
@@ -41,7 +41,7 @@ $(document).ready(function() {
     }); 
     
     $("body").on("click", "#edit-form-save", function (e){                
-        console.log("clicked #edit-form-save")
+        console.log("clicked #edit-form-save");
         e.preventDefault();
         saveGallery();    
     });
@@ -224,21 +224,25 @@ function removeItem(itemid) {
     }
 }
 
-function showSitemap(imageEntryId, feedId) {
-    console.log("opened sitemap: itemId: ", imageEntryId, " feed: ",feedId);
+function showSitemap(imageEntryId) {
+    console.log("opened sitemap: itemId: ", imageEntryId);
     linkEditor.open(function(node) {
         console.log("selected: %o", node, " isDiry:", isDirty);
         $("#" + imageEntryId + "-content").text(node.data.title);
         $("#" + imageEntryId + "-content").attr("data-description", node.data.key);
+        var editBtn = $("#" + imageEntryId).find(".btn-pencil");
+        // console.log("pencil btn: ",editBtn)
+        editBtn.removeAttr('disabled');
         isDirty = true;
     });
     /* linkEditor.open(imageEntryId, function() {
         console.debug("open xyz: itemId: ",imageEntryId);
     });*/
-    // linkEditor.onSelect = function(data){
-    //     console.debug("selected item arguments: url:", data.url, " align: ", data.align);
-    //     saveGallery(data.url, feedId, imageEntryId);
-    // };
+    
+    /* linkEditor.onSelect = function(data){
+        console.debug("selected item arguments: data:",data);
+        // saveGallery(data.url, feedId, imageEntryId);
+    };*/
 
 }
 
