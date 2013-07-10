@@ -172,9 +172,12 @@ function addImage(){
     liTemplate.find(".image-desc span").attr("data-description", "");
     liTemplate.find(".image-desc span").text("No description");
 
-    /* liTemplate.find(".edit-pic").click(function() {   
-       removeItem(imageId);
-    });*/        
+
+
+    liTemplate.find(".connect-edit").click(function() {
+        // console.log("connect-pic clicked: imageId: ", imageId);
+        openWikiArticle(imageId);
+    });
     
     liTemplate.find(".connect-pic").click(function() {   
         console.log("connect-pic clicked: imageId: ", imageId);
@@ -226,24 +229,40 @@ function removeItem(itemid) {
 
 function showSitemap(imageEntryId) {
     console.log("opened sitemap: itemId: ", imageEntryId);
+    var linkedArticleId = $("#" + imageEntryId + "-content").attr("data-description");
+    console.log("linked Article: " + linkedArticleId);
+    if(linkedArticleId){
+        // $(".remove-linked-article").show();
+        console.log("linked Article: " + linkedArticleId + " should be visible now!");
+        
+    }
     linkEditor.open(function(node) {
         console.log("selected: %o", node, " isDiry:", isDirty);
-        $("#" + imageEntryId + "-content").text(node.data.title);
-        $("#" + imageEntryId + "-content").attr("data-description", node.data.key);
-        var editBtn = $("#" + imageEntryId).find(".btn-pencil");
-        // console.log("pencil btn: ",editBtn)
-        editBtn.removeAttr('disabled');
-        isDirty = true;
+   
+        $.ajax({
+            type: "GET",
+            url: "modu{les/util.xql",
+            data: { "action": "feedURL" , "title": node.data.title, "description": node.data.key },
+            complete: function(data) {
+                console.log("complete: returned data: ",data);
+                //var readyState = data.readyState;
+                var responseText = jQuery.parseJSON(data.responseText);
+                // var status = data.status;
+                var statusText = data.statusText;
+                
+                if(statusText == "OK"){                                    
+                    console.log("responseText url: ",responseText.wikiUrl);
+                    $("#" + imageEntryId + "-content").text(node.data.title);
+                    $("#" + imageEntryId + "-content").attr("data-description", node.data.key); 
+                    $("#" + imageEntryId + "-content").attr("data-url", responseText.wikiUrl);
+                                        
+                    $("#" + imageEntryId).find(".btn-pencil").removeAttr('disabled');                                        
+                    isDirty = true;                    
+                }                
+            }
+        });
     });
-    /* linkEditor.open(imageEntryId, function() {
-        console.debug("open xyz: itemId: ",imageEntryId);
-    });*/
-    
-    /* linkEditor.onSelect = function(data){
-        console.debug("selected item arguments: data:",data);
-        // saveGallery(data.url, feedId, imageEntryId);
-    };*/
-
+  
 }
 
 function saveGallery(feedURL, feedId, imageEntryId) {
@@ -259,25 +278,29 @@ function saveGallery(feedURL, feedId, imageEntryId) {
         url: "modules/store.xql",
         data: data,
         complete: function() {
+            isDirty = false;
             if(feedURL){
                 $.log("Store completed feedURL: ",feedURL, " imageEntryId: ",imageEntryId, " feedId: ",feedId);
-                window.location = "?id=" + feedURL + "&action=edit";
+                window.location = feedURL + "?action=edit";
             }else {
-                $.log("Successfully saved Slideshow Feed");
+                $.log("Successfully saved Slideshow Feed");                
             }
         }
     });            
 }
 
-function openWikiArticle(feedURL, feedId, imageId ) {
-    // console.log("openWikiArticle: feedURL: ", feedURL, " feedId: ", feedId, " imageId: ", imageId);
-    console.log("isDirty:", isDirty, " feedURL: ",feedURL);
+function openWikiArticle(imageId ) {
+    console.log("openWikiArticle for ImageId: ", imageId);
+    var feedURL = $("#" + imageId + " .wiki-link span").attr("data-url");
+    console.log("feedURL: ",feedURL);
+    
+    console.log("isDirty:", isDirty);
     if(isDirty === true){
         $("#unsaved-changes-dialog").modal('show');
         $("#dialog-form-url").val(feedURL);
     }
     else {
-        window.location = "?id=" + feedURL + "&action=edit";
+        window.location = feedURL + "?action=edit";
     }
 }
 

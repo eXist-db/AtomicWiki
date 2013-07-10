@@ -10,6 +10,7 @@ import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" a
 declare namespace vra="http://www.vraweb.org/vracore4.htm";
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace html="http://www.w3.org/1999/xhtml";
+declare namespace wiki="http://exist-db.org/xquery/wiki";
 
 declare variable $gallery:IMAGE_BIG := "?width=1024";
 declare variable $gallery:IMAGE_THUMB := "?width=100&amp;height=100&amp;crop_type=middle";
@@ -185,10 +186,15 @@ declare
                             </div>
                             <div class="span10 gallery-item-caption">
                                 <h3 class="image-title"></h3>
-                                <div class="image-desc">Image description taken from entry: <span id="" data-description=""></span></div> 
+                                <div class="image-desc">
+                                    <p class="wiki-link">Image description taken from entry: 
+                                            <span id="" data-url="" data-description=""></span>                                                
+                                    </p>                        
+                                </div>
+                                
                                 <input type="hidden" id="formURL"> </input>
                                 <div class="gallery-item-controls pull-right">
-                                    <a class="btn btn-pencil" disabled="disabled"><i class="icon-pencil"></i></a>
+                                    <a class="btn btn-pencil connect-edit" disabled="disabled"><i class="icon-pencil"></i></a>
                                     <a class="btn btn-edit connect-pic" ><i class="icon-share-alt"></i></a>
                                     <a class="btn btn-remove remove-pic"><i class="icon-remove"></i></a>
                                     <a class="btn btn-arrow-up move-pic-up"><i class="icon-arrow-up"></i></a>
@@ -201,6 +207,7 @@ declare
             )
 };
 
+
 declare %private function gallery:feed-to-html-image($feedId as xs:string, $imageURL as xs:string, $id as xs:string, $title as xs:string?, $src as item()*) {    
     let $description := collection($config:wiki-root)/atom:entry[atom:id = $src]
     let $html := 
@@ -208,7 +215,15 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
             doc(util:collection-name($description) || "/" || $description/atom:content/@src)/*
         else()        
     let $entryId := data($description/atom:content/@src)
-                
+    
+    let $feedURL := if(string-length($src) gt 0) 
+                    then (                        
+                        let $feedEntry := collection($config:wiki-root)//atom:entry[atom:id = $src]
+                        return 
+                            config:feed-url-from-entry($feedEntry) || $feedEntry/wiki:id                        
+                    )
+                    else()
+    
     return
         <li id="{$id}" class="container gallery-item-row img-rounded">
             <div class="row">
@@ -222,16 +237,15 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
                 <div class="span10 gallery-item-caption">
                     <h3 class="image-title">{$title}</h3>
                     <div class="image-desc">
-                        <p>Image description taken from entry: <span id="{$id}-content" data-description="{$src}">{$description/atom:title/text()}</span></p>
-                        { $html }
+                        <p class="wiki-link">Image description taken from entry: <span id="{$id}-content" data-url="{$feedURL}" data-description="{$src}">{$description/atom:title/text()}</span></p>                        
                     </div>
                     <div class="gallery-item-controls pull-right">                
                         {
                             if($entryId)
                             then (
-                                <a class="btn btn-pencil" onclick="openWikiArticle('{$entryId}','{$feedId}', '{$id}')"><i class="icon-pencil"></i></a>
+                                <a class="btn btn-pencil" onclick="openWikiArticle('{$id}')"><i class="icon-pencil"></i></a>
                             )else (
-                                <a class="btn btn-pencil" disabled="disabled"><i class="icon-pencil"></i></a>
+                                <a class="btn btn-pencil" onclick="openWikiArticle('{$id}')" disabled="disabled"><i class="icon-pencil"></i></a>
                             )                            
                         }
                         
@@ -370,3 +384,4 @@ function gallery:get-ziziphus-collections($node as node(), $model as map(*)) {
     return
         <option value="{$collection}">{replace($collection, ".*/([^/]+)$", "$1")}</option>
 };
+
