@@ -52,7 +52,21 @@ $(document).ready(function() {
         updateForm();
         form.submit();
         return false;
-    });    
+    }); 
+    $(".delete-button").click(function(ev) {
+        //ev.preventDefault();
+        console.log("clicked delete-button");
+        var imageEntryId = $(".connected-atricle").attr("data-image-id");        
+        console.log("remove referenced feed for image: ", imageEntryId);
+        if(imageEntryId) {
+            $(".connected-atricle").text("");
+            $("#" + imageEntryId + "-content").text("");
+            $("#" + imageEntryId + "-content").attr("data-description", ""); 
+            $("#" + imageEntryId + "-content").attr("data-url", "");            
+            $("#" + imageEntryId).find(".btn-pencil").attr('disabled', "disabled");                                        
+        }
+        return false;
+    });
     
     $("#toggleGallerySwitch").click(function (e) {
         e.preventDefault();
@@ -232,35 +246,38 @@ function showSitemap(imageEntryId) {
     var linkedArticleId = $("#" + imageEntryId + "-content").attr("data-description");
     console.log("linked Article: " + linkedArticleId);
     if(linkedArticleId){
-        // $(".remove-linked-article").show();
+        $(".connected-atricle").text($("#" + imageEntryId + "-content").text());
+        $(".connected-atricle").attr("data-image-id", imageEntryId);
+        $(".remove-linked-article").show();
         console.log("linked Article: " + linkedArticleId + " should be visible now!");
         
     }
     linkEditor.open(function(node) {
-        console.log("selected: %o", node, " isDiry:", isDirty);
-   
-        $.ajax({
-            type: "GET",
-            url: "modu{les/util.xql",
-            data: { "action": "feedURL" , "title": node.data.title, "description": node.data.key },
-            complete: function(data) {
-                console.log("complete: returned data: ",data);
-                //var readyState = data.readyState;
-                var responseText = jQuery.parseJSON(data.responseText);
-                // var status = data.status;
-                var statusText = data.statusText;
-                
-                if(statusText == "OK"){                                    
-                    console.log("responseText url: ",responseText.wikiUrl);
-                    $("#" + imageEntryId + "-content").text(node.data.title);
-                    $("#" + imageEntryId + "-content").attr("data-description", node.data.key); 
-                    $("#" + imageEntryId + "-content").attr("data-url", responseText.wikiUrl);
-                                        
-                    $("#" + imageEntryId).find(".btn-pencil").removeAttr('disabled');                                        
-                    isDirty = true;                    
-                }                
-            }
-        });
+        console.log("selected: %o", node, " isDirty:", isDirty);
+        if(node && node.data.key && node.data.title){
+            $.ajax({
+                type: "GET",
+                url: "modu{les/util.xql",
+                data: { "action": "feedURL" , "title": node.data.title, "description": node.data.key },
+                complete: function(data) {
+                    console.log("complete: returned data: ",data);
+                    //var readyState = data.readyState;
+                    var responseText = jQuery.parseJSON(data.responseText);
+                    // var status = data.status;
+                    var statusText = data.statusText;
+                    
+                    if(statusText == "OK"){                                    
+                        console.log("responseText url: ",responseText.wikiUrl);
+                        $("#" + imageEntryId + "-content").text(node.data.title);
+                        $("#" + imageEntryId + "-content").attr("data-description", node.data.key); 
+                        $("#" + imageEntryId + "-content").attr("data-url", responseText.wikiUrl);
+                                            
+                        $("#" + imageEntryId).find(".btn-pencil").removeAttr('disabled');                                        
+                        isDirty = true;                    
+                    }                
+                }
+            });
+        }
     });
   
 }
@@ -290,17 +307,22 @@ function saveGallery(feedURL, feedId, imageEntryId) {
 }
 
 function openWikiArticle(imageId ) {
-    console.log("openWikiArticle for ImageId: ", imageId);
-    var feedURL = $("#" + imageId + " .wiki-link span").attr("data-url");
-    console.log("feedURL: ",feedURL);
-    
-    console.log("isDirty:", isDirty);
-    if(isDirty === true){
-        $("#unsaved-changes-dialog").modal('show');
-        $("#dialog-form-url").val(feedURL);
+    if(!imageId || $("#" + imageId).find(".btn-pencil").attr('disabled')){
+        return;
     }
     else {
-        window.location = feedURL + "?action=edit";
+        console.log("openWikiArticle for ImageId: ", imageId);
+        var feedURL = $("#" + imageId + " .wiki-link span").attr("data-url");
+        console.log("feedURL: ",feedURL);
+        
+        console.log("isDirty:", isDirty);
+        if(isDirty === true){
+            $("#unsaved-changes-dialog").modal('show');
+            $("#dialog-form-url").val(feedURL);
+        }
+        else {
+            window.location = feedURL + "?action=edit";
+        }
     }
 }
 
