@@ -12,7 +12,7 @@ if ($('.galleria').length !== 0) {
         carouselSpeed: 1234,
         imagePosition: 'center center',
         trueFullscreen: true,
-        keepSource: false,
+        keepSource: true,
         idleTime: 1234
         //lightbox: true
     });
@@ -20,12 +20,14 @@ if ($('.galleria').length !== 0) {
             
     Galleria.ready(function() {
         var self = this; // galleria is ready and the gallery is assigned
-        // creates a new element with the id 'mystuff':
+        
+        // store our master container (.galleria)
+        var my_container = self.$("container").parent();
+        
         self.addElement('fscr');
-        // appends the element to the container
+        // appends the element to a container
         self.appendChild('stage','fscr');
-        //self.$('galleria-fscr').css({position:'absolute',right:0,top:0,'z-index':4});
-        //self.$('fscr').addClass('galleria-fscr');
+
         self.$('fscr').click(function() {
             self.toggleFullscreen(); // toggles the fullscreen
         });
@@ -39,7 +41,7 @@ if ($('.galleria').length !== 0) {
         */
                 
         self.$('splay').click(function() {
-            self.setPlaytime(4000);
+            //self.setPlaytime(4000);
             self.playToggle();
         });
                 
@@ -95,27 +97,26 @@ if ($('.galleria').length !== 0) {
                 
         var info = self.$('info-link,info-close,info-text');
         
-        
-        self.bind("fullscreen_enter", function(e) {
-            self.$('info-link').removeClass('galleria-info-link-active');
-            self.$('info-link').click();
-            //var w = $(window).width();
-            //var h = $(window).height() + 150;
-            //self.resize(w,h);
-            //alert(w + " " +h);
+        function fixInfoHeight (option) {
+            if (option) {
+                self.resize();
+            }
             var my_h = self.$("stage").height();
             self.$("info").height(my_h - 100);
             self.$("info-link").height(my_h - 100);
             self.$("info-text").height(my_h - 110);
-            
+        } 
+        
+        self.bind("fullscreen_enter", function(e) {
+            if (!!self.getData(0)[ "description" ]) {
+                self.$('info-link').removeClass('galleria-info-link-active');
+                self.$('info-link').click();
+            }
+            fixInfoHeight(false);
         });
         
         self.bind("fullscreen_exit", function(e) {
-            self.resize();
-            var my_h = self.$("stage").height();
-            self.$("info").height(my_h - 100);
-            self.$("info-link").height(my_h - 100);
-            self.$("info-text").height(my_h - 110);
+            fixInfoHeight(true);
         });
         
         /*
@@ -124,6 +125,7 @@ if ($('.galleria').length !== 0) {
             console.log("rescale done");
         });
         */
+        
         self.$('info-link').bind( 'click',function(e) {
             if( ! self.$('info-link').hasClass('galleria-info-link-active')){
                 self.$('info-link').addClass('galleria-info-link-active');
@@ -147,27 +149,20 @@ if ($('.galleria').length !== 0) {
         });
         
         // self.bind('thumbnail', function(e) {
-
         //     $(e.thumbTarget).hover(self.proxy(function() {
-        
         //         self.setInfo(e.index); // sets the caption to display data from the hovered image
         //         self.setCounter(e.index); // sets the counter to display the index of the hovered image
-        
         //     }, self.proxy(function() {
-    
         //         self.setInfo(); // reset the caption to display the currently active data
         //         self.setCounter(); // reset the caption to display the currently active data
         //     })));
         // });
         
         // self.bind('thumbnail', function(e) {
-
         //     $(e.thumbTarget).mouseout(self.proxy(function() {
-        
         //         self.setInfo(); // sets the caption to display data from the hovered image
         //         self.setCounter(); // sets the counter to display the index of the hovered image
         //         //self.setIndex(e.index);
-        
         //     }));
         // });
         
@@ -184,6 +179,29 @@ if ($('.galleria').length !== 0) {
             //console.log(self.getData( 0 )[ "description" ]);
             self.$('info-link').click();
         }
+        
+        if (self.getData(0)[ "conf_autoplay" ] == "on") {
+            //self.setOptions('autoplay',parseInt(self.getData(0)[ "conf_intervall" ]));
+            self.setPlaytime(self.getData(0)[ "conf_intervall" ]);
+            self.playToggle();
+        } else {
+            self.setOptions('autoplay',false);
+        }
+        
+        // resize our master-container using customn settings for width and height
+        my_container.css({
+            "width": parseInt(self.getData(0)[ "conf_width" ].replace("px", "")) + "px",
+            "height": parseInt(self.getData(0)[ "conf_height" ].replace("px", "")) + "px"
+        });
+        
+        //self.resize();
+        fixInfoHeight(true);
+        
+        if (self.getData(0)[ "conf_align" ]) {
+            self.setOptions({
+                 imagePosition: "center " + self.getData(0)[ "conf_align" ],
+            }).refreshImage();
+        }
                 
     }); /* end of: Galleria.ready() */
     
@@ -196,13 +214,19 @@ if ($('.galleria').length !== 0) {
                 big: $(img).attr('data-big'),
                 //title: $(img).parent().siblings('.title').html(),
                 //title: $(img).parent().siblings(".description").html(),
-                description: $(img).parent().siblings(".description").html() // tell Galleria to grab the content from the .description div as caption
+                description: $(img).parent().siblings(".description").html(), // tell Galleria to grab the content from the .description div as caption
+                
+                conf_autoplay: $(img).parent().parent().parent().siblings("span[data-name='conf_autoplay']").filter(":first").eq(0).attr('data-value'),
+                conf_intervall: $(img).parent().parent().parent().siblings("span[data-name='conf_intervall']").filter(":first").eq(0).attr('data-value'),
+                conf_width: $(img).parent().parent().parent().siblings("span[data-name='conf_width']").filter(":first").eq(0).attr('data-value'),
+                conf_height: $(img).parent().parent().parent().siblings("span[data-name='conf_height']").filter(":first").eq(0).attr('data-value'),
+                conf_align: $(img).parent().parent().parent().siblings("span[data-name='conf_align']").filter(":first").eq(0).attr('data-value')
             };
             return data;
         }
     });
             
 } /* end of: ($('.galleria').length != 0) */
-
+        // extend:
         
             
