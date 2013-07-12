@@ -11,7 +11,6 @@ declare namespace vra="http://www.vraweb.org/vracore4.htm";
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace wiki="http://exist-db.org/xquery/wiki";
 declare namespace html="http://www.w3.org/1999/xhtml";
-declare namespace wiki="http://exist-db.org/xquery/wiki";
 
 declare variable $gallery:IMAGE_BIG := "?width=1024";
 declare variable $gallery:IMAGE_THUMB := "?width=100&amp;height=100&amp;crop_type=middle";
