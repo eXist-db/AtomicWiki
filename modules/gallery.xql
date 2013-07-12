@@ -9,6 +9,7 @@ import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" a
 
 declare namespace vra="http://www.vraweb.org/vracore4.htm";
 declare namespace atom="http://www.w3.org/2005/Atom";
+declare namespace wiki="http://exist-db.org/xquery/wiki";
 declare namespace html="http://www.w3.org/1999/xhtml";
 
 declare variable $gallery:IMAGE_BIG := "?width=1024";
@@ -23,11 +24,22 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
         else
             let $div :=
             <div class="galleria">
-                <div class="gallery-images">
+                {
+                let $galleryCol := util:collection-name($model("feed")) || "/_galleries"
+                
+                let $gal_col := collection($galleryCol)/atom:feed[atom:id=$gallery-id]
+                
+                let $conf_autoplay := $gal_col/wiki:config[@key="autoplay"]/@value/string()
+                let $conf_intervall := $gal_col/wiki:config[@key="intervall"]/@value/string()
+                let $conf_width := $gal_col/wiki:config[@key="width"]/@value/string()
+                let $conf_height := $gal_col/wiki:config[@key="height"]/@value/string()
+                let $conf_align := $gal_col/wiki:config[@key="align"]/@value/string()
+                return
+                <div class="gallery-images" style="display:none">
                     <ul>
                     {
-                    let $galleryCol := util:collection-name($model("feed")) || "/_galleries"
-                    let $entries := collection($galleryCol)/atom:feed[atom:id=$gallery-id]/atom:entry
+            
+                    let $entries := $gal_col/atom:entry
                     for $entry at $pos in $entries
                     let $href := $entry/atom:link[starts-with(@type, "image")]/@href/string()
                     let $vraMetaID := $entry/atom:link[starts-with(@type, "vra")]/@href/string()
@@ -54,6 +66,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                                 ()
                         }
                             <a href="{$src}"><img data-big="{$src}/{$gallery:IMAGE_BIG}" src="{$src}/{$gallery:IMAGE_THUMB}" /></a>
+    
                             <!--a href="{$src}"><img data-big="{$src}" src="{$src}" /></a-->
                             {
                             if ($contentHtml)
@@ -65,7 +78,6 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                                     <li>agent: {$vraMetaImageAgentName}</li>
                                     
                                 </ul> -->
-                                
                             </span>
                             else
                                 ()
@@ -73,10 +85,17 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                         </li>
                     }
                     </ul>
+                    <span data-name="conf_autoplay" data-value="{$conf_autoplay}" style="display: none;"></span>
+                    <span data-name="conf_intervall" data-value="{$conf_intervall}" style="display: none;"></span>
+                    <span data-name="conf_width" data-value="{$conf_width}" style="display: none;"></span>
+                    <span data-name="conf_height" data-value="{$conf_height}" style="display: none;"></span>
+                    <span data-name="conf_align" data-value="{$conf_align}" style="display: none;"></span>
+                
                 </div>
+                }
             </div>
         return
-            $div
+           $div
 };
 
 declare function gallery:select-gallery($node as node(), $model as map(*)) {
@@ -107,29 +126,46 @@ declare function gallery:select-gallery($node as node(), $model as map(*)) {
 (:        :)
 (:};:)
 
-declare function gallery:build-gallery-edit-menu($node as node(), $model as map(*)) {
-    let $theme := theme:theme-for-feed(util:collection-name($model("feed")))
-    let $theme := substring-before($theme, "/_theme")
-    let $galleries :=
-        for $feed in collection($theme)/atom:feed
-        where ends-with(util:collection-name($feed), "_galleries")
-    return
-            $feed/atom:title
-    return
-        <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"> Edit Slideshows </a>
-            <ul class="dropdown-menu pull-left">
-                {
-                for $gallery in $galleries
-                let $feedname := replace(util:document-name($gallery),"(.*)\.atom","$1")
-                let $galleryCol := substring-before(util:collection-name($gallery), "/_galleries")
-                return
-                    <li>
-                    <a href="?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery/text()," "}</a>
-                    </li>
-                }  
-            </ul>
+
+declare function gallery:build-gallery-add-menu($node as node(), $model as map(*)) {
+    if ($config:slideshows-enabled = "true")
+    then
+        <li>
+            <a href=".?action=addgallery">
+                <i class="icon-plus"/> New Slideshow</a>
         </li>
+    else
+        ()
+};
+
+
+declare function gallery:build-gallery-edit-menu($node as node(), $model as map(*)) {
+    if ($config:slideshows-enabled = "true")
+    then
+        let $theme := theme:theme-for-feed(util:collection-name($model("feed")))
+        let $theme := substring-before($theme, "/_theme")
+        let $galleries :=
+            for $feed in collection($theme)/atom:feed
+            where ends-with(util:collection-name($feed), "_galleries")
+        return
+                $feed/atom:title
+        return
+            <li class="dropdown-submenu">
+                <a tabindex="-1" href="#"> Edit Slideshows </a>
+                <ul class="dropdown-menu pull-left">
+                    {
+                    for $gallery in $galleries
+                    let $feedname := replace(util:document-name($gallery),"(.*)\.atom","$1")
+                    let $galleryCol := substring-before(util:collection-name($gallery), "/_galleries")
+                    return
+                        <li>
+                        <a href="?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery/text()," "}</a>
+                        </li>
+                    }  
+                </ul>
+            </li>
+    else
+        ()
 };
 
 

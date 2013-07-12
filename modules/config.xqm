@@ -104,6 +104,10 @@ declare variable $config:default-editor :=
     $config:wiki-config/configuration/editor/@default/string()
 ;
 
+declare variable $config:slideshows-enabled :=
+    $config:wiki-config/configuration/slideshows-enabled/string()
+;
+
 (:~
  : Resolve the given path using the current application context.
  : If the app resides in the file system,
