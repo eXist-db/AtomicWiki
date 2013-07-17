@@ -47,13 +47,20 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                     let $vraMetaImageAgentName := $vraCol//image//agent/name/text()
                     let $src :=
                         if (matches($href, "^(/|\w+:)")) then
-                            $href
+                            map {
+                                    "src" := $href,
+                                    "src_thumb" := $href || $gallery:IMAGE_THUMB,
+                                    "src_big" := $href || $gallery:IMAGE_BIG
+                            }
                         else
-                            substring-after($config:wiki-data, "/") || "/_galleries/" || $href
-                    (:
-                    let $src_thumb := $src || "thumb.jpg"
-                    let $src_big := $src || "big.jpg"
-                    :)
+                            let $pic_src := substring-after($config:wiki-data, "/") || "/_galleries/" || $href
+                            return
+                            map {
+                                    "src" := $pic_src,
+                                    "src_thumb" := $pic_src,
+                                    "src_big" := $pic_src
+                            }
+
                     let $contentSrc := $entry/atom:content/@src
                     let $contentEntry := collection($config:wiki-root)/atom:entry[atom:id = $contentSrc]
                     let $contentHtml := doc(util:collection-name($contentEntry) || "/" || $contentEntry/atom:content/@src)/*/*
@@ -65,7 +72,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                             else
                                 ()
                         }
-                            <a href="{$src}"><img data-big="{$src}/{$gallery:IMAGE_BIG}" src="{$src}/{$gallery:IMAGE_THUMB}" /></a>
+                            <a href="{$src("src")}"><img data-big="{$src("src_big")}" src="{$src("src_thumb")}" /></a>
     
                             <!--a href="{$src}"><img data-big="{$src}" src="{$src}" /></a-->
                             {
