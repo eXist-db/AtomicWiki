@@ -9,6 +9,7 @@ import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" a
 
 declare namespace vra="http://www.vraweb.org/vracore4.htm";
 declare namespace atom="http://www.w3.org/2005/Atom";
+declare namespace wiki="http://exist-db.org/xquery/wiki";
 declare namespace html="http://www.w3.org/1999/xhtml";
 
 declare variable $gallery:IMAGE_BIG := "?width=1024";
@@ -17,17 +18,28 @@ declare variable $gallery:IMAGE_THUMB_LARGE := "?width=256&amp;height=256&amp;cr
 
 declare function gallery:show-catalog($node as node(), $model as map(*)) {
     let $gallery-id := $node/@id
-    return
+    return 
         if (empty($gallery-id)) then
             ()
         else
             let $div :=
             <div class="galleria">
-                <div class="gallery-images">
+                {
+                let $galleryCol := util:collection-name($model("feed")) || "/_galleries"
+                
+                let $gal_col := collection($galleryCol)/atom:feed[atom:id=$gallery-id]
+                
+                let $conf_autoplay := $gal_col/wiki:config[@key="autoplay"]/@value/string()
+                let $conf_intervall := $gal_col/wiki:config[@key="intervall"]/@value/string()
+                let $conf_width := $gal_col/wiki:config[@key="width"]/@value/string()
+                let $conf_height := $gal_col/wiki:config[@key="height"]/@value/string()
+                let $conf_align := $gal_col/wiki:config[@key="align"]/@value/string()
+                return
+                <div class="gallery-images" style="display:none">
                     <ul>
                     {
-                    let $galleryCol := util:collection-name($model("feed")) || "/_galleries"
-                    let $entries := collection($galleryCol)/atom:feed[atom:id=$gallery-id]/atom:entry
+            
+                    let $entries := $gal_col/atom:entry
                     for $entry at $pos in $entries
                     let $href := $entry/atom:link[starts-with(@type, "image")]/@href/string()
                     let $vraMetaID := $entry/atom:link[starts-with(@type, "vra")]/@href/string()
@@ -54,25 +66,36 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                                 ()
                         }
                             <a href="{$src}"><img data-big="{$src}/{$gallery:IMAGE_BIG}" src="{$src}/{$gallery:IMAGE_THUMB}" /></a>
+    
                             <!--a href="{$src}"><img data-big="{$src}" src="{$src}" /></a-->
+                            {
+                            if ($contentHtml)
+                            then
                             <span class="description" style="display: none;">
-                                <h1>{$entry/atom:title/text()}</h1>
                                 {$contentHtml}
                                <!-- <ul><h3>Meta Daten:</h3>
                                     <li>vra-ID:{$vraMetaID}</li>
                                     <li>agent: {$vraMetaImageAgentName}</li>
                                     
                                 </ul> -->
-                                
                             </span>
-                        
+                            else
+                                ()
+                            }
                         </li>
                     }
                     </ul>
+                    <span data-name="conf_autoplay" data-value="{$conf_autoplay}" style="display: none;"></span>
+                    <span data-name="conf_intervall" data-value="{$conf_intervall}" style="display: none;"></span>
+                    <span data-name="conf_width" data-value="{$conf_width}" style="display: none;"></span>
+                    <span data-name="conf_height" data-value="{$conf_height}" style="display: none;"></span>
+                    <span data-name="conf_align" data-value="{$conf_align}" style="display: none;"></span>
+                
                 </div>
+                }
             </div>
         return
-            $div
+           $div
 };
 
 declare function gallery:select-gallery($node as node(), $model as map(*)) {
@@ -103,29 +126,46 @@ declare function gallery:select-gallery($node as node(), $model as map(*)) {
 (:        :)
 (:};:)
 
-declare function gallery:build-gallery-edit-menu($node as node(), $model as map(*)) {
-    let $theme := theme:theme-for-feed(util:collection-name($model("feed")))
-    let $theme := substring-before($theme, "/_theme")
-    let $galleries :=
-        for $feed in collection($theme)/atom:feed
-        where ends-with(util:collection-name($feed), "_galleries")
-    return
-            $feed/atom:title
-    return
-        <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"> Edit Slideshows </a>
-            <ul class="dropdown-menu">
-                {
-                for $gallery in $galleries
-                let $feedname := replace(util:document-name($gallery),"(.*)\.atom","$1")
-                let $galleryCol := substring-before(util:collection-name($gallery), "/_galleries")
-                return
-                    <li>
-                    <a href="?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery/text()," "}</a>
-                    </li>
-                }  
-            </ul>
+
+declare function gallery:build-gallery-add-menu($node as node(), $model as map(*)) {
+    if ($config:slideshows-enabled = "true")
+    then
+        <li>
+            <a href=".?action=addgallery">
+                <i class="icon-plus"/> New Slideshow</a>
         </li>
+    else
+        ()
+};
+
+
+declare function gallery:build-gallery-edit-menu($node as node(), $model as map(*)) {
+    if ($config:slideshows-enabled = "true")
+    then
+        let $theme := theme:theme-for-feed(util:collection-name($model("feed")))
+        let $theme := substring-before($theme, "/_theme")
+        let $galleries :=
+            for $feed in collection($theme)/atom:feed
+            where ends-with(util:collection-name($feed), "_galleries")
+        return
+                $feed/atom:title
+        return
+            <li class="dropdown-submenu">
+                <a tabindex="-1" href="#"> Edit Slideshows </a>
+                <ul class="dropdown-menu pull-left">
+                    {
+                    for $gallery in $galleries
+                    let $feedname := replace(util:document-name($gallery),"(.*)\.atom","$1")
+                    let $galleryCol := substring-before(util:collection-name($gallery), "/_galleries")
+                    return
+                        <li>
+                        <a href="?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery/text()," "}</a>
+                        </li>
+                    }  
+                </ul>
+            </li>
+    else
+        ()
 };
 
 
@@ -181,10 +221,15 @@ declare
                             </div>
                             <div class="span10 gallery-item-caption">
                                 <h3 class="image-title"></h3>
-                                <div class="image-desc">Image description taken from entry: <span id="" data-description=""></span></div> 
+                                <div class="image-desc">
+                                    <p class="wiki-link">Image description taken from entry: 
+                                            <span id="" data-url="" data-description=""></span>                                                
+                                    </p>                        
+                                </div>
+                                
                                 <input type="hidden" id="formURL"> </input>
                                 <div class="gallery-item-controls pull-right">
-                                    <a class="btn" disabled="disabled"><i class="icon-pencil"></i></a>
+                                    <a class="btn btn-pencil connect-edit" disabled="disabled"><i class="icon-pencil"></i></a>
                                     <a class="btn btn-edit connect-pic" ><i class="icon-share-alt"></i></a>
                                     <a class="btn btn-remove remove-pic"><i class="icon-remove"></i></a>
                                     <a class="btn btn-arrow-up move-pic-up"><i class="icon-arrow-up"></i></a>
@@ -197,6 +242,7 @@ declare
             )
 };
 
+
 declare %private function gallery:feed-to-html-image($feedId as xs:string, $imageURL as xs:string, $id as xs:string, $title as xs:string?, $src as item()*) {    
     let $description := collection($config:wiki-root)/atom:entry[atom:id = $src]
     let $html := 
@@ -204,7 +250,15 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
             doc(util:collection-name($description) || "/" || $description/atom:content/@src)/*
         else()        
     let $entryId := data($description/atom:content/@src)
-                
+    
+    let $feedURL := if(string-length($src) gt 0) 
+                    then (                        
+                        let $feedEntry := collection($config:wiki-root)//atom:entry[atom:id = $src]
+                        return 
+                            config:feed-url-from-entry($feedEntry) || $feedEntry/wiki:id                        
+                    )
+                    else()
+    
     return
         <li id="{$id}" class="container gallery-item-row img-rounded">
             <div class="row">
@@ -218,12 +272,19 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
                 <div class="span10 gallery-item-caption">
                     <h3 class="image-title">{$title}</h3>
                     <div class="image-desc">
-                        <p>Image description taken from entry: <span id="{$id}-content" data-description="{$src}">{$description/atom:title/text()}</span></p>
-                        { $html }
+                        <p class="wiki-link">Image description taken from entry: <span id="{$id}-content" data-url="{$feedURL}" data-description="{$src}">{$description/atom:title/text()}</span></p>                        
                     </div>
                     <div class="gallery-item-controls pull-right">                
-                        <a class="btn btn-pencil" onclick="openWikiArticle('{$entryId}','{$feedId}', '{$id}')"><i class="icon-pencil"></i></a>
-                        <a class="btn btn-edit" onclick="showSitemap('{$id}','{$feedId}')"><i class="icon-share-alt"></i></a>
+                        {
+                            if($entryId)
+                            then (
+                                <a class="btn btn-pencil" onclick="openWikiArticle('{$id}')"><i class="icon-pencil"></i></a>
+                            )else (
+                                <a class="btn btn-pencil" onclick="openWikiArticle('{$id}')" disabled="disabled"><i class="icon-pencil"></i></a>
+                            )                            
+                        }
+                        
+                        <a class="btn btn-edit" onclick="showSitemap('{$id}')"><i class="icon-share-alt"></i></a>
                         <a class="btn btn-remove" onclick="removeItem('{$id}')"><i class="icon-remove"></i></a>
                         <a class="btn btn-arrow-up" onclick="moveUp('{$id}')"><i class="icon-arrow-up"></i></a>
                         <a class="btn btn-arrow-down" onclick="moveDown('{$id}')"><i class="icon-arrow-down"></i></a>
@@ -358,3 +419,4 @@ function gallery:get-ziziphus-collections($node as node(), $model as map(*)) {
     return
         <option value="{$collection}">{replace($collection, ".*/([^/]+)$", "$1")}</option>
 };
+
