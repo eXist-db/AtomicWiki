@@ -15,7 +15,7 @@ declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace templates="http://exist-db.org/xquery/templates";
 
 declare variable $config:default-user := ("editor", "editor");
-declare variable $config:default-group := "wiki";
+declare variable $config:default-group := "biblio.users";
 declare variable $config:admin-group := "wiki-admin";
 
 (: 
