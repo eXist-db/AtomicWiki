@@ -97,7 +97,6 @@ Atomic.menu = (function () {
             var xml = "<menu>";
             for (var i = 0; i < entries.length; i++) {
                 var entry = entries[i];
-                $.log("entry: %o", entry);
                 var children = entry.getChildren();
                 var isFolder = entry.hasChildren();
                 xml += "<entry title='" + entry.data.title.encodeHTML() + "' folder='" + isFolder + "'>";
@@ -116,7 +115,7 @@ Atomic.menu = (function () {
                 url: "modules/edit-menu.xql",
                 type: "PUT",
                 contentType: "application/xml",
-                headers: { "X-AtomicFeed": (entry.data.feed === undefined ? "/" : entry.data.feed) },
+                headers: { "X-AtomicFeed": feed },
                 data: xml,
                 success: function(data) {
                     window.location.reload();
