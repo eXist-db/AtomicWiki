@@ -41,7 +41,7 @@ Atomic.sitemap = (function () {
             onPostInit: function() {
                 var uuid = $("input[name='uuid']").val();
                 var node = this.selectKey(uuid);
-                node.expand(true);
+		node.makeVisible();
             },
             onDblClick: function(dtnode) {
                 var key = dtnode.data.key;
