@@ -123,6 +123,91 @@ declare function gallery:select-gallery($node as node(), $model as map(*)) {
             }
         </select>
 };
+declare function gallery:add-video($node as node(), $model as map(*)) {
+    <div>
+        <select class="span4" name="video">
+            <option value="Pandora1">Pandora 1: insert the whole URL</option>
+            <option value="Pandora2">Pandora 2: for http://129.206.36.128:8000</option>
+            <option value="youTube">YouTube</option>
+            <option value="vimeo">Vimeo</option>
+        </select> 
+        <input class="span4" type="text" name="id" placeholder="Name or ID of video!" required="required"/>
+    </div>
+    
+};
+
+declare function gallery:select-video($node as node(), $model as map(*), $videotyp as xs:string?) {
+    let $id := $node/@id
+    
+    return
+        
+    switch ($videotyp)
+    case "Pandora1" return
+        <div>
+            <iframe width = "700" height="400" src="{$id}?embeded=true" frameborder="0" webkitAllowFullScreen="true" mozallowfullscreen="true" allowFullScreen="true" >Pandora video</iframe>
+        </div>
+    case "Pandora2" return
+        <div>
+            <iframe width = "640" height="360" src="http://129.206.36.128:8000/{$id}?embeded=true" frameborder="1">Pandora video</iframe>
+        </div>
+    case "youTube" return
+        <div>
+            <iframe  width = "640" height="385" src="http://www.youtube.com/embed/{$id}" frameborder="0">YouTube video</iframe>
+        </div>
+    case "vimeo" return
+        <div>
+            <iframe width="640" height="360" src="http://player.vimeo.com/video/{$id}">vimeo video</iframe>
+        </div>
+        
+    default return 
+
+        <h1>You selected nothing</h1>
+};
+    
+declare function gallery:add-music($node as node(), $model as map(*)) {
+    <div>
+        <select class="span4" name="music">
+            <option value="musicLocal">local</option>
+<!--            <option value="musicUrl">URL</option>
+           <option value="ogg">ogg</option> -->
+        </select> 
+        <input class="span4" type="text" name="id" placeholder="File Name or URL of music-title" required="required"/>
+    </div>
+    
+};
+
+declare function gallery:select-music($node as node(), $model as map(*), $musictyp as xs:string?) {
+    let $id := $node/@id
+    return
+        
+    switch ($musictyp)
+    case "musicLocal" return
+        <div>
+            <audio src="data/{$id}" controls="">
+                <embed src="data/{$id}" width="100" height="50" />
+            </audio>
+            
+        </div>
+(:    case "musicUrl" return:)
+(:        <div>:)
+(:            <audio src="http://www.youtube.com/embed/{$id}?rel=0" controls="">:)
+(:                <embed src="http://www.youtube.com/embed/{$id}?rel=0" width="100" height="50" loop="true" autostart="true"/>:)
+(:            </audio>:)
+(:            <p> music player</p>   :)
+(:            :)
+(:            :)
+(:        </div>:)
+(:    case "ogg" return:)
+(:        <div>:)
+(:            <audio controls=""> <source src=""type="audio/ogg"/>Your browser does not support ogg audio format</audio>:)
+(:        </div>:)
+        
+    default return 
+
+        <h1>You selected nothing</h1>
+                      
+};
+
 
 (:declare function gallery:select-options($node as node(), $model as map(*)) {:)
 (:    let $galleryCol := util:collection-name($model("feed")) || "/_galleries":)

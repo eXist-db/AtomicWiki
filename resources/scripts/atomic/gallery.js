@@ -2,6 +2,7 @@ var linkEditor;
 var sitemap;
 var anchorEditor;
 var addGallery;
+var addVideo;
 var atomicEditor;
 var form;
 var isDirty = false;
@@ -12,6 +13,7 @@ $(document).ready(function() {
     linkEditor = new Atomic.editor.LinkToText();
     anchorEditor = new Atomic.editor.EditAnchor();
     addGallery = new Atomic.editor.AddGalleryLink();
+    addVideo = new Atomic.editorAddVideoLink();
 
 // $(document).tooltip();
     $(".control-group").on("change","#title,#name", function(e) {

@@ -358,6 +358,72 @@ Atomic.editor.AddGalleryLink = (function () {
     
     return Constr;
 }());
+
+Atomic.namespace("Atomic.editor.AddVideoLink");
+
+Atomic.editor.AddVideoLink = (function () {
+    
+    Constr = function() {
+        this.dialog = $("#video-dialog");
+        this.dialog.modal({
+            keyboard: true,
+            show: false
+        });
+        var select = this.dialog.find("select");
+        var self = this;
+        $(".close-button", this.dialog).click(function(ev) {
+            ev.preventDefault();
+            self.dialog.modal("hide");
+        });
+        $(".apply-button", this.dialog).click(function(ev) {
+            ev.preventDefault();
+            self.dialog.modal("hide");
+            if (self.callback) {
+                self.callback(select.val(), self.dialog.find("input[name='id']").val());
+            }
+        });
+    };
+    
+    Constr.prototype.show = function(callback) {
+        this.dialog.modal("show");
+        this.callback = callback;
+    };
+    
+    return Constr;
+}());
+
+Atomic.namespace("Atomic.editor.AddMusicLink");
+
+Atomic.editor.AddMusicLink = (function () {
+    
+    Constr = function() {
+        this.dialog = $("#music-dialog");
+        this.dialog.modal({
+            keyboard: true,
+            show: false
+        });
+        var select = this.dialog.find("select");
+        var self = this;
+        $(".close-button", this.dialog).click(function(ev) {
+            ev.preventDefault();
+            self.dialog.modal("hide");
+        });
+        $(".apply-button", this.dialog).click(function(ev) {
+            ev.preventDefault();
+            self.dialog.modal("hide");
+            if (self.callback) {
+                self.callback(select.val(), self.dialog.find("input[name='id']").val());
+            }
+        });
+    };
+    
+    Constr.prototype.show = function(callback) {
+        this.dialog.modal("show");
+        this.callback = callback;
+    };
+    
+    return Constr;
+}());
     
 Atomic.namespace("Atomic.editor.EditAnchor");
 
