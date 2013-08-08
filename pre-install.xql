@@ -42,6 +42,6 @@ if (sm:group-exists($config:admin-group)) then
 else
     sm:create-group($config:admin-group, "wiki administrator group"),
 if (sm:user-exists($config:default-user[1])) then
-    ()
+    sm:add-group-member($config:default-group, $config:default-user[1])
 else
     sm:create-account($config:default-user[1], $config:default-user[2], $config:default-group, $config:admin-group)
