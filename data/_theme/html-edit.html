@@ -74,7 +74,6 @@
                                             <ul>
                                                 <li class="dropdown">
                                                     <a class="btn dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-                                                        <i class="icon-font"/>&#160;
                                                         <span class="current-font">Normal</span>
                                                         <b class="caret"/>
                                                     </a>
@@ -128,6 +127,12 @@
                                                     </a>
                                                     <a data-wysihtml5-command="insertGallery" class="btn" title="Insert Slideshow">
                                                         <i class="icon-th-large"/>
+                                                    </a>
+                                                    <a data-wysihtml5-command="insertVideo" class="btn" title="Insert Video">
+                                                        <i class="icon-film"/>
+                                                    </a>
+                                                    <a data-wysihtml5-command="insertMusic" class="btn" title="Insert Music">
+                                                        <i class="icon-music"/>
                                                     </a>
                                                 </li>
                                                 <li class="btn-group">
@@ -224,6 +229,15 @@
                                                     </a>
                                                     <a data-wysihtml5-command="insertImage" class="btn" title="Insert/Edit Image">
                                                         <i class="icon-picture"/>
+                                                    </a>
+                                                    <a data-wysihtml5-command="insertGallery" class="btn" title="Insert Slideshow">
+                                                        <i class="icon-th-large"/>
+                                                    </a>
+                                                    <a data-wysihtml5-command="insertVideo" class="btn" title="Insert Video">
+                                                        <i class="icon-film"/>
+                                                    </a>
+                                                    <a data-wysihtml5-command="insertMusic" class="btn" title="Insert Music">
+                                                        <i class="icon-music"/>
                                                     </a>
                                                 </li>
                                                 <li class="btn-group">
@@ -342,6 +356,60 @@
                         </div>
                     </form>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn close-button">
+                    <i class="icon-remove"/> Cancel
+                </a>
+                <a class="btn-primary btn apply-button">
+                    <i class="icon-remove"/> Apply
+                </a>
+            </div>
+        </div>
+        <div class="modal hide fade" id="video-dialog">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">
+                    <i class="icon-remove"/>
+                </a>
+                <h3 class="title">Insert Video</h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="">
+                    <div class="control-group">
+                        <label class="control-label" for="video">Select Video Typ:</label>
+                        <div class="controls">
+                            <div class="gallery:add-video"/>
+                            <span class="help-inline">Select a video player and enter the video number. For Pandora 2 insert eg. M/editor00:01:19.120,00:01:19:120</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn close-button">
+                    <i class="icon-remove"/> Cancel
+                </a>
+                <a class="btn-primary btn apply-button">
+                    <i class="icon-remove"/> Apply
+                </a>
+            </div>
+        </div>
+        <div class="modal hide fade" id="music-dialog">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">
+                    <i class="icon-remove"/>
+                </a>
+                <h3 class="title">Insert Music</h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="">
+                    <div class="control-group">
+                        <label class="control-label" for="video">Select Music Typ:</label>
+                        <div class="controls">
+                            <div class="gallery:add-music"/>
+                            <span class="help-inline">Select the music type and enter the file name</span>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <a class="btn btn close-button">

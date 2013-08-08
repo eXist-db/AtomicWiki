@@ -1,4 +1,4 @@
- xquery version "3.0";
+xquery version "3.0";
 
 module namespace app="http://exist-db.org/xquery/app";
 
@@ -127,7 +127,7 @@ declare function app:get-or-create-entry($node as node(), $model as map(*), $loc
             $node/@*,
             if ($id or $wikiId) then
                 let $entry := config:get-entries($feed, $id, $wikiId)
-                let $locked := atomic:lock-for-user($entry)
+                let $locked := atomic:lock-for-user($entry)[1]
                 return
                     if ($locked) then
                         <div class="alert">

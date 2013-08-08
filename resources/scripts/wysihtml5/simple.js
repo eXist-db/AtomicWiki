@@ -27,7 +27,20 @@ var wysihtml5ParserRules = {
         "alert-info": 1,
         "gallery:show-catalog gallery-placeholder": 1,
         "gallery:show-catalog": 1,
-        "gallery-placeholder": 1
+        "gallery:add-video video-placeholder": 1,
+        "gallery:add-video": 1,
+        "gallery-placeholder": 1,
+        "gallery:select-video?videotyp=Pandora1": 1,
+        "gallery:select-video?videotyp=Pandora2": 1,
+        "gallery:select-video?videotyp=youTube": 1,
+        "gallery:select-video?videotyp=vimeo": 1,
+        "video-placeholder": 1,
+        "gallery:add-music": 1,
+        "gallery:add-music music-placeholder": 1,
+        "gallery:select-music?musictyp=musicLocal": 1,
+        "gallery:select-music?musictyp=musicUrl": 1,
+        "gallery:select-music?musictyp=ogg": 1,
+        "music-placeholder": 1
     },
   tags: {
     strong: {},

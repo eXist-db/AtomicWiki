@@ -202,7 +202,7 @@ Atomic.namespace("Atomic.editor.Editor");
 
 Atomic.editor.Editor = (function () {
 
-    Constr = function(contentId, textareaId, toolbarId, sitemap, anchorEditor, addGallery) {
+    Constr = function(contentId, textareaId, toolbarId, sitemap, anchorEditor, addGallery, addVideo, addMusic) {
         this.codeEditors = [];
         
         var content = document.getElementById(contentId);
@@ -303,6 +303,26 @@ Atomic.editor.Editor = (function () {
                 addGallery.show(function(value, title) {
                     editor.composer.commands.exec("insertHTML", 
                         "<div class='gallery:show-catalog gallery-placeholder' id='" + value + "'>Image Slideshow: " + title + "</div><p></p>");
+                });
+                return false;
+            }
+        });
+        
+        toolbar.find('a[data-wysihtml5-command="insertVideo"]').click(function(ev) {
+            if(addVideo){
+                addVideo.show(function(videotyp, id) {
+                editor.composer.commands.exec("insertHTML", 
+                        "<div class='gallery:select-video?videotyp=" + videotyp + " video-placeholder' id='" + id + "'> You selected videotyp: " + videotyp + " with the name: " + id + "  </div><p></p>");
+                });
+                return false;
+            }
+        });
+        
+        toolbar.find('a[data-wysihtml5-command="insertMusic"]').click(function(ev) {
+            if(addMusic){
+                addMusic.show(function(musictyp, id) {
+                editor.composer.commands.exec("insertHTML", 
+                        "<div class='gallery:select-music?musictyp=" + musictyp + " music-placeholder' id='" + id + "'> You selected audiotyp: " + musictyp + " with the name: " + id + "  </div><p></p>");
                 });
                 return false;
             }
