@@ -244,7 +244,7 @@ declare function gallery:build-gallery-edit-menu($node as node(), $model as map(
         return
             <li class="dropdown-submenu">
                 <a tabindex="-1" href="#"> Edit Slideshows </a>
-                <ul class="dropdown-menu pull-left">
+                <ul class="dropdown-menu pull-left" style="max-height:300px;overflow-y:auto;">
                     {
                     for $gallery in $galleries
                     let $feedname := replace(util:document-name($gallery),"(.*)\.atom","$1")

@@ -4,12 +4,10 @@ $(document).ready(function() {
     var sitemap = new Atomic.editor.EditLink();
     var anchorEditor = new Atomic.editor.EditAnchor();
     var addGallery = new Atomic.editor.AddGalleryLink();
-    var addVideo = new Atomic.editor.AddVideoLink();
-    var addMusic = new Atomic.editor.AddMusicLink();
     var summaryEditor = null;
     
     var contentEditor = null;
-    contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap, anchorEditor, addGallery, addVideo, addMusic);
+    contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap, anchorEditor, addGallery);
     $("#content-editor-content").remove();
         
     function updateForm() {
@@ -33,7 +31,7 @@ $(document).ready(function() {
     $("#summary-editor-tab").click(function (e) {
         e.preventDefault();
         if (!summaryEditor) {
-            summaryEditor = new Atomic.editor.Editor("summary-editor-content", "summary-editor-textarea", "summary-editor-toolbar", sitemap, anchorEditor, addGallery, addVideo, addMusic);
+            summaryEditor = new Atomic.editor.Editor("summary-editor-content", "summary-editor-textarea", "summary-editor-toolbar", sitemap, anchorEditor, addGallery);
             $("#summary-editor-content").remove();
         }
         $(this).tab('show');
@@ -104,5 +102,5 @@ $(document).ready(function() {
         return true;
     });
     
-    // $("ul.dropdown-menu").hide();
+    $(".actions .dropdown").hide();
 });

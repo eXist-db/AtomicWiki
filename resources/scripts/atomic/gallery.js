@@ -89,6 +89,8 @@ $(document).ready(function() {
         return false;
     });
     
+    // hide all admin-actions when in edit mode
+    $(".actions .dropdown").hide();
 });
 
 function loadImages(start, max) {
