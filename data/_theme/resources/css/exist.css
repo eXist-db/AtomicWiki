@@ -188,7 +188,7 @@ body { color: #222; background: url(../images/body.gif) repeat 50% 100%; }
 /* ---------------------------------------- TYPE ---------------------------------------- */
 
 
-p { padding: 5px 0; }
+p { padding: 0 0 5px 0; }
 
 h1 { font-size: 1.5em; padding: 0px 0 5px; margin: 0; font-weight: bold; "QuicksandBook", "Arial", Helvetica, sans-serif; }
 h2 { font-size: 1.2em; padding: 10px 0; font-weight: bold; font-family: "QuicksandBook", "Arial", Helvetica, sans-serif; letter-spacing: 1px; }
@@ -370,7 +370,7 @@ blockquote p { padding: 0 0 10px; }
 }
 
 .content img {
-    margin: 8px 0;
+    margin: 0 0 8px 0;
     max-width: 100%
 }
 
@@ -457,29 +457,29 @@ div.alert {
 
 figure {
     width: auto;
-    margin: 1em 1.5em;
+    margin: 0 1.5em 1em 0;
 }
 
 figure.wysiwyg-float-right {
     width: 48%;
-    margin: 1em 0 1em 1.5em;
+    margin: 0 0 1em 1.5em;
 }
 
 figure.wysiwyg-float-left {
     width: 48%;
-    margin: 1em 1.5em 1em 0;
+    margin: 0 1.5em 1em 0;
 }
 
 figure.wysiwyg-img-float-left {
     display: inline-block;
     float: left;
-    margin: 1em 1.5em 1em 0;
+    margin: 0 1.5em 1em 0;
 }
 
 figure.wysiwyg-img-float-right {
     display: inline-block;
     float: right;
-    margin: 1em 0 1em 1.5em;
+    margin: 0 0 1em 1.5em;
 }
 
 figure figcaption {
