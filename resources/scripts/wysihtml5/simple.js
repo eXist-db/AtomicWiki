@@ -64,6 +64,7 @@ var wysihtml5ParserRules = {
         }
     },
     iframe: {},
+    u:      {},
     ul:     {},
     ol:     {},
     li:     {},

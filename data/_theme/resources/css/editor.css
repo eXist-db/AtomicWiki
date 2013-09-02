@@ -187,7 +187,7 @@ div.alert {
     color: inherit;
 }
 
-.gallery-placeholder {
+.gallery-placeholder, .music-placeholder, .video-placeholder {
     border: 1px solid orange;
     padding: 4px 4px;
     color: orange;
