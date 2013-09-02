@@ -261,6 +261,40 @@ declare function gallery:build-gallery-edit-menu($node as node(), $model as map(
 };
 
 
+declare
+    %templates:wrap function gallery:gallery-width($node as node(), $model as map(*)) {
+    
+    attribute value { request:get-attribute("feed")/atom:feed/wiki:config[@key="width"]/@value/string() }
+};
+
+declare
+    %templates:wrap function gallery:gallery-height($node as node(), $model as map(*)) {
+    
+    attribute value { request:get-attribute("feed")/atom:feed/wiki:config[@key="height"]/@value/string() }
+};
+
+declare
+    %templates:wrap function gallery:gallery-align($node as node(), $model as map(*)) {
+    
+    attribute value { request:get-attribute("feed")/atom:feed/wiki:config[@key="align"]/@value/string() }
+};
+
+declare
+    %templates:wrap function gallery:gallery-intervall($node as node(), $model as map(*)) {
+    
+    attribute value { request:get-attribute("feed")/atom:feed/wiki:config[@key="intervall"]/@value/string() }
+};
+
+declare
+    %templates:wrap function gallery:gallery-autoplay($node as node(), $model as map(*)) {
+    let $value := request:get-attribute("feed")/atom:feed/wiki:config[@key="autoplay"]/@value/string()
+    return
+        if ($value) then
+            attribute checked {"checked"}
+        else
+            ()
+};
+
 declare 
     %templates:wrap function gallery:gallery-title($node as node(), $model as map(*)) {    
 
