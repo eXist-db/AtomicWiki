@@ -141,14 +141,19 @@ declare function store:parse-gallery() {
 
 declare function store:gallery($gallery as node()) {
     let $collection1 := request:get-parameter("gallery-coll", "/db/apps/wiki/data")
-    
+    let $user := xmldb:get-current-user()
     let $feed := 
      <atom:feed>
         <atom:id>{data($gallery/@id)}</atom:id>
         <atom:updated>{current-dateTime()}</atom:updated>
         <atom:title>{data($gallery/@title)}</atom:title>
         <atom:author>
-            <atom:name>{ xmldb:get-current-user() }</atom:name>
+            <atom:name>{ $user }</atom:name>
+            <wiki:display>
+            { 
+                store:get-user-name()
+            }
+            </wiki:display>
         </atom:author>
         <category scheme="http://exist-db.org/NS/wiki/type/" term="wiki"/>
         {
@@ -191,6 +196,17 @@ declare function store:gallery-entry($entry as node()) {
         </atom:entry>
 };
 
+declare function store:get-user-name() {
+    let $user := xmldb:get-current-user()
+    let $first :=
+        sm:get-account-metadata($user, xs:anyURI("http://axschema.org/namePerson/first"))
+    return
+        if (exists($first)) then
+            ($first || " " || sm:get-account-metadata($user, xs:anyURI("http://axschema.org/namePerson/last")))
+        else
+            sm:get-account-metadata($user, xs:anyURI("http://axschema.org/namePerson"))
+};
+
 declare function store:article() {
     let $name := request:get-parameter("name", ())
     let $id := request:get-parameter("entryId", ())
@@ -225,7 +241,22 @@ declare function store:article() {
             }
             <atom:published>{ $published }</atom:published>
             <atom:updated>{current-dateTime()}</atom:updated>
-            <atom:author><atom:name>{ $author }</atom:name></atom:author>
+            <atom:author>
+                <atom:name>{ $author }</atom:name>
+                {
+                    if (xmldb:get-current-user() = $author) then
+                        <wiki:display>
+                        { 
+                            store:get-user-name()
+                        }
+                        </wiki:display>
+                    else
+                        let $old := collection($config:wiki-root)/atom:entry[atom:id = $id]
+                        return
+                            <foo>{$old}</foo>
+                }
+                
+            </atom:author>
             <atom:title>{$title}</atom:title>
             {
                 if ($summaryParsed) then
