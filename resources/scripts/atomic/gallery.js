@@ -13,7 +13,7 @@ $(document).ready(function() {
     linkEditor = new Atomic.editor.LinkToText();
     anchorEditor = new Atomic.editor.EditAnchor();
     addGallery = new Atomic.editor.AddGalleryLink();
-    addVideo = new Atomic.editorAddVideoLink();
+    addVideo = new Atomic.editor.AddVideoLink();
 
 // $(document).tooltip();
     $(".control-group").on("change","#title,#name", function(e) {
