@@ -2,9 +2,10 @@ xquery version "3.0";
 
 module namespace gallery="http://exist-db.org/apps/wiki/gallery";
 
+
+import module namespace dbutil="http://exist-db.org/xquery/dbutil" at "xmldb:exist:///db/apps/shared-resources/content/dbutils.xql";
 import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
-import module namespace dbutil="http://exist-db.org/xquery/dbutil";
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "themes.xql";
 
 declare namespace vra="http://www.vraweb.org/vracore4.htm";
@@ -25,9 +26,9 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
             let $div :=
             <div class="galleria">
                 {
-                let $galleryCol := util:collection-name($model("feed")) || "/_galleries"
-                
-                let $gal_col := collection($galleryCol)/atom:feed[atom:id=$gallery-id]
+                let $theme := theme:theme-for-feed(util:collection-name($model("feed")))
+                let $theme := substring-before($theme, "/_theme")
+                let $gal_col := collection($theme)/atom:feed[atom:id=$gallery-id]
                 
                 let $conf_autoplay := $gal_col/wiki:config[@key="autoplay"]/@value/string()
                 let $conf_intervall := $gal_col/wiki:config[@key="intervall"]/@value/string()
@@ -177,14 +178,15 @@ declare function gallery:add-music($node as node(), $model as map(*)) {
 };
 
 declare function gallery:select-music($node as node(), $model as map(*), $musictyp as xs:string?) {
+    let $collection := $config:base-url || substring-after(util:collection-name($model("feed")), $config:app-root)
     let $id := $node/@id
     return
         
     switch ($musictyp)
     case "musicLocal" return
         <div>
-            <audio src="data/{$id}" controls="">
-                <embed src="data/{$id}" width="100" height="50" />
+            <audio src="{$collection}/{$id}" controls="">
+                <embed src="{$collection}/{$id}" width="100" height="50" />
             </audio>
             
         </div>
@@ -244,7 +246,7 @@ declare function gallery:build-gallery-edit-menu($node as node(), $model as map(
         return
             <li class="dropdown-submenu">
                 <a tabindex="-1" href="#"> Edit Slideshows </a>
-                <ul class="dropdown-menu pull-left">
+                <ul class="dropdown-menu pull-left" style="max-height:300px;overflow-y:auto;">
                     {
                     for $gallery in $galleries
                     let $feedname := replace(util:document-name($gallery),"(.*)\.atom","$1")
@@ -381,7 +383,10 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
                     then (                        
                         let $feedEntry := collection($config:wiki-root)//atom:entry[atom:id = $src]
                         return 
-                            config:feed-url-from-entry($feedEntry) || $feedEntry/wiki:id                        
+                            if ($feedEntry) then
+                                config:feed-url-from-entry($feedEntry) || $feedEntry/wiki:id
+                            else
+                                ()
                     )
                     else()
     
