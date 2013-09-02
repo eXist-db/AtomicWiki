@@ -170,10 +170,18 @@ declare function app:title($node as node(), $model as map(*)) {
 };
 
 declare function app:author($node as node(), $model as map(*)) {
-    if (map:contains($model, "entry")) then
-        $model("entry")/atom:author/atom:name/string()
-    else
-        $model("feed")/atom:author/atom:name/string()
+    let $author :=
+        if (map:contains($model, "entry")) then
+            $model("entry")/atom:author/atom:name/string()
+        else
+            $model("feed")/atom:author/atom:name/string()
+    let $display :=
+        if (map:contains($model, "entry")) then
+            $model("entry")/atom:author/wiki:display/string()
+        else
+            $model("feed")/atom:author/wiki:display/string()
+    return
+        if (exists($display)) then $display else $author
 };
 
 declare function app:id($node as node(), $model as map(*)) {
@@ -402,7 +410,7 @@ declare function app:edit-publication-date($node as node(), $model as map(*)) {
 declare function app:edit-author($node as node(), $model as map(*)) {
     element { node-name($node) } {
         $node/@*,
-        attribute value { $model("entry")/atom:author }
+        attribute value { $model("entry")/atom:author/atom:name }
     }
 };
 
