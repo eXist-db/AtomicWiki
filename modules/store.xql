@@ -90,8 +90,8 @@ declare function store:relativize-links($node as node()) {
 
 declare function store:process-html($content as xs:string?) {
     if ($content) then
-        (:let $parsed := cleanup:clean(util:parse-html($content)//*:article):)
-        let $parsed := util:parse-html($content)//*:article
+        let $parsed := cleanup:clean(util:parse-html($content)//*:article)
+(:        let $parsed := util:parse-html($content)//*:article:)
         return
 (:            $parsed:)
             store:relativize-links($parsed)

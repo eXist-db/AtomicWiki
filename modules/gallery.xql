@@ -144,7 +144,7 @@ declare function gallery:select-video($node as node(), $model as map(*), $videot
     switch ($videotyp)
     case "Pandora1" return
         <div>
-            <iframe width = "700" height="400" src="{$id}?embeded=true" frameborder="0" webkitAllowFullScreen="true" mozallowfullscreen="true" allowFullScreen="true" >Pandora video</iframe>
+            <iframe width = "700" height="400" src="{$id}?embeded=true" frameborder="1" webkitAllowFullScreen="true" mozallowfullscreen="true" allowFullScreen="true" >Pandora video</iframe>
         </div>
     case "Pandora2" return
         <div>
@@ -152,11 +152,11 @@ declare function gallery:select-video($node as node(), $model as map(*), $videot
         </div>
     case "youTube" return
         <div>
-            <iframe  width = "640" height="385" src="http://www.youtube.com/embed/{$id}" frameborder="0">YouTube video</iframe>
+            <iframe  width = "640" height="385" src="http://www.youtube.com/embed/{$id}" frameborder="1">YouTube video</iframe>
         </div>
     case "vimeo" return
         <div>
-            <iframe width="640" height="360" src="http://player.vimeo.com/video/{$id}">vimeo video</iframe>
+            <iframe width="640" height="360" src="http://player.vimeo.com/video/{$id}" frameborder="1" >vimeo video</iframe>
         </div>
         
     default return 
@@ -244,7 +244,7 @@ declare function gallery:build-gallery-edit-menu($node as node(), $model as map(
         return
             <li class="dropdown-submenu">
                 <a tabindex="-1" href="#"> Edit Slideshows </a>
-                <ul class="dropdown-menu pull-left" style="max-height:300px;overflow-y:auto;">
+                <ul class="dropdown-menu pull-left">
                     {
                     for $gallery in $galleries
                     let $feedname := replace(util:document-name($gallery),"(.*)\.atom","$1")
