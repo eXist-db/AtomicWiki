@@ -78,18 +78,22 @@ function app:entries($node as node(), $model as map(*), $count as xs:string?, $i
     $start as xs:int) {
     let $feed := $model("feed")
     let $allEntries := config:get-entries($feed, $id, $wiki-id)
-    let $entries :=
-        if ($allEntries[wiki:is-index = "true"]) then
-            $allEntries[wiki:is-index = "true"][1]
+    return
+        if (empty($allEntries)) then
+            <p class="alert alert-info">Either the feed is empty or you are not allowed to view the entries.</p>
         else
-            atomic:sort($allEntries)
-    let $count := if ($count) then number($count) else $config:items-per-page
-    return (
-        for $entry in subsequence($entries, $start, $count)
-        return
-            templates:process($node/*[1], map:new(($model, map { "entry" := $entry, "count" := count($entries) }))),
-        templates:process($node/*[2], map:new(($model, map { "count" := count($entries), "perPage" := $count })))
-    )
+            let $entries :=
+                if ($allEntries[wiki:is-index = "true"]) then
+                    $allEntries[wiki:is-index = "true"][1]
+                else
+                    atomic:sort($allEntries)
+            let $count := if ($count) then number($count) else $config:items-per-page
+            return (
+                for $entry in subsequence($entries, $start, $count)
+                return
+                    templates:process($node/*[1], map:new(($model, map { "entry" := $entry, "count" := count($entries) }))),
+                templates:process($node/*[2], map:new(($model, map { "count" := count($entries), "perPage" := $count })))
+            )
 };
 
 declare

@@ -40,6 +40,22 @@ declare function local:check-user($user as xs:string) {
             true()
 };
 
+declare function local:default-view($template, $relPath) {
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$template}">
+            <set-header name="Cache-Control" value="no-cache"/>
+            <!--set-header name="Cache-Control" value="max-age=3600"/-->
+        </forward>
+        <view>
+            <forward url="{$exist:controller}/modules/view.xql" absolute="no">
+                <set-attribute name="exist.path" value="{$exist:path}"/>
+                <add-parameter name="wiki-id" value="{$relPath[2]}"/>
+            </forward>
+        </view>
+        { $local:error-handler }
+    </dispatch>
+};
+
 try {
     let $root := substring-after($exist:root, "xmldb:exist://")
     return
@@ -98,6 +114,7 @@ try {
     (: URL addresses a collection or article :)
     else if (matches($exist:path, ".*/[^\./]*/?$")) then
         let $user := login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)
+        let $loggedIn := request:get-attribute("org.exist.wiki.login.user") != "guest"
         let $editCollection := request:get-parameter("collection", ())
         let $relPath := local:extract-feed($exist:path)
         (: Try to determine the feed collection, either by looking at the URL or a parameter 'collection' :)
@@ -109,118 +126,109 @@ try {
         (: The feed XML will be saved to a request attribute :)
         let $setAttr := request:set-attribute("feed", $feed)
         let $action := request:get-parameter("action", "view")
-	let $template := if ($feed) then theme:resolve(util:collection-name($feed), "feed.html", $root, $exist:controller) else ()
+	    let $template := if ($feed) then theme:resolve(util:collection-name($feed), "feed.html", $root, $exist:controller) else ()
         return
             if ($feed) then
-                switch ($action)
-                    case "store" case "delete" case "unlock" return
-                        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                            <forward url="{$exist:controller}/modules/store.xql">
-                            { login:set-user("org.exist.wiki.login", (), false(), local:check-user#1) }
-                            </forward>
-                            <view>
-                                <forward url="{$template}" method="GET">
-                                    <set-header name="Cache-Control" value="no-cache"/>
-                                </forward>
-                                <forward url="{$exist:controller}/modules/view.xql">
-                                    <add-parameter name="wiki-id" value="{$relPath[2]}"/>
-                                </forward>
-                            </view>
-                            { $local:error-handler }
-                        </dispatch>
-                    case "edit" case "addentry" case "switch-editor" return
-                        let $id := request:get-parameter("id", ())
-                        let $entry := config:get-entries($feed, $id, $relPath[2])[1]
-                        let $editorParam := request:get-parameter("editor", ())
-                        let $editor := 
-                            if ($editorParam) then
-                                $editorParam
-                            else if ($entry/wiki:editor) then
-                                $entry/wiki:editor/string()
-                            else
-                                $config:default-editor
-                        let $template := if ($editor = "html") then "html-edit.html" else "wiki-edit.html"
-                        return
+                if ($loggedIn) then
+                    switch ($action)
+                        case "store" case "delete" case "unlock" return
                             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                                {
-                                    if ($editorParam) then
-                                        <forward url="{$exist:controller}/modules/store.xql">
-                                        </forward>
-                                    else
-                                        ()
-                                }
-                                <forward url="{theme:resolve(util:collection-name($feed), $template, $root, $exist:controller)}">
-                                    <set-header name="Cache-Control" value="no-cache"/>
+                                <forward url="{$exist:controller}/modules/store.xql">
+                                { login:set-user("org.exist.wiki.login", (), false(), local:check-user#1) }
                                 </forward>
                                 <view>
-                                    <forward url="{$exist:controller}/modules/view.xql" absolute="no">
+                                    <forward url="{$template}" method="GET">
+                                        <set-header name="Cache-Control" value="no-cache"/>
+                                    </forward>
+                                    <forward url="{$exist:controller}/modules/view.xql">
                                         <add-parameter name="wiki-id" value="{$relPath[2]}"/>
                                     </forward>
                                 </view>
                                 { $local:error-handler }
                             </dispatch>
-                  case "editgallery" case "addgallery" return
-                        let $template :="html-edit-gallery.html"
-                        let $gallery := request:get-parameter("gallery", ())
-                        let $feedCol := request:get-parameter("collection", "/db/apps/wiki/data" ) || "/_galleries"
-                        let $log := util:log("WARN", "URL: " || $feedCol)
-                        let $feed := if ($gallery) then 
-                            let $foo := $feedCol || '/' || $gallery || ".atom"
-                            let $log := util:log("WARN", "Opening Gallery: " || $foo)
-                            return doc($foo)
-                         else $feed
-                        let $setAttr := request:set-attribute("feed", $feed)
-                        let $setAttr := request:set-attribute("galleryName", $gallery)
-                        return
+                        case "edit" case "addentry" case "switch-editor" return
+                            let $id := request:get-parameter("id", ())
+                            let $entry := config:get-entries($feed, $id, $relPath[2])[1]
+                            let $editorParam := request:get-parameter("editor", ())
+                            let $editor := 
+                                if ($editorParam) then
+                                    $editorParam
+                                else if ($entry/wiki:editor) then
+                                    $entry/wiki:editor/string()
+                                else
+                                    $config:default-editor
+                            let $template := if ($editor = "html") then "html-edit.html" else "wiki-edit.html"
+                            return
+                                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                                    {
+                                        if ($editorParam) then
+                                            <forward url="{$exist:controller}/modules/store.xql">
+                                            </forward>
+                                        else
+                                            ()
+                                    }
+                                    <forward url="{theme:resolve(util:collection-name($feed), $template, $root, $exist:controller)}">
+                                        <set-header name="Cache-Control" value="no-cache"/>
+                                    </forward>
+                                    <view>
+                                        <forward url="{$exist:controller}/modules/view.xql" absolute="no">
+                                            <add-parameter name="wiki-id" value="{$relPath[2]}"/>
+                                        </forward>
+                                    </view>
+                                    { $local:error-handler }
+                                </dispatch>
+                      case "editgallery" case "addgallery" return
+                            let $template :="html-edit-gallery.html"
+                            let $gallery := request:get-parameter("gallery", ())
+                            let $feedCol := request:get-parameter("collection", "/db/apps/wiki/data" ) || "/_galleries"
+                            let $log := util:log("WARN", "URL: " || $feedCol)
+                            let $feed := if ($gallery) then 
+                                let $foo := $feedCol || '/' || $gallery || ".atom"
+                                let $log := util:log("WARN", "Opening Gallery: " || $foo)
+                                return doc($foo)
+                             else $feed
+                            let $setAttr := request:set-attribute("feed", $feed)
+                            let $setAttr := request:set-attribute("galleryName", $gallery)
+                            return
+                                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                                    <forward url="{$exist:controller}/modules/store.xql">
+                                    </forward>
+                                    <forward url="{theme:resolve(util:collection-name($feed), $template, $root, $exist:controller)}">
+                                        <set-header name="Cache-Control" value="no-cache"/>
+                                    </forward>
+                                    <view>
+                                        <forward url="{$exist:controller}/modules/view.xql" absolute="no">
+                                        </forward>
+                                    </view>
+                                    { $local:error-handler }
+                                </dispatch>                            
+                        case "editfeed" return
                             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                                <forward url="{$exist:controller}/modules/store.xql">
-                                </forward>
-                                <forward url="{theme:resolve(util:collection-name($feed), $template, $root, $exist:controller)}">
+                                <forward url="{theme:resolve(util:collection-name($feed), 'unknown-feed.html', $root, $exist:controller)}">
                                     <set-header name="Cache-Control" value="no-cache"/>
                                 </forward>
                                 <view>
-                                    <forward url="{$exist:controller}/modules/view.xql" absolute="no">
+                                    <forward url="{$exist:controller}/modules/view.xql">
+                                        <set-attribute name="collection" value="{$config:wiki-root}/{$relPath[1]}"/>
                                     </forward>
                                 </view>
                                 { $local:error-handler }
-                            </dispatch>                            
-                    case "editfeed" return
-                        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                            <forward url="{theme:resolve(util:collection-name($feed), 'unknown-feed.html', $root, $exist:controller)}">
-                                <set-header name="Cache-Control" value="no-cache"/>
-                            </forward>
-                            <view>
-                                <forward url="{$exist:controller}/modules/view.xql">
-                                    <set-attribute name="collection" value="{$config:wiki-root}/{$relPath[1]}"/>
+                            </dispatch>
+                        case "manage" return
+                            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                                <forward url="{theme:resolve(util:collection-name($feed), 'manage.html', $root, $exist:controller)}">
                                 </forward>
-                            </view>
-                            { $local:error-handler }
-                        </dispatch>
-                    case "manage" return
-                        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                            <forward url="{theme:resolve(util:collection-name($feed), 'manage.html', $root, $exist:controller)}">
-                            </forward>
-                            <view>
-                                <forward url="{$exist:controller}/modules/view.xql">
-                                    <add-parameter name="wiki-id" value="{$relPath[2]}"/>
-                                </forward>
-                            </view>
-                            { $local:error-handler }
-                        </dispatch>
-                    default return
-                        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                            <forward url="{$template}">
-                                <set-header name="Cache-Control" value="no-cache"/>
-                                <!--set-header name="Cache-Control" value="max-age=3600"/-->
-                            </forward>
-                            <view>
-                                <forward url="{$exist:controller}/modules/view.xql" absolute="no">
-                                    <set-attribute name="exist.path" value="{$exist:path}"/>
-                                    <add-parameter name="wiki-id" value="{$relPath[2]}"/>
-                                </forward>
-                            </view>
-                            { $local:error-handler }
-                        </dispatch>
+                                <view>
+                                    <forward url="{$exist:controller}/modules/view.xql">
+                                        <add-parameter name="wiki-id" value="{$relPath[2]}"/>
+                                    </forward>
+                                </view>
+                                { $local:error-handler }
+                            </dispatch>
+                        default return
+                            local:default-view($template, $relPath)
+                    else
+                        local:default-view($template, $relPath)
             else
                 switch ($action)
                     case "store" case "delete" return
