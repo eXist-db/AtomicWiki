@@ -312,7 +312,7 @@ Atomic.editor.Editor = (function () {
             if(addVideo){
                 addVideo.show(function(videotyp, id) {
                 editor.composer.commands.exec("insertHTML", 
-                        "<div class='gallery:select-video?videotyp=" + videotyp + " video-placeholder' id='" + id + "'> You selected videotyp: " + videotyp + " with the name: " + id + "  </div><p></p>");
+                        "<div class='gallery:select-video?videotyp=" + videotyp + " video-placeholder' id='" + id + "'>Video: " + videotyp + "/" + id + " </div><p></p>");
                 });
                 return false;
             }

@@ -261,7 +261,7 @@ function showSitemap(imageEntryId) {
         if(node && node.data.key && node.data.title){
             $.ajax({
                 type: "GET",
-                url: "modu{les/util.xql",
+                url: "modules/util.xql",
                 data: { "action": "feedURL" , "title": node.data.title, "description": node.data.key },
                 complete: function(data) {
                     console.log("complete: returned data: ",data);
