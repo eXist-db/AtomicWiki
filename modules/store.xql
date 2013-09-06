@@ -208,7 +208,7 @@ declare function store:get-user-name() {
 };
 
 declare function store:article() {
-    let $name := request:get-parameter("name", ())
+    let $filename := request:get-parameter("name", ())
     let $id := request:get-parameter("entryId", ())
     let $published := request:get-parameter("published", current-dateTime())
     let $title := request:get-parameter("title", ())
@@ -227,10 +227,11 @@ declare function store:article() {
     let $contentData := if ($editor = "wiki") then $contentParsed else store:process-html($contentParsed)
     let $summaryData := if ($editor = "wiki") then $summaryParsed else store:process-html($summaryParsed)
     let $contentType := if ($editType = ("wiki", "html")) then "html" else $editType
+    let $old := util:expand(collection($config:wiki-root)/atom:entry[atom:id = $id])
     let $entry :=
         <atom:entry>
             <atom:id>{$id}</atom:id>
-            <wiki:id>{$name}</wiki:id>
+            <wiki:id>{$filename}</wiki:id>
             <wiki:editor>{$editor}</wiki:editor>
             <wiki:is-index>{if (exists($isIndexPage)) then 'true' else 'false'}</wiki:is-index>
             {
@@ -251,9 +252,7 @@ declare function store:article() {
                         }
                         </wiki:display>
                     else
-                        let $old := collection($config:wiki-root)/atom:entry[atom:id = $id]
-                        return
-                            <foo>{$old}</foo>
+                        $old/atom:author/wiki:display
                 }
                 
             </atom:author>
@@ -267,7 +266,7 @@ declare function store:article() {
             {
                 if ($storeSeparate) then
                     let $dataColl := $collection
-                    let $docName := concat($name, if ($contentType eq "xquery") then ".xql" else ".html")
+                    let $docName := concat($filename, if ($contentType eq "xquery") then ".xql" else ".html")
                     let $mediaType := if ($contentType eq "xquery") then "application/xquery" else "text/html"
                     let $stored := 
                         store:store-resource($dataColl, $docName, $contentData, $mediaType)
@@ -283,7 +282,7 @@ declare function store:article() {
                     ()
             }
         </atom:entry>
-    let $atomResource := if ($resource) then $resource else $name || ".atom"
+    let $atomResource := if ($resource) then $resource else $filename || ".atom"
     let $stored :=
         store:store-resource(store:create-collection($collection), $atomResource, $entry, "application/atom+xml")
     return
