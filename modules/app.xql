@@ -306,11 +306,11 @@ declare function app:posted-link($node as node(), $model as map(*)) {
     element { node-name($node) } {
         attribute class { $node/@class || " posted-link" },
         $node/@* except $node/@class,
-        $node/node()
+        templates:process($node/node(), $model)
     },
     <form action="" method="post" style="display: none;">
     {
-        let $href := substring-after($node/@href, "?")
+        let $href := substring-after( $node/@href, "?")
         for $pair in tokenize($href, "&amp;")
         return
             <input type="hidden" name="{substring-before($pair, '=')}" value="{substring-after($pair, '=')}"/>
@@ -561,7 +561,9 @@ declare function app:check-access($node as node(), $model as map(*)) {
 
 declare function app:user($node as node(), $model as map(*)) {
     element { node-name($node) } {
-        request:get-attribute("org.exist.wiki.login.user")
+        let $user := request:get-attribute("org.exist.wiki.login.user")
+        return
+            $user
     }
 };
 
