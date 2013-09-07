@@ -15,4 +15,9 @@
         <allow user="admin"/>
     </users-->
     <slideshows-enabled>true</slideshows-enabled>
+    <!-- 
+        Append the following domain to all login names (except admin).
+        This is useful if authentication is handled by an LDAP server.
+    -->
+    <login-domain></login-domain>
 </configuration>
