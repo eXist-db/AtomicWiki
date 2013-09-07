@@ -151,7 +151,7 @@ declare function store:gallery($gallery as node()) {
             <atom:name>{ $user }</atom:name>
             <wiki:display>
             { 
-                store:get-user-name()
+                acl:get-user-name()
             }
             </wiki:display>
         </atom:author>
@@ -196,16 +196,6 @@ declare function store:gallery-entry($entry as node()) {
         </atom:entry>
 };
 
-declare function store:get-user-name() {
-    let $user := xmldb:get-current-user()
-    let $first :=
-        sm:get-account-metadata($user, xs:anyURI("http://axschema.org/namePerson/first"))
-    return
-        if (exists($first)) then
-            ($first || " " || sm:get-account-metadata($user, xs:anyURI("http://axschema.org/namePerson/last")))
-        else
-            sm:get-account-metadata($user, xs:anyURI("http://axschema.org/namePerson"))
-};
 
 declare function store:article() {
     let $filename := request:get-parameter("name", ())
@@ -248,7 +238,7 @@ declare function store:article() {
                     if (xmldb:get-current-user() = $author) then
                         <wiki:display>
                         { 
-                            store:get-user-name()
+                            acl:get-user-name()
                         }
                         </wiki:display>
                     else

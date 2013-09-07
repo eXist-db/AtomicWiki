@@ -8,6 +8,8 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
 import module namespace date="http://exist-db.org/xquery/datetime" at "java:org.exist.xquery.modules.datetime.DateTimeModule";
 import module namespace html2wiki="http://atomic.exist-db.org/xquery/html2wiki" at "html2wiki.xql";
 import module namespace wiki="http://exist-db.org/xquery/wiki" at "java:org.exist.xquery.modules.wiki.WikiModule";
+import module namespace acl="http://atomic.exist-db.org/xquery/atomic/acl" at "acl.xql";
+
 
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace html="http://www.w3.org/1999/xhtml";
@@ -563,7 +565,7 @@ declare function app:user($node as node(), $model as map(*)) {
     element { node-name($node) } {
         let $user := request:get-attribute("org.exist.wiki.login.user")
         return
-            $user
+            acl:get-user-name()
     }
 };
 
