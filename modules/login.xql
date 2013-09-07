@@ -2,6 +2,8 @@ xquery version "3.0";
 
 module namespace login="http://exist-db.org/xquery/login";
 
+
+import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace plogin="http://exist-db.org/xquery/persistentlogin" 
     at "java:org.exist.xquery.modules.persistentlogin.PersistentLoginModule";
 
@@ -44,7 +46,13 @@ import module namespace plogin="http://exist-db.org/xquery/persistentlogin"
 :)
 declare function login:set-user($domain as xs:string, $path as xs:string?, $maxAge as xs:dayTimeDuration?, $asDba as xs:boolean,
     $onLogin as function(*)) as empty() {
-    let $user := request:get-parameter("user", ())
+    let $userParam := request:get-parameter("user", ())
+    let $loginDomain := $config:wiki-config/configuration/login-domain
+    let $user :=
+        if ($userParam != "admin" and $loginDomain != "" and not(contains($userParam, "@"))) then
+            $userParam || "@" || $loginDomain
+        else
+            $userParam
     let $password := request:get-parameter("password", ())
     let $logout := request:get-parameter("logout", ())
     let $durationParam := request:get-parameter("duration", ())
