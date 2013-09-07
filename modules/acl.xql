@@ -33,6 +33,21 @@ declare function acl:change-collection-permissions($path as xs:string) {
     sm:chgrp($path, $config:default-group)
 };
 
+declare function acl:get-user-name() {
+    let $user := xmldb:get-current-user()
+    let $first :=
+        sm:get-account-metadata($user, xs:anyURI("http://axschema.org/namePerson/first"))
+    return
+        if (exists($first)) then
+            ($first || " " || sm:get-account-metadata($user, xs:anyURI("http://axschema.org/namePerson/last")))
+        else
+            let $userNichtLeer := sm:get-account-metadata($user, xs:anyURI("http://axschema.org/namePerson"))
+            return
+                if ($userNichtLeer) then $userNichtLeer
+                else
+                    $user
+};
+
 declare 
     %templates:default("modelItem", "entry")
 function acl:show-permissions($node as node(), $model as map(*), $modelItem as xs:string?) {
