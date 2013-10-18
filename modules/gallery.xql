@@ -42,7 +42,9 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
             
                     let $entries := $gal_col/atom:entry
                     for $entry at $pos in $entries
-                    let $href := $entry/atom:link[starts-with(@type, "image")]/@href/string()
+                    let $hrefSrc := $entry/atom:link[starts-with(@type, "image")]/@href/string()
+                    (: replace image-server base URI :)
+                    let $href := replace($hrefSrc, $config:image-server || "/", $config:image-server || ":" || $config:image-server-port || "/")
                     let $vraMetaID := $entry/atom:link[starts-with(@type, "vra")]/@href/string()
                     let $vraCol := collection("/db/apps//_galleries/vra_entries/$vraMetaID")//vra
                     let $vraMetaImageAgentName := $vraCol//image//agent/name/text()
@@ -372,6 +374,8 @@ declare
 
 
 declare %private function gallery:feed-to-html-image($feedId as xs:string, $imageURL as xs:string, $id as xs:string, $title as xs:string?, $src as item()*) {    
+    (: replace image-server base URI :)
+    let $imageURL := replace($imageURL, $config:image-server || "/", $config:image-server || ":" || $config:image-server-port || "/")
     let $description := collection($config:wiki-root)/atom:entry[atom:id = $src]
     let $html := 
         if ($description/atom:content/@src) then
@@ -514,9 +518,10 @@ declare
         let $entry := $model("entry")    
         let $image := ($entry//vra:relationSet/vra:relation[@pref='true'] | $entry//vra:relationSet/vra:relation[not(@pref)])[1]
         
-        let $serverPath := "http://kjc-ws2.kjc.uni-heidelberg.de/images/service/download_uuid/"
+        let $serverPath := $config:image-server
+        let $serverPort := $config:image-server-port
         let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
-        let $imageURL :=  $serverPath || $image/@relids
+        let $imageURL :=  $serverPath || ":" || $serverPort || "/images/service/download_uuid/" || $image/@relids
         
         return 
             if($image/@relids) 

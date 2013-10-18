@@ -108,6 +108,14 @@ declare variable $config:slideshows-enabled :=
     $config:wiki-config/configuration/slideshows-enabled/string()
 ;
 
+declare variable $config:image-server :=
+    $config:wiki-config/configuration/image-server/string()
+;
+
+declare variable $config:image-server-port :=
+    $config:wiki-config/configuration/image-server-port/string()
+;
+
 (:~
  : Resolve the given path using the current application context.
  : If the app resides in the file system,
