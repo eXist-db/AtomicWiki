@@ -22,6 +22,8 @@
                 
             var EditSession = _require("ace/edit_session").EditSession;
             var TextLayer = _require("ace/layer/text").Text;
+            var JavaScriptMode = _require("ace/mode/javascript").Mode;
+            var XQueryMode = _require("ace/mode/xquery").Mode;
             var baseStyles = _require("ace/requirejs/text!./static.css");
     
             // for better performance, create one session for all elements
@@ -33,7 +35,8 @@
             return this.each(function() {
                 var plugin = $(this);
                 var settings = {
-                    mode: "text"
+                    mode: "text",
+                    theme: "tomorrow_night"
                 };
           
                 if (options) {
@@ -46,11 +49,11 @@
                 }
                 
                 function getMode() {
-                    var mode = _require("ace/mode/" + settings.mode);
-                    if (!mode)
-                        mode = _require("ace/mode/text");
-                    var Mode = mode.Mode;
-                    return new Mode();
+                    var req = _require("ace/mode/" + settings.mode);
+                    if (req) {
+                        return new (req.Mode)();
+                    }
+                    return null;
                 }
                 
                 function render(data, theme, mode, disableGutter) {
@@ -86,17 +89,25 @@
                     };
                 }
                 
-                
-                var theme = _require("ace/theme/tomorrow_night");
+                var theme = _require("ace/theme/" + settings.theme);
                 var dom = _require("ace/lib/dom");
             
                 var data = $(this).text();
-            
-                var highlighted = render(data, theme, getMode(), true);
+                var mode = getMode();
+                if (!mode) {
+                    mode = new (_require("ace/mode/text").Mode)();
+                }
+                var highlighted = render(data, theme, mode, true);
             
                 dom.importCssString(highlighted.css, "ace_highlight");
                 $(this).html(highlighted.html);
+                
+                $(this).data("text", data);
             });
+        },
+        
+        getText: function() {
+            return $(this).data("text");
         }
     };
 

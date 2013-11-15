@@ -402,14 +402,14 @@ div.alert {
 .code {
     font-family: "Ubuntu Mono", "Menlo", "Consolas", monospace;
     font-size: 1em;
-    background: #555555 url(../images/noise.png);
+    /*background: #555555 url(../images/noise.png);*/
     margin: 16px 8px;
-    padding: 8px 8px;
+    /*padding: 8px 8px;*/
 }
 
 #content .content pre.prettyprint li, #content code {
-    font-size: 105%;
     line-height: 1.2em;
+    white-space: normal;
 }
 
 .content .example {
