@@ -7,9 +7,9 @@ import module namespace templates="http://exist-db.org/xquery/templates" at "tem
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace date="http://exist-db.org/xquery/datetime" at "java:org.exist.xquery.modules.datetime.DateTimeModule";
 import module namespace html2wiki="http://atomic.exist-db.org/xquery/html2wiki" at "html2wiki.xql";
-import module namespace wiki="http://exist-db.org/xquery/wiki" at "java:org.exist.xquery.modules.wiki.WikiModule";
 import module namespace acl="http://atomic.exist-db.org/xquery/atomic/acl" at "acl.xql";
 
+declare namespace wiki="http://exist-db.org/xquery/wiki";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace html="http://www.w3.org/1999/xhtml";
@@ -51,26 +51,6 @@ declare function app:get-or-create-feed($node as node(), $model as map(*)) as ma
             atomic:create-feed()
     return
         map { "feed" := $data, "entry" := $data }
-};
-
-declare function app:create-entry($node as node(), $model as map(*)) {
-    let $id := request:get-parameter("id", ())
-    let $published := request:get-parameter("published", current-dateTime())
-    let $title := request:get-parameter("title", ())
-    let $content := request:get-parameter("content", ())
-    let $summary := request:get-parameter("summary", ())
-    let $author := request:get-parameter("author", xmldb:get-current-user())
-    let $entry :=
-        <atom:entry>
-            <atom:id>{$id}</atom:id>
-            <atom:published>{ $published }</atom:published>
-            <atom:author><atom:name>{ $author }</atom:name></atom:author>
-            <atom:title>{$title}</atom:title>
-            <atom:summary type="xhtml">{ wiki:parse($summary, <parameters/>) }</atom:summary>
-            <atom:content type="xhtml">{ wiki:parse($content, <parameters/>) }</atom:content>
-        </atom:entry>
-    return
-        map { "entry" := $entry }
 };
 
 declare
@@ -261,7 +241,7 @@ declare function app:process-content($type as xs:string?, $content as item()?, $
     let $type := if ($type) then $type else "html"
     return
         switch ($type)
-            case "html" case "xhtml" return
+            case "html" case "xhtml" case "markdown" return
                 let $data := atomic:process-links($content)
                 return
                     if ($expandTemplates) then
@@ -369,7 +349,7 @@ declare
     %templates:default("mode", "markup")
 function app:edit-content($node as node(), $model as map(*), $mode as xs:string) {
     let $contentElem := $model("entry")/atom:content
-    let $content := atomic:get-content($contentElem, false())
+    let $content := atomic:get-source($contentElem)
     return
         element { node-name($node) } {
             $node/@*,

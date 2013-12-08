@@ -2,11 +2,18 @@ xquery version "3.0";
 
 module namespace atomic="http://atomic.exist-db.org/xquery/atomic";
 
+import module namespace md="http://exist-db.org/xquery/markdown" at "xmldb:exist:///db/apps/markdown/content/markdown.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace html="http://www.w3.org/1999/xhtml";
 declare namespace wiki="http://exist-db.org/xquery/wiki";
+
+declare variable $atomic:MD_CONFIG := map {
+    "code-block" := function($language as xs:string, $code as xs:string) {
+        <pre class="ext:code?lang={$language}">{$code}</pre>
+    }
+};
 
 declare function atomic:process-links($node as node()?) {
     typeswitch ($node)
@@ -88,6 +95,10 @@ declare function atomic:get-content($content as element(atom:content)?, $eval as
                         doc($path)/*
                     case "xquery" return
                         xs:anyURI($path)
+                    case "markdown" return
+                        let $text := util:binary-to-string(util:binary-doc($path))
+                        return
+                            <div>{md:parse($text, $atomic:MD_CONFIG)}</div>
                     default return
                         util:binary-to-string(util:binary-doc($path))
         else
@@ -104,6 +115,23 @@ declare function atomic:get-content($content as element(atom:content)?, $eval as
                 util:eval($data)
         else
             $data
+};
+
+declare function atomic:get-source($content as element(atom:content)?) as item()* {
+    let $data :=
+        if ($content/@src) then
+            let $baseColl := util:collection-name($content)
+            let $path := concat($baseColl, "/", $content/@src)
+            return
+                switch ($content/@type)
+                    case "html" case "xhtml" return
+                        doc($path)/*
+                    default return
+                        util:binary-to-string(util:binary-doc($path))
+        else
+            if ($content/@type = ("html", "xhtml")) then $content/* else $content/node()
+    return
+        $data
 };
 
 declare function atomic:lock-for-user($feed as element(atom:entry)) {

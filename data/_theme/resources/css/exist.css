@@ -359,12 +359,12 @@ blockquote p { padding: 0 0 10px; }
     margin: 0pt 1.5em 1.5em;
 }
 
-.content ul li {
+.content ul>li {
     list-style: disc;
     margin-bottom: .4em;
 }
 
-.content ol li {
+.content ol>li {
     list-style: decimal;
     margin-bottom: .4em;
 }
