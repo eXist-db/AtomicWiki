@@ -1,34 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xdb="http://exist-db.org/ant" default="xar" name="AtomicWiki">
     <property file="build.properties"/>
-    <property name="java.src" value="java/src"/>
-    <property name="java.classes" value="java/classes"/>
-    <property name="java.libs" value="java/lib"/>
     <property name="build.dir" value="build"/>
     <property name="scripts" value="resources/scripts"/>
-    <path id="classpath">
-        <fileset dir="${exist.dir}">
-            <include name="*.jar"/>
-        </fileset>
-        <fileset dir="${exist.dir}/lib/core">
-            <include name="*.jar"/>
-        </fileset>
-        <fileset dir="${java.libs}">
-            <include name="*.jar"/>
-        </fileset>
-    </path>
     <target name="dist" depends="xar">
         <zip destfile="${build.dir}/atomicwiki-${project.version}.zip">
             <fileset dir="${build.dir}">
-                <include name="*.jar"/>
                 <include name="*.xar"/>
-            </fileset>
-            <fileset dir="${java.libs}">
-                <include name="*.jar"/>
             </fileset>
         </zip>
     </target>
-    <target name="xar" depends="jar">
+    <target name="xar">
         <mkdir dir="${build.dir}"/>
         <zip destfile="${build.dir}/atomicwiki-${project.version}.xar">
             <fileset dir=".">
@@ -38,7 +20,7 @@
                 <include name="templates/**"/>
                 <include name="data/_theme/**"/>
                 <include name="data/_galleries/**"/>
-		<include name="data/_nav.html"/>
+                <include name="data/_nav.html"/>
                 <include name="data/annotations"/>
                 <include name="data/help/**"/>
                 <include name="data/util/**"/>
@@ -47,35 +29,16 @@
                 <include name="data/AtomicWikiWelcome.atom"/>
                 <include name="data/WikiIntro.html"/>
                 <include name="data/WikiIntro.atom"/>
+                <include name="data/Markdown.atom"/>
+                <include name="data/Markdown.md"/>
                 <include name="data/AtomicWikiWelcome.atom"/>
                 <include name="data/*.png"/>
                 <exclude name=".git*"/>
             </fileset>
-            <zipfileset dir="${build.dir}" includes="*.jar" prefix="wiki"/>
-            <zipfileset dir="${java.libs}" includes="*.jar" prefix="wiki"/>
         </zip>
     </target>
-    <target name="prepare">
-        <mkdir dir="${java.classes}"/>
-    </target>
-    <target name="compile" depends="prepare">
-        <javac srcdir="${java.src}" destdir="${java.classes}" optimize="true" debug="true" target="1.5" source="1.5">
-            <classpath>
-                <path refid="classpath"/>
-            </classpath>
-        </javac>
-    </target>
-    <target name="jar" depends="compile">
-        <jar basedir="${java.classes}" jarfile="${build.dir}/atomicwiki-${project.version}.jar">
-            <manifest>
-                <attribute name="Project-Name" value="${project.name}"/>
-                <attribute name="Project-Version" value="${project.version}"/>
-                <attribute name="Project-Build" value="${DSTAMP}"/>
-            </manifest>
-        </jar>
-    </target>
+    <target name="prepare"/>
     <target name="clean">
         <delete dir="${build.dir}"/>
-        <delete dir="${java.classes}"/>
     </target>
 </project>

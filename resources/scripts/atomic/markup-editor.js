@@ -125,8 +125,8 @@ Atomic.Editor = (function () {
         doc.setUseWrapMode(true);
         doc.setWrapLimitRange(0, 80);
 
-        var WikiMode = require("Atomic/mode/wiki").Mode;
-    	doc.setMode(new WikiMode());
+        var MarkdownMode = require("ace/mode/markdown").Mode;
+    	doc.setMode(new MarkdownMode());
         
 	    var renderer = new Renderer(div, "ace/theme/tomorrow");
 	    
@@ -140,12 +140,12 @@ Atomic.Editor = (function () {
         });
         this.container.find(".btn-emphasis").click(function(ev) {
             ev.preventDefault();
-            $this.markup("__", "__");
+            $this.markup("*", "*");
             return false;
         });
         this.container.find(".btn-code").click(function(ev) {
             ev.preventDefault();
-            $this.markup("$$", "$$");
+            $this.markup("`", "`");
             return false;
         });
         this.container.find(".sel-heading").change(function(ev) {
@@ -158,7 +158,7 @@ Atomic.Editor = (function () {
         this.container.find(".sel-code").change(function(ev) {
             var val = $(this).val();
             if (val != "none") {
-                $this.markup("{code lang=\"" + val + "\"}\n", "\n{/code}");
+                $this.markup("```" + val + "\n", "\n```");
             }
         });
     };
