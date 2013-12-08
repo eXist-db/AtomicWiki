@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<atom:entry xmlns:atom="http://www.w3.org/2005/Atom">
+    <atom:id>8135cd85-56b4-40a2-97dd-b1b3e54e604e</atom:id>
+    <wiki:id xmlns:wiki="http://exist-db.org/xquery/wiki">Markdown</wiki:id>
+    <wiki:editor xmlns:wiki="http://exist-db.org/xquery/wiki">wiki</wiki:editor>
+    <wiki:is-index xmlns:wiki="http://exist-db.org/xquery/wiki">true</wiki:is-index>
+    <atom:published>2013-11-10T11:02:36.432+01:00</atom:published>
+    <atom:updated>2013-12-08T16:01:22.779+01:00</atom:updated>
+    <atom:author>
+        <atom:name>editor</atom:name>
+        <wiki:display xmlns:wiki="http://exist-db.org/xquery/wiki">editor</wiki:display>
+    </atom:author>
+    <atom:title>Markdown Syntax</atom:title>
+    <atom:content type="markdown" src="Markdown.md"/>
+</atom:entry>
