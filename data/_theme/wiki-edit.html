@@ -6,8 +6,8 @@
         <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
     </head>
-    <body class="templates:surround?with=templates/page.html&amp;at=container-body&amp;using=body">
-        <div class="span12">
+    <body class="templates:surround?with=templates/page.html&amp;at=container-body&amp;using=grey-top">
+        <div class="col-md-12">
             <div class="app:feed">
                 <div class="app:get-or-create-entry entries">
                     <ul id="editor-tabs" class="nav nav-tabs">
@@ -20,57 +20,57 @@
                     </ul>
                     <div class="tab-content">
                         <div id="edit" class="tab-pane active">
-                            <form id="edit-form" class="form-horizontal" action="." method="POST">
-                                <div class="control-group">
-                                    <div class="btn-group">
-                                        <a href="?" id="edit-form-cancel" class="btn">
+                            <form id="edit-form" class="form form-horizontal" action="." method="POST">
+                                <div class="form-group">
+                                    <div class="btn-group col-md-12">
+                                        <a href="?" id="edit-form-cancel" class="btn btn-default">
                                             <i class="icon-ban-circle"/> Cancel</a>
-                                        <button id="edit-form-save" class="btn">
+                                        <button id="edit-form-save" class="btn btn-default">
                                             <i class="icon-download-alt"/> Save</button>
                                         <button id="edit-form-saveAndClose" class="btn btn-primary" type="submit">
                                             <i class="icon-ok"/> Save and Close</button>
                                     </div>
                                 </div>
-                                <div class="control-group title">
-                                    <label class="control-label" for="title">Title</label>
-                                    <div class="controls">
-                                        <input class="span6 app:edit-title" type="text" name="title" placeholder="Title" required="required"/>
+                                <div class="form-group title">
+                                    <label class="control-label col-md-2" for="title">Title</label>
+                                    <div class="col-md-9">
+                                        <input class="form-control" data-template="app:edit-title" type="text" name="title" placeholder="Title" required="required"/>
                                     </div>
                                 </div>
-                                <div class="control-group">
-                                    <label class="control-label" for="name">Short Name</label>
-                                    <div class="controls">
-                                        <input class="span3 app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="[A-Za-zäöüÄÖÜ]{1}[\w-äöüßÄÖÜ]{2,}"/>
-                                        <span class="help-inline">First sign just a letter, at least three characters required. No spaces.</span>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="name">Short Name</label>
+                                    <div class="col-md-4">
+                                        <input class="form-control" data-template="app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="[A-Za-zäöüÄÖÜ]{1}[\w-äöüßÄÖÜ]{2,}"/>
+                                        <span class="help-block">First sign just a letter, at least three characters required. No spaces.</span>
                                     </div>
                                 </div>
-                                <div class="control-group options">
-                                    <label class="control-label" for="is-index">Index Page</label>
-                                    <div class="controls">
-                                        <label class="checkbox">
-                                            <input type="checkbox" class="app:edit-use-index" name="is-index"/>
-                                            Check to use this page as the index page for the section
-                                        </label>
+                                <div class="form-group options">
+                                    <label class="col-md-2 control-label" for="is-index">Index Page</label>
+                                    <div class="col-md-4">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" class="app:edit-use-index" name="is-index"/>
+                                                Check to use this page as the index page for the section
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="control-group options">
-                                    <label for="ctype" class="control-label">Content type</label>
-                                    <div class="controls">
-                                        <select name="ctype" class="app:edit-content-type">
+                                <div class="form-group options">
+                                    <label for="ctype" class="control-label col-md-2">Content type</label>
+                                    <div class="col-md-4">
+                                        <select name="ctype" data-template="app:edit-content-type" class="form-control">
                                             <option value="markdown">Markdown</option>
                                             <option value="xquery">XQuery</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="accordion">
-                                    <div class="accordion-group">
-                                        <div class="accordion-heading">
-                                            <a href="#permissions" class="accordion-toggle" data-toggle="collapse">Permissions</a>
-                                        </div>
-                                        <div class="accordion-body collapse" id="permissions">
-                                            <div class="accordion-inner">
-                                                <div class="templates:include?path=templates/permissions.html"/>
-                                            </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <a data-toggle="collapse" href="#permissions">Permissions</a>
+                                    </div>
+                                    <div id="permissions" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="templates:include?path=templates/permissions.html"/>
                                         </div>
                                     </div>
                                 </div>
@@ -86,55 +86,103 @@
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="content-editor">
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-strong" title="strong">
-                                                    <i class="icon-bold"/>
+                                                <button type="button" class="btn btn-strong btn-default" title="strong">
+                                                    <i class="glyphicon glyphicon-bold"/>
                                                 </button>
-                                                <button type="button" class="btn btn-emphasis" title="emphasis">
-                                                    <i class="icon-italic"/>
+                                                <button type="button" class="btn btn-emphasis btn-default" title="emphasis">
+                                                    <i class="glyphicon glyphicon-italic"/>
                                                 </button>
-                                                <button type="button" class="btn btn-code">
-                                                    <i class="icon-pencil"/>
+                                                <button type="button" class="btn btn-code btn-default">
+                                                    <i class="glyphicon glyphicon-pencil"/>
                                                 </button>
-                                                <select class="sel-heading">
-                                                    <option value="0">-- Heading --</option>
-                                                    <option value="1">Heading 1</option>
-                                                    <option value="2">Heading 2</option>
-                                                    <option value="3">Heading 3</option>
-                                                </select>
-                                                <select class="sel-code">
-                                                    <option value="none">-- Code --</option>
-                                                    <option value="xquery">XQuery</option>
-                                                    <option value="xml">XML</option>
-                                                    <option value="java">Java</option>
-                                                    <option value="text">Other</option>
-                                                </select>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                        -- Heading --
+                                                        <span class="caret"/>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li>
+                                                            <a href="#">Heading 1</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Heading 2</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Heading 3</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                        -- Code --
+                                                        <span class="caret"/>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li>
+                                                            <a href="#">XQuery</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">XML</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Java</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Other</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                             <textarea name="content" class="app:edit-content?mode=markup"/>
                                         </div>
                                         <div class="tab-pane" id="summary-editor">
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-strong" title="strong">
-                                                    <i class="icon-bold"/>
+                                                <button type="button" class="btn btn-strong btn-default" title="strong">
+                                                    <i class="glyphicon glyphicon-bold"/>
                                                 </button>
-                                                <button type="button" class="btn btn-emphasis" title="emphasis">
-                                                    <i class="icon-italic"/>
+                                                <button type="button" class="btn btn-emphasis btn-default" title="emphasis">
+                                                    <i class="glyphicon glyphicon-italic"/>
                                                 </button>
-                                                <button type="button" class="btn btn-code">
-                                                    <i class="icon-pencil"/>
+                                                <button type="button" class="btn btn-code btn-default">
+                                                    <i class="glyphicon glyphicon-pencil"/>
                                                 </button>
-                                                <select class="sel-heading">
-                                                    <option value="0">-- Heading --</option>
-                                                    <option value="1">Heading 1</option>
-                                                    <option value="2">Heading 2</option>
-                                                    <option value="3">Heading 3</option>
-                                                </select>
-                                                <select class="sel-code">
-                                                    <option value="none">-- Code --</option>
-                                                    <option value="xquery">XQuery</option>
-                                                    <option value="xml">XML</option>
-                                                    <option value="java">Java</option>
-                                                    <option value="text">Other</option>
-                                                </select>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                        -- Heading --
+                                                        <span class="caret"/>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li>
+                                                            <a href="#">Heading 1</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Heading 2</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Heading 3</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                        -- Code --
+                                                        <span class="caret"/>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li>
+                                                            <a href="#">XQuery</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">XML</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Java</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Other</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                             <textarea name="summary" class="app:edit-summary?mode=markup"/>
                                         </div>
@@ -156,18 +204,25 @@
             </div>
         </div>
         <div class="modal" id="confirmDialog" style="display: none;">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">x</a>
-                <h3>Confirm</h3>
-            </div>
-            <div class="modal-body"/>
-            <div class="modal-footer">
-                <a class="btn-primary btn ok-button">
-                    <i class="icon-ok"/> OK
-                </a>
-                <a class="btn btn cancel-button">
-                    <i class="icon-remove"/> Cancel
-                </a>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h3>Confirm</h3>
+                    </div>
+                    <div class="modal-body"/>
+                    <div class="modal-footer">
+                        <a class="btn-primary btn ok-button">
+                            <i class="icon-ok"/> OK
+                        </a>
+                        <a class="btn btn cancel-button">
+                            <i class="icon-remove"/> Cancel
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>

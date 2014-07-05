@@ -1,102 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html>
     <head>
-        <title>Atomic Wiki</title>
-        <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
+        <title class="config:app-title">Atomic Wiki</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="shortcut icon" href="$shared/resources/images/exist_icon_16x16.ico"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
-        <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
+        <script type="text/javascript" src="$shared/resources/scripts/bootstrap-3.0.3.min.js"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
     </head>
-    <body id="body" class="grey-top">
+    <body id="grey-top" data-template="site:expand-links" data-template-base="http://exist-db.org/">
         <div class="grey-bot">
-            <div class="container-fluid" id="container">
-                <div class="row-fluid">
-                    <div class="span12" id="header">
+            <div class="container" id="main-container">
+                <div class="row">
+                    <div class="col-md-12" id="header">
                         <a href="/" id="logo">eXistDB</a>
                     </div>
                 </div>
                 <div class="app:feed">
-                    <div class="row-fluid">
-                        <div class="navbar">
-                            <div class="navbar-inner">
-                                <div class="container">
-                                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                                        <span class="icon-bar"/>
-                                        <span class="icon-bar"/>
-                                        <span class="icon-bar"/>
+                    <div class="row">
+                        <nav class="navbar navbar-inverse" role="navigation" data-template="site:expand-links">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"/>
+                                <span class="icon-bar"/>
+                                <span class="icon-bar"/>
+                            </button>
+                            <div class="navbar-collapse collapse" id="navbar-collapse-1">
+                                <ul class="menu nav navbar-nav">
+                                    <li class="menu:site-menu"/>
+                                </ul>
+                                <div class="app:login">
+                                    <a class="btn btn-default navbar-btn navbar-right" href="#loginDialog" data-toggle="modal">Login</a>
+                                    <a href="?logout=logout" class="btn btn-default navbar-btn navbar-right app:posted-link">
+                                        Logout <span class="app:user">user</span>
                                     </a>
-                                    <div class="nav-collapse collapse">
-                                        <ul class="nav menu">
-                                            <li class="menu:site-menu"/>
-                                        </ul>
-                                        <div class="container pull-right">
-                                            <div class="app:login">
-                                                <a class="btn btn-inverse" href="#loginDialog" data-toggle="modal">Login</a>
-                                                <ul class="actions">
-                                                    <li class="dropdown">
-                                                        <a href="#" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-                                                            Admin <span class="caret"/>
-                                                        </a>
-                                                        <ul class="dropdown-menu">
-                                                            <li>
-                                                                <a href=".?action=addentry&amp;editor=html">
-                                                                    <i class="icon-plus"/> New HTML Article</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href=".?action=addentry&amp;editor=wiki">
-                                                                    <i class="icon-plus"/> New Markdown Article</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="?action=editfeed" class="app:posted-link">
-                                                                    <i class="icon-edit"/> Edit Section</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" id="open-sitemap">
-                                                                    <i class="icon-home"/> Sitemap</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" id="edit-menu">
-                                                                    <i class="icon-list"/> Edit Menu</a>
-                                                            </li>
-                                                            <li class="gallery:build-gallery-add-menu">
-                                                                <a href=".?action=addgallery">
-                                                                    <i class="icon-plus"/> New Slideshow</a>
-                                                            </li>
-                                                            <li class="gallery:build-gallery-edit-menu dropdown-submenu">
-                                                                <a tabindex="-1" href="#"> Edit Slideshows </a>
-                                                                <ul class="dropdown-menu pull-left">
-                                                                    <li>
-                                                                        <a href="?action=editgallery&amp;collection=/db/apps/wiki/data&amp;gallery=Slideshow1">
-                                                                            <i class="icon-plus"/> Slideshow 1</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <li>
-                                                        <a href="?logout=logout" class="btn btn-inverse app:posted-link">
-                                                            Logout <span class="app:user">user</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="atom-link" data-template="app:atom-link" href="#">
-                                                            <img src="theme/resources/images/feed-icon.png"/>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <a class="atom-link navbar-right" data-template="app:atom-link" href="#">
+                                        <img src="theme/resources/images/feed-icon.png"/>
+                                    </a>
+                                    <ul class="nav navbar-nav navbar-right">
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                Admin <span class="caret"/>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a href=".?action=addentry&amp;editor=html">
+                                                        <i class="icon-plus"/> New HTML Article</a>
+                                                </li>
+                                                <li>
+                                                    <a href=".?action=addentry&amp;editor=wiki">
+                                                        <i class="icon-plus"/> New Markdown Article</a>
+                                                </li>
+                                                <li>
+                                                    <a href="?action=editfeed" class="app:posted-link">
+                                                        <i class="icon-edit"/> Edit Section</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" id="open-sitemap">
+                                                        <i class="icon-home"/> Sitemap</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" id="edit-menu">
+                                                        <i class="icon-list"/> Edit Menu</a>
+                                                </li>
+                                                <li class="gallery:build-gallery-add-menu">
+                                                    <a href=".?action=addgallery">
+                                                        <i class="icon-plus"/> New Slideshow</a>
+                                                </li>
+                                                <li class="gallery:build-gallery-edit-menu dropdown-submenu">
+                                                    <a tabindex="-1" href="#"> Edit Slideshows </a>
+                                                    <ul class="dropdown-menu pull-left">
+                                                        <li>
+                                                            <a href="?action=editgallery&amp;collection=/db/apps/wiki/data&amp;gallery=Slideshow1">
+                                                                <i class="icon-plus"/> Slideshow 1</a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
-                        </div>
+                        </nav>
                     </div>
                 </div>
-                <div class="container" id="main">
-                    <div class="row" id="container-body">
-                        <div class="span12" id="content"/>
-                    </div>
+                <div class="row" id="container-body">
+                    <div class="col-md-12" id="content"/>
                 </div>
             </div>
         </div>
@@ -105,52 +95,62 @@
                 <p> Copyright eXistSolutions 2013</p>
             </div>
         </div>
-        <div class="modal" id="loginDialog" style="display: none;">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">
-                    <i class="icon-remove"/>
-                </a>
-                <h3>Login</h3>
+        <div class="modal" id="loginDialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title">Login</h4>
+                    </div>
+                    <form class="form form-horizontal login" action="" method="POST">
+                        <input type="hidden" name="duration" value="P14D"/>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="user" class="control-label col-md-4">User</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="user" placeholder="User" required="required" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="control-label col-md-4">Password</label>
+                                <div class="col-md-8">
+                                    <input type="password" name="password" placeholder="Password" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" type="button">
+                                <i class="icon-user"/> Login
+                            </button>
+                        </div>
+                        <div class="error-msg" style="color:red;margin:10px 10px;display:none">wrong username or password</div>
+                    </form>
+                </div>
             </div>
-            <form class="login content" action="" method="POST">
-                <input type="hidden" name="duration" value="P14D"/>
-                <div class="modal-body">
-                    <div class="control-group">
-                        <label for="user" class="control-label">User</label>
-                        <div class="controls">
-                            <input type="text" name="user" placeholder="User" required="required"/>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label for="password" class="control-label">Password</label>
-                        <div class="controls">
-                            <input type="password" name="password" placeholder="Password"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-small" type="button">
-                        <i class="icon-user"/> Login
-                    </button>
-                </div>
-                <div class="error-msg" style="color:red;margin:10px 10px;display:none">wrong username or password</div>
-            </form>
         </div>
-        <div class="modal hide fade" id="confirmDialog">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">
-                    <i class="icon-remove"/>
-                </a>
-                <h3>Confirm</h3>
-            </div>
-            <div class="modal-body"/>
-            <div class="modal-footer">
-                <a class="btn-primary btn ok-button">
-                    <i class="icon-ok"/> OK
-                </a>
-                <a class="btn btn cancel-button">
-                    <i class="icon-remove"/> Cancel
-                </a>
+        <div class="modal" id="confirmDialog" style="display: none">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title">Confirm</h4>
+                    </div>
+                    <div class="modal-body"/>
+                    <div class="modal-footer">
+                        <a class="btn-primary btn ok-button">
+                            <i class="icon-ok"/> OK
+                        </a>
+                        <a class="btn btn-default cancel-button">
+                            <i class="icon-remove"/> Cancel
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
