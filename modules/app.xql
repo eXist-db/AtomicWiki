@@ -517,7 +517,7 @@ declare function app:login($node as node(), $model as map(*)) {
     let $user := request:get-attribute("org.exist.wiki.login.user")
     return
         if ($user) then
-            templates:process($node/*[2], $model)
+            templates:process(subsequence($node/*, 2), $model)
         else
             templates:process($node/*[1], $model)
 };

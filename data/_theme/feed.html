@@ -3,18 +3,20 @@
     <head>
         <title>Atomic Wiki</title>
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="shortcut icon" href="$shared/resources/images/exist_icon_16x16.ico"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/gallery.css"/>
         <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body class="templates:surround?with=templates/page.html&amp;at=content&amp;using=body">
+    <body class="templates:surround?with=templates/page.html&amp;at=content&amp;using=grey-top">
         <div class="app:feed">
             <div class="app:entries?count=5 entries">
                 <div class="entry">
                     <div class="entryhead">
                         <div class="templates:if-attribute-set?attribute=org.exist.wiki.login.user">
                             <div class="edit-toolbar btn-group">
-                                <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"/>
+                                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"/>
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
