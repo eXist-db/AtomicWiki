@@ -1,6 +1,7 @@
 xquery version "3.0";
 
 
+
 import module namespace cleanup="http://atomic.exist-db.org/xquery/cleanup" at "cleanup.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace acl="http://atomic.exist-db.org/xquery/atomic/acl" at "acl.xql";
@@ -16,20 +17,15 @@ declare variable $store:ERROR := xs:QName("store:error");
 
 
 declare function store:store-resource($collection, $name, $content, $mediaType) {
-    (: let $log1 := util:log("ERROR", "collection: " || $collection|| " name: " || $name):)
-(:    let $deleted := if (doc-available($collection || '/' || $name)) then:)
-(:            xmldb:remove($collection, $name):)
-(:            else ():)
-            
     let $found := 
         if ($content instance of element()) then 
             collection($config:wiki-root)//atom:feed[atom:id = $content/atom:id]
         else
             ()
-    let $delete-if-exists := for $item in $found 
+    let $delete-if-exists := 
+        for $item in $found 
         return
             xmldb:remove(util:collection-name($item), util:document-name($item))
-        
     let $stored := xmldb:store($collection, $name, $content, $mediaType)
     
     let $owner := sm:get-permissions(xs:anyURI($stored))/@owner
@@ -46,9 +42,6 @@ declare function store:process-content($editType as xs:string, $content as xs:st
         ()
     else
         switch ($editType)
-            case "wiki" return
-                $content
-(:                wiki:parse($content, <parameters/>):)
             case "html" return
                 if (matches($content, "^[^<]*<article")) then
                     $content
@@ -98,8 +91,8 @@ declare function store:process-html($content as xs:string?) {
         let $parsed := cleanup:clean(util:parse-html($content)//*:article)
 (:        let $parsed := util:parse-html($content)//*:article:)
         return
-(:            $parsed:)
-            store:relativize-links($parsed)
+            $parsed
+(:            store:relativize-links($parsed):)
     else
         ()
 };
@@ -183,7 +176,7 @@ declare function store:gallery($gallery as node()) {
 };
 
 declare function store:gallery-entry($entry as node()) {
-    let $contentType := if ($entry/@ctype = ("wiki", "html")) then "html" else $entry/@ctype
+    let $contentType := if ($entry/@ctype = "html") then "html" else $entry/@ctype
     let $imageId := if(string-length($entry/@imageId) gt 0) then data($entry/@imageId) else util:uuid()
     return
         <atom:entry>
@@ -219,8 +212,8 @@ declare function store:article() {
     let $editType := request:get-parameter("ctype", "html")
     let $contentParsed := store:process-content($editType, $content)
     let $summaryParsed := store:process-content($editType, $summary)
-    let $contentData := if ($editor = ("wiki", "markdown")) then $contentParsed else store:process-html($contentParsed)
-    let $summaryData := if ($editor = ("wiki", "markdown")) then $summaryParsed else store:process-html($summaryParsed)
+    let $contentData := if ($editor = "markdown") then $contentParsed else store:process-html($contentParsed)
+    let $summaryData := if ($editor = "markdown") then $summaryParsed else store:process-html($summaryParsed)
     let $contentType := if ($editType = "html") then "html" else $editType
     let $old := util:expand(collection($config:wiki-root)/atom:entry[atom:id = $id])
     let $entry :=
@@ -274,7 +267,7 @@ declare function store:article() {
                         switch ($contentType)
                             case "xquery" return
                                 "application/xquery"
-                            case "markdown" case "wiki" return
+                            case "markdown" return
                                 "text/x-markdown"
                             default return
                                 "text/html"

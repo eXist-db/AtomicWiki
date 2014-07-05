@@ -483,6 +483,7 @@ declare function app:edit-editor($node as node(), $model as map(*)) {
             $model("entry")/wiki:editor/string()
         else
             "wiki"
+    let $editor := if ($editor = ("wiki", "markdown")) then "markdown" else ""
     return
         element { node-name($node) } {
             $node/@*,
