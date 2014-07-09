@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div class="templates:surround?with=templates/page.html&amp;at=content">
+<div data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
     <div class="entries">
         <div class="app:check-access">
             <div class="entry">
@@ -8,36 +8,36 @@
                     Please log in.</p>
                 </div>
             </div>
-            <div class="entry app:get-or-create-feed">
+            <div class="entry" data-template="app:get-or-create-feed">
                 <h1 class="entrytitle">Edit Collection</h1>
-                <form class="form-horizontal" id="edit-form" action="." method="POST">
-                    <div class="control-group title">
-                        <label class="control-label" for="title">Title</label>
-                        <div class="controls">
-                            <input class="app:edit-title" name="title" placeholder="Title" required="required"/>
+                <form class="form form-horizontal" id="edit-form" action="." method="POST">
+                    <div class="form-group title">
+                        <label class="control-label col-md-2" for="title">Title</label>
+                        <div class="col-md-8">
+                            <input class="form-control" data-template="app:edit-title" name="title" placeholder="Title" required="required"/>
                         </div>
                     </div>
-                    <div class="control-group title">
-                        <label class="control-label" for="subtitle">Subtitle</label>
-                        <div class="controls">
-                            <input class="app:edit-subtitle" name="subtitle" placeholder="Subtitle"/>
+                    <div class="form-group title">
+                        <label class="control-label col-md-2" for="subtitle">Subtitle</label>
+                        <div class="col-md-8">
+                            <input class="form-control" data-template="app:edit-subtitle" name="subtitle" placeholder="Subtitle"/>
                         </div>
                     </div>
-                    <div class="accordion">
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a href="#permissions" class="accordion-toggle" data-toggle="collapse">Permissions</a>
-                            </div>
-                            <div class="accordion-body collapse" id="permissions">
-                                <div class="accordion-inner">
-                                    <div class="templates:include?path=templates/permissions.html"/>
-                                </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a data-toggle="collapse" href="#permissions">Permissions</a>
+                        </div>
+                        <div id="permissions" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="templates:include?path=templates/permissions.html"/>
                             </div>
                         </div>
                     </div>
-                    <div class="form-actions">
-                        <button class="btn btn-primary" type="submit" name="action" value="store">Store/Create</button>
-                        <a href="" class="btn">Cancel</a>
+                    <div class="form-group">
+                        <div class="btn-group">
+                            <a href="" class="btn btn-default">Cancel</a>
+                            <button class="btn btn-primary" type="submit" name="action" value="store">Store/Create</button>
+                        </div>
                     </div>
                     <input type="hidden" name="feed-id" class="app:edit-id"/>
                     <input type="hidden" name="author" class="app:edit-author"/>

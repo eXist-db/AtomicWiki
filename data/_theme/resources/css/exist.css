@@ -3,6 +3,7 @@
 
 @import url('bootstrap.min.css');
 @import url('bootstrap-theme.min.css');
+@import url('font-awesome.min.css');
 
 @font-face {
     font-family: 'QuicksandBook';
@@ -222,10 +223,6 @@ body {
 }
 
 #structure { min-height: 600px; height: 100%; }
-
-.modal {
-    z-index: 20000;
-}
 
 /* ---------------------------------------- INDEX ---------------------------------------- */
 
@@ -554,6 +551,10 @@ figure figcaption {
     float: right;
 }
 
+.edit-toolbar a i, .feed-toolbar a i {
+    width: 22px;
+}
+
 .editrow {
     margin: 0 0 10px 0;
     width: 100%;
@@ -602,6 +603,10 @@ figure figcaption {
 
 .options {
     font-size: 85%;
+}
+
+#edit {
+    padding-top: 10px;
 }
 
 #edit-form .title input {
@@ -1057,4 +1062,47 @@ ul.dropdown-menu li {
 #content .galleria-info-description ul,
 #content .galleria-info-description li {
     color: #fff;
+}
+
+/* The sitemap */
+.sitemap-toggle {
+    position: absolute;
+    left: 4px;
+}
+
+#sitemap .dynatree-container {
+    background-color: inherit;
+}
+
+.row-offcanvas {
+    position: relative;
+    -webkit-transition: all .25s ease-out;
+         -o-transition: all .25s ease-out;
+            transition: all .25s ease-out;
+}
+
+.row-offcanvas-left {
+    left: 0;
+}
+
+.row-offcanvas-left .sidebar-offcanvas {
+    left: -50%;
+    opacity: 0.0;
+    -webkit-transition: opacity .25s ease-out;
+    -o-transition: opacity .25s ease-out;
+    transition: opacity .25s ease-out;
+}
+
+.row-offcanvas-left.active {
+    left: 50%;
+}
+
+.row-offcanvas-left.active .sidebar-offcanvas {
+    opacity: 1.0;
+}
+
+.sidebar-offcanvas {
+    position: absolute;
+    top: 0;
+    width: 50%;
 }

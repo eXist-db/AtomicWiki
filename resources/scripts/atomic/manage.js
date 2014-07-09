@@ -8,24 +8,31 @@ Atomic.sitemap = (function () {
     var initialized = false;
     
     $(document).ready(function() {
-        dialog = $("#sitemap-dialog");
-        dialog.modal({
-            keyboard: true,
-            show: false
+        dialog = $("#sitemap");
+        init(function(url) {
+            window.location = url;
         });
-        $(".close-button", dialog).click(function(ev) {
-            ev.preventDefault();
-            dialog.modal("hide");
+        $(".sitemap-toggle").click(function(ev) {
+            dialog.parent().toggleClass("active");
         });
-        $("#open-sitemap").click(function(ev) {
-            ev.preventDefault();
-            open(function(url) {
-                window.location = url;
-            });
-        });
+        
+        // dialog.modal({
+        //     keyboard: true,
+        //     show: false
+        // });
+        // $(".close-button", dialog).click(function(ev) {
+        //     ev.preventDefault();
+        //     dialog.modal("hide");
+        // });
+        // $("#open-sitemap").click(function(ev) {
+        //     ev.preventDefault();
+        //     open(function(url) {
+        //         window.location = url;
+        //     });
+        // });
     });
     
-    function init() {
+    function init(onSelect) {
         if (initialized) {
             return false;
         }
@@ -41,7 +48,7 @@ Atomic.sitemap = (function () {
             onPostInit: function() {
                 var uuid = $("input[name='uuid']").val();
                 var node = this.selectKey(uuid);
-		node.makeVisible();
+		        node.makeVisible();
             },
             onDblClick: function(dtnode) {
                 var key = dtnode.data.key;
@@ -57,7 +64,7 @@ Atomic.sitemap = (function () {
     function open(callback) {
         init();
         onSelect = callback;
-        dialog.modal("show");
+        // dialog.modal("show");
     }
     
     return {
@@ -86,10 +93,10 @@ Atomic.menu = (function () {
             show: false
         });
         dialog.find(".modal-header h3").html("Edit menu for section '/" + feed + "'");
-        $(".close-button", dialog).click(function(ev) {
+        /*$(".close-button", dialog).click(function(ev) {
             ev.preventDefault();
             dialog.modal("hide");
-        });
+        });*/
         $(".apply-button", dialog).click(function(ev) {
             ev.preventDefault();
             var root = menu.dynatree("getRoot");

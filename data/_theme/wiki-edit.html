@@ -21,14 +21,14 @@
                     <div class="tab-content">
                         <div id="edit" class="tab-pane active">
                             <form id="edit-form" class="form form-horizontal" action="." method="POST">
-                                <div class="form-group">
+                                <div class="form-group ">
                                     <div class="btn-group col-md-12">
                                         <a href="?" id="edit-form-cancel" class="btn btn-default">
-                                            <i class="icon-ban-circle"/> Cancel</a>
+                                            <i class="fa fa-times"/> Cancel</a>
                                         <button id="edit-form-save" class="btn btn-default">
-                                            <i class="icon-download-alt"/> Save</button>
+                                            <i class="fa fa-save"/> Save</button>
                                         <button id="edit-form-saveAndClose" class="btn btn-primary" type="submit">
-                                            <i class="icon-ok"/> Save and Close</button>
+                                            <i class="fa fa-share"/> Save and Close</button>
                                     </div>
                                 </div>
                                 <div class="form-group title">
@@ -87,28 +87,28 @@
                                         <div class="tab-pane active" id="content-editor">
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-strong btn-default" title="strong">
-                                                    <i class="glyphicon glyphicon-bold"/>
+                                                    <i class="fa fa-bold"/>
                                                 </button>
                                                 <button type="button" class="btn btn-emphasis btn-default" title="emphasis">
-                                                    <i class="glyphicon glyphicon-italic"/>
+                                                    <i class="fa fa-italic"/>
                                                 </button>
-                                                <button type="button" class="btn btn-code btn-default">
-                                                    <i class="glyphicon glyphicon-pencil"/>
+                                                <button type="button" class="btn btn-code btn-default" title="code">
+                                                    <i class="fa fa-code"/>
                                                 </button>
                                                 <div class="btn-group">
                                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                                         -- Heading --
                                                         <span class="caret"/>
                                                     </button>
-                                                    <ul class="dropdown-menu" role="menu">
+                                                    <ul class="dropdown-menu toggle-heading" role="menu">
                                                         <li>
-                                                            <a href="#">Heading 1</a>
+                                                            <a href="#" data-heading="1">Heading 1</a>
                                                         </li>
                                                         <li>
-                                                            <a href="#">Heading 2</a>
+                                                            <a href="#" data-heading="2">Heading 2</a>
                                                         </li>
                                                         <li>
-                                                            <a href="#">Heading 3</a>
+                                                            <a href="#" data-heading="3">Heading 3</a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -117,18 +117,18 @@
                                                         -- Code --
                                                         <span class="caret"/>
                                                     </button>
-                                                    <ul class="dropdown-menu" role="menu">
+                                                    <ul class="dropdown-menu toggle-code" role="menu">
                                                         <li>
-                                                            <a href="#">XQuery</a>
+                                                            <a href="#" data-syntax="xquery">XQuery</a>
                                                         </li>
                                                         <li>
-                                                            <a href="#">XML</a>
+                                                            <a href="#" data-syntax="xml">XML</a>
                                                         </li>
                                                         <li>
-                                                            <a href="#">Java</a>
+                                                            <a href="#" data-syntax="java">Java</a>
                                                         </li>
                                                         <li>
-                                                            <a href="#">Other</a>
+                                                            <a href="#" data-syntax="">Other</a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -138,28 +138,28 @@
                                         <div class="tab-pane" id="summary-editor">
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-strong btn-default" title="strong">
-                                                    <i class="glyphicon glyphicon-bold"/>
+                                                    <i class="fa fa-bold"/>
                                                 </button>
                                                 <button type="button" class="btn btn-emphasis btn-default" title="emphasis">
-                                                    <i class="glyphicon glyphicon-italic"/>
+                                                    <i class="fa fa-italic"/>
                                                 </button>
                                                 <button type="button" class="btn btn-code btn-default">
-                                                    <i class="glyphicon glyphicon-pencil"/>
+                                                    <i class="fa fa-code"/>
                                                 </button>
                                                 <div class="btn-group">
                                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                                         -- Heading --
                                                         <span class="caret"/>
                                                     </button>
-                                                    <ul class="dropdown-menu" role="menu">
+                                                    <ul class="dropdown-menu toggle-heading" role="menu">
                                                         <li>
-                                                            <a href="#">Heading 1</a>
+                                                            <a href="#" data-heading="1">Heading 1</a>
                                                         </li>
                                                         <li>
-                                                            <a href="#">Heading 2</a>
+                                                            <a href="#" data-heading="2">Heading 2</a>
                                                         </li>
                                                         <li>
-                                                            <a href="#">Heading 3</a>
+                                                            <a href="#" data-heading="3">Heading 3</a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -168,18 +168,18 @@
                                                         -- Code --
                                                         <span class="caret"/>
                                                     </button>
-                                                    <ul class="dropdown-menu" role="menu">
+                                                    <ul class="dropdown-menu toggle-code" role="menu">
                                                         <li>
-                                                            <a href="#">XQuery</a>
+                                                            <a href="#" data-syntax="xquery">XQuery</a>
                                                         </li>
                                                         <li>
-                                                            <a href="#">XML</a>
+                                                            <a href="#" data-syntax="xml">XML</a>
                                                         </li>
                                                         <li>
-                                                            <a href="#">Java</a>
+                                                            <a href="#" data-syntax="java">Java</a>
                                                         </li>
                                                         <li>
-                                                            <a href="#">Other</a>
+                                                            <a href="#" data-syntax="">Other</a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -197,6 +197,43 @@
                                 <input type="hidden" name="action" value=""/>
                                 <input type="hidden" name="external" value="on"/>
                             </form>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <a href="#attachments" data-toggle="collapse">Attachments</a>
+                                </div>
+                                <div class="panel-collapse collapse" id="attachments">
+                                    <div class="panel-body">
+                                        <div class="attachment-list">
+                                            <table>
+                                                <thead>
+                                                    <th>Name</th>
+                                                    <th>Thumbnail</th>
+                                                    <th>Type</th>
+                                                </thead>
+                                                <tbody class="app:attachments attachments"/>
+                                            </table>
+                                        </div>
+                                        <div id="image-upload">
+                                            <p>To upload: drop one or more files on this dialog or click on the button below.</p>
+                                            <form class="file_upload" action="modules/upload.xql" method="POST" enctype="multipart/form-data">
+                                                <div class="file_upload_body">
+                                                    <input type="file" name="uploadedfiles[]" multiple="multiple"/>
+                                                    <input name="collection" value="/db/abc" type="hidden"/>
+                                                    <button>Upload</button>
+                                                    <div class="file_upload_label">Upload</div>
+                                                </div>
+                                            </form>
+                                            <div class="overall-progress" style="opacity: 0">
+                                                <div class="bar" style="width: 0%;"/>
+                                                <div class="progress-label">0%</div>
+                                            </div>
+                                            <div class="queue">
+                                                <table class="files"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="tab-pane" id="preview"/>
                     </div>
@@ -226,13 +263,20 @@
             </div>
         </div>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery/jquery-ui.min.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery/jquery.fileupload.js"/>
         <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
-        <script type="text/javascript" src="resources/scripts/prettify/prettify.js"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
         <script src="$shared/resources/scripts/ace/ace.js" type="text/javascript" charset="utf-8"/>
         <script src="$shared/resources/scripts/ace/theme-tomorrow.js" type="text/javascript" charset="utf-8"/>
+        <script type="text/javascript" src="$shared/resources/scripts/ace/theme-clouds.js"/>
         <script src="$shared/resources/scripts/ace/mode-markdown.js" type="text/javascript" charset="utf-8"/>
-        <!--script src="resources/scripts/atomic/wiki-mode.js" type="text/javascript" charset="utf-8"/-->
+        <script type="text/javascript" src="$shared/resources/scripts/ace/mode-javascript.js"/>
+        <script type="text/javascript" src="$shared/resources/scripts/ace/mode-text.js"/>
+        <script type="text/javascript" src="$shared/resources/scripts/ace/mode-xquery.js"/>
+        <script type="text/javascript" src="$shared/resources/scripts/ace/mode-xml.js"/>
         <script src="resources/scripts/atomic/markup-editor.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/atomic/attachments.js" type="text/javascript" charset="utf-8"/>
+        <script type="text/javascript" src="resources/scripts/atomic/highlight.js"/>
     </body>
 </html>

@@ -23,7 +23,7 @@ $(document).ready(function() {
         });
     }
     
-    $("#editor-tabs a[href='#preview']").on('show', function (e) {
+    $("#editor-tabs a[href='#preview']").on('show.bs.tab', function (e) {
         // update the preview tab
         summaryEditor.update();
         contentEditor.update();
@@ -33,7 +33,8 @@ $(document).ready(function() {
 		    url: "preview.html",
 		    data: data,
 		    success: function (data) {
-                $("#preview").html(data);
+                $("#preview").html(data)
+                    .find(".code").highlight({ theme: "clouds" });
 		    }
         });
     });
@@ -148,18 +149,22 @@ Atomic.Editor = (function () {
             $this.markup("`", "`");
             return false;
         });
-        this.container.find(".sel-heading").change(function(ev) {
-            var val = parseInt($(this).val());
+        this.container.find(".toggle-heading a").click(function(ev) {
+            ev.preventDefault();
+            var val = parseInt($(this).attr("data-heading"));
             if (val > 0) {
-                var stars = "===============".substring(0, val);
-                $this.markup(stars, stars);
+                var stars = "########".substring(0, val);
+                $this.markup(stars + ' ');
             }
+            return false;
         });
-        this.container.find(".sel-code").change(function(ev) {
-            var val = $(this).val();
+        this.container.find(".toggle-code a").click(function(ev) {
+            ev.preventDefault();
+            var val = $(this).attr("data-syntax");
             if (val != "none") {
                 $this.markup("```" + val + "\n", "\n```");
             }
+            return false;
         });
     };
     
@@ -185,10 +190,12 @@ Atomic.Editor = (function () {
             this.editor.insert(before + selected + after);
         } else {
             this.editor.insert(before);
-            var sel = this.editor.getSelection();
-            var lead = sel.getSelectionLead();
-            this.editor.insert(after);
-            sel.moveCursorToPosition(lead);
+            if (after) {
+                var sel = this.editor.getSelection();
+                var lead = sel.getSelectionLead();
+                this.editor.insert(after);
+                sel.moveCursorToPosition(lead);
+            }
             this.editor.focus();
         }
     };

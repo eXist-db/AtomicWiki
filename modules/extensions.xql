@@ -3,7 +3,7 @@ xquery version "3.0";
 module namespace ext="http://atomic.exist-db.org/xquery/extensions";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
-import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
+import module namespace templates="http://exist-db.org/xquery/templates";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
 
@@ -37,7 +37,7 @@ declare
 function ext:code($node as node(), $model as map(*), $lang as xs:string?, $edit as xs:string, $action as xs:string?) {
     let $syntax := $lang
     let $source := replace($node/string(), "^\s*(.*)\s*$", "$1")
-    let $context := request:get-context-path()
+    let $eXideLink := templates:link-to-app("http://exist-db.org/apps/eXide", "index.html?snip=" || encode-for-uri($source))
     return
         switch ($action)
             case "edit" return
@@ -45,8 +45,10 @@ function ext:code($node as node(), $model as map(*), $lang as xs:string?, $edit 
             default return (
                 <div class="code" data-language="{$syntax}">{$source}</div>,
                 if ($edit = ("yes", "true")) then
-                    <a class="btn" href="{$context}/eXide/index.html?snip={encode-for-uri($source)}" target="eXide"
-                        title="Opens the code in eXide in new tab or existing tab if it is already open.">Edit</a>
+                    <a class="btn btn-default eXide-open" href="{$eXideLink}" target="eXide"
+                        data-exide-create="{$source}"
+                        title="Opens the code in eXide in new tab or existing tab if it is already open.">
+                        <i class="glyphicon glyphicon-edit"/> Edit</a>
                 else
                     ()
             )

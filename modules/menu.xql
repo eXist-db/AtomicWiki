@@ -27,7 +27,7 @@ declare function menu:site-menu($node as node(), $model as map(*)) {
 (:            let $path := $config:base-url || substring-after(util:collection-name($menu), $config:wiki-root):)
             let $path := $config:base-url
             return
-                menu:relativize-links($menu, $path)
+                menu:relativize-links($menu, $path)/*
         else
             <nav>
                 <ul class="nav menu">
@@ -57,7 +57,7 @@ declare function menu:relativize-links($node as node(), $path as xs:string) {
     case element(a) return
         let $href := $node/@href
         return
-            if ($href = "#") then
+            if ($href = "#" or matches($href, "^\w+://")) then
                 $node
             else
                 element { node-name($node) } {
