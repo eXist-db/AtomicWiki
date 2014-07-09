@@ -117,7 +117,7 @@ declare function gallery:select-gallery($node as node(), $model as map(*)) {
     return
             $feed
     return
-        <select class="span4" name="gallery">
+        <select class="form-control" name="gallery">
             {
             for $gallery in $galleries
             let $galleryCol := substring-before(util:collection-name($gallery), "/_galleries")
@@ -128,13 +128,13 @@ declare function gallery:select-gallery($node as node(), $model as map(*)) {
 };
 declare function gallery:add-video($node as node(), $model as map(*)) {
     <div>
-        <select class="span4" name="video">
+        <select class="form-control" name="video">
             <option value="Pandora1">Pandora 1: insert the whole URL</option>
             <option value="Pandora2">Pandora 2: for http://129.206.36.128:8000</option>
             <option value="youTube">YouTube</option>
             <option value="vimeo">Vimeo</option>
         </select> 
-        <input class="span4" type="text" name="id" placeholder="Name or ID of video!" required="required"/>
+        <input class="form-control" type="text" name="id" placeholder="Name or ID of video!" required="required"/>
     </div>
     
 };
@@ -226,10 +226,7 @@ declare function gallery:select-music($node as node(), $model as map(*), $musict
 declare function gallery:build-gallery-add-menu($node as node(), $model as map(*)) {
     if ($config:slideshows-enabled = "true")
     then
-        <li>
-            <a href=".?action=addgallery">
-                <i class="icon-plus"/> New Slideshow</a>
-        </li>
+        $node
     else
         ()
 };
@@ -247,7 +244,7 @@ declare function gallery:build-gallery-edit-menu($node as node(), $model as map(
                 $feed/atom:title
         return
             <li class="dropdown-submenu">
-                <a tabindex="-1" href="#"> Edit Slideshows </a>
+                <a tabindex="-1" href="#"> <i class="fa fa-picture-o"/> Edit Slideshows </a>
                 <ul class="dropdown-menu pull-left" style="max-height:300px;overflow-y:auto;">
                     {
                     for $gallery in $galleries

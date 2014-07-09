@@ -1,27 +1,62 @@
-# Supported Markdown syntax
+Markdown support in the wiki is based on a parser [written in XQuery][4]. It extends the [original markdown][3] proposal with fenced code blocks and tables. These are additional features found in [Github flavored markdown][2].
 
-The parser extends the [original markdown][3] proposal with fenced code blocks and tables. These are additional features found in [Github flavored markdown][2].
+# Paragraphs
 
-## Paragraphs
 Paragraphs are separated from following blocks by a blank line. 
 A single line break does **not** start a new paragraph.
 
-Lorem ipsum dolor sit amet, `consectetur` adipiscing elit. Curabitur nec lobortis magna. Fusce vestibulum felis a eros suscipit mattis. Pellentesque sit amet enim libero. Sed sed tempus nibh. Ut pellentesque quam ac bibendum iaculis. Suspendisse **vitae** interdum risus, [convallis auctor](/WikiIntro) urna. Mauris vel sapien ut sapien mollis rhoncus non a nibh. Nullam vulputate consequat purus, ut varius justo ornare vel. Etiam ornare diam at velit varius volutpat. Mauris vel luctus mi, at fermentum purus. *Vestibulum ante ipsum* primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras lobortis est dolor, et tristique lorem egestas vitae. Sed feugiat dictum nunc. Nullam ultricies vehicula aliquam. Cras felis ante, ultrices sed lacinia et, pharetra in tellus. Vivamus scelerisque ut mi a dapibus.
+# Headings
 
-## Code
+A heading starts with one or more hash signs (\#) and extends to the end of the line.
+
+# Bold, emphasis and underline
+
+To *emphasis* a span of text, place single \* around it. Use double \*\* for stronger emphasis (**bold**). character.
+
+# Code
+
+## Inline
 
 To format inline code snippets, surround them with a single backtick: `request:get-parameter()`. Use two 
 backticks to allow one backtick inside: `` `ls` ``.
 
-## Lists
+## Code Blocks
 
-### Simple list
+A triple \`\`\` on a line starts a code block, which should be closed by another \`\`\` on a single line. Following the \`\`\` one may indicate the syntax to be used for highlighting, e.g.
+
+```
+\`\`\`xquery
+for $i in 1 to 10
+return
+    <li>{$i * 2}</li>
+\`\`\`
+```
+
+This will be rendered as follows:
+
+```xquery
+for $i in 1 to 10
+return
+    <li>{$i * 2}</li>
+```
+
+# Lists
+
+## Simple list
+
+For an unordered list, start each item on a line with a \*:
 
 * Buy milk
 * Drink it
 * Be happy
 
-### Nested list:
+For an ordered list, each item should start with a number followed by a period (1.):
+
+1. First item
+2. Second item
+3. Third item
+
+## Nested list:
 
 1. One
 1. Two
@@ -30,27 +65,43 @@ backticks to allow one backtick inside: `` `ls` ``.
 1. Three
 1. Four
 
-## Links
+# Links
 
-Links can be specified directly or by reference.
+Links can be specified directly or by reference. For example, \[this link\]\[1\] references a link definition given at the end of the document:
 
-This [link][1] references a link definition given at the end of the document ! And here's a direct link to the eXist [documentation](http://exist-db.org/exist/apps/docs "eXist-db Documentation").
-
-## Images
-
-![eXist-db Logo](http://exist-db.org/exist/apps/homepage/img/existdb.gif)
-
-Image linked through reference: ![Read more][glasses].
-
-## Code Blocks
-
-```xquery
-for $i in 1 to 10
-return
-    <li>{$i * 2}</li>
+```
+[1]: http://exist-db.org "eXist-db homepage"
 ```
 
-## Table
+A direct link is written as
+
+```
+\[link text\]\(url "optional alt text"\)
+```
+
+Here's a live example of both link types in action:
+
+This [link][1] references a link definition given at the end of the document! And here's a direct link to the eXist [documentation](http://exist-db.org/exist/apps/docs "eXist-db Documentation").
+
+# Images
+
+![eXist-db Logo](http://exist-db.org/exist/apps/homepage/resources/img/existdb.gif)
+
+Image linked through reference: ![eXist Book][5].
+
+# Tables
+
+A full table with headers is formatted as follows:
+
+```
+| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | **centered**  |   $12 |
+| zebra stripes | are neat      |    $1 |
+```
+
+This will render as:
 
 | Tables        | Are           | Cool  |
 | ------------- |:-------------:| -----:|
@@ -58,11 +109,27 @@ return
 | col 2 is      | **centered**  |   $12 |
 | zebra stripes | are neat      |    $1 |
 
-Another simple table:
+You can also create a simple table without header:
+
+```
+simple table | column1 | column2
+```
 
 simple table | column1 | column2
+
+# Inline HTML and blocks
+
+<figure style="float: right">
+    <img src="/_galleries/london.jpg" width="200"/>
+    <figcaption>An HTML figure floated to the right</figcaption>
+</figure>
+
+You may inline HTML inside a block. For example, we can turn the following <span style="color: red">span of text into red</span>.
+
+It is also possible to use HTML block-level elements, but please note that they must start and end on a new line. Anything between the start and end HTML tag will be rendered as HTML. It is thus not possible to use markdown syntax within an HTML block. For example, we may use an HTML figure element to include an image:
 
 [1]: http://exist-db.org "eXist-db homepage"
 [2]: https://help.github.com/articles/github-flavored-markdown
 [3]: http://daringfireball.net/projects/markdown/syntax
-[glasses]: http://exist-db.org/exist/apps/homepage/img/view.png "Documentation"
+[4]: https://github.com/wolfgangmm/exist-markdown
+[5]: http://exist-db.org/exist/apps/homepage/resources/img/book-cover.gif "eXist Book"

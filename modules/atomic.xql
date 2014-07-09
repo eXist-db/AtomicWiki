@@ -102,7 +102,13 @@ declare function atomic:get-content($content as element(atom:content)?, $eval as
                     default return
                         util:binary-to-string(util:binary-doc($path))
         else
-            if ($content/@type = ("html", "xhtml")) then $content/* else $content/node()
+            switch ($content/@type)
+                case "html" case "xhtml" return
+                    $content/*
+                case "markdown" return
+                    <div>{md:parse($content/string(), $atomic:MD_CONFIG)}</div>
+                default return
+                    $content/node()
     return
         if ($data and $content/@type eq "xquery" and $eval) then
             (: The following variables will be available within the script :)

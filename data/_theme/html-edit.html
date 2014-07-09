@@ -9,55 +9,55 @@
         <link rel="stylesheet" type="text/css" href="theme/resources/css/gallery.css"/>
         <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body class="templates:surround?with=templates/page.html&amp;at=content&amp;using=grey-top">
+    <body data-template="templates:surround" data-template-with="templates/page.html" data-template-at="container-body" data-template-using="grey-top">
         <div class="col-md-12">
             <div class="app:feed">
                 <div class="app:get-or-create-entry?lock=true entries">
                     <div id="edit" class="edit">
-                        <form id="edit-form" class="form-horizontal" action="?" method="POST">
-                            <div class="control-group">
+                        <form id="edit-form" class="form form-horizontal" action="?" method="POST">
+                            <div class="form-group">
                                 <div class="btn-group">
-                                    <button id="edit-form-cancel" formnovalidate="formnnovalidate" class="btn">
-                                        <i class="icon-ban-circle"/> Cancel</button>
-                                    <button id="edit-form-save" class="btn">
-                                        <i class="icon-download-alt"/> Save</button>
+                                    <button id="edit-form-cancel" formnovalidate="formnnovalidate" class="btn btn-default">
+                                        <i class="fa fa-times"/> Cancel</button>
+                                    <button id="edit-form-save" class="btn btn-default">
+                                        <i class="fa fa-save"/> Save</button>
                                     <button id="edit-form-saveAndClose" class="btn btn-primary" type="submit">
-                                        <i class="icon-ok"/> Save and Close</button>
+                                        <i class="fa fa-share"/> Save and Close</button>
                                 </div>
                             </div>
-                            <div class="control-group title">
-                                <label class="control-label" for="title">Title</label>
-                                <div class="controls">
-                                    <input class="span6 app:edit-title" type="text" name="title" placeholder="Title" required="required"/>
+                            <div class="form-group title">
+                                <label class="control-label col-md-2" for="title">Title</label>
+                                <div class="col-md-8">
+                                    <input data-template="app:edit-title" class="form-control" type="text" name="title" placeholder="Title" required="required"/>
                                     <p class="help-block">A short, unique name for this entry which will be used in
                                         URLs.</p>
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <label class="control-label" for="name">Short Name</label>
-                                <div class="controls">
-                                    <input class="span3 app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="[A-Za-zäöüÄÖÜ]{1}[\w-äöüßÄÖÜ]{2,}"/>
-                                    <span class="help-inline">First sign just a letter, at least three characters required. No spaces.</span>
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="name">Short Name</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" data-template="app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="[A-Za-zäöüÄÖÜ]{1}[\w-äöüßÄÖÜ]{2,}"/>
+                                    <span class="help-block">First sign just a letter, at least three characters required. No spaces.</span>
                                 </div>
                             </div>
-                            <div class="control-group options">
-                                <label class="control-label" for="is-index">Index Page</label>
-                                <div class="controls">
-                                    <label class="checkbox">
-                                        <input type="checkbox" class="app:edit-use-index" name="is-index"/>
-                                        Check to use this page as the index page for the section
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="accordion">
-                                <div class="accordion-group">
-                                    <div class="accordion-heading">
-                                        <a href="#permissions" class="accordion-toggle" data-toggle="collapse">Permissions</a>
+                            <div class="form-group options">
+                                <label class="col-md-2 control-label" for="is-index">Index Page</label>
+                                <div class="col-md-4">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" class="app:edit-use-index" name="is-index"/>
+                                            Check to use this page as the index page for the section
+                                        </label>
                                     </div>
-                                    <div class="accordion-body collapse" id="permissions">
-                                        <div class="accordion-inner">
-                                            <div class="templates:include?path=templates/permissions.html"/>
-                                        </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <a data-toggle="collapse" href="#permissions">Permissions</a>
+                                </div>
+                                <div id="permissions" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="templates:include?path=templates/permissions.html"/>
                                     </div>
                                 </div>
                             </div>
@@ -73,9 +73,9 @@
                                 <div class="tab-content">
                                     <div id="content-editor-html" class="tab-pane active content">
                                         <div id="content-editor-toolbar" style="display: none;" class="wysihtml5-toolbar">
-                                            <ul>
-                                                <li class="dropdown">
-                                                    <a class="btn dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+                                            <div class="btn-toolbar">
+                                                <div class="btn-group">
+                                                    <a class="btn btn-default dropdown-toggle" role="button" data-toggle="dropdown" href="#">
                                                         <span class="current-font">Normal</span>
                                                         <b class="caret"/>
                                                     </a>
@@ -102,88 +102,87 @@
                                                             <a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="javascript">Javascript Code</a>
                                                         </li>
                                                     </ul>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a data-wysihtml5-command="bold" class="btn" title="Bold text">
-                                                        <i class="icon-bold"/>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <a data-wysihtml5-command="bold" class="btn btn-default" title="Bold text">
+                                                        <i class="fa fa-bold"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="italic" class="btn" title="Italic text">
-                                                        <i class="icon-italic"/>
+                                                    <a data-wysihtml5-command="italic" class="btn btn-default" title="Italic text">
+                                                        <i class="fa fa-italic"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="underline" class="btn" title="Underline text">
-                                                        <i class="icon-underline"/>
+                                                    <a data-wysihtml5-command="underline" class="btn btn-default" title="Underline text">
+                                                        <i class="fa fa-underline"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="formatInline" data-wysihtml5-command-value="code" class="btn" title="Format as code">
-                                                        <i class="icon-barcode"/>
+                                                    <a data-wysihtml5-command="formatInline" data-wysihtml5-command-value="code" class="btn btn-default" title="Format as code">
+                                                        <i class="fa fa-code"/>
                                                     </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a data-wysihtml5-command="createLink" class="btn" title="Insert/Edit Link">
-                                                        <i class="icon-share"/>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <a data-wysihtml5-command="createLink" class="btn btn-default" title="Insert/Edit Link">
+                                                        <i class="glyphicon glyphicon-link"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="setAnchor" class="btn" title="Set Anchor">
-                                                        <i class="icon-bookmark"/>
+                                                    <a data-wysihtml5-command="setAnchor" class="btn btn-default" title="Set Anchor">
+                                                        <i class="glyphicon glyphicon-bookmark"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="insertImage" class="btn" title="Insert/Edit Image">
-                                                        <i class="icon-picture"/>
+                                                    <a data-wysihtml5-command="insertImage" class="btn btn-default" title="Insert/Edit Image">
+                                                        <i class="glyphicon glyphicon-picture"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="insertGallery" class="btn" title="Insert Slideshow">
-                                                        <i class="icon-th-large"/>
+                                                    <a data-wysihtml5-command="insertGallery" class="btn btn-default" title="Insert Slideshow">
+                                                        <i class="glyphicon glyphicon-th-large"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="insertVideo" class="btn" title="Insert Video">
-                                                        <i class="icon-film"/>
+                                                    <a data-wysihtml5-command="insertVideo" class="btn btn-default" title="Insert Video">
+                                                        <i class="glyphicon glyphicon-film"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="insertMusic" class="btn" title="Insert Music">
-                                                        <i class="icon-music"/>
+                                                    <a data-wysihtml5-command="insertMusic" class="btn btn-default" title="Insert Music">
+                                                        <i class="glyphicon glyphicon-headphones"/>
                                                     </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a class="btn" data-wysihtml5-command="justifyLeft" title="Align Left">
-                                                        <i class="icon-align-left"/>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <a class="btn btn-default" data-wysihtml5-command="justifyLeft" title="Align Left">
+                                                        <i class="glyphicon glyphicon-align-left"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="justifyRight" title="Align Right">
-                                                        <i class="icon-align-right"/>
+                                                    <a class="btn btn-default" data-wysihtml5-command="justifyRight" title="Align Right">
+                                                        <i class="glyphicon glyphicon-align-right"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="justifyCenter" title="Center">
-                                                        <i class="icon-align-center"/>
+                                                    <a class="btn btn-default" data-wysihtml5-command="justifyCenter" title="Center">
+                                                        <i class="glyphicon glyphicon-align-center"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="justifyFull" title="Justify">
-                                                        <i class="icon-align-justify"/>
+                                                    <a class="btn btn-default" data-wysihtml5-command="justifyFull" title="Justify">
+                                                        <i class="glyphicon glyphicon-align-justify"/>
                                                     </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a class="btn" data-wysihtml5-command="insertUnorderedList" title="Insert/Toggle Unordered List">
-                                                        <i class="icon-list"/>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <a class="btn btn-default" data-wysihtml5-command="insertUnorderedList" title="Insert/Toggle Unordered List">
+                                                        <i class="glyphicon glyphicon-list"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="insertOrderedList" title="Insert/Toggle Ordered List">
-                                                        <i class="icon-th-list"/>
+                                                    <a class="btn btn-default" data-wysihtml5-command="insertOrderedList" title="Insert/Toggle Ordered List">
+                                                        <i class="glyphicon glyphicon-th-list"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="info" title="Insert/Toggle an Info Box">
-                                                        <i class="icon-info-sign"/>
+                                                    <a class="btn btn-default" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="info" title="Insert/Toggle an Info Box">
+                                                        <i class="glyphicon glyphicon-info-sign"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="alert" title="Insert/Toggle an Alert Box">
-                                                        <i class="icon-warning-sign"/>
+                                                    <a class="btn btn-default" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="alert" title="Insert/Toggle an Alert Box">
+                                                        <i class="glyphicon glyphicon-warning-sign"/>
                                                     </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a class="btn" data-wysihtml5-command="undo" title="Undo">
-                                                        <i class="icon-undo"/>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <a class="btn btn-default" data-wysihtml5-command="undo" title="Undo">
+                                                        <i class="glyphicon glyphicon-repeat"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="redo" title="Redo">
-                                                        <i class="icon-redo"/>
+                                                    <a class="btn btn-default" data-wysihtml5-command="redo" title="Redo">
+                                                        <i class="glyphicon glyphicon-repeat"/>
                                                     </a>
-                                                </li>
-                                            </ul>
+                                                </div>
+                                            </div>
                                         </div>
                                         <pre id="content-editor-content" class="app:edit-content?mode=html"/>
                                         <textarea name="content" id="content-editor-textarea" placeholder="Article text..."/>
                                     </div>
                                     <div id="summary-editor-html" class="tab-pane content">
                                         <div id="summary-editor-toolbar" style="display: none;" class="wysihtml5-toolbar">
-                                            <ul>
-                                                <li class="dropdown">
-                                                    <a class="btn dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-                                                        <i class="icon-font"/>&#160;
+                                            <div class="btn-toolbar">
+                                                <div class="btn-group">
+                                                    <a class="btn btn-default dropdown-toggle" role="button" data-toggle="dropdown" href="#">
                                                         <span class="current-font">Normal</span>
                                                         <b class="caret"/>
                                                     </a>
@@ -210,75 +209,78 @@
                                                             <a data-wysihtml5-command="codeBlock" data-wysihtml5-command-value="javascript">Javascript Code</a>
                                                         </li>
                                                     </ul>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a data-wysihtml5-command="bold" class="btn" title="Bold text">
-                                                        <i class="icon-bold"/>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <a data-wysihtml5-command="bold" class="btn btn-default" title="Bold text">
+                                                        <i class="glyphicon glyphicon-bold"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="italic" class="btn" title="Italic text">
-                                                        <i class="icon-italic"/>
+                                                    <a data-wysihtml5-command="italic" class="btn btn-default" title="Italic text">
+                                                        <i class="glyphicon glyphicon-italic"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="underline" class="btn" title="Underline text">
-                                                        <i class="icon-underline"/>
+                                                    <a data-wysihtml5-command="underline" class="btn btn-default" title="Underline text">
+                                                        <i class="glyphicon glyphicon-text-width"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="formatInline" data-wysihtml5-command-value="code" class="btn" title="Format as code">
-                                                        <i class="icon-barcode"/>
+                                                    <a data-wysihtml5-command="formatInline" data-wysihtml5-command-value="code" class="btn btn-default" title="Format as code">
+                                                        <i class="glyphicon glyphicon-barcode"/>
                                                     </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a data-wysihtml5-command="createLink" class="btn" title="Insert/Edit Link">
-                                                        <i class="icon-share"/>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <a data-wysihtml5-command="createLink" class="btn btn-default" title="Insert/Edit Link">
+                                                        <i class="glyphicon glyphicon-link"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="insertImage" class="btn" title="Insert/Edit Image">
-                                                        <i class="icon-picture"/>
+                                                    <a data-wysihtml5-command="setAnchor" class="btn btn-default" title="Set Anchor">
+                                                        <i class="glyphicon glyphicon-bookmark"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="insertGallery" class="btn" title="Insert Slideshow">
-                                                        <i class="icon-th-large"/>
+                                                    <a data-wysihtml5-command="insertImage" class="btn btn-default" title="Insert/Edit Image">
+                                                        <i class="glyphicon glyphicon-picture"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="insertVideo" class="btn" title="Insert Video">
-                                                        <i class="icon-film"/>
+                                                    <a data-wysihtml5-command="insertGallery" class="btn btn-default" title="Insert Slideshow">
+                                                        <i class="glyphicon glyphicon-th-large"/>
                                                     </a>
-                                                    <a data-wysihtml5-command="insertMusic" class="btn" title="Insert Music">
-                                                        <i class="icon-music"/>
+                                                    <a data-wysihtml5-command="insertVideo" class="btn btn-default" title="Insert Video">
+                                                        <i class="glyphicon glyphicon-film"/>
                                                     </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a class="btn" data-wysihtml5-command="justifyLeft" title="Align Left">
-                                                        <i class="icon-align-left"/>
+                                                    <a data-wysihtml5-command="insertMusic" class="btn btn-default" title="Insert Music">
+                                                        <i class="glyphicon glyphicon-headphones"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="justifyRight" title="Align Right">
-                                                        <i class="icon-align-right"/>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <a class="btn btn-default" data-wysihtml5-command="justifyLeft" title="Align Left">
+                                                        <i class="glyphicon glyphicon-align-left"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="justifyCenter" title="Center">
-                                                        <i class="icon-align-center"/>
+                                                    <a class="btn btn-default" data-wysihtml5-command="justifyRight" title="Align Right">
+                                                        <i class="glyphicon glyphicon-align-right"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="justifyFull" title="Justify">
-                                                        <i class="icon-align-justify"/>
+                                                    <a class="btn btn-default" data-wysihtml5-command="justifyCenter" title="Center">
+                                                        <i class="glyphicon glyphicon-align-center"/>
                                                     </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a class="btn" data-wysihtml5-command="insertUnorderedList" title="Insert/Toggle Unordered List">
-                                                        <i class="icon-list"/>
+                                                    <a class="btn btn-default" data-wysihtml5-command="justifyFull" title="Justify">
+                                                        <i class="glyphicon glyphicon-align-justify"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="insertOrderedList" title="Insert/Toggle Ordered List">
-                                                        <i class="icon-th-list"/>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <a class="btn btn-default" data-wysihtml5-command="insertUnorderedList" title="Insert/Toggle Unordered List">
+                                                        <i class="glyphicon glyphicon-list"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="info" title="Insert/Toggle an Info Box">
-                                                        <i class="icon-info-sign"/>
+                                                    <a class="btn btn-default" data-wysihtml5-command="insertOrderedList" title="Insert/Toggle Ordered List">
+                                                        <i class="glyphicon glyphicon-th-list"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="alert" title="Insert/Toggle an Alert Box">
-                                                        <i class="icon-warning-sign"/>
+                                                    <a class="btn btn-default" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="info" title="Insert/Toggle an Info Box">
+                                                        <i class="glyphicon glyphicon-info-sign"/>
                                                     </a>
-                                                </li>
-                                                <li class="btn-group">
-                                                    <a class="btn" data-wysihtml5-command="undo" title="Undo">
-                                                        <i class="icon-undo"/>
+                                                    <a class="btn btn-default" data-wysihtml5-command="alertBlock" data-wysihtml5-command-value="alert" title="Insert/Toggle an Alert Box">
+                                                        <i class="glyphicon glyphicon-warning-sign"/>
                                                     </a>
-                                                    <a class="btn" data-wysihtml5-command="redo" title="Redo">
-                                                        <i class="icon-redo"/>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <a class="btn btn-default" data-wysihtml5-command="undo" title="Undo">
+                                                        <i class="glyphicon glyphicon-repeat"/>
                                                     </a>
-                                                </li>
-                                            </ul>
+                                                    <a class="btn btn-default" data-wysihtml5-command="redo" title="Redo">
+                                                        <i class="glyphicon glyphicon-repeat"/>
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                         <pre id="summary-editor-content" class="app:edit-summary?mode=html"/>
                                         <textarea name="summary" id="summary-editor-textarea" placeholder="Article text..."/>
@@ -297,40 +299,38 @@
                             <input type="hidden" name="action" value=""/>
                         </form>
                     </div>
-                    <div class="accordion">
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a href="#attachments" class="accordion-toggle" data-toggle="collapse">Attachments</a>
-                            </div>
-                            <div class="accordion-body collapse" id="attachments">
-                                <div class="accordion-inner">
-                                    <div class="attachment-list">
-                                        <table>
-                                            <thead>
-                                                <th>Name</th>
-                                                <th>Thumbnail</th>
-                                                <th>Type</th>
-                                            </thead>
-                                            <tbody class="app:attachments attachments"/>
-                                        </table>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="#attachments" data-toggle="collapse">Attachments</a>
+                        </div>
+                        <div class="panel-collapse collapse" id="attachments">
+                            <div class="panel-body">
+                                <div class="attachment-list">
+                                    <table>
+                                        <thead>
+                                            <th>Name</th>
+                                            <th>Thumbnail</th>
+                                            <th>Type</th>
+                                        </thead>
+                                        <tbody class="app:attachments attachments"/>
+                                    </table>
+                                </div>
+                                <div id="image-upload">
+                                    <p>To upload: drop one or more files on this dialog or click on the button below.</p>
+                                    <form class="file_upload" action="modules/upload.xql" method="POST" enctype="multipart/form-data">
+                                        <div class="file_upload_body">
+                                            <input type="file" name="uploadedfiles[]" multiple="multiple"/>
+                                            <input name="collection" value="/db/abc" type="hidden"/>
+                                            <button>Upload</button>
+                                            <div class="file_upload_label">Upload</div>
+                                        </div>
+                                    </form>
+                                    <div class="overall-progress" style="opacity: 0">
+                                        <div class="bar" style="width: 0%;"/>
+                                        <div class="progress-label">0%</div>
                                     </div>
-                                    <div id="image-upload">
-                                        <p>To upload: drop one or more files on this dialog or click on the button below.</p>
-                                        <form class="file_upload" action="modules/upload.xql" method="POST" enctype="multipart/form-data">
-                                            <div class="file_upload_body">
-                                                <input type="file" name="uploadedfiles[]" multiple="multiple"/>
-                                                <input name="collection" value="/db/abc" type="hidden"/>
-                                                <button>Upload</button>
-                                                <div class="file_upload_label">Upload</div>
-                                            </div>
-                                        </form>
-                                        <div class="overall-progress" style="opacity: 0">
-                                            <div class="bar" style="width: 0%;"/>
-                                            <div class="progress-label">0%</div>
-                                        </div>
-                                        <div class="queue">
-                                            <table class="files"/>
-                                        </div>
+                                    <div class="queue">
+                                        <table class="files"/>
                                     </div>
                                 </div>
                             </div>
@@ -339,178 +339,200 @@
                 </div>
             </div>
         </div>
-        <div class="modal hide fade" id="gallery-dialog">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">
-                    <i class="icon-remove"/>
-                </a>
-                <h3 class="title">Insert Image Slideshow</h3>
-            </div>
-            <div class="modal-body">
-                <div class="app:feed">
-                    <form class="form-horizontal" action="">
-                        <div class="control-group">
-                            <label class="control-label" for="gallery">Select Slideshow:</label>
-                            <div class="controls">
-                                <div class="gallery:select-gallery"/>
-                                <span class="help-inline">Select an existing slideshow to include in the article.</span>
-                            </div>
+        <div class="modal fade" id="gallery-dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h3 class="title">Insert Image Slideshow</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="app:feed">
+                            <form class="form form-horizontal" action="">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="gallery">Select Slideshow:</label>
+                                    <div class="col-md-8">
+                                        <div class="gallery:select-gallery"/>
+                                        <span class="help-block">Select an existing slideshow to include in the article.</span>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-default close-button" data-dismiss="modal">
+                            <i class="icon-remove"/> Cancel
+                        </a>
+                        <a class="btn-primary btn apply-button">
+                            <i class="icon-remove"/> Apply
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <a class="btn btn close-button">
-                    <i class="icon-remove"/> Cancel
-                </a>
-                <a class="btn-primary btn apply-button">
-                    <i class="icon-remove"/> Apply
-                </a>
-            </div>
         </div>
-        <div class="modal hide fade" id="video-dialog">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">
-                    <i class="icon-remove"/>
-                </a>
-                <h3 class="title">Insert Video</h3>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" action="">
-                    <div class="control-group">
-                        <label class="control-label" for="video">Select Video Typ:</label>
-                        <div class="controls">
-                            <div class="gallery:add-video"/>
-                            <span class="help-inline">Select a video player and enter the video number. For Pandora 2 insert eg. M/editor00:01:19.120,00:01:19:120</span>
-                        </div>
+        <div class="modal fade" id="video-dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h3 class="title">Insert Video</h3>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn close-button">
-                    <i class="icon-remove"/> Cancel
-                </a>
-                <a class="btn-primary btn apply-button">
-                    <i class="icon-remove"/> Apply
-                </a>
-            </div>
-        </div>
-        <div class="modal hide fade" id="music-dialog">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">
-                    <i class="icon-remove"/>
-                </a>
-                <h3 class="title">Insert Music</h3>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" action="">
-                    <div class="control-group">
-                        <label class="control-label" for="video">Select Music Typ:</label>
-                        <div class="controls">
-                            <div class="gallery:add-music"/>
-                            <span class="help-inline">Select the music type and enter the file name</span>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn close-button">
-                    <i class="icon-remove"/> Cancel
-                </a>
-                <a class="btn-primary btn apply-button">
-                    <i class="icon-remove"/> Apply
-                </a>
-            </div>
-        </div>
-        <div class="modal hide fade" id="link-dialog">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">
-                    <i class="icon-remove"/>
-                </a>
-                <h3 class="title">Insert Link</h3>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" action="">
-                    <div class="control-group">
-                        <label class="control-label" for="url">URL:</label>
-                        <div class="controls">
-                            <input class="span4" type="text" name="url" placeholder="http://" required="required"/>
-                            <span class="help-inline">Enter absolute URL or select resource from tree</span>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="anchor">Anchor:</label>
-                        <div class="controls">
-                            <input class="span4" type="text" name="anchor" placeholder="http://" required="required"/>
-                            <span class="help-inline">Link to a text block within the target page. This needs to have
-                            an ID with the same text as the anchor.</span>
-                        </div>
-                    </div>
-                    <div class="image-settings">
-                        <div class="control-group">
-                            <label class="control-label" for="width">Width:</label>
-                            <div class="controls">
-                                <input class="span2" type="text" name="width"/>
-                                <span class="help-inline">Set either width or height</span>
+                    <div class="modal-body">
+                        <form class="form form-horizontal" action="">
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="video">Select Video Type:</label>
+                                <div class="col-md-8">
+                                    <div class="gallery:add-video"/>
+                                    <span class="help-block">Select a video player and enter the video number. For Pandora 2 insert eg. M/editor00:01:19.120,00:01:19:120</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label" for="height">Height:</label>
-                            <div class="controls">
-                                <input class="span2" type="text" name="height"/>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label" for="align">Alignment:</label>
-                            <div class="controls">
-                                <select class="span4" name="align">
-                                    <option value="wysiwyg-text-align-center" selected="selected">Center</option>
-                                    <option value="wysiwyg-img-float-left">Left</option>
-                                    <option value="wysiwyg-img-float-right">Right</option>
-                                    <option value="wysiwyg-float-left">Left 50%</option>
-                                    <option value="wysiwyg-float-right">Right 50%</option>
-                                </select>
-                            </div>
-                        </div>
+                        </form>
                     </div>
-                </form>
-                <div class="sitemap"/>
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn close-button">
-                    <i class="icon-remove"/> Cancel
-                </a>
-                <a class="btn-primary btn apply-button">
-                    <i class="icon-remove"/> Apply
-                </a>
+                    <div class="modal-footer">
+                        <a class="btn btn-default close-button">
+                            <i class="icon-remove"/> Cancel
+                        </a>
+                        <a class="btn-primary btn apply-button">
+                            <i class="icon-remove"/> Apply
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="modal hide fade" id="anchor-dialog">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">
-                    <i class="icon-remove"/>
-                </a>
-                <h3 class="title">Set Block ID</h3>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" action="">
-                    <div class="control-group">
-                        <label class="control-label" for="id">ID:</label>
-                        <div class="controls">
-                            <input class="span4" type="text" name="id" required="required"/>
-                            <span class="help-inline">Assign an ID to the current text block. This can be used
-                            to link directly to the block (by appending #id to a link).</span>
-                        </div>
+        <div class="modal fade" id="music-dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a class="close" data-dismiss="modal">
+                            <i class="icon-remove"/>
+                        </a>
+                        <h3 class="title">Insert Music</h3>
                     </div>
-                </form>
+                    <div class="modal-body">
+                        <form class="form-horizontal" action="">
+                            <div class="control-group">
+                                <label class="control-label" for="video">Select Music Typ:</label>
+                                <div class="controls">
+                                    <div class="gallery:add-music"/>
+                                    <span class="help-inline">Select the music type and enter the file name</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-default close-button">
+                            <i class="icon-remove"/> Cancel
+                        </a>
+                        <a class="btn-primary btn apply-button">
+                            <i class="icon-remove"/> Apply
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer">
-                <a class="btn btn close-button">
-                    <i class="icon-remove"/> Cancel
-                </a>
-                <a class="btn-primary btn apply-button">
-                    <i class="icon-remove"/> Apply
-                </a>
+        </div>
+        <div class="modal fade" id="link-dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a class="close" data-dismiss="modal">
+                            <i class="icon-remove"/>
+                        </a>
+                        <h3 class="title">Insert Link</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" action="">
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="url">URL:</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" type="text" name="url" placeholder="http://" required="required"/>
+                                    <span class="help-block">Enter absolute URL or select resource from tree</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="anchor">Anchor:</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" type="text" name="anchor" placeholder="http://" required="required"/>
+                                    <span class="help-block">Link to a text block within the target page. This needs to have
+                                    an ID with the same text as the anchor.</span>
+                                </div>
+                            </div>
+                            <div class="image-settings">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="width">Width:</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" type="text" name="width"/>
+                                        <span class="help-block">Set either width or height</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="height">Height:</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" type="text" name="height"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="align">Alignment:</label>
+                                    <div class="col-md-8">
+                                        <select class="form-control" name="align">
+                                            <option value="wysiwyg-text-align-center" selected="selected">Center</option>
+                                            <option value="wysiwyg-img-float-left">Left</option>
+                                            <option value="wysiwyg-img-float-right">Right</option>
+                                            <option value="wysiwyg-float-left">Left 50%</option>
+                                            <option value="wysiwyg-float-right">Right 50%</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="sitemap"/>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-default close-button">
+                            <i class="icon-remove"/> Cancel
+                        </a>
+                        <a class="btn-primary btn apply-button">
+                            <i class="icon-remove"/> Apply
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="anchor-dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a class="close" data-dismiss="modal">
+                            <i class="icon-remove"/>
+                        </a>
+                        <h3 class="title">Set Block ID</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form form-horizontal" action="">
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="id">ID:</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" type="text" name="id" required="required"/>
+                                    <span class="help-block">Assign an ID to the current text block. This can be used
+                                    to link directly to the block (by appending #id to a link).</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-default close-button">
+                            <i class="icon-remove"/> Cancel
+                        </a>
+                        <a class="btn-primary btn apply-button">
+                            <i class="icon-remove"/> Apply
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>

@@ -65,7 +65,7 @@ declare function local:resources($collection as xs:string) {
                 <title>{$resource}</title>
                 <key>{$resource}</key>
                 <isFolder json:literal="true">false</isFolder>,
-                <url>{$baseURL || substring-after($collection, $config:app-root) || "/" || $resource}</url>
+                <url>{$baseURL || substring-after($collection, $config:wiki-data) || "/" || $resource}</url>
                 <path>{substring-after($collection, $config:wiki-data)}/{$resource}</path>
             </children>
         else

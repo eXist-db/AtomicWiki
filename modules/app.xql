@@ -2,8 +2,10 @@ xquery version "3.0";
 
 module namespace app="http://exist-db.org/xquery/app";
 
+
+import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace atomic="http://atomic.exist-db.org/xquery/atomic" at "atomic.xql";
-import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
+import module namespace templates="http://exist-db.org/xquery/templates";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace date="http://exist-db.org/xquery/datetime" at "java:org.exist.xquery.modules.datetime.DateTimeModule";
 import module namespace html2wiki="http://atomic.exist-db.org/xquery/html2wiki" at "html2wiki.xql";
@@ -127,6 +129,49 @@ declare function app:get-or-create-entry($node as node(), $model as map(*), $loc
         }
 };
 
+declare
+    %templates:wrap
+function app:create-entry($node as node(), $model as map(*), $title as xs:string?, $name as xs:string?, $entryId as xs:string?, $ctype as xs:string,
+    $published as xs:string?, $author as xs:string?, $content as xs:string?, $summary as xs:string?) {
+    let $entry :=
+        <atom:entry>
+            <atom:id>{$entryId}</atom:id>
+            <wiki:id>{$name}</wiki:id>
+            <atom:published>{ $published }</atom:published>
+            <atom:updated>{current-dateTime()}</atom:updated>
+            <atom:author>
+                <atom:name>{ $author }</atom:name>
+                <wiki:display>
+                { 
+                    acl:get-user-name()
+                }
+                </wiki:display>
+            </atom:author>
+            <atom:title>{$title}</atom:title>
+            {
+                if ($summary) then
+                    <atom:summary type="xhtml">{ $summary }</atom:summary>
+                else
+                    ()
+            }
+            {
+                let $mediaType := 
+                    switch ($ctype)
+                        case "xquery" return
+                            "application/xquery"
+                        case "markdown" return
+                            "text/x-markdown"
+                        default return
+                            "text/html"
+                return
+                    <atom:content type="{$ctype}">{$content}</atom:content>
+            }
+        </atom:entry>
+    let $log := console:log($entry)
+    return
+        map { "entry" := $entry, "count" := 1 }
+};
+
 declare function app:title($node as node(), $model as map(*)) {
     let $entry := $model("entry")
     let $user := request:get-attribute("org.exist.wiki.login.user")
@@ -215,7 +260,7 @@ declare function app:content($node as node(), $model as map(*)) {
         let $atomContent := $model("entry")/atom:content
         let $content := atomic:get-content($atomContent, true())
         return (
-            if ($model[2] gt 1) then
+            if ($model("count") gt 1) then
                 app:process-content($atomContent/@type, ($summary, $content)[1], $model)
             else (
                 if ($summary) then
@@ -262,26 +307,40 @@ declare function app:edit-link($node as node(), $model as map(*), $action as xs:
 };
 
 declare function app:action-button($node as node(), $model as map(*), $action as xs:string?) {
- 
     let $lockedBy := $model('entry')/wiki:lock/@user
     return
-    if ($lockedBy and $lockedBy != xmldb:get-current-user()) then
-(:            <span><i class="icon-lock"></i> Locked by {$lockedBy/string()}</span>:)
-        ()
-    else
-    element { node-name($node) } {
-        $node/@*,
-        templates:process($node/node(), $model)
-    },
-    <form action="" method="post" style="display: none;">
-        <input name="id" value="{$model('entry')/atom:id}" type="hidden"/>
-        {
-            if ($action) then
-                <input name="action" value="{$action}" type="hidden"/>
-            else
-                ()
-        }
-    </form>
+        if ($lockedBy and $lockedBy != xmldb:get-current-user()) then
+    (:            <span><i class="icon-lock"></i> Locked by {$lockedBy/string()}</span>:)
+            ()
+        else
+            element { node-name($node) } {
+                $node/@*,
+                templates:process($node/node(), $model)
+            },
+            <form action="" method="post" style="display: none;">
+                <input name="id" value="{$model('entry')/atom:id}" type="hidden"/>
+                {
+                    if ($action) then
+                        <input name="action" value="{$action}" type="hidden"/>
+                    else
+                        ()
+                }
+            </form>
+};
+
+declare function app:edit-source($node as node(), $model as map(*)) {
+    let $href := $model("entry")//atom:content/@src
+    let $source := 
+        if ($href) then
+            util:collection-name($model("entry")) || "/" || $href
+        else
+            document-uri(root($model("entry")))
+    let $eXideLink := templates:link-to-app("http://exist-db.org/apps/eXide", "index.html")
+    return
+        <a class="eXide-open" href="{$eXideLink}" target="eXide" data-exide-open="{$source}"
+                title="Opens the code in eXide in new tab or existing tab if it is already open.">
+        { $node/node() }
+        </a>
 };
 
 declare function app:posted-link($node as node(), $model as map(*)) {
@@ -479,11 +538,11 @@ declare function app:edit-editor($node as node(), $model as map(*)) {
     let $editor :=
         if ($editorParam) then
             $editorParam
-        else if ($model("entry")/wiki:editor) then
-            $model("entry")/wiki:editor/string()
+        else if ($model("entry")/atom:content/@type) then
+            $model("entry")/atom:content/@type/string()
         else
             "wiki"
-    let $editor := if ($editor = ("wiki", "markdown")) then "markdown" else ""
+    let $editor := if ($editor = ("wiki", "markdown")) then "markdown" else "html"
     return
         element { node-name($node) } {
             $node/@*,

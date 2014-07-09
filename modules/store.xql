@@ -1,7 +1,6 @@
 xquery version "3.0";
 
-
-
+import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace cleanup="http://atomic.exist-db.org/xquery/cleanup" at "cleanup.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace acl="http://atomic.exist-db.org/xquery/atomic/acl" at "acl.xql";
@@ -86,12 +85,36 @@ declare function store:relativize-links($node as node()) {
         $node
 };
 
+declare function store:fix-images($nodes as node()*) {
+    for $node in $nodes
+    return
+        typeswitch ($node)
+            case element() return
+                if ($node/@src) then
+                    let $src := $node/@src
+                    return
+                        element { node-name($node) } {
+                            if (starts-with($src, $config:base-url)) then (
+                                attribute src { substring-after($src, $config:base-url) },
+                                $node/@* except $node/@src,
+                                for $child in $node/node() return store:fix-images($child)
+                            ) else
+                                ( $node/@*, for $child in $node/node() return store:fix-images($child) )
+                        }
+                else
+                    element { node-name($node) } {
+                        $node/@*, for $child in $node/node() return store:fix-images($child)
+                    }
+            default return
+                $node
+};
+
 declare function store:process-html($content as xs:string?) {
     if ($content) then
         let $parsed := cleanup:clean(util:parse-html($content)//*:article)
 (:        let $parsed := util:parse-html($content)//*:article:)
         return
-            $parsed
+            store:fix-images($parsed)
 (:            store:relativize-links($parsed):)
     else
         ()
@@ -215,6 +238,7 @@ declare function store:article() {
     let $contentData := if ($editor = "markdown") then $contentParsed else store:process-html($contentParsed)
     let $summaryData := if ($editor = "markdown") then $summaryParsed else store:process-html($summaryParsed)
     let $contentType := if ($editType = "html") then "html" else $editType
+    let $log := console:log(("content ", $contentData))
     let $old := util:expand(collection($config:wiki-root)/atom:entry[atom:id = $id])
     let $entry :=
         <atom:entry>

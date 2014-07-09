@@ -110,7 +110,7 @@ try {
                 { login:set-user("org.exist.wiki.login", (), false(), local:check-user#1) }
                 </forward>
             </dispatch>
-    
+        
     (: URL addresses a collection or article :)
     else if (matches($exist:path, ".*/[^\./]*/?$")) then
         let $user := login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)
@@ -153,8 +153,8 @@ try {
                             let $editor := 
                                 if ($editorParam) then
                                     $editorParam
-                                else if ($entry/wiki:editor) then
-                                    $entry/wiki:editor/string()
+                                else if ($entry/atom:content/@type) then
+                                    $entry/atom:content/@type
                                 else
                                     $config:default-editor
                             let $template := if ($editor = "html") then "html-edit.html" else "wiki-edit.html"
@@ -284,6 +284,11 @@ try {
                 </forward>
             </dispatch>
     
+    else if (matches($exist:resource, "\.(png|jpg|jpeg|gif|pdf)$", "i")) then
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$exist:controller}/data/{$exist:path}"/>
+        </dispatch>
+        
     else
         (: everything else is passed through :)
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">

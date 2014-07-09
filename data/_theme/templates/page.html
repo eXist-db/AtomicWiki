@@ -5,11 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="shortcut icon" href="$shared/resources/images/exist_icon_16x16.ico"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
-        <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
-        <script type="text/javascript" src="$shared/resources/scripts/bootstrap-3.0.3.min.js"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
     </head>
-    <body id="grey-top" data-template="site:expand-links" data-template-base="http://exist-db.org/">
+    <body id="grey-top">
         <div class="grey-bot">
             <div class="container" id="main-container">
                 <div class="row">
@@ -19,6 +17,12 @@
                 </div>
                 <div class="app:feed">
                     <div class="row">
+                        <div class="app:login">
+                            <span/>
+                            <button type="button" class="sitemap-toggle btn navbar-btn" title="Toggle sitemap">
+                                <span class="fa fa-sitemap"/>
+                            </button>
+                        </div>
                         <nav class="navbar navbar-inverse" role="navigation" data-template="site:expand-links">
                             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
                                 <span class="sr-only">Toggle navigation</span>
@@ -31,45 +35,41 @@
                                     <li class="menu:site-menu"/>
                                 </ul>
                                 <div class="app:login">
-                                    <a class="btn btn-default navbar-btn navbar-right" href="#loginDialog" data-toggle="modal">Login</a>
-                                    <a href="?logout=logout" class="btn btn-default navbar-btn navbar-right app:posted-link">
-                                        Logout <span class="app:user">user</span>
-                                    </a>
-                                    <a class="atom-link navbar-right" data-template="app:atom-link" href="#">
-                                        <img src="theme/resources/images/feed-icon.png"/>
-                                    </a>
                                     <ul class="nav navbar-nav navbar-right">
+                                        <li>
+                                            <a href="#loginDialog" data-toggle="modal">
+                                                <span class="fa fa-sign-in"/> Login</a>
+                                        </li>
+                                    </ul>
+                                    <ul class="nav navbar-nav navbar-right feed-toolbar">
                                         <li class="dropdown">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                                Admin <span class="caret"/>
+                                                <span class="fa fa-wrench"/> Admin <span class="caret"/>
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li>
                                                     <a href=".?action=addentry&amp;editor=html">
-                                                        <i class="icon-plus"/> New HTML Article</a>
+                                                        <i class="fa fa-file-code-o"/> New HTML Article</a>
                                                 </li>
                                                 <li>
                                                     <a href=".?action=addentry&amp;editor=wiki">
-                                                        <i class="icon-plus"/> New Markdown Article</a>
+                                                        <i class="fa fa-file-text-o"/> New Markdown Article</a>
                                                 </li>
                                                 <li>
                                                     <a href="?action=editfeed" class="app:posted-link">
-                                                        <i class="icon-edit"/> Edit Section</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" id="open-sitemap">
-                                                        <i class="icon-home"/> Sitemap</a>
+                                                        <i class="fa fa-folder-open-o"/> Edit Section</a>
                                                 </li>
                                                 <li>
                                                     <a href="#" id="edit-menu">
-                                                        <i class="icon-list"/> Edit Menu</a>
+                                                        <i class="fa fa-reorder"/> Edit Menu</a>
                                                 </li>
                                                 <li class="gallery:build-gallery-add-menu">
                                                     <a href=".?action=addgallery">
-                                                        <i class="icon-plus"/> New Slideshow</a>
+                                                        <i class="fa fa-file-image-o"/> New Slideshow</a>
                                                 </li>
                                                 <li class="gallery:build-gallery-edit-menu dropdown-submenu">
-                                                    <a tabindex="-1" href="#"> Edit Slideshows </a>
+                                                    <a tabindex="-1" href="#">
+                                                        <i class="fa fa-picture-o"/> Edit Slideshows </a>
                                                     <ul class="dropdown-menu pull-left">
                                                         <li>
                                                             <a href="?action=editgallery&amp;collection=/db/apps/wiki/data&amp;gallery=Slideshow1">
@@ -79,13 +79,28 @@
                                                 </li>
                                             </ul>
                                         </li>
+                                        <li>
+                                            <a href="?logout=logout" class="navbar-right app:posted-link">
+                                                <span class="fa fa-sign-out"/> Logout <span class="app:user">user</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="atom-link navbar-right" data-template="app:atom-link" href="#">
+                                                <span class="fa fa-rss-square fa-lg"/>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
                         </nav>
                     </div>
                 </div>
-                <div class="row" id="container-body">
+                <div class="row row-offcanvas row-offcanvas-left" id="container-body">
+                    <div class="col-md-6 sidebar-offcanvas well" id="sitemap">
+                        <h1>Sitemap</h1>
+                        <p>Double click on section or article to navigate to it.</p>
+                        <div class="sitemap"/>
+                    </div>
                     <div class="col-md-12" id="content"/>
                 </div>
             </div>
@@ -109,20 +124,18 @@
                         <input type="hidden" name="duration" value="P14D"/>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="user" class="control-label col-md-4">User</label>
-                                <div class="col-md-8">
-                                    <input type="text" name="user" placeholder="User" required="required" class="form-control"/>
+                                <div class="col-md-12">
+                                    <input type="text" name="user" placeholder="User ID" required="required" class="form-control"/>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="password" class="control-label col-md-4">Password</label>
-                                <div class="col-md-8">
+                                <div class="col-md-12">
                                     <input type="password" name="password" placeholder="Password" class="form-control"/>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-primary" type="button">
+                            <button class="btn btn-primary col-md-12" type="button">
                                 <i class="icon-user"/> Login
                             </button>
                         </div>
