@@ -45,8 +45,16 @@
                     <div class="app:content content annotatable"/>
                 </div>
                 <footer>
-                    <a class="app:previous-page previous-entries">Newer entries</a>
-                    <a class="app:next-page">Older entries</a>
+                    <ul class="pager">
+                        <li class="next">
+                            <a data-template="app:next-page">Older posts <i class="fa fa-chevron-right"/>
+                            </a>
+                        </li>
+                        <li class="previous">
+                            <a data-template="app:previous-page">
+                                <i class="fa fa-chevron-left"/> Newer posts</a>
+                        </li>
+                    </ul>
                 </footer>
             </div>
             <div class="modal" id="menu-dialog">

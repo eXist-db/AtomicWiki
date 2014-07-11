@@ -84,7 +84,7 @@ declare
     %templates:default("start", 1)
 function app:next-page($node as node(), $model as map(*), $start as xs:int) {
     if ($start + $model("perPage") le $model("count")) then
-        <a href="?start={$start + $model('count')}" class="next-page">{ templates:process($node/node(), $model) }</a>
+        <a href="?start={$start + $model('perPage')}">{$node/node()}</a>
     else
         ()
 };
@@ -95,8 +95,9 @@ function app:previous-page($node as node(), $model as map(*), $start as xs:int) 
     if ($start gt 1) then
         let $prev := if ($start - $model("perPage") gt 1) then $start - $model("perPage") else 1
         return
-            <a href="?start={$prev}" class="prev-page">{ templates:process($node/node(), $model) }</a>
-    else ()
+            <a href="?start={$prev }">{$node/node()}</a>
+    else
+        ()
 };
 
 declare function app:entry($node as node(), $model as map(*), $feed as xs:string, $entry as xs:string) {
