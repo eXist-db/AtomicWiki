@@ -2,6 +2,7 @@ $(document).ready(function() {
     
     var form = $("#edit-form");
     var sitemap = new Atomic.editor.EditLink();
+    var addImage = new Atomic.editor.ImageLink();
     var anchorEditor = new Atomic.editor.EditAnchor();
     var addGallery = new Atomic.editor.AddGalleryLink();
     var addVideo = new Atomic.editor.AddVideoLink();
@@ -9,7 +10,7 @@ $(document).ready(function() {
     var summaryEditor = null;
     
     var contentEditor = null;
-    contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap, anchorEditor, addGallery, addVideo, addMusic);
+    contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap, addImage, anchorEditor, addGallery, addVideo, addMusic);
     $("#content-editor-content").remove();
         
     function updateForm() {
@@ -33,7 +34,7 @@ $(document).ready(function() {
     $("#summary-editor-tab").click(function (e) {
         e.preventDefault();
         if (!summaryEditor) {
-            summaryEditor = new Atomic.editor.Editor("summary-editor-content", "summary-editor-textarea", "summary-editor-toolbar", sitemap, anchorEditor, addGallery, addVideo, addMusic);
+            summaryEditor = new Atomic.editor.Editor("summary-editor-content", "summary-editor-textarea", "summary-editor-toolbar", sitemap, addImage, anchorEditor, addGallery, addVideo, addMusic);
             $("#summary-editor-content").remove();
         }
         $(this).tab('show');

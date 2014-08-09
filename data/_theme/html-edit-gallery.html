@@ -9,114 +9,135 @@
         <link rel="stylesheet" type="text/css" href="theme/resources/css/jquery-ui.css"/>
         <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body class="templates:surround?with=templates/page.html&amp;at=container-body&amp;using=body">
-        <div class="span12">
+    <body class="templates:surround?with=templates/page.html&amp;at=container-body&amp;using=grey-top">
+        <div class="col-md-12">
             <div class="app:feed">
                 <div class="app:get-or-create-entry?lock=true entries">
                     <div id="edit" class="edit">
                         <form id="edit-form" class="form-horizontal" action="?" method="POST">
-                            <div class="control-group">
+                            <h1>Insert Slideshow</h1>
+                            <div class="form-group">
                                 <div class="btn-group">
-                                    <button id="edit-form-cancel" class="btn">
+                                    <button id="edit-form-cancel" class="btn btn-default">
                                         <i class="icon-ban-circle"/> Cancel</button>
-                                    <button id="edit-form-save" class="btn">
+                                    <button id="edit-form-save" class="btn btn-default">
                                         <i class="icon-download-alt"/> Save</button>
                                     <button id="edit-form-saveAndClose" class="btn btn-primary" type="button">
                                         <i class="icon-ok"/> Save and Close</button>
                                 </div>
                             </div>
-                            <h1>Insert Slideshow</h1>
-                            <div class="control-group title">
-                                <label class="control-label" for="title">Title</label>
-                                <div class="controls">
-                                    <input class="span6 gallery:gallery-title" id="title" type="text" name="title" placeholder="Title" required="required"/>
+                            <div class="form-group title">
+                                <label class="col-md-2 control-label" for="title">Title</label>
+                                <div class="col-md-6">
+                                    <input data-template="gallery:gallery-title" class="form-control" id="title" type="text" name="title" placeholder="Title" required="required"/>
                                     <p class="help-block">A short, unique name for this entry which will be used in
                                 URLs.</p>
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <label class="control-label" for="name">Short Name</label>
-                                <div class="controls">
-                                    <input class="span3 gallery:gallery-subtitle" id="name" type="text" name="name" placeholder="ShortName" required="required" pattern="[A-Za-zäöüÄÖÜ]{1}[\w-äöüßÄÖÜ]{2,}"/>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="name">Short Name</label>
+                                <div class="col-md-6">
+                                    <input data-template="gallery:gallery-subtitle" class="form-control" id="name" type="text" name="name" placeholder="ShortName" required="required" pattern="[A-Za-zäöüÄÖÜ]{1}[\w-äöüßÄÖÜ]{2,}"/>
                                     <span class="help-inline">First sign just a letter, at least three characters required. No spaces.</span>
                                 </div>
                             </div>
-                            <div class="accordion">
-                                <div class="accordion-group">
-                                    <div class="accordion-heading">
-                                        <a href="#options" class="accordion-toggle" data-toggle="collapse">Options</a>
-                                    </div>
-                                    <div class="accordion-body collapse" id="options">
-                                        <div class="control-group">
-                                            <label class="control-label" for="width">Width</label>
-                                            <div class="controls">
-                                                <input class="span3 gallery:gallery-width" type="text" name="width" placeholder="200px"/>
-                                                <span class="help-inline">Width</span>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a href="#options" data-toggle="collapse">Options</a>
+                                    </h4>
+                                </div>
+                                <div class="panel-collapse collapse" id="options">
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="width">Width</label>
+                                            <div class="col-md-6">
+                                                <input data-template="gallery:gallery-width" class="form-control" type="text" name="width" placeholder="200px"/>
+                                                <span class="help-block">Width</span>
                                             </div>
                                         </div>
-                                        <div class="control-group">
-                                            <label class="control-label" for="height">Height</label>
-                                            <div class="controls">
-                                                <input class="span3 gallery:gallery-height" type="text" name="height" placeholder="200px"/>
-                                                <span class="help-inline">Height</span>
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="height">Height</label>
+                                            <div class="col-md-6">
+                                                <input data-template="gallery:gallery-height" class="form-control" type="text" name="height" placeholder="200px"/>
+                                                <span class="help-block">Height</span>
                                             </div>
                                         </div>
-                                        <div class="control-group">
-                                            <label class="control-label" for="align">Alignment</label>
-                                            <div class="controls">
-                                                <input class="span3 gallery:gallery-align" type="text" name="align" placeholder="center"/>
-                                                <span class="help-inline">Alignment</span>
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="align">Alignment</label>
+                                            <div class="col-md-6">
+                                                <input data-template="gallery:gallery-align" class="form-control" type="text" name="align" placeholder="center"/>
+                                                <span class="help-block">Alignment</span>
                                             </div>
                                         </div>
-                                        <div class="control-group">
-                                            <label class="control-label" for="intervall">Switch After</label>
-                                            <div class="controls">
-                                                <input class="span3 gallery:gallery-intervall" type="number" name="intervall" placeholder="7500"/>
-                                                <span class="help-inline">Switch After</span>
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="intervall">Switch After</label>
+                                            <div class="col-md-6">
+                                                <input data-template="gallery:gallery-intervall" class="form-control" type="number" name="intervall" placeholder="7500"/>
+                                                <span class="help-block">Switch After</span>
                                             </div>
                                         </div>
-                                        <div class="control-group">
-                                            <label class="control-label" for="autoplay">Autoplay</label>
-                                            <div class="controls">
-                                                <input class="span3 gallery:gallery-autoplay" type="checkbox" name="autoplay"/>
-                                                <span class="help-inline">Autoplay</span>
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="autoplay">Autoplay</label>
+                                            <div class="col-md-6">
+                                                <input data-template="gallery:gallery-autoplay" class="form-control" type="checkbox" name="autoplay"/>
+                                                <span class="help-block">Autoplay</span>
                                             </div>
                                         </div>
-                                        <div class="control-group">
-                                            <label class="control-label" for="style">Image Caption Style</label>
-                                            <div class="controls">
-                                                <input id="style" class="span3" type="text" name="style"/>
-                                                <span class="help-inline">Image Caption Style</span>
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" for="style">Image Caption Style</label>
+                                            <div class="col-md-6">
+                                                <input id="style" class="form-control" type="text" name="style"/>
+                                                <span class="help-block">Image Caption Style</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="accordion">
-                                <div class="accordion-group">
-                                    <div class="accordion-heading">
-                                        <a href="#permissions" class="accordion-toggle" data-toggle="collapse">Permissions</a>
-                                    </div>
-                                    <div class="accordion-body collapse" id="permissions">
-                                        <div class="accordion-inner">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a href="#permissions" data-toggle="collapse">Permissions</a>
+                                    </h4>
+                                    <div class="panel-collapse collapse" id="permissions">
+                                        <div class="panel-body">
                                             <table class="permissions acl:show-permissions?modelItem=feed">
                                                 <tr>
                                                     <td colspan="3" class="perm-private">
-                                                        <input id="perm-private" type="checkbox" name="perm-private" checked="checked" title="Uncheck for more access control options"/> Private
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input id="perm-private" type="checkbox" name="perm-private" checked="checked" title="Uncheck for more access control options"/> Private
+                                                            </label>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 <tr class="perm-detail">
                                                     <td>Everyone:</td>
                                                     <td>
-                                                        <input id="perm-public-read" type="checkbox" name="perm-public-read"/> read</td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input id="perm-public-read" type="checkbox" name="perm-public-read"/> read
+                                                            </label>
+                                                        </div>
+                                                    </td>
                                                     <td/>
                                                 </tr>
                                                 <tr class="perm-detail">
                                                     <td>Registered users:</td>
                                                     <td>
-                                                        <input id="perm-reg-read" type="checkbox" name="perm-reg-read"/> read</td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input id="perm-reg-read" type="checkbox" name="perm-reg-read"/> read
+                                                            </label>
+                                                        </div>
+                                                    </td>
                                                     <td>
-                                                        <input id="perm-reg-write" type="checkbox" name="perm-reg-write"/> write</td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input id="perm-reg-write" type="checkbox" name="perm-reg-write"/> write
+                                                            </label>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -140,39 +161,45 @@
                 </div>
             </div>
         </div>
-        <div class="modal hide fade" id="text-link-dialog">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">
-                    <i class="icon-remove"/>
-                </a>
-                <h3 class="title">Link to Image Description</h3>
-            </div>
-            <div class="modal-body">
-                <div class="sitemap"/>
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn close-button">
-                    <i class="icon-remove"/> Cancel
-        </a>
-                <a class="btn-primary btn apply-button">
-                    <i class="icon-remove"/> Apply
-        </a>
+        <div class="modal fade" id="text-link-dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a class="close" data-dismiss="modal">
+                            <i class="icon-remove"/>
+                        </a>
+                        <h3 class="title">Link to Image Description</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="sitemap"/>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn close-button">
+                            <i class="icon-remove"/> Cancel
+                        </a>
+                        <a class="btn-primary btn apply-button">
+                            <i class="icon-remove"/> Apply
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="gallery" class="">
             <a href="#" id="toggleGallerySwitch">
-                <img src="theme/resources/images/gallery-black-small.png" height="30px"/>
+                <img src="theme/resources/images/gallery-black-small.png" width="36px"/>
             </a>
             <div class="gallery-container">
                 <div class="header">
                     <form class="form-search">
-                        <select name="filterCollection" id="filterCollection">
+                        <select name="filterCollection" id="filterCollection" class="form-control">
                             <option value="all" selected="selected">All</option>
                             <optgroup label="Ziziphus" class="gallery:get-ziziphus-collections"/>
                         </select>
-                        <div class="input-append">
-                            <input name="query" id="query" type="search" placeholder="search"/>
-                            <button id="query-images" class="btn" type="button">Search</button>
+                        <div class="input-group">
+                            <input name="query" id="query" type="search" placeholder="search" class="form-control"/>
+                            <span class="input-group-btn">
+                                <button id="query-images" class="btn btn-default" type="button">Go</button>
+                            </span>
                         </div>
                         <input name="start" id="imagePickerStart" value="1" type="hidden"/>
                         <input name="max" id="imagePickerMax" value="10" type="hidden"/>
@@ -182,19 +209,23 @@
             </div>
         </div>
         <div id="unsaved-changes-dialog" class="modal hide fade">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                <h3>Unsaved Changed</h3>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="dialog-form-url"/>
-                <p>There are unsaved changes. Click "Save" to save them and proceed or "Cancel" to abort.</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" id="dialog-cancel-action" type="button">
-                    <i class="icon-ban-circle"/> Cancel</button>
-                <button class="btn btn-primary" id="dialog-save-action" type="button">
-                    <i class="icon-ok"/> Save and Proceed</button>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h3>Unsaved Changed</h3>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="dialog-form-url"/>
+                        <p>There are unsaved changes. Click "Save" to save them and proceed or "Cancel" to abort.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" id="dialog-cancel-action" type="button">
+                            <i class="icon-ban-circle"/> Cancel</button>
+                        <button class="btn btn-primary" id="dialog-save-action" type="button">
+                            <i class="icon-ok"/> Save and Proceed</button>
+                    </div>
+                </div>
             </div>
         </div>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>

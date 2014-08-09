@@ -551,7 +551,7 @@ figure figcaption {
     float: right;
 }
 
-.edit-toolbar a i, .feed-toolbar a i {
+i[class*="fa"] {
     width: 22px;
 }
 

@@ -107,8 +107,7 @@
 }
 
 .gallery-container .header {    
-    width:98%;
-    height:30px;
+    width:100%;
     padding:5px;
     display:inline-block;
     border-bottom:thin solid #DDD;
@@ -117,16 +116,13 @@
 #filterCollection{
     width:33%;
 }
-#query{
-    width:323px;
-}
 #query:valid{
     background-image:none !important;
 }
 .gallery-container .footer {
    border-top: thin solid #DDDDDD;    
     float: left;
-    height: 40px;
+    height: 50px;
     margin: 0 auto;
     padding: 10px 0 0;
     text-align: center;
@@ -177,7 +173,7 @@
     width: 30px;
     position: absolute ! important;
     right: -8px;
-    top: -9px;    
+    top: -9px;
     z-index: 10;
 }
 
@@ -215,7 +211,6 @@
 
 #imageSelector #thumbs {
     padding-left: 9px;
-    float: left;
     background:whitesmoke;
 }
 

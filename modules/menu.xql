@@ -4,7 +4,6 @@ module namespace menu="http://exist-db.org/apps/atomic/menu";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
 
-
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "themes.xql";
 
@@ -57,7 +56,7 @@ declare function menu:relativize-links($node as node(), $path as xs:string) {
     case element(a) return
         let $href := $node/@href
         return
-            if ($href = "#" or matches($href, "^\w+://")) then
+            if ($href = "#" or matches($href, "^\w+://") or matches($href, "^\{.*\}")) then
                 $node
             else
                 element { node-name($node) } {
