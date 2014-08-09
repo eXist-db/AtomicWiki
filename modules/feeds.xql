@@ -10,8 +10,8 @@ declare function local:get-content($entry as element(atom:entry)) {
     return
         element { node-name($entry) } {
             $entry/@*, $entry/* except $entry/atom:content,
-            <atom:content>
-            { $content/@type, atomic:get-content($content, true()) }
+            <atom:content type="{if ($content/@type = 'markdown') then 'html' else 'xhtml'}">
+            { atomic:get-content($content, true()) }
             </atom:content>
         }
 };

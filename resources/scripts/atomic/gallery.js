@@ -39,7 +39,7 @@ $(document).ready(function() {
 
     $("#gallery").on("click", ".add-image", function(event){        
         event.preventDefault();
-        addImage();                
+        addImage();
     }); 
     
     $("body").on("click", "#edit-form-save", function (e){                
@@ -215,7 +215,7 @@ function addImage(){
     });    
     
     // append the clonde and setup template into the gallery    
-    liTemplate.appendTo("#gallery-items")
+    liTemplate.appendTo("#gallery-items");
     
     jumpTo(liTemplate);
 }

@@ -202,7 +202,7 @@ Atomic.namespace("Atomic.editor.Editor");
 
 Atomic.editor.Editor = (function () {
 
-    Constr = function(contentId, textareaId, toolbarId, sitemap, anchorEditor, addGallery, addVideo, addMusic) {
+    Constr = function(contentId, textareaId, toolbarId, sitemap, addImage, anchorEditor, addGallery, addVideo, addMusic) {
         this.codeEditors = [];
         
         var content = document.getElementById(contentId);
@@ -236,7 +236,7 @@ Atomic.editor.Editor = (function () {
         
         var toolbar = $("#" + toolbarId);
         var dialog = $("#link-dialog");
-        
+        var imgDialog = $("#image-dialog");
         var self = this;
         
         toolbar.find('a[data-wysihtml5-command="codeBlock"]').click(function(ev) {
@@ -322,7 +322,7 @@ Atomic.editor.Editor = (function () {
             if(addMusic){
                 addMusic.show(function(musictyp, id) {
                 editor.composer.commands.exec("insertHTML", 
-                        "<div class='gallery:select-music?musictyp=" + musictyp + " music-placeholder' id='" + id + "'> You selected audiotyp: " + musictyp + " with the name: " + id + "  </div><p></p>");
+                    "<div class='gallery:select-music?musictyp=" + musictyp + " music-placeholder' id='" + id + "'> You selected audiotyp: " + musictyp + " with the name: " + id + "  </div><p></p>");
                 });
                 return false;
             }
@@ -331,10 +331,11 @@ Atomic.editor.Editor = (function () {
         toolbar.find('a[data-wysihtml5-command="insertImage"]').click(function(ev) {
             var activeButton = $(this).hasClass("wysihtml5-command-active");
             if (!activeButton) {
-                dialog.find("input[name=url]").val("");
-                dialog.find("input[name=width]").val("");
-                dialog.find("input[name=height]").val("");
-                sitemap.open("images", "Insert Image", function(data) {
+                imgDialog.find("input[name=url]").val("");
+                imgDialog.find("input[name=width]").val("");
+                imgDialog.find("input[name=height]").val("");
+                addImage.open("images", "Insert Image", function(data) {
+                    console.log("data %o", data);
                     editor.currentView.element.focus(false);
                     var attribs = { src: data.url };
                     if (data.width && data.width != "") {
@@ -361,15 +362,15 @@ Atomic.editor.Editor = (function () {
                 var src = image.attr("alt");
                 if (!src)
                     src = image.attr("src");
-                dialog.find("input[name=url]").val(src);
-                dialog.find("input[name=width]").val(image.attr("width"));
-                dialog.find("input[name=height]").val(image.attr("height"));
+                imgDialog.find("input[name=url]").val(src);
+                imgDialog.find("input[name=width]").val(image.attr("width"));
+                imgDialog.find("input[name=height]").val(image.attr("height"));
                 
                 var className = imagesInSelection[0].parentNode.className;
                 if (className != "") {
-                    dialog.find("input[name=align]").val(className);
+                    imgDialog.find("input[name=align]").val(className);
                 }
-                sitemap.open("images", "Insert Image", function(data) {
+                addImage.open("images", "Insert Image", function(data) {
                     editor.currentView.element.focus(false);
                     image.attr("src", data.url);
                     image.attr("alt", data.url);

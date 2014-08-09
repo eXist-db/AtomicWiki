@@ -9,6 +9,7 @@ Atomic.editor.Attachments = (function () {
     $(document).ready(function() {
         var collection = $("#edit-form input[name=collection]").val();
         var container = $("#image-upload");
+        $.log("Initializing uploads: %o", container);
         var pending = 0;
         var progressDiv = $(".overall-progress", container);
         var errorsFound = false;

@@ -604,3 +604,120 @@ Atomic.editor.EditLink = (function () {
     
     return Constr;
 }());
+
+Atomic.namespace("Atomic.editor.ImageLink");
+
+Atomic.editor.ImageLink = (function () {
+    
+    Constr = function() {
+        var self = this;
+        this.dialog = $("#image-dialog");
+        var input = $("input[name='url']", this.dialog);
+        this.dialog.modal({
+            keyboard: true,
+            show: false
+        });
+        var self = this;
+        $(".close-button", this.dialog).click(function(ev) {
+            ev.preventDefault();
+            self.dialog.modal("hide");
+        });
+        $(".apply-button", this.dialog).click(function(ev) {
+            ev.preventDefault();
+            self.dialog.modal("hide");
+            if (self.onSelect) {
+                var fields = self.dialog.find("form").serializeArray();
+                var data = {};
+                for (var i = 0; i < fields.length; i++) {
+                    if (fields[i].value && fields[i].value != "")
+                        data[fields[i].name] = fields[i].value;
+                }
+                self.onSelect(data);
+            }
+        });
+        
+        this.dialog.on("click", ".add-image", function(event){        
+            event.preventDefault();
+            
+            var imageTitle = $(".ui-selected .image-title").html();
+            var imageURL = $(".ui-selected .image-url").html();
+            console.log("Image added: %s: %s", imageURL, imageTitle);
+            $("#image-dialog input[name='url']").val(imageURL);
+        }); 
+        this.dialog.find("#query-images").click(function (ev) {   
+            console.debug("clicke on load images button!");
+            self.loadImages(1);
+        });
+        this.loadImages();
+    };
+    
+    Constr.prototype.loadImages = function(start, max) {
+        // console.debug("load images!")
+        if(start) {
+            // update hidden input name="start"
+            $('#imagePickerStart').val(start);
+        }
+        if(max) {
+            $('#imagePickerMax').val(max);
+        }
+    
+        var self = this;
+        var searchForm = $(".form-search", self.dialog);
+        console.log("prepare query images");
+    
+        var data = searchForm.serialize();
+        console.debug("search data: ",data);
+        
+        // FIXME CHANGE THIS URL 
+        // a relative url does not work here since we 
+        // are creating collections for wiki sections
+        $.ajax({
+            type: "POST",
+            url: "/exist/apps/wiki/data/_theme/ImageSelector.html",
+            data:data,
+            complete: function() {
+                $.log("updating gallery completed");
+            }
+        }).done(function( html ) {
+            // console.log("ajax.done html:",html)
+            $("#imageSelector").replaceWith(html);
+            $("#gallery-selection" ).selectable({ 
+                filter: "li",
+                tolerance: "fit" ,
+                cancel: 'a',
+                selecting: function( event, ui ) {
+                    console.debug("selecting event target " + event.target);
+                    if( $(".ui-selected, .ui-selecting", self.dialog).length > 1){
+                        $(ui.selecting).removeClass("ui-selecting");
+                    }
+                    /* 
+                    else {
+                        console.log("Selected! This: ", this, " Event:  ", event , " ui: ", ui);                                
+                        var atomTitle = "<span id='img-title-label' class='label'> Title: </span><span id='img-title'>"+$(ui.selecting).find('.image-title').html()+"</span>";
+                        var atomId = "<span id='img-id-label' class='label'> Id: </span><span id='img-id'>"+$(ui.selecting).find('.image-id').html()+"</span>";
+                        var atomURL = "<span id='img-url-label' class='label'> URL: </span><span id='img-url'>"+$(ui.selecting).find('.image-url').html()+"</span>";
+                        var uiContent = "<p>" + atomTitle + atomId + atomURL + "</p>";
+                        $(".img-selected").html(uiContent);                                       
+                    }
+                     */
+                },
+                
+                unselecting: function( event, ui ) {
+                   // console.log("Unselected! This: ", this, " Event:  ", event , " ui: ", ui);                                
+                   // $(".img-selected").html("");
+                }
+            });
+            self.dialog.find("img" ).tooltip();
+        });
+        
+    };
+    
+    Constr.prototype.open = function(mode, title, callback) {
+        $(".title", this.dialog).text(title);
+        $(".gallery-container").show();
+        this.onSelect = callback;
+        this.dialog.modal("show");
+    };
+    
+    return Constr;
+}());

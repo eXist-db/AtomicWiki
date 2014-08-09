@@ -162,7 +162,7 @@ declare function config:entry-url-from-entry($entry as element(atom:entry)) {
     concat(config:feed-url-from-entry($entry), $entry/wiki:id)
 };
 
-declare function config:atom-url-from-feed($feed as element(atom:feed)) {
+declare function config:atom-url-from-feed($feed as node()) {
     let $collection := util:collection-name($feed)
     let $relPath := substring-after($collection, concat($config:wiki-root, "/"))
     return

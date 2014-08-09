@@ -2,6 +2,8 @@ xquery version "3.0";
 
 module namespace atomic="http://atomic.exist-db.org/xquery/atomic";
 
+
+import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace md="http://exist-db.org/xquery/markdown" at "xmldb:exist:///db/apps/markdown/content/markdown.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
@@ -97,8 +99,10 @@ declare function atomic:get-content($content as element(atom:content)?, $eval as
                         xs:anyURI($path)
                     case "markdown" return
                         let $text := util:binary-to-string(util:binary-doc($path))
+                        let $parsed := md:parse($text, $atomic:MD_CONFIG)
+                        let $log := console:log($parsed)
                         return
-                            <div>{md:parse($text, $atomic:MD_CONFIG)}</div>
+                            <div>{$parsed}</div>
                     default return
                         util:binary-to-string(util:binary-doc($path))
         else

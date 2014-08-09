@@ -3,6 +3,7 @@ xquery version "3.0";
 module namespace gallery="http://exist-db.org/apps/wiki/gallery";
 
 
+import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace dbutil="http://exist-db.org/xquery/dbutil" at "xmldb:exist:///db/apps/shared-resources/content/dbutils.xql";
 import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
@@ -57,6 +58,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                             }
                         else
                             let $pic_src := substring-after($config:wiki-data, "/") || "/_galleries/" || $href
+                            let $pic_src := "_galleries/" || $href
                             return
                             map {
                                     "src" := $pic_src,
@@ -118,12 +120,12 @@ declare function gallery:select-gallery($node as node(), $model as map(*)) {
             $feed
     return
         <select class="form-control" name="gallery">
-            {
+        {
             for $gallery in $galleries
             let $galleryCol := substring-before(util:collection-name($gallery), "/_galleries")
             return
                 <option value="{$gallery/atom:id}" >{$gallery/atom:title/string()}</option>
-            }
+        }
         </select>
 };
 declare function gallery:add-video($node as node(), $model as map(*)) {
@@ -243,9 +245,9 @@ declare function gallery:build-gallery-edit-menu($node as node(), $model as map(
         return
                 $feed/atom:title
         return
-            <li class="dropdown-submenu">
-                <a tabindex="-1" href="#"> <i class="fa fa-picture-o"/> Edit Slideshows </a>
-                <ul class="dropdown-menu pull-left" style="max-height:300px;overflow-y:auto;">
+            <li class="dropdown">
+                <a tabindex="-1" href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-picture-o"/> Edit Slideshows </a>
+                <ul class="dropdown-menu dropdown-menu-left" style="max-height:300px;overflow-y:auto;">
                     {
                     for $gallery in $galleries
                     let $feedname := replace(util:document-name($gallery),"(.*)\.atom","$1")
@@ -340,13 +342,13 @@ declare
                 <ul style="display:none" name="hidden-ul">
                     <li id="li-template" class="container gallery-item-row img-rounded">
                         <div class="row">
-                            <div class="span2 gallery-item-image">
+                            <div class="col-md-2 gallery-item-image">
                                 <a title="" name="" class="thumb" target="blank_"
                                     href="">
-                                    <img alt="" class="img-polaroid" src=""/>
+                                    <img alt="" class="img-thumbnail" src=""/>
                                 </a>
                             </div>
-                            <div class="span10 gallery-item-caption">
+                            <div class="col-md-10 gallery-item-caption">
                                 <h3 class="image-title"></h3>
                                 <div class="image-desc">
                                     <p class="wiki-link">Image description taken from entry: 
@@ -356,11 +358,11 @@ declare
                                 
                                 <input type="hidden" id="formURL"> </input>
                                 <div class="gallery-item-controls pull-right">
-                                    <a class="btn btn-pencil connect-edit" disabled="disabled"><i class="icon-pencil"></i></a>
-                                    <a class="btn btn-edit connect-pic" ><i class="icon-share-alt"></i></a>
-                                    <a class="btn btn-remove remove-pic"><i class="icon-remove"></i></a>
-                                    <a class="btn btn-arrow-up move-pic-up"><i class="icon-arrow-up"></i></a>
-                                    <a class="btn btn-arrow-down move-pic-down"><i class="icon-arrow-down"></i></a>
+                                    <a class="btn btn-default btn-pencil connect-edit" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <a class="btn btn-default btn-edit connect-pic" ><i class="glyphicon glyphicon-share-alt"></i></a>
+                                    <a class="btn btn-default btn-remove remove-pic"><i class="glyphicon glyphicon-remove"></i></a>
+                                    <a class="btn btn-default btn-arrow-up move-pic-up"><i class="glyphicon glyphicon-arrow-up"></i></a>
+                                    <a class="btn btn-default btn-arrow-down move-pic-down"><i class="glyphicon glyphicon-arrow-down"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -394,14 +396,14 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
     return
         <li id="{$id}" class="container gallery-item-row img-rounded">
             <div class="row">
-                <div class="span2 gallery-item-image">
+                <div class="col-md-2 gallery-item-image">
                     <a class="thumb" target="blank_" href="{$imageURL}" data-image-id="{$id}">
-                        <img alt="{$title}" class="img-polaroid"  
+                        <img alt="{$title}" class="img-thumbnail"  
                              src="{$imageURL}{$gallery:IMAGE_THUMB_LARGE}"
                              data-src="{$imageURL}"/>
                     </a>
                 </div>
-                <div class="span10 gallery-item-caption">
+                <div class="col-md-10 gallery-item-caption">
                     <h3 class="image-title">{$title}</h3>
                     <div class="image-desc">
                         <p class="wiki-link">Image description taken from entry: <span id="{$id}-content" data-url="{$feedURL}" data-description="{$src}">{$description/atom:title/text()}</span></p>                        
@@ -410,16 +412,16 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
                         {
                             if($entryId)
                             then (
-                                <a class="btn btn-pencil" onclick="openWikiArticle('{$id}')"><i class="icon-pencil"></i></a>
+                                <a class="btn btn-pencil btn-default" onclick="openWikiArticle('{$id}')"><i class="glyphicon glyphicon-pencil"></i></a>
                             )else (
-                                <a class="btn btn-pencil" onclick="openWikiArticle('{$id}')" disabled="disabled"><i class="icon-pencil"></i></a>
+                                <a class="btn btn-default btn-pencil" onclick="openWikiArticle('{$id}')" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i></a>
                             )                            
                         }
                         
-                        <a class="btn btn-edit" onclick="showSitemap('{$id}')"><i class="icon-share-alt"></i></a>
-                        <a class="btn btn-remove" onclick="removeItem('{$id}')"><i class="icon-remove"></i></a>
-                        <a class="btn btn-arrow-up" onclick="moveUp('{$id}')"><i class="icon-arrow-up"></i></a>
-                        <a class="btn btn-arrow-down" onclick="moveDown('{$id}')"><i class="icon-arrow-down"></i></a>
+                        <a class="btn btn-default btn-edit" onclick="showSitemap('{$id}')"><i class="glyphicon glyphicon-share-alt"></i></a>
+                        <a class="btn btn-default btn-remove" onclick="removeItem('{$id}')"><i class="glyphicon glyphicon-remove"></i></a>
+                        <a class="btn btn-default btn-arrow-up" onclick="moveUp('{$id}')"><i class="glyphicon glyphicon-arrow-up"></i></a>
+                        <a class="btn btn-default btn-arrow-down" onclick="moveDown('{$id}')"><i class="glyphicon glyphicon-arrow-down"></i></a>
                     </div>
                 </div>
             </div>
@@ -432,10 +434,14 @@ declare
     if ($query or $cached) then
         let $result := 
             if ($query and $filterCollection and not($filterCollection eq "all")) then
-                (: @TODO  :)                
-                collection($filterCollection)//vra:vra/vra:work[ft:query(.//*, $query)]
-            else if($query) then 
+                if ($filterCollection = "local") then
+                    gallery:local-images()
+                else
+                    collection($filterCollection)//vra:vra/vra:work[ft:query(.//*, $query)]
+            else if($query) then (
+                gallery:local-images(),
                 collection('/db/resources/commons')//vra:vra/vra:work[ft:query(.//*, $query)]
+            )
             else
                 $cached
         return (
@@ -449,13 +455,44 @@ declare
         (
             map {
                 "result" := 
-                    if ($filterCollection eq "all") then
-                        collection('/db/resources/commons')//vra:vra/vra:work
+                    if ($filterCollection eq "all") then (
+                        collection('/db/resources/commons')//vra:vra/vra:work,
+                        gallery:local-images()
+                    ) else if ($filterCollection eq "local") then
+                        gallery:local-images()
                     else
                         collection($filterCollection)//vra:vra/vra:work
             }
         )
 };
+
+declare function gallery:local-images() {
+    dbutil:scan(xs:anyURI($config:wiki-root), function($collection, $resource) {
+        if ($resource and util:is-binary-doc($resource)) then
+            let $mime := xmldb:get-mime-type($resource)
+            return
+                if ($mime = "image/jpeg") then
+                    let $uuid := util:uuid()
+                    let $vra :=
+                        <work xmlns="http://www.vraweb.org/vracore4.htm" id="w_{$uuid}" source="local">
+                            <titleSet>
+                                <display/>
+                                <title type="generalView">{$resource}</title>
+                            </titleSet>
+                            <relationSet>
+                                <relation type="imageIs" href="{$resource}">general view</relation> 
+                            </relationSet>
+                        </work>
+                    let $log := console:log($vra)
+                    return
+                        $vra
+                else
+                    ()
+        else
+            ()
+    })
+};
+
 declare
     %templates:wrap
     function gallery:hit-count($node as node(), $model as map(*), $start as xs:integer, $max as xs:integer) {
@@ -469,8 +506,9 @@ declare
 declare
     %templates:wrap
     %templates:default("start", 1)
-    %templates:default("max", 10)
+    %templates:default("max", 8)
 function gallery:search-result($node as node(), $model as map(*), $start as xs:integer, $max as xs:integer) {
+    console:log($model("result")),
     let $filteredResult := subsequence($model("result"), $start, $max)
     for $entry at $index in $filteredResult
     return
@@ -479,7 +517,7 @@ function gallery:search-result($node as node(), $model as map(*), $start as xs:i
 
 declare 
     %templates:default("start", 1)
-    %templates:default("max", 10)
+    %templates:default("max", 8)
 function gallery:pagination-previous($node as node(), $model as map(*), $start as xs:integer, $max as xs:integer) {
     let $total := count($model("result"))
     return
@@ -495,7 +533,7 @@ function gallery:pagination-previous($node as node(), $model as map(*), $start a
 
 declare 
     %templates:default("start", 1)
-    %templates:default("max", 10)
+    %templates:default("max", 8)
 function gallery:pagination-next($node as node(), $model as map(*), $start as xs:integer, $max as xs:integer) {
     let $total := count($model("result"))
     return
@@ -518,20 +556,27 @@ declare
         let $serverPath := $config:image-server
         let $serverPort := $config:image-server-port
         let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
-        let $imageURL :=  $serverPath || ":" || $serverPort || "/images/service/download_uuid/" || $image/@relids
-        
+        let $imageURL :=  
+            if ($image/@relids) then
+                $serverPath || ":" || $serverPort || "/images/service/download_uuid/" || $image/@relids
+            else
+                "modules/images.xql?image=" || $image/@href
+        let $href :=
+            if ($image/@relids) then
+                $imageURL
+            else
+                $config:base-url || substring-after($image/@href, $config:wiki-root)
         return 
-            if($image/@relids) 
-            then (
+            (
                 <a href="#" class="add-image"> </a>,  
                 <img src="{$imageURL}{$imageOption}" class="relatedImage" title="{$entry//vra:titleSet/vra:title[@pref='true']/text()}"/>,                                       
                 <div style="display:none">                    
                     <div class="image-id">{data($image/@relids)}</div>
                     <div class="image-title">{$entry//vra:titleSet/vra:title[@pref='true']/text()}</div>
                     <div class="image-work-record">{$entry/@id}</div>
-                    <div class="image-url">{$imageURL}</div>
+                    <div class="image-url">{string($href)}</div>
                 </div>
-            )else ()
+            )
     };
     
 declare 
