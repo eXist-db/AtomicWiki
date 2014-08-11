@@ -105,6 +105,7 @@ Atomic.Editor = (function () {
 	var Editor = require("ace/editor").Editor;
 	var EditSession = require("ace/edit_session").EditSession;
     var UndoManager = require("ace/undomanager").UndoManager;
+    var addImage = new Atomic.editor.ImageLink(true);
     
     Constr = function(container) {
         var $this = this;
@@ -165,6 +166,24 @@ Atomic.Editor = (function () {
                 $this.markup("```" + val + "\n", "\n```");
             }
             return false;
+        });
+        this.container.find(".btn-image").click(function(ev) {
+            ev.preventDefault();
+            addImage.open("images", "Insert Image", function(data) {
+                if (data.html == "on") {
+                    var html = "<figure class=\"" + data.align + "\">\n" +
+                        "    <img src=\"" + data.url + "\"/>\n" +
+                        "    <figcaption>" + data.title + "</figcaption>\n" +
+                        "</figure>";
+                    $this.markup(html);
+                } else {
+                    if (data.title) {
+                        $this.markup("![" + data.title + "](" + data.url + ')');
+                    } else {
+                        $this.markup("![untitled image](" + data.url + ')');
+                    }
+                }
+            });
         });
     };
     

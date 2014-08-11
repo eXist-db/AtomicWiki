@@ -5,7 +5,7 @@ module namespace gallery="http://exist-db.org/apps/wiki/gallery";
 
 import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace dbutil="http://exist-db.org/xquery/dbutil" at "xmldb:exist:///db/apps/shared-resources/content/dbutils.xql";
-import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
+import module namespace templates="http://exist-db.org/xquery/templates";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "themes.xql";
 
@@ -170,15 +170,12 @@ declare function gallery:select-video($node as node(), $model as map(*), $videot
 };
     
 declare function gallery:add-music($node as node(), $model as map(*)) {
-    <div>
-        <select class="span4" name="music">
+    <div class="form-group">
+        <select class="col-md-6 form-control" name="music">
             <option value="musicLocal">local</option>
-<!--            <option value="musicUrl">URL</option>
-           <option value="ogg">ogg</option> -->
-        </select> 
-        <input class="span4" type="text" name="id" placeholder="File Name or URL of music-title" required="required"/>
+        </select>
+        <input class="col-md-6 form-control" type="text" name="id" placeholder="File Name or URL of music-title" required="required"/>
     </div>
-    
 };
 
 declare function gallery:select-music($node as node(), $model as map(*), $musictyp as xs:string?) {
@@ -456,8 +453,8 @@ declare
             map {
                 "result" := 
                     if ($filterCollection eq "all") then (
-                        collection('/db/resources/commons')//vra:vra/vra:work,
-                        gallery:local-images()
+                        gallery:local-images(),
+                        collection('/db/resources/commons')//vra:vra/vra:work
                     ) else if ($filterCollection eq "local") then
                         gallery:local-images()
                     else
@@ -525,6 +522,8 @@ function gallery:pagination-previous($node as node(), $model as map(*), $start a
             element { node-name($node) } {
                 $node/@* except $node/@href,
                 attribute href { "javascript:loadImages("||$start - $max || "," || $max || ")" },
+                attribute data-start { $start - $max },
+                attribute data-max { $max },
                 $node/node()
             }
         else
@@ -541,6 +540,8 @@ function gallery:pagination-next($node as node(), $model as map(*), $start as xs
             element { node-name($node) } {
                 $node/@* except $node/@href,
                 attribute href { "javascript:loadImages("||$start + $max || "," || $max || ")" },
+                attribute data-start { $start + $max },
+                attribute data-max { $max },
                 $node/node()
             }
         else
@@ -575,6 +576,7 @@ declare
                     <div class="image-title">{$entry//vra:titleSet/vra:title[@pref='true']/text()}</div>
                     <div class="image-work-record">{$entry/@id}</div>
                     <div class="image-url">{string($href)}</div>
+                    <div class="image-url-rel">{substring-after($image/@href, $config:wiki-root)}</div>
                 </div>
             )
     };
