@@ -2,4 +2,5 @@
 <package xmlns="http://expath.org/ns/pkg" name="http://exist-db.org/apps/wiki" abbrev="wiki" version="0.4" spec="1.0">
     <title>AtomicWiki</title>
     <dependency package="http://exist-db.org/apps/shared"/>
+    <dependency package="http://exist-db.org/apps/markdown" semver-min="0.2"/>
 </package>

@@ -9,12 +9,12 @@
         <link rel="stylesheet" type="text/css" href="theme/resources/css/gallery.css"/>
         <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body data-template="templates:surround" data-template-with="templates/page.html" data-template-at="container-body" data-template-using="grey-top">
+    <body data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content" data-template-using="grey-top">
         <div class="col-md-12">
             <div class="app:feed">
                 <div class="app:get-or-create-entry?lock=true entries">
                     <div id="edit" class="edit">
-                        <form id="edit-form" class="form form-horizontal" action="?" method="POST">
+                        <form id="edit-form" class="form form-horizontal" data-template="app:set-form-action" method="POST">
                             <div class="form-group">
                                 <div class="btn-group">
                                     <button id="edit-form-cancel" formnovalidate="formnnovalidate" class="btn btn-default">
@@ -341,7 +341,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="gallery-dialog">
+        <div class="modal" id="gallery-dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -375,7 +375,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="video-dialog">
+        <div class="modal" id="video-dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -407,7 +407,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="music-dialog">
+        <div class="modal" id="music-dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -418,14 +418,8 @@
                         <h3 class="title">Insert Music</h3>
                     </div>
                     <div class="modal-body">
-                        <form class="form-horizontal" action="">
-                            <div class="control-group">
-                                <label class="control-label" for="video">Select Music Typ:</label>
-                                <div class="controls">
-                                    <div class="gallery:add-music"/>
-                                    <span class="help-inline">Select the music type and enter the file name</span>
-                                </div>
-                            </div>
+                        <form class="form-inline" action="">
+                            <div class="gallery:add-music"/>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -439,7 +433,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="link-dialog">
+        <div class="modal" id="link-dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -507,7 +501,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="image-dialog">
+        <div class="modal" id="image-dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -585,7 +579,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="anchor-dialog">
+        <div class="modal" id="anchor-dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
