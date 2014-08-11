@@ -5,8 +5,10 @@
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
+        <link rel="stylesheet" type="text/css" href="theme/resources/css/gallery.css"/>
+        <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body class="templates:surround?with=templates/page.html&amp;at=container-body&amp;using=grey-top">
+    <body class="templates:surround?with=templates/page.html&amp;at=content&amp;using=grey-top">
         <div class="col-md-12">
             <div class="app:feed">
                 <div class="app:get-or-create-entry entries">
@@ -132,6 +134,11 @@
                                                             <a href="#" data-syntax="">Other</a>
                                                         </li>
                                                     </ul>
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn btn-image btn-default" title="Insert/Edit Image">
+                                                            <i class="fa fa-image"/>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <textarea name="content" class="app:edit-content?mode=markup"/>
@@ -183,6 +190,11 @@
                                                             <a href="#" data-syntax="">Other</a>
                                                         </li>
                                                     </ul>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-image btn-default" title="Insert/Edit Image">
+                                                        <i class="fa fa-image"/>
+                                                    </button>
                                                 </div>
                                             </div>
                                             <textarea name="summary" class="app:edit-summary?mode=markup"/>
@@ -264,8 +276,100 @@
                 </div>
             </div>
         </div>
+        <div class="modal" id="image-dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h3 class="title">Insert Link</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" action="">
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="url">URL:</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" type="text" name="url" placeholder="http://" required="required"/>
+                                    <span class="help-block">Enter absolute URL or select resource from tree</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="title">Title:</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" type="text" name="title" placeholder="Title"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="checkbox col-md-8 col-md-offset-4">
+                                    <label>
+                                        <input type="checkbox" name="html"/> insert HTML figure
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="width">Width:</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" type="text" name="width"/>
+                                    <span class="help-block">Set either width or height</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="height">Height:</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" type="text" name="height"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="align">Alignment:</label>
+                                <div class="col-md-8">
+                                    <select class="form-control" name="align">
+                                        <option value="wysiwyg-text-align-center" selected="selected">Center</option>
+                                        <option value="wysiwyg-img-float-left">Left</option>
+                                        <option value="wysiwyg-img-float-right">Right</option>
+                                        <option value="wysiwyg-float-left">Left 50%</option>
+                                        <option value="wysiwyg-float-right">Right 50%</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="gallery-container">
+                            <div class="header">
+                                <form class="form-search">
+                                    <select name="filterCollection" id="filterCollection" class="form-control">
+                                        <option value="all" selected="selected">All</option>
+                                        <option value="local">Local</option>
+                                        <optgroup label="Ziziphus" class="gallery:get-ziziphus-collections"/>
+                                    </select>
+                                    <div class="input-group">
+                                        <input name="query" id="query" type="search" placeholder="search" class="form-control"/>
+                                        <span class="input-group-btn">
+                                            <button id="query-images" class="btn btn-default" type="button">
+                                                <i class="fa fa-refresh"/> Refresh</button>
+                                        </span>
+                                    </div>
+                                    <input name="start" id="imagePickerStart" value="1" type="hidden"/>
+                                    <input name="max" id="imagePickerMax" value="8" type="hidden"/>
+                                </form>
+                            </div>
+                            <div id="imageSelector"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-default close-button">
+                            <i class="icon-remove"/> Cancel
+                        </a>
+                        <a class="btn-primary btn apply-button">
+                            <i class="icon-remove"/> Apply
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery-ui.min.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery/jquery.dynatree.min.js"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery.fileupload.js"/>
         <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
@@ -277,6 +381,7 @@
         <script type="text/javascript" src="$shared/resources/scripts/ace/mode-text.js"/>
         <script type="text/javascript" src="$shared/resources/scripts/ace/mode-xquery.js"/>
         <script type="text/javascript" src="$shared/resources/scripts/ace/mode-xml.js"/>
+        <script src="resources/scripts/atomic/manage.js" type="text/javascript" charset="utf-8"/>
         <script src="resources/scripts/atomic/markup-editor.js" type="text/javascript" charset="utf-8"/>
         <script src="resources/scripts/atomic/attachments.js" type="text/javascript" charset="utf-8"/>
         <script type="text/javascript" src="resources/scripts/atomic/highlight.js"/>
