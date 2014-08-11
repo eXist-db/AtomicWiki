@@ -48,7 +48,9 @@ Atomic.sitemap = (function () {
             onPostInit: function() {
                 var uuid = $("input[name='uuid']").val();
                 var node = this.selectKey(uuid);
-		        node.makeVisible();
+                if (node) {
+		            node.makeVisible();
+                }
             },
             onDblClick: function(dtnode) {
                 var key = dtnode.data.key;
@@ -641,7 +643,7 @@ Atomic.editor.ImageLink = (function () {
             
             var imageTitle = $(".ui-selected .image-title").html();
             var imageURL = $(".ui-selected .image-url").html();
-            if (useRelativeURLs) {
+            if (/^\//.test(imageURL) && useRelativeURLs) {
                 imageURL = $(".ui-selected .image-url-rel").html();
             }
             console.log("Image added: %s: %s", imageURL, imageTitle);
