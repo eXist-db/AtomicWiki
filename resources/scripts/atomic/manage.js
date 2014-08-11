@@ -609,7 +609,7 @@ Atomic.namespace("Atomic.editor.ImageLink");
 
 Atomic.editor.ImageLink = (function () {
     
-    Constr = function() {
+    Constr = function(useRelativeURLs) {
         var self = this;
         this.dialog = $("#image-dialog");
         var input = $("input[name='url']", this.dialog);
@@ -641,6 +641,9 @@ Atomic.editor.ImageLink = (function () {
             
             var imageTitle = $(".ui-selected .image-title").html();
             var imageURL = $(".ui-selected .image-url").html();
+            if (useRelativeURLs) {
+                imageURL = $(".ui-selected .image-url-rel").html();
+            }
             console.log("Image added: %s: %s", imageURL, imageTitle);
             $("#image-dialog input[name='url']").val(imageURL);
         }); 
@@ -681,7 +684,17 @@ Atomic.editor.ImageLink = (function () {
         }).done(function( html ) {
             // console.log("ajax.done html:",html)
             $("#imageSelector").replaceWith(html);
-            $("#gallery-selection" ).selectable({ 
+            self.dialog.find(".next").click(function(ev) {
+                var start = $(this).attr("data-start");
+                var max = $(this).attr("data-max");
+                self.loadImages(start, max);
+            });
+            self.dialog.find(".previous").click(function(ev) {
+                var start = $(this).attr("data-start");
+                var max = $(this).attr("data-max");
+                self.loadImages(start, max);
+            });
+            $("#gallery-selection" ).selectable({
                 filter: "li",
                 tolerance: "fit" ,
                 cancel: 'a',

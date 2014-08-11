@@ -173,6 +173,16 @@ function app:create-entry($node as node(), $model as map(*), $title as xs:string
         map { "entry" := $entry, "count" := 1 }
 };
 
+declare function app:set-form-action($node as node(), $model as map(*)) {
+    let $wikiId := request:get-parameter("wiki-id", ())
+    return
+        element { node-name($node) } {
+            $node/@*,
+            attribute action { $wikiId },
+            templates:process($node/node(), $model)
+        }
+};
+
 declare function app:title($node as node(), $model as map(*)) {
     let $entry := $model("entry")
     let $user := request:get-attribute("org.exist.wiki.login.user")
@@ -304,7 +314,7 @@ declare function app:edit-link($node as node(), $model as map(*), $action as xs:
         if ($lockedBy and $lockedBy != xmldb:get-current-user()) then
             <span><i class="icon-lock"></i> Locked by {$lockedBy/string()}</span>
         else
-            <a href="{$model('entry')/wiki:id}?action={$action}">{ $node/@*[local-name(.) != 'href'], $node/node() }</a>
+            <a href="{$model('entry')/wiki:id}?action=edit">{ $node/@*[local-name(.) != 'href'], $node/node() }</a>
 };
 
 declare function app:action-button($node as node(), $model as map(*), $action as xs:string?) {
