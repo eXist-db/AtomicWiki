@@ -20,7 +20,7 @@ Atomic.command.figure = (function () {
             value = typeof(value) === "object" ? value : { src: value };
             
             var figure = document.createElement("figure");
-            if (value.class) {
+            if (value && value.class) {
                 figure.className = value.class;
             }
             
