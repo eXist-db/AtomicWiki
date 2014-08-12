@@ -291,6 +291,7 @@ blockquote p { padding: 0 0 10px; }
 .entry {
     margin: 0 0 1.5em 0;
     line-height: 1.6em;
+    clear: both;
 }
 
 .entry .entryhead {
