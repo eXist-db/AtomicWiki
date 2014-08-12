@@ -51,6 +51,12 @@ $(document).ready(function() {
         ev.preventDefault();
         save();
     });
+
+    $("#edit-form-cancel").click(function(ev) {
+        $("input[name='action']", form).val("unlock");
+        form.submit();
+        return true;
+    });
     $("#editor-switch").click(function(ev) {
         ev.preventDefault();
         var name = $("input[name='name']").val();
