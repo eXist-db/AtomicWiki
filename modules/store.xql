@@ -223,6 +223,7 @@ declare function store:article() {
     let $id := request:get-parameter("entryId", ())
     let $published := request:get-parameter("published", current-dateTime())
     let $title := request:get-parameter("title", ())
+    let $categories := request:get-parameter("category", ())
     let $content := request:get-parameter("content", ())
     let $summary := request:get-parameter("summary", ())
     let $author := request:get-parameter("author", xmldb:get-current-user())
@@ -269,6 +270,11 @@ declare function store:article() {
                 
             </atom:author>
             <atom:title>{$title}</atom:title>
+            {
+                for $cat in tokenize($categories, "\s*,\s*")
+                return
+                    <atom:category term="{$cat}"/>
+            }
             {
                 if ($summaryParsed) then
                     <atom:summary type="xhtml">{ $summaryData }</atom:summary>

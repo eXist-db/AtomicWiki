@@ -8,6 +8,7 @@
         <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/gallery.css"/>
         <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
+        <link href="resources/scripts/bootstrap-tagsinput.css" rel="stylesheet" type="text/css"/>
     </head>
     <body data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content" data-template-using="grey-top">
         <div class="col-md-12">
@@ -38,6 +39,12 @@
                                 <div class="col-md-4">
                                     <input class="form-control" data-template="app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="[A-Za-zäöüÄÖÜ]{1}[\w-äöüßÄÖÜ]{2,}"/>
                                     <span class="help-block">First sign just a letter, at least three characters required. No spaces.</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="category" class="control-label col-md-2">Tags</label>
+                                <div class="col-md-9">
+                                    <input name="category" class="form-control" data-role="tagsinput" data-template="app:edit-categories"/>
                                 </div>
                             </div>
                             <div class="form-group options">
@@ -617,6 +624,7 @@
         <script type="text/javascript" src="resources/scripts/jquery/jquery.fileupload.js"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery.dynatree.min.js"/>
         <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
+        <script type="text/javascript" src="resources/scripts/bootstrap-tagsinput.min.js"/>
         <script type="text/javascript" src="resources/scripts/wysihtml5/wysihtml5-0.4.0pre.min.js"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
         <script src="resources/scripts/atomic/manage.js" type="text/javascript" charset="utf-8"/>
