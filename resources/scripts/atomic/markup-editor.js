@@ -54,6 +54,9 @@ $(document).ready(function() {
 
     $("#edit-form-cancel").click(function(ev) {
         $("input[name='action']", form).val("unlock");
+        form.attr("novalidate", "novalidate");
+        form.find("input[name='title']").val("invalid");
+        form.find("input[name='name']").val("invalid");
         form.submit();
         return true;
     });
