@@ -465,10 +465,10 @@ declare
 
 declare function gallery:local-images() {
     dbutil:scan(xs:anyURI($config:wiki-root), function($collection, $resource) {
-        if ($resource and util:is-binary-doc($resource)) then
+        if (not(contains($collection, "_theme")) and $resource and util:is-binary-doc($resource)) then
             let $mime := xmldb:get-mime-type($resource)
             return
-                if ($mime = "image/jpeg") then
+                if ($mime = ("image/jpeg", "image/png")) then
                     let $uuid := util:uuid()
                     let $vra :=
                         <work xmlns="http://www.vraweb.org/vracore4.htm" id="w_{$uuid}" source="local">
