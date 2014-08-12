@@ -178,7 +178,7 @@ declare function app:set-form-action($node as node(), $model as map(*)) {
     return
         element { node-name($node) } {
             $node/@*,
-            attribute action { $wikiId },
+            attribute action { if ($wikiId) then $wikiId else '.' },
             templates:process($node/node(), $model)
         }
 };

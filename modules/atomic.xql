@@ -163,12 +163,16 @@ declare function atomic:unlock-for-user() as empty() {
     let $unlocked :=
         if ($collection and $resource) then
             let $entry := doc($collection || "/" || $resource)/atom:entry
-            let $unlocked :=
-                element { node-name($entry) } {
-                    $entry/@*, $entry/node() except $entry/wiki:lock
-                }
             return
-                xmldb:store($collection, $resource, $unlocked)
+                if ($entry) then
+                    let $unlocked :=
+                        element { node-name($entry) } {
+                            $entry/@*, $entry/node() except $entry/wiki:lock
+                        }
+                    return
+                        xmldb:store($collection, $resource, $unlocked)
+                else
+                    ()
         else
             ()
     return
