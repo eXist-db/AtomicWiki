@@ -397,6 +397,12 @@ declare function app:edit-name($node as node(), $model as map(*)) {
         }
 };
 
+declare
+    %templates:wrap
+function app:edit-categories($node as node(), $model as map(*)) {
+    attribute value { string-join($model("entry")/atom:category/@term, ",") }
+};
+
 declare function app:edit-content-type($node as node(), $model as map(*)) {
     let $type := $model("entry")/atom:content/@type
     return
