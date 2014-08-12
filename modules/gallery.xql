@@ -480,7 +480,6 @@ declare function gallery:local-images() {
                                 <relation type="imageIs" href="{$resource}">general view</relation> 
                             </relationSet>
                         </work>
-                    let $log := console:log($vra)
                     return
                         $vra
                 else
@@ -505,7 +504,6 @@ declare
     %templates:default("start", 1)
     %templates:default("max", 8)
 function gallery:search-result($node as node(), $model as map(*), $start as xs:integer, $max as xs:integer) {
-    console:log($model("result")),
     let $filteredResult := subsequence($model("result"), $start, $max)
     for $entry at $index in $filteredResult
     return

@@ -23,11 +23,11 @@
                     </ul>
                     <div class="tab-content">
                         <div id="edit" class="tab-pane active">
-                            <form id="edit-form" class="form form-horizontal" action="." method="POST">
+                            <form id="edit-form" class="form form-horizontal" data-template="app:set-form-action" method="POST">
                                 <div class="form-group ">
                                     <div class="btn-group col-md-12">
-                                        <a href="?" id="edit-form-cancel" class="btn btn-default">
-                                            <i class="fa fa-times"/> Cancel</a>
+                                        <button id="edit-form-cancel" formnovalidate="formnnovalidate" class="btn btn-default">
+                                            <i class="fa fa-times"/> Cancel</button>
                                         <button id="edit-form-save" class="btn btn-default">
                                             <i class="fa fa-save"/> Save</button>
                                         <button id="edit-form-saveAndClose" class="btn btn-primary" type="submit">
