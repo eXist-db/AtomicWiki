@@ -192,3 +192,16 @@ declare function atomic:sort($entries as element(atom:entry)*) {
         return
             $entry
 };
+
+declare function atomic:fix-xhtml-namespace($nodes as node()*) {
+    for $node in $nodes
+    return
+        typeswitch ($node)
+            case element() return
+                element { QName("http://www.w3.org/1999/xhtml", local-name($node)) } {
+                    $node/@*,
+                    atomic:fix-xhtml-namespace($node/node())
+                }
+            default return
+                $node
+};
