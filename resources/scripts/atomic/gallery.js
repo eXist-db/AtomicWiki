@@ -182,8 +182,8 @@ function addImage(){
     
     liTemplate.attr("id", imageId);    
     liTemplate.find(".thumb").attr("href",imageURL);
-    liTemplate.find(".img-polaroid").attr("alt",imageTitle);
-    liTemplate.find(".img-polaroid").attr("src",imageURL + "?width=256&amp;height=256&amp;crop_type=middle");
+    liTemplate.find(".img-thumbnail").attr("alt",imageTitle);
+    liTemplate.find(".img-thumbnail").attr("src",imageURL + "?width=256&amp;height=256&amp;crop_type=middle");
     
     liTemplate.find(".image-title").html(imageTitle); 
     liTemplate.find(".image-desc span").attr("id", imageId + "-content");
