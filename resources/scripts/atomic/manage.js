@@ -156,12 +156,21 @@ Atomic.menu = (function () {
             }
         });
         dialog.find(".remove-heading").click(function(ev) {
+            ev.preventDefault();
             var current = menu.dynatree("getActiveNode");
             current.remove();
         });
         $("#edit-menu").click(function(ev) {
             ev.preventDefault();
             open();
+        });
+        dialog.find(".apply-change").click(function(ev) {
+            ev.preventDefault();
+            var current = menu.dynatree("getActiveNode");
+            if (current) {
+                current.data.title = dialog.find("input[name='title']").val();
+                current.render();
+            }
         });
     });
     
