@@ -58,7 +58,7 @@
                 </footer>
             </div>
             <div class="modal" id="menu-dialog">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">
@@ -75,19 +75,18 @@
                                 </div>
                                 <div class="col-md-6">
                                     <form class="form form-inline">
-                                        <div class="input-group">
                                             <input class="form-control" type="text" name="title" placeholder="Add new heading"/>
-                                            <span class="input-group-btn">
+                                            <span class="btn-group">
                                                 <a href="#" class="btn btn-default add-heading">
                                                     <i class="fa fa-plus"/>
                                                 </a>
-                                            </span>
-                                            <span class="input-group-btn">
                                                 <a href="#" class="btn btn-default remove-heading">
                                                     <i class="fa fa-minus"/>
                                                 </a>
+                                                <a href="#" class="btn btn-default apply-change">
+                                                    <i class="fa fa-check"/>
+                                                </a>
                                             </span>
-                                        </div>
                                         <input type="hidden" name="feed" class="app:feed-path"/>
                                         <input type="hidden" name="uuid" class="app:feed-id"/>
                                     </form>
