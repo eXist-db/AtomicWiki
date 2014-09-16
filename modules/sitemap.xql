@@ -20,6 +20,7 @@ declare function local:build-tree($mode as xs:string, $collection as xs:string) 
             <isFolder json:literal="true">true</isFolder>,
             <url>{$baseURL}/{config:feed-from-entry($feed)}/</url>,
             <path>{config:feed-from-entry($feed)}</path>,
+            <collection>{$collection}</collection>,
             if ($mode != "images") then
                 local:entries($feed)
             else
@@ -49,6 +50,7 @@ declare function local:entries($feed as element(atom:feed)) {
             <title>{$entry/atom:title/text()}</title>
             <key>{$entry/atom:id/text()}</key>
             <isFolder json:literal="true">false</isFolder>
+            <collection>{document-uri(root($feed))}</collection>
             <feed>{config:feed-from-entry($entry)}/{$entry/wiki:id/string()}</feed>
             <url>{$config:base-url}/{config:feed-from-entry($entry)}/{$entry/wiki:id/string()}</url>
             <path>{config:feed-from-entry($feed)}{$entry/wiki:id/string()}</path>

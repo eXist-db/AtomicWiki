@@ -42,11 +42,6 @@
                                             <a href="#loginDialog" data-toggle="modal">
                                                 <span class="fa fa-sign-in"/> Login</a>
                                         </li>
-                                        <li>
-                                            <a class="atom-link navbar-right" data-template="app:atom-link" href="#">
-                                                <span class="fa fa-rss-square fa-lg"/>
-                                            </a>
-                                        </li>
                                     </ul>
                                     <ul class="nav navbar-nav navbar-right feed-toolbar">
                                         <li class="dropdown">
@@ -105,7 +100,28 @@
                 <div class="row row-offcanvas row-offcanvas-left" id="container-body">
                     <div class="col-md-6 sidebar-offcanvas well" id="sitemap">
                         <h1>Sitemap</h1>
-                        <p>Double click on section or article to navigate to it.</p>
+                        <p>Double click on section or article to navigate to it. Use toolbar to
+                        create or edit a section.</p>
+                        <div class="btn-group">
+                            <button class="btn btn-default btn-create-feed" name="create-feed" title="Create new feed below selected one">
+                                <i class="fa fa-folder"/>
+                            </button>
+                            <button class="btn btn-default btn-edit-feed" name="edit-feed" title="Edit selected feed">
+                                <i class="fa fa-wrench"/>
+                            </button>
+                            <button class="btn btn-default btn-edit-entry" name="edit-entry" title="Edit selected entry">
+                                <i class="fa fa-edit"/>
+                            </button>
+                            <button class="btn btn-default btn-new-html" name="create-html" title="Create new HTML article">
+                                <i class="fa fa-file-code-o"/>
+                            </button>
+                            <button class="btn btn-default btn-new-markdown" name="create-markdown" title="Create new markdown article">
+                                <i class="fa fa-file-text-o"/>
+                            </button>
+                            <button class="btn btn-default btn-delete-entry" title="Delete selected article">
+                                <i class="fa fa-trash-o"/>
+                            </button>
+                        </div>
                         <div class="sitemap"/>
                     </div>
                     <div class="col-md-12" id="content"/>
@@ -167,6 +183,24 @@
                             <i class="icon-ok"/> OK
                         </a>
                         <a class="btn btn-default cancel-button">
+                            <i class="icon-remove"/> Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="editFeedDialog" style="display: none">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Create/Edit Feed</h4>
+                    </div>
+                    <div class="modal-body"/>
+                    <div class="modal-footer">
+                        <a class="btn-primary btn ok-button">
+                            <i class="icon-ok"/> OK
+                        </a>
+                        <a class="btn btn-default cancel-button" data-dismiss="modal">
                             <i class="icon-remove"/> Cancel
                         </a>
                     </div>

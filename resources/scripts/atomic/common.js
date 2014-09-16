@@ -40,7 +40,7 @@ Atomic.namespace("Atomic.app");
 Atomic.app = (function () {
     
     return {
-        
+    
         init: function() {
             $("#delete-article").click(function (ev) {
                 ev.preventDefault();
@@ -57,27 +57,7 @@ Atomic.app = (function () {
                 var form = $(this).next().submit();
             });
             
-            $("#perm-private:checked").each(function() {
-                $(".perm-detail").hide();
-            });
-            $("#perm-private").change(function() {
-                if ($(this).is(":checked")) {
-                    $(".perm-detail").hide();
-                    $("#perm-public-read").attr("checked", false);
-                    $("#perm-reg-read").attr("checked", false);
-                    $("#perm-reg-write").attr("checked", false);
-                } else {
-                    $(".perm-detail").show();
-                    $("#perm-public-read").attr("checked", true);
-                    $("#perm-reg-read").attr("checked", true);
-                }
-            });
-            $("#perm-public-read").change(function() {
-                if ($(this).is(":checked")) {
-                    $("#perm-reg-read").attr("checked", true);
-                    $("#perm-private").attr("checked", false);
-                }
-            });
+            Atomic.app.initPermissions($("table.permissions"));
             
             function checkSubmit(e) {
                 e.preventDefault();
@@ -107,6 +87,31 @@ Atomic.app = (function () {
             });
 
 //            prettyPrint();
+        },
+        
+        initPermissions: function(table) {
+            table.find(".perm-private:checked").each(function() {
+                table.find(".perm-detail").hide();
+            });
+            table.find(".perm-private").change(function(ev) {
+                ev.preventDefault();
+                if ($(this).is(":checked")) {
+                    $(".perm-detail", table).hide();
+                    table.find(".perm-public-read").attr("checked", false);
+                    table.find(".perm-group-read").attr("checked", false);
+                    table.find(".perm-group-write").attr("checked", false);
+                } else {
+                    table.find(".perm-detail").show();
+                    table.find(".perm-public-read").attr("checked", true);
+                    table.find(".perm-group-read").attr("checked", true);
+                }
+            });
+            table.find(".perm-public-read").change(function() {
+                if ($(this).is(":checked")) {
+                    table.find(".perm-group-read").attr("checked", true);
+                    table.find(".perm-private").attr("checked", false);
+                }
+            });
         }
     };
 }());

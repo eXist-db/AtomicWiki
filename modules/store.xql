@@ -383,7 +383,7 @@ declare function store:collection() {
         </atom:feed>
     let $stored :=
         xmldb:store($collectionPath, "feed.atom", $data, "application/atom+xml")
-    let $owner := sm:get-permissions(xs:anyURI($stored))/@owner
+    let $owner := sm:get-permissions($stored)//sm:permission/@owner/string()
     let $perms :=
         if ($owner = xmldb:get-current-user()) then
             acl:change-permissions($stored)
