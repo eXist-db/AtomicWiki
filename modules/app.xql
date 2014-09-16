@@ -2,8 +2,6 @@ xquery version "3.0";
 
 module namespace app="http://exist-db.org/xquery/app";
 
-
-import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace atomic="http://atomic.exist-db.org/xquery/atomic" at "atomic.xql";
 import module namespace templates="http://exist-db.org/xquery/templates";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
@@ -44,15 +42,16 @@ declare function app:feed-id($node as node(), $model as map(*)) {
 
 };
 
-declare function app:get-or-create-feed($node as node(), $model as map(*)) as map(*) {
-    let $feed := request:get-attribute("feed")
+declare function app:get-or-create-feed($node as node(), $model as map(*), $create as xs:string?) as map(*) {
+    let $feed := if ($create) then () else request:get-attribute("feed")
+    let $isNew := exists($feed)
     let $data :=
         if ($feed) then
             $feed
         else
             atomic:create-feed()
     return
-        map { "feed" := $data, "entry" := $data }
+        map { "feed" := $data, "entry" := $data, "is-new" := string(not($isNew)) }
 };
 
 declare
@@ -168,7 +167,6 @@ function app:create-entry($node as node(), $model as map(*), $title as xs:string
                     <atom:content type="{$ctype}">{$content}</atom:content>
             }
         </atom:entry>
-    let $log := console:log($entry)
     return
         map { "entry" := $entry, "count" := 1 }
 };
@@ -280,7 +278,7 @@ declare function app:content($node as node(), $model as map(*)) {
                     (),
                 app:process-content($atomContent/@type, $content, $model)
             ),
-            if ($model[2] gt 1 and $summary) then
+            if ($model("count") gt 1 and $summary) then
                 <a class="label" href="{$model('entry')/wiki:id}">Read article ...</a>
             else
                 ()
@@ -368,6 +366,16 @@ declare function app:posted-link($node as node(), $model as map(*)) {
             <input type="hidden" name="{substring-before($pair, '=')}" value="{substring-after($pair, '=')}"/>
     }
     </form>
+};
+
+declare function app:new-feed-input($node as node(), $model as map(*), $create as xs:string?) {
+    if ($create) then
+        element { node-name($node) } {
+            $node/@*,
+            templates:process($node/node(), $model)
+        }
+    else
+        ()
 };
 
 declare function app:edit-title($node as node(), $model as map(*)) {
@@ -472,10 +480,11 @@ declare function app:edit-author($node as node(), $model as map(*)) {
     }
 };
 
-declare function app:edit-id($node as node(), $model as map(*)) {
+declare function app:edit-id($node as node(), $model as map(*), $create as xs:string?) {
     element { node-name($node) } {
         $node/@*,
-        attribute value { $model("entry")/atom:id }
+        (: No id if this is a new feed :)
+        attribute value { if ($create) then () else $model("entry")/atom:id }
     }
 };
 

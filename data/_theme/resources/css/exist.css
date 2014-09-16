@@ -734,8 +734,8 @@ table.permissions td {
     margin: 0 0 4px;
 }
 
-#sitemap-dialog .modal-body {
-    height: 600px;
+#sitemap .btn-group {
+    margin-bottom: 10px;
 }
 
 #link-dialog {

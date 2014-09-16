@@ -5,7 +5,7 @@ module namespace acl="http://atomic.exist-db.org/xquery/atomic/acl";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace templates="http://exist-db.org/xquery/templates";
 
-declare function acl:set-perm($value as item()?, $flag as xs:string) {
+declare %private function acl:set-perm($value as item()?, $flag as xs:string) {
     if ($value) then $flag else "-"
 };
 
@@ -13,18 +13,32 @@ declare function acl:change-permissions($path as xs:string) {
     let $private := request:get-parameter("perm-private", ())
     let $public-read := request:get-parameter("perm-public-read", ())
     let $public-perms := if ($public-read) then "r--" else "---"
-    let $reg-read := request:get-parameter("perm-reg-read", ())
-    let $reg-write := request:get-parameter("perm-reg-write", ())
-    let $reg-perms := acl:set-perm($reg-read or $reg-write, "r") || acl:set-perm($reg-write, "w") || "-"
+    let $group := request:get-parameter("perm-group", ())
+    let $group-read := request:get-parameter("perm-group-read", ())
+    let $group-write := request:get-parameter("perm-group-write", ())
+    let $group-perms := acl:set-perm($group-read or $group-write, "r") || acl:set-perm($group-write, "w")
+    let $reg-perms := if ($group = $config:default-group) then $group-perms else "--"
+    let $permissions := sm:get-permissions(xs:anyURI($path))
     return (
         (: Change main group :)
         (: Need to switch to the user who created the group :)
         sm:chgrp($path, $config:default-group),
-        sm:add-group-ace($path, $config:admin-group, true(), "rw-"),
+        for $ace in $permissions//sm:ace
+        where $ace/@who != $config:admin-group
+        return
+            sm:remove-ace($path, $ace/@index),
+        if ($permissions//sm:ace[@who = $config:admin-group]) then
+            ()
+        else
+            sm:add-group-ace($path, $config:admin-group, true(), "rw-"),
         if ($private) then
             sm:chmod($path, "rw-------")
         else
-            sm:chmod($path, "rw-" || $reg-perms || $public-perms)
+            sm:chmod($path, "rw-" || $reg-perms || "-" || $public-perms),
+        if ($group != "" and $group != $config:default-group and $group-perms != "--") then
+            sm:add-group-ace($path, $group, true(), $group-perms)
+        else
+            ()
     )
 };
 
@@ -62,34 +76,71 @@ function acl:show-permissions($node as node(), $model as map(*), $modelItem as x
                         <td>Only the user who created an article is allowed to change permissions.</td>
                     </tr>
                 else
-                    let $processed := templates:copy-node($node, $model)
+                    let $processed := templates:copy-node($node, map:new(($model, map { "permissions" := $permissions })))
                     return
-                        acl:process-permissions($processed, $permissions/*)
+                        acl:process-permissions($processed, $permissions/*, $doc)
         else
             templates:copy-node($node, $model)
 };
 
-declare %private function acl:process-permissions($node as node(), $permissions as element()) {
+declare %private function acl:process-permissions($node as node(), $permissions as element(), $path as xs:anyURI) {
     typeswitch ($node)
         case element(input) return
             let $checked :=
                 switch ($node/@name/string())
                     case "perm-private" return
-                        ends-with($permissions/@mode, "------")
+                        ends-with($permissions/@mode, "------") and
+                        matches(
+                            $permissions//sm:ace[starts-with(@who, "wiki.")][@target = "GROUP"][@access_type="ALLOWED"][1]/@mode,
+                            "-..$"
+                        )
                     case "perm-public-read" return
                         matches($permissions/@mode, "r..$")
-                    case "perm-reg-read" return
-                        matches($permissions/@mode, "^.{3}r")
-                    case "perm-reg-write" return
-                        matches($permissions/@mode, "^.{4}w")
+                    case "perm-group-read" return
+                        matches(
+                            $permissions//sm:ace[starts-with(@who, "wiki.")][@target = "GROUP"][@access_type="ALLOWED"][1]/@mode,
+                            "r..$"
+                        ) or matches($permissions/@mode, "^...r")
+                    case "perm-group-write" return
+                        matches(
+                            $permissions//sm:ace[starts-with(@who, "wiki.")][@target = "GROUP"][@access_type="ALLOWED"][1]/@mode,
+                            ".w.$"
+                        ) or matches($permissions/@mode, "^....w.*")
                     default return
                         false()
             return
                 <input>{ $node/@*[local-name(.) != "checked"], if ($checked) then attribute checked { "checked" } else () }</input>
         case element() return
             element { node-name($node) } {
-                $node/@*, for $child in $node/node() return acl:process-permissions($child, $permissions)
+                $node/@*, for $child in $node/node() return acl:process-permissions($child, $permissions, $path)
             }
         default return
             $node
+};
+
+declare
+    %templates:wrap
+function acl:group-select($node as node(), $model as map(*)) {
+    <option value="">none</option>,
+    <option value="{$config:default-group}">
+    {
+        if (matches($model("permissions")//sm:permission/@mode, "^...rw?")) then
+            attribute selected { "selected" }
+        else
+            ()
+    }
+    All registered users
+    </option>,
+    let $currentGroup := $model("permissions")//sm:ace[starts-with(@who, "wiki.")][@target = "GROUP"][@access_type="ALLOWED"][1]/@who
+    for $group in sm:find-groups-by-groupname("wiki.")
+    return
+        <option value="{$group}">
+        {
+            if ($group = $currentGroup) then
+                attribute selected { "selected" }
+            else
+                ()
+        }
+        { substring-after($group, "wiki.") }
+        </option>
 };

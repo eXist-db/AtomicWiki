@@ -2,41 +2,28 @@ Atomic.namespace("Atomic.sitemap");
 
 Atomic.sitemap = (function () {
     
-    var dialog;
+    var container;
     var body;
     var onSelect = null;
     var initialized = false;
+    var dialog;
+    var sitemap;
     
     $(document).ready(function() {
-        dialog = $("#sitemap");
+        container = $("#sitemap");
         init(function(url) {
             window.location = url;
         });
         $(".sitemap-toggle").click(function(ev) {
-            dialog.parent().toggleClass("active");
+            container.parent().toggleClass("active");
         });
-        
-        // dialog.modal({
-        //     keyboard: true,
-        //     show: false
-        // });
-        // $(".close-button", dialog).click(function(ev) {
-        //     ev.preventDefault();
-        //     dialog.modal("hide");
-        // });
-        // $("#open-sitemap").click(function(ev) {
-        //     ev.preventDefault();
-        //     open(function(url) {
-        //         window.location = url;
-        //     });
-        // });
     });
     
     function init(onSelect) {
         if (initialized) {
             return false;
         }
-        sitemap = $(".sitemap", dialog);
+        sitemap = $(".sitemap", container);
         sitemap.dynatree({
             persist: false,
             minExpandLevel: 2,
@@ -45,6 +32,15 @@ Atomic.sitemap = (function () {
             clickFolderMode: 1,
             autoFocus: true,
             keyboard: false,
+            onActivate: function(node) {
+                if (node.data.isFolder) {
+                    $(".btn-create-feed,.btn-edit-feed,.btn-new-html,.btn-new-markdown", container).removeAttr("disabled");
+                    $(".btn-create-entry,.btn-edit-entry,.btn-delete-entry", container).attr("disabled", "disabled");
+                } else {
+                    $(".btn-create-feed,.btn-edit-feed,.btn-new-html,.btn-new-markdown", container).attr("disabled", "disabled");
+                    $(".btn-create-entry,.btn-edit-entry,.btn-delete-entry", container).removeAttr("disabled");
+                }
+            },
             onPostInit: function() {
                 var uuid = $("input[name='uuid']").val();
                 var node = this.selectKey(uuid);
@@ -54,19 +50,155 @@ Atomic.sitemap = (function () {
             },
             onDblClick: function(dtnode) {
                 var key = dtnode.data.key;
-                console.log("path: %o", dtnode.data.url);
                 if (onSelect) {
                     onSelect(dtnode.data.url);
                 }
+            },
+            onClick: function(node, event) {
+                if (event.shiftKey) {
+                    edit(node);
+                    return false;
+                }
+            }
+        });
+        
+        dialog = $("#editFeedDialog").modal({
+            show: false
+        });
+        dialog.find(".ok-button").click(function(ev) {
+            ev.preventDefault();
+            var form = dialog.find(".modal-body form");
+            var url = form.find("input[name = 'url']");
+            if (url.length > 0) {
+                var collectionInput = form.find("input[name = 'collection']");
+                var collection = collectionInput.val() + "/" + url.val();
+                collectionInput.val(collection);
+            }
+            var data = form.serialize();
+            $.ajax({
+                url: "modules/store.xql",
+                data: data,
+                type: "POST",
+                success: function(data) {
+                    refresh();
+                    dialog.modal("hide");
+                }
+            });
+        });
+        $(".btn-create-feed", container)
+        .attr("disabled", "disabled")
+        .click(function(ev) {
+            ev.preventDefault();
+            editFeed(true);
+        });
+        $(".btn-edit-feed", container)
+        .attr("disabled", "disabled")
+        .click(function(ev) {
+            ev.preventDefault();
+            editFeed(false);
+        });
+        $(".btn-edit-entry", container)
+        .attr("disabled", "disabled")
+        .click(function(ev) {
+            ev.preventDefault();
+            var current = sitemap.dynatree("getActiveNode");
+            if (current && !current.data.isFolder) {
+                window.location = current.data.url + "?action=edit";
+            }
+        });
+        $(".btn-new-html", container)
+        .attr("disabled", "disabled")
+        .click(function(ev) {
+            ev.preventDefault();
+            var current = sitemap.dynatree("getActiveNode");
+            if (current && current.data.isFolder) {
+                window.location = current.data.url + "?action=addentry&editor=html";
+            }
+        });
+        $(".btn-new-markdown", container)
+        .attr("disabled", "disabled")
+        .click(function(ev) {
+            ev.preventDefault();
+            var current = sitemap.dynatree("getActiveNode");
+            if (current && current.data.isFolder) {
+                window.location = current.data.url + "?action=addentry&editor=wiki";
+            }
+        });
+        $(".btn-delete-entry", container)
+        .attr("disabled", "disabled")
+        .click(function(ev) {
+            ev.preventDefault();
+            var current = sitemap.dynatree("getActiveNode");
+            if (current && !current.data.isFolder) {
+                Atomic.util.Dialog.confirm("Delete Article?", "This will delete the current article. Are you sure?",
+                    function () {
+                        $.ajax({
+                            url: "?action=delete&id=" + current.data.key,
+                            type: "GET"
+                        });
+                    }
+                );
             }
         });
         initialized = true;
     }
     
+    function editFeed(createNew) {
+        var current = sitemap.dynatree("getActiveNode");
+        if (current && current.data.isFolder) {
+            var params = {
+                collection: current.data.collection
+            };
+            if (createNew) {
+                params.create = "true";
+            }
+            $.ajax({
+                url: "edit-feed.html",
+                data: params,
+                type: "GET",
+                success: function(data) {
+                    dialog.find(".modal-body").html(data);
+                    Atomic.app.initPermissions(dialog.find(".modal-body .permissions"));
+                    dialog.modal("show");
+                }
+            });
+        }
+    }
+    
+    function edit(node) {
+        var title = node.data.title;
+        var tree = node.tree;
+        tree.$widget.unbind();
+        $(".dynatree-title", node.span).html("<input id='editNode' value='" + title + "'>");
+        $("input#editNode").focus()
+        .keydown(function(ev) {
+            switch (ev.which) {
+                case 27:
+                    $("input#editNode").val(title);
+                    $(this).blur();
+                    break;
+                case 13:
+                    $(this).blur();
+                    break;
+            }
+        })
+        .blur(function(ev) {
+            var title = $("input#editNode").val();
+            node.setTitle(title);
+            tree.$widget.bind();
+            node.focus();
+        });
+    }
+    
+    function refresh() {
+        var tree = sitemap.dynatree("getTree");
+        tree.getRoot().removeChildren();
+        tree.reload();
+    }
+    
     function open(callback) {
         init();
         onSelect = callback;
-        // dialog.modal("show");
     }
     
     return {
@@ -304,18 +436,16 @@ Atomic.menu = (function () {
         });
     }
     
-    function show() {
-        init();
-        dialog.find("input[name='title']").val("");
-        
+    function refresh() {
         var tree = menu.dynatree("getTree");
         tree.getRoot().removeChildren();
         tree.reload();
-        
-        tree = sitemap.dynatree("getTree");
-        tree.getRoot().removeChildren();
-        tree.reload();
-        
+    }
+    
+    function show() {
+        init();
+        dialog.find("input[name='title']").val("");
+        refresh();
         dialog.modal("show");
     }
     

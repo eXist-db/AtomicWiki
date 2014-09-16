@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div>
-    <table class="permissions acl:show-permissions">
+    <table class="permissions" data-template="acl:show-permissions">
         <tr>
-            <td colspan="3" class="perm-private">
-                <input id="perm-private" type="checkbox" name="perm-private" checked="checked" title="Uncheck for more access control options"/> Private
+            <td colspan="4">
+                <input class="perm-private" type="checkbox" name="perm-private" checked="checked" title="Uncheck for more access control options"/> Private
             </td>
         </tr>
         <tr class="perm-detail">
-            <td>Everyone:</td>
+            <td>Group:</td>
             <td>
-                <input id="perm-public-read" type="checkbox" name="perm-public-read"/> read</td>
-            <td/>
+                <select name="perm-group" data-template="acl:group-select"/>
+            </td>
+            <td>
+                <input class="perm-group-read" type="checkbox" name="perm-group-read"/> read</td>
+            <td>
+                <input class="perm-group-write" type="checkbox" name="perm-group-write"/> write</td>
         </tr>
         <tr class="perm-detail">
-            <td>Registered users:</td>
+            <td>Everyone:</td>
+            <td/>
             <td>
-                <input id="perm-reg-read" type="checkbox" name="perm-reg-read"/> read</td>
-            <td>
-                <input id="perm-reg-write" type="checkbox" name="perm-reg-write"/> write</td>
+                <input class="perm-public-read" type="checkbox" name="perm-public-read"/> read</td>
+            <td/>
         </tr>
     </table>
 </div>

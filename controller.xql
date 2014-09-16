@@ -1,5 +1,7 @@
 xquery version "3.0";
 
+
+import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "modules/config.xqm";
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "modules/themes.xql";
 import module namespace login="http://exist-db.org/xquery/login" at "modules/login.xql";
@@ -81,6 +83,23 @@ try {
             <forward url="{$exist:controller}/data/_theme/code-edit.html"/>
         </dispatch>
     
+    else if ($exist:resource = "edit-feed.html") then
+        let $user := login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)
+        let $loggedIn := request:get-attribute("org.exist.wiki.login.user") != "guest"
+        let $editCollection := request:get-parameter("collection", ())
+        (: Try to determine the feed collection, either by looking at the URL or a parameter 'collection' :)
+        let $feed := xmldb:xcollection($editCollection)/atom:feed 
+        (: The feed XML will be saved to a request attribute :)
+        let $setAttr := request:set-attribute("feed", $feed)
+        return
+            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                <forward url="{theme:resolve(util:collection-name($feed), $exist:resource, $root, $exist:controller)}">
+                </forward>
+                <view>
+                    <forward url="{$exist:controller}/modules/view.xql"></forward>
+                </view>
+            </dispatch>
+            
     else if ($exist:resource = "images.xql") then
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$exist:controller}/modules/images.xql"/>
