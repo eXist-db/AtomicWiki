@@ -120,7 +120,7 @@ Atomic.namespace("Atomic.util.Dialog");
 
 Atomic.util.Dialog = (function () {
     
-	var dialog, body, header;
+	var dialog, body, header, icon;
 	
 	var okCallback = null;
 	var cancelCallback = null;
@@ -129,8 +129,9 @@ Atomic.util.Dialog = (function () {
         if (!document.getElementById("confirmDialog"))
             return;
 		dialog = $("#confirmDialog");
-		body = $(".modal-body", dialog);
-        header = $(".modal-header h3", dialog);
+		body = $(".modal-body .message", dialog);
+		icon = $(".modal-body .icon i", dialog);
+        header = $(".modal-header h4", dialog);
         
         dialog.modal({
             keyboard: true,
@@ -154,10 +155,15 @@ Atomic.util.Dialog = (function () {
 	
 	return {
 		
-        error: function(title, msg) {
+        error: function(title, msg, iconClass) {
             title = title || "Error";
             header.html(title);
             body.html(msg);
+            if (iconClass) {
+                icon.attr("class", "fa fa-4x " + iconClass);
+            } else {
+                icon.attr("class", "fa fa-4x fa-question");
+            }
             $(".cancel-button", dialog).hide();
             dialog.modal("show");
         },

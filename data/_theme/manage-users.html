@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+    <head>
+        <title>Atomic Wiki</title>
+        <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
+        <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
+        <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
+        <link href="theme/resources/css/manage-users.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body class="templates:surround?with=templates/page.html&amp;at=content&amp;using=grey-top">
+        <div class="col-md-12">
+            <form class="form form-horizontal" action="." method="POST">
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="groups">Groups:</label>
+                    <div class="col-md-8">
+                        <select name="groups" class="form-control" data-bind="value: selectedGroup, options: group, optionsText: Atomic.users.getLabel"/>
+                    </div>
+                </div>
+                <div class="row group-toolbar">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input class="form-control" name="new-group" data-bind="value: newGroup.name" placeholder="New Group ID"/>
+                            <span class="input-group-btn">
+                                <button data-bind="click: Atomic.users.createGroup" class="btn btn-default" type="button">
+                                    <i class="fa fa-plus"/>
+                                    <i class="fa fa-group"/>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="form-control" name="new-group-desc" data-bind="value: newGroup.description" placeholder="Description (optional)"/>
+                    </div>
+                </div>
+                <table class="table table-bordered table-striped users">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th/>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: selectedGroup().user">
+                        <tr>
+                            <td data-bind="text: id" class="col-md-3"/>
+                            <td data-bind="text: name" class="col-md-4"/>
+                            <td class="col-md-1">
+                                <a href="" class="btn btn-default" data-bind="click: Atomic.users.removeUser">
+                                    <i class="fa fa-trash-o"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-8">
+                        <div class="input-group">
+                            <input class="form-control typeahead" name="new-user" placeholder="User ID" data-bind="value: addUser"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" data-bind="click: Atomic.users.addUser">
+                                    <i class="fa fa-plus"/>
+                                    <i class="fa fa-user"/>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery/jquery-ui.custom.min.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery/jquery.dynatree.min.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery/typeahead.bundle.js"/>
+        <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
+        <script type="text/javascript" src="resources/scripts/knockout-3.2.0.js"/>
+        <script type="text/javascript" src="resources/scripts/knockout.mapping-2.4.1.js"/>
+        <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/atomic/manage.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/atomic/users.js" type="text/javascript" charset="utf-8"/>
+    </body>
+</html>

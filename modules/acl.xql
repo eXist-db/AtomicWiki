@@ -44,7 +44,16 @@ declare function acl:change-permissions($path as xs:string) {
 
 declare function acl:change-collection-permissions($path as xs:string) {
     sm:chmod($path, "rwxrwxr-x"),
-    sm:chgrp($path, $config:default-group)
+    sm:chgrp($path, $config:default-group),
+    let $group := request:get-parameter("perm-group", ())
+    let $group-read := request:get-parameter("perm-group-read", ())
+    let $group-write := request:get-parameter("perm-group-write", ())
+    let $group-perms := acl:set-perm($group-read or $group-write, "r") || acl:set-perm($group-write, "w")
+    return
+        if ($group != "" and $group != $config:default-group and $group-perms != "--") then
+            sm:add-group-ace($path, $group, true(), $group-perms)
+        else
+            ()
 };
 
 declare function acl:get-user-name() {

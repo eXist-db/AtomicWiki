@@ -58,6 +58,21 @@ declare function local:default-view($template, $relPath) {
     </dispatch>
 };
 
+declare function local:get-url($root as xs:string) {
+    let $editCollection := request:get-parameter("collection", ())
+    let $relPath := local:extract-feed($exist:path)
+    (: Try to determine the feed collection, either by looking at the URL or a parameter 'collection' :)
+    let $feed := 
+        if ($editCollection) then
+            xmldb:xcollection($editCollection)/atom:feed 
+        else
+            config:resolve-feed($relPath[1])
+    (: The feed XML will be saved to a request attribute :)
+    let $setAttr := request:set-attribute("feed", $feed)
+    let $url := theme:resolve(util:collection-name($feed), $exist:resource, $root, $exist:controller)
+    return
+        $url
+};
 try {
     let $root := substring-after($exist:root, "xmldb:exist://")
     return
@@ -85,21 +100,27 @@ try {
     
     else if ($exist:resource = "edit-feed.html") then
         let $user := login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)
-        let $loggedIn := request:get-attribute("org.exist.wiki.login.user") != "guest"
-        let $editCollection := request:get-parameter("collection", ())
-        (: Try to determine the feed collection, either by looking at the URL or a parameter 'collection' :)
-        let $feed := xmldb:xcollection($editCollection)/atom:feed 
-        (: The feed XML will be saved to a request attribute :)
-        let $setAttr := request:set-attribute("feed", $feed)
+        let $url := local:get-url($root)
         return
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                <forward url="{theme:resolve(util:collection-name($feed), $exist:resource, $root, $exist:controller)}">
+                <forward url="{$url}">
                 </forward>
                 <view>
                     <forward url="{$exist:controller}/modules/view.xql"></forward>
                 </view>
             </dispatch>
             
+    else if ($exist:resource = "manage-users.html") then
+        let $user := login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)
+        let $url := local:get-url($root)
+        return
+            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                <forward url="{$url}"/>
+                <view>
+                    <forward url="{$exist:controller}/modules/view.xql"/>
+                </view>
+            </dispatch>
+        
     else if ($exist:resource = "images.xql") then
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$exist:controller}/modules/images.xql"/>
