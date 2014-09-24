@@ -29,20 +29,23 @@ declare function local:mkcol($collection, $path) {
     local:mkcol-recursive($collection, tokenize($path, "/"))
 };
 
+declare function local:create-group($group as xs:string, $description as xs:string) {
+    if (sm:group-exists($group)) then
+        ()
+    else
+        sm:create-group($group, $description)
+};
+
 (: store the collection configuration :)
 local:mkcol("/db/system/config", $target),
 xdb:store-files-from-pattern(concat("/system/config", $target), $dir, "*.xconf"),
 
-if (sm:group-exists($config:default-group)) then 
-    ()
-else 
-    sm:create-group($config:default-group),
-if (sm:group-exists($config:admin-group)) then
-    ()
-else
-    sm:create-group($config:admin-group, "wiki administrator group"),
+local:create-group($config:default-group, "Wiki application group"),
+local:create-group($config:admin-group, "Wiki administrators group"),
+local:create-group($config:users-group, "Group containing all wiki users"),
 if (sm:user-exists($config:default-user[1])) then (
     sm:add-group-member($config:default-group, $config:default-user[1]),
+    sm:add-group-member($config:users-group, $config:default-user[1]),
     sm:add-group-member("dba", $config:default-user[1])
 ) else
     sm:create-account($config:default-user[1], $config:default-user[2], $config:default-group, ($config:admin-group, "dba"))

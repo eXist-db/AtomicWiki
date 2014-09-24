@@ -19,7 +19,7 @@ declare function acl:change-permissions($path as xs:string) {
     let $group-read := request:get-parameter("perm-group-read", ())
     let $group-write := request:get-parameter("perm-group-write", ())
     let $group-perms := acl:set-perm($group-read or $group-write, "r") || acl:set-perm($group-write, "w")
-    let $reg-perms := if ($group = $config:default-group) then $group-perms else "--"
+    let $reg-perms := "r-"
     let $permissions := sm:get-permissions(xs:anyURI($path))
     return (
         (: Change main group :)
@@ -91,8 +91,7 @@ function acl:show-permissions($node as node(), $model as map(*), $modelItem as x
     return
         if (doc-available($doc)) then
             let $permissions := sm:get-permissions($doc)
-            let $log := console:log("wiki", ("permissions:", $permissions))
-            let $owner := $permissions/@owner/string()
+            let $owner := $permissions//@owner/string()
             return
                 if ($owner != xmldb:get-current-user()) then
                     <tr>

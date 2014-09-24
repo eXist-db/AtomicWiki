@@ -306,10 +306,22 @@ declare function app:process-content($type as xs:string?, $content as item()?, $
                 $content
 };
 
+declare
+    %templates:wrap
+function app:can-edit($node as node(), $model as map(*)) {
+    if (sm:has-access(xs:anyURI(document-uri(root($model('entry')))), "rw")) then
+        element { node-name($node) } {
+            $node/@*,
+            templates:process($node/node(), $model)
+        }
+    else
+        ()
+};
+
 declare function app:edit-link($node as node(), $model as map(*), $action as xs:string) {
     let $lockedBy := $model('entry')/wiki:lock/@user
     return
-        if ($lockedBy and $lockedBy != xmldb:get-current-user()) then
+        if ($lockedBy and not($lockedBy = xmldb:get-current-user())) then
             <span><i class="icon-lock"></i> Locked by {$lockedBy/string()}</span>
         else
             <a href="{$model('entry')/wiki:id}?action=edit">{ $node/@*[local-name(.) != 'href'], $node/node() }</a>
@@ -318,7 +330,7 @@ declare function app:edit-link($node as node(), $model as map(*), $action as xs:
 declare function app:action-button($node as node(), $model as map(*), $action as xs:string?) {
     let $lockedBy := $model('entry')/wiki:lock/@user
     return
-        if ($lockedBy and $lockedBy != xmldb:get-current-user()) then
+        if ($lockedBy and not($lockedBy = xmldb:get-current-user())) then
     (:            <span><i class="icon-lock"></i> Locked by {$lockedBy/string()}</span>:)
             ()
         else
@@ -358,7 +370,7 @@ declare function app:posted-link($node as node(), $model as map(*)) {
         $node/@* except $node/@class,
         templates:process($node/node(), $model)
     },
-    <form action="" method="post" style="display: none;">
+    <form action="{substring-before( $node/@href, '?')}" method="post" style="display: none;">
     {
         let $href := substring-after( $node/@href, "?")
         for $pair in tokenize($href, "&amp;")
@@ -612,7 +624,6 @@ declare function app:check-access($node as node(), $model as map(*)) {
     return
         if ($user) then
             let $collection := request:get-attribute("collection")
-            let $log := util:log-system-out("collection: " || $collection)
             return
                 if ($collection and xmldb:collection-available($collection)) then
                     let $feed := xmldb:xcollection($collection)//atom:feed

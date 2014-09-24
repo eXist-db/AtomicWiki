@@ -27,7 +27,7 @@ declare function store:store-resource($collection, $name, $content, $mediaType) 
             xmldb:remove(util:collection-name($item), util:document-name($item))
     let $stored := xmldb:store($collection, $name, $content, $mediaType)
     
-    let $owner := sm:get-permissions(xs:anyURI($stored))/@owner
+    let $owner := sm:get-permissions(xs:anyURI($stored))//@owner
     let $permissions :=                    
         if ($owner != xmldb:get-current-user()) then
             ()
