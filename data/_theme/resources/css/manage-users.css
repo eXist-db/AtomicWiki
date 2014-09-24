@@ -7,6 +7,10 @@
     text-align: center;
 }
 
+.new-user-form {
+    margin-top: 30px;
+}
+
 .twitter-typeahead {
   width: 100%;
   position: relative;

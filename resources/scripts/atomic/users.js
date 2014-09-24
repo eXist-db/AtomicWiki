@@ -4,6 +4,47 @@ Atomic.users = (function () {
     
     var viewModel = null;
     
+    function User() {
+        this.id = ko.observable("");
+        this.name = ko.observable();
+        this.password1 = ko.observable();
+        this.password2 = ko.observable();
+        
+        this.reset = function(id) {
+            this.id(id);
+            this.name("");
+            this.password1("");
+            this.password2("");
+        };
+        
+        this.save = function(model) {
+            var group = model.selectedGroup().name();
+            var user = model.newUser;
+            console.log("Creating user " + user.id());
+            var data = {
+                mode: "edit-user",
+                id: user.id(),
+                name: user.name(),
+                password: user.password1(),
+                group: group
+            };
+            $.ajax({
+                url: "modules/users.xql",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function(data) {
+                    if (data.status == "error") {
+                        Atomic.util.Dialog.error("Saving User Failed", data.message, "fa-exclamation");
+                    } else {
+                        model.newUser.reset("");
+                        Atomic.users.loadGroups(group);
+                    }
+                }
+            });
+        };
+    }
+    
     function loadGroups(selected) {
         $.ajax({
             url: "modules/users.xql?mode=groups",
@@ -19,6 +60,7 @@ Atomic.users = (function () {
                         description: ko.observable()
                     };
                     viewModel.addUser = ko.observable();
+                    viewModel.newUser = new User();
                     ko.applyBindings(viewModel);
                 } else {
                     ko.mapping.fromJS(data, viewModel);
@@ -70,8 +112,10 @@ Atomic.users = (function () {
             $.log("Adding user %s to group %s", model.addUser(), group);
             $.getJSON("modules/users.xql", { mode: "add-user", id: model.addUser(), group: group},
                 function(data) {
-                    if (data.status == "error") {
-                        Atomic.util.Dialog.error("Adding User Failed", data.message, "fa-exclamation");
+                    if (data.status == "notfound") {
+                        Atomic.util.Dialog.confirm("User Not Found", "User " + user + " does not exist. Create it?", function() {
+                            model.newUser.reset(user);
+                        });
                     } else {
                         Atomic.users.loadGroups(group);
                         model.addUser("");

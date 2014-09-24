@@ -2,6 +2,8 @@ xquery version "3.0";
 
 module namespace acl="http://atomic.exist-db.org/xquery/atomic/acl";
 
+
+import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace templates="http://exist-db.org/xquery/templates";
 
@@ -24,13 +26,12 @@ declare function acl:change-permissions($path as xs:string) {
         (: Need to switch to the user who created the group :)
         sm:chgrp($path, $config:default-group),
         for $ace in $permissions//sm:ace
-        where $ace/@who != $config:admin-group
         return
             sm:remove-ace($path, $ace/@index),
-        if ($permissions//sm:ace[@who = $config:admin-group]) then
-            ()
-        else
-            sm:add-group-ace($path, $config:admin-group, true(), "rw-"),
+(:        if ($permissions//sm:ace[@who = $config:users-group]) then:)
+(:            ():)
+(:        else:)
+(:            sm:add-group-ace($path, $config:users-group, true(), "rw-"),:)
         if ($private) then
             sm:chmod($path, "rw-------")
         else
@@ -71,6 +72,18 @@ declare function acl:get-user-name() {
                     $user
 };
 
+declare function acl:if-admin-user($node as node(), $model as map(*)) {
+    let $user := xmldb:get-current-user()
+    return
+        if (sm:is-dba($user)) then
+            element { node-name($node) } {
+                $node/@*,
+                templates:process($node/*, $model)
+            }
+        else
+            ()
+};
+
 declare 
     %templates:default("modelItem", "entry")
 function acl:show-permissions($node as node(), $model as map(*), $modelItem as xs:string?) {
@@ -78,6 +91,7 @@ function acl:show-permissions($node as node(), $model as map(*), $modelItem as x
     return
         if (doc-available($doc)) then
             let $permissions := sm:get-permissions($doc)
+            let $log := console:log("wiki", ("permissions:", $permissions))
             let $owner := $permissions/@owner/string()
             return
                 if ($owner != xmldb:get-current-user()) then
@@ -99,9 +113,12 @@ declare %private function acl:process-permissions($node as node(), $permissions 
                 switch ($node/@name/string())
                     case "perm-private" return
                         ends-with($permissions/@mode, "------") and
-                        matches(
-                            $permissions//sm:ace[starts-with(@who, "wiki.")][@target = "GROUP"][@access_type="ALLOWED"][1]/@mode,
-                            "-..$"
+                        (
+                            empty($permissions//sm:ace) or
+                            matches(
+                                $permissions//sm:ace[starts-with(@who, "wiki.")][@target = "GROUP"][@access_type="ALLOWED"][1]/@mode,
+                                "-..$"
+                            )
                         )
                     case "perm-public-read" return
                         matches($permissions/@mode, "r..$")

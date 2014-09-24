@@ -59,7 +59,7 @@ declare function local:groups() {
 declare function local:create-group() {
     let $id := request:get-parameter("id", ())
     let $id := if (starts-with($id, "wiki.")) then $id else "wiki." || $id
-    let $description := request:get-parameter("description", ())
+    let $description := request:get-parameter("description", "")
     let $managers := sm:get-group-members($config:admin-group)
     return
         if (sm:group-exists($id)) then
@@ -79,7 +79,7 @@ declare function local:add-user() {
             {sm:add-group-member($group, $id)}
             </ok>
         else
-            <error status="error" message="User {$id} does not exist"/>
+            <error status="notfound" message="User {$id} does not exist"/>
 };
 
 declare function local:remove-user() {
@@ -89,6 +89,17 @@ declare function local:remove-user() {
         sm:remove-group-member($group, $id)
 };
 
+declare function local:edit-user() {
+    let $id := request:get-parameter("id", ())
+    let $password := request:get-parameter("password", ())
+    let $name := request:get-parameter("name", ())
+    let $group := request:get-parameter("group", ())
+    return
+        <ok status="ok">
+        {sm:create-account($id, $password, $config:default-group, distinct-values(("wiki.users", $group)), $name, "")}
+        </ok>
+};
+
 let $mode := request:get-parameter("mode", ())
 return
     switch ($mode)
@@ -96,6 +107,8 @@ return
             local:create-group()
         case "add-user" return
             local:add-user()
+        case "edit-user" return
+            local:edit-user()
         case "remove-user" return
             local:remove-user()
         case "groups" return
