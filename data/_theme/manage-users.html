@@ -67,6 +67,39 @@
                     </div>
                 </div>
             </form>
+            <form class="form form-horizontal new-user-form" action="." method="POST" data-bind="visible: $data.newUser.id() != ''">
+                <div class="form-group has-feedback" data-bind="css: { 'has-error': $data.newUser.id() == '' }">
+                    <label class="control-label col-md-3" for="id">User ID:</label>
+                    <div class="col-md-8">
+                        <input name="id" data-bind="value: newUser.id" class="form-control"/>
+                        <span class="glyphicon form-control-feedback" data-bind="css: { 'glyphicon-remove': $data.newUser.id() == '' }"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="name">Name:</label>
+                    <div class="col-md-8">
+                        <input name="name" data-bind="value: newUser.name" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group has-feedback" data-bind="css: { 'has-error': $data.newUser.password1() == '' }">
+                    <label class="control-label col-md-3" for="password1">Password</label>
+                    <div class="col-md-8">
+                        <input name="password1" type="password" data-bind="value: newUser.password1" class="form-control"/>
+                        <span class="glyphicon form-control-feedback" data-bind="css: { 'glyphicon-remove': $data.newUser.password1() == '' }"/>
+                    </div>
+                </div>
+                <div class="form-group has-feedback" data-bind="css: { 'has-error': $data.newUser.password1() != $data.newUser.password2() }">
+                    <label class="control-label col-md-3" for="password2">Repeat Password</label>
+                    <div class="col-md-8">
+                        <input name="password2" type="password" data-bind="value: newUser.password2" class="form-control"/>
+                        <span class="glyphicon form-control-feedback" data-bind="css: { 'glyphicon-remove': $data.newUser.password1() != $data.newUser.password2() }"/>
+                    </div>
+                </div>
+                <div class="btn-group pull-right">
+                    <button name="cancel" class="btn btn-default">Cancel</button>
+                    <button name="save" class="btn btn-primary" data-bind="click: $data.newUser.save">Save</button>
+                </div>
+            </form>
         </div>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery-ui.custom.min.js"/>

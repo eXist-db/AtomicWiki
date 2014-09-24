@@ -16,6 +16,7 @@ declare namespace templates="http://exist-db.org/xquery/templates";
 
 declare variable $config:default-user := ("editor", "editor");
 declare variable $config:default-group := "biblio.users";
+declare variable $config:users-group := "wiki.users";
 declare variable $config:admin-group := "wiki-admin";
 
 (: 
