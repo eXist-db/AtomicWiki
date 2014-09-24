@@ -26,7 +26,7 @@ declare function local:find-users() {
 declare function local:groups() {
         <groups>
         {
-            for $group in sm:list-groups()[. = $config:admin-group or starts-with(., "wiki.")]
+            for $group in sm:list-groups()[starts-with(., "wiki.")]
             order by $group
             return
                 <group name="{$group}">
@@ -70,15 +70,26 @@ declare function local:create-group() {
             </ok>
 };
 
-declare function local:add-user() {
+declare function local:add-user-to-group() {
     let $id := request:get-parameter("id", ())
     let $group := request:get-parameter("group", ())
     return
-        if (sm:user-exists($id)) then
+        if (sm:user-exists($id)) then (
+            let $groups := sm:get-user-groups($id)
+            return (
+                if ($config:users-group != $groups) then
+                    sm:add-group-member($config:users-group, $id)
+                else
+                    (),
+                if ($config:default-group != $groups) then
+                    sm:add-group-member($config:default-group, $id)
+                else
+                    ()
+            ),
             <ok status="ok">
-            {sm:add-group-member($group, $id)}
+                {sm:add-group-member($group, $id)}
             </ok>
-        else
+        ) else
             <error status="notfound" message="User {$id} does not exist"/>
 };
 
@@ -106,7 +117,7 @@ return
         case "create-group" return
             local:create-group()
         case "add-user" return
-            local:add-user()
+            local:add-user-to-group()
         case "edit-user" return
             local:edit-user()
         case "remove-user" return

@@ -144,7 +144,7 @@ declare function atomic:get-source($content as element(atom:content)?) as item()
 declare function atomic:lock-for-user($feed as element(atom:entry)) {
     let $lock := $feed/wiki:lock/@user
     return
-        if ($lock and $lock != xmldb:get-current-user()) then
+        if ($lock and not($lock = xmldb:get-current-user())) then
             $lock/string()
         else
             let $addLock :=
