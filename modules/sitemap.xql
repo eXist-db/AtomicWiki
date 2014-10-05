@@ -5,6 +5,7 @@ declare namespace wiki="http://exist-db.org/xquery/wiki";
 declare namespace atom="http://www.w3.org/2005/Atom";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
+import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 
 declare option exist:serialize "method=json media-type=application/json";
 

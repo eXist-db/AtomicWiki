@@ -334,6 +334,7 @@ Atomic.editor.Editor = (function () {
                 imgDialog.find("input[name=url]").val("");
                 imgDialog.find("input[name=width]").val("");
                 imgDialog.find("input[name=height]").val("");
+                imgDialog.find("input[name=title]").val("");
                 addImage.open("images", "Insert Image", function(data) {
                     console.log("data %o", data);
                     editor.currentView.element.focus(false);
@@ -346,7 +347,7 @@ Atomic.editor.Editor = (function () {
                     }
                     attribs.alt = data.url;
                     attribs.class = data.align;
-                    attribs.caption = "Figure caption";
+                    attribs.caption = data.title || "Figure caption";
                     Atomic.command.figure.exec(editor.composer, "insertFigure", attribs);
 //                    editor.composer.commands.exec("insertImage", attribs);
                 });

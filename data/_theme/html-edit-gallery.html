@@ -4,7 +4,8 @@
         <title>Insert Slideshow</title>
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link href="http://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
+        <link rel="stylesheet" type="text/css" href="theme/resources/css/wiki.css"/>
+        <link rel="stylesheet" type="text/css" data-template="theme:css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/gallery.css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/jquery-ui.css"/>
         <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
@@ -103,41 +104,26 @@
                                         <div class="panel-body">
                                             <table class="permissions acl:show-permissions?modelItem=feed">
                                                 <tr>
-                                                    <td colspan="3" class="perm-private">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input id="perm-private" type="checkbox" name="perm-private" checked="checked" title="Uncheck for more access control options"/> Private
-                                                            </label>
-                                                        </div>
+                                                    <td colspan="4">
+                                                        <input class="perm-private" type="checkbox" name="perm-private" checked="checked" title="Uncheck for more access control options"/> Private
                                                     </td>
+                                                </tr>
+                                                <tr class="perm-detail">
+                                                    <td>Group:</td>
+                                                    <td>
+                                                        <select name="perm-group" data-template="acl:group-select"/>
+                                                    </td>
+                                                    <td>
+                                                        <input class="perm-group-read" type="checkbox" name="perm-group-read"/> read</td>
+                                                    <td>
+                                                        <input class="perm-group-write" type="checkbox" name="perm-group-write"/> write</td>
                                                 </tr>
                                                 <tr class="perm-detail">
                                                     <td>Everyone:</td>
-                                                    <td>
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input id="perm-public-read" type="checkbox" name="perm-public-read"/> read
-                                                            </label>
-                                                        </div>
-                                                    </td>
                                                     <td/>
-                                                </tr>
-                                                <tr class="perm-detail">
-                                                    <td>Registered users:</td>
                                                     <td>
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input id="perm-reg-read" type="checkbox" name="perm-reg-read"/> read
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input id="perm-reg-write" type="checkbox" name="perm-reg-write"/> write
-                                                            </label>
-                                                        </div>
-                                                    </td>
+                                                        <input class="perm-public-read" type="checkbox" name="perm-public-read"/> read</td>
+                                                    <td/>
                                                 </tr>
                                             </table>
                                         </div>
@@ -161,7 +147,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="text-link-dialog">
+        <div class="modal" id="text-link-dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -208,7 +194,7 @@
                 <div id="imageSelector"/>
             </div>
         </div>
-        <div id="unsaved-changes-dialog" class="modal hide fade">
+        <div id="unsaved-changes-dialog" class="modal hide">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">

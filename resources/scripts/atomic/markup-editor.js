@@ -1,3 +1,14 @@
+$(window).on("unload", function() {
+    var collection = $("#edit-form input[name='collection']").val();
+    var resource = $("#edit-form input[name='resource']").val();
+    alert("Unlock document: " + collection + "/" + resource);
+    $.get("modules/store.xql", {
+        action: "unlock",
+        collection: collection,
+        resource: resource
+    });
+});
+    
 $(document).ready(function() {
     
     var contentEditor = new Atomic.Editor(document.getElementById("content-editor"));

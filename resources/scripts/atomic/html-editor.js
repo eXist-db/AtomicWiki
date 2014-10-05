@@ -9,6 +9,17 @@ $(document).ready(function() {
     var addMusic = new Atomic.editor.AddMusicLink();
     var summaryEditor = null;
     
+    $(window).on("unload", function() {
+        var collection = $("#edit-form input[name='collection']").val();
+        var resource = $("#edit-form input[name='resource']").val();
+        alert("Unlock document: " + collection + "/" + resource);
+        $.get("modules/store.xql", {
+            action: "unlock",
+            collection: collection,
+            resource: resource
+        });
+    });
+    
     var contentEditor = null;
     contentEditor = new Atomic.editor.Editor("content-editor-content", "content-editor-textarea", "content-editor-toolbar", sitemap, addImage, anchorEditor, addGallery, addVideo, addMusic);
     $("#content-editor-content").remove();

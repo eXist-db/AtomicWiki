@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html>
     <head>
-        <title class="config:app-title">Atomic Wiki</title>
+        <title data-template="theme:title">Atomic Wiki</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="shortcut icon" href="$shared/resources/images/exist_icon_16x16.ico"/>
-        <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
+        <link rel="stylesheet" type="text/css" href="theme/resources/css/wiki.css"/>
+        <link rel="stylesheet" type="text/css" data-template="theme:css"/>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
         <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
@@ -61,13 +62,13 @@
                                                     <a href="?action=editfeed" class="app:posted-link">
                                                         <i class="fa fa-folder-open-o"/> Edit Section</a>
                                                 </li>
-                                                <li data-template="acl:if-admin-user">
+                                                <li data-template="acl:if-admin-user" data-template-allow-manager="true">
                                                     <a href="manage-users.html">
                                                         <i class="fa fa-users"/> Manage Users
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" id="edit-menu">
+                                                    <a href="#" id="edit-menu" data-template="acl:if-admin-user">
                                                         <i class="fa fa-reorder"/> Edit Menu</a>
                                                 </li>
                                                 <li class="gallery:build-gallery-add-menu">
@@ -159,6 +160,14 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <input type="password" name="password" placeholder="Password" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="domain" class="col-md-4 control-label">Domain:</label>
+                                <div class="col-md-8">
+                                    <select name="domain" class="form-control" data-template="acl:domains">
+                                        <option value="">Local</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

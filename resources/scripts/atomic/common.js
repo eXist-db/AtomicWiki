@@ -112,6 +112,17 @@ Atomic.app = (function () {
                     table.find(".perm-private").attr("checked", false);
                 }
             });
+        },
+        
+        unlock: function() {
+            var collection = $("#edit-form input[name='collection']").val();
+            var resource = $("#edit-form input[name='resource']").val();
+            alert("Unlock document: " + collection + "/" + resource);
+            $.get("modules/store.xql", {
+                action: "unlock",
+                collection: collection,
+                resource: resource
+            });
         }
     };
 }());

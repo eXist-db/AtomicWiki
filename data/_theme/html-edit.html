@@ -5,7 +5,8 @@
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="shortcut icon" href="$shared/resources/images/exist_icon_16x16.ico"/>
-        <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
+        <link rel="stylesheet" type="text/css" href="theme/resources/css/wiki.css"/>
+        <link rel="stylesheet" type="text/css" data-template="theme:css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/gallery.css"/>
         <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
         <link href="resources/scripts/bootstrap-tagsinput.css" rel="stylesheet" type="text/css"/>
@@ -30,15 +31,15 @@
                                 <label class="control-label col-md-2" for="title">Title</label>
                                 <div class="col-md-8">
                                     <input data-template="app:edit-title" class="form-control" type="text" name="title" placeholder="Title" required="required"/>
-                                    <p class="help-block">A short, unique name for this entry which will be used in
-                                        URLs.</p>
+                                    <p class="help-block">The title of the entry</p>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-2" for="name">Short Name</label>
                                 <div class="col-md-4">
                                     <input class="form-control" data-template="app:edit-name" type="text" name="name" placeholder="ShortName" required="required" pattern="[A-Za-zäöüÄÖÜ]{1}[\w-äöüßÄÖÜ]{2,}"/>
-                                    <span class="help-block">First sign just a letter, at least three characters required. No spaces.</span>
+                                    <span class="help-block">A short, unique name for this entry which will be used in
+                                        URLs. First sign just a letter, at least three characters required. No spaces.</span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -552,6 +553,7 @@
                                     </select>
                                 </div>
                             </div>
+                            <input type="hidden" name="title" value=""/>
                         </form>
                         <div class="gallery-container">
                             <div class="header">

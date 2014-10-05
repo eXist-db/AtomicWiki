@@ -17,10 +17,11 @@ declare variable $store:ERROR := xs:QName("store:error");
 
 declare function store:store-resource($collection, $name, $content, $mediaType) {
     let $found := 
-        if ($content instance of element()) then 
+        if ($content instance of element(atom:entry)) then 
             collection($config:wiki-root)//atom:feed[atom:id = $content/atom:id]
         else
             ()
+    let $log := console:log($content)
     let $delete-if-exists := 
         for $item in $found 
         return
@@ -31,8 +32,10 @@ declare function store:store-resource($collection, $name, $content, $mediaType) 
     let $permissions :=                    
         if ($owner != xmldb:get-current-user()) then
             ()
-        else
+        else (
+            console:log($stored || " current user: " || xmldb:get-current-user() || "; owner: " || $owner),
             acl:change-permissions($stored)
+        )
     return $permissions
 };
 
@@ -192,7 +195,7 @@ declare function store:gallery($gallery as node()) {
     
     let $atomResource := $gallery/@name || ".atom"
     let $coll4 := store:create-collection(replace($collection1, '/_galleries', '') || "/_galleries")
-    let $log := util:log("WARN", ("Creating Gallery: " || $atomResource || " at " || $coll4))
+    let $log := console:log(("Creating Gallery: " || $atomResource || " at " || $coll4))
     let $stored := store:store-resource($coll4, $atomResource, $feed, "application/atom+xml")
     return
         <result status="ok"/>
@@ -239,7 +242,6 @@ declare function store:article() {
     let $contentData := if ($editor = "markdown") then $contentParsed else store:process-html($contentParsed)
     let $summaryData := if ($editor = "markdown") then $summaryParsed else store:process-html($summaryParsed)
     let $contentType := if ($editType = "html") then "html" else $editType
-    let $log := console:log(("content ", $contentData))
     let $old := util:expand(collection($config:wiki-root)/atom:entry[atom:id = $id])
     let $entry :=
         <atom:entry>
