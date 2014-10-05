@@ -787,6 +787,7 @@ Atomic.editor.ImageLink = (function () {
             }
             console.log("Image added: %s: %s", imageURL, imageTitle);
             $("#image-dialog input[name='url']").val(imageURL);
+            $("#image-dialog input[name='title']").val(imageTitle);
         }); 
         this.dialog.find("#query-images").click(function (ev) {   
             console.debug("clicke on load images button!");

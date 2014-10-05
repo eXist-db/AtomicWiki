@@ -7,6 +7,7 @@ Atomic.users = (function () {
     function User() {
         this.id = ko.observable("");
         this.name = ko.observable();
+        this.manager = ko.observable(false);
         this.password1 = ko.observable();
         this.password2 = ko.observable();
         
@@ -52,6 +53,10 @@ Atomic.users = (function () {
             dataType: "json",
             timeout: 10000,
             success: function(data) {
+                if (data.status == "access-denied") {
+                    Atomic.util.Dialog.error("Retrieving Groups Failed", data.message, "fa-exclamation");
+                    return;
+                }
                 if (!viewModel) {
                     viewModel = ko.mapping.fromJS(data);
                     viewModel.selectedGroup = ko.observable();
@@ -66,8 +71,9 @@ Atomic.users = (function () {
                     ko.mapping.fromJS(data, viewModel);
                 }
                 if (selected) {
+                    console.log("selected: %s", selected);
                     $.each(viewModel.group(), function(i, group) {
-                        if (group.name() == selected) {
+                        if (group.label() == selected) {
                             viewModel.selectedGroup(group);
                         }
                     });
@@ -88,16 +94,29 @@ Atomic.users = (function () {
                 if (data.status == "error") {
                     Atomic.util.Dialog.error("Group Creation Failed", data.message, "fa-exclamation");
                 } else {
-                    Atomic.users.loadGroups(name);
                     model.newGroup.name("");
                     model.newGroup.description("");
+                    Atomic.users.loadGroups(name);
                 }
             }
         });
     }
     
+    function setManager(user) {
+        var group = viewModel.selectedGroup().name();
+        $.getJSON("modules/users.xql", { mode: "set-manager", id: user.id(), group: group, set: !user.manager()},
+            function(data) {
+                if (data.status == "error") {
+                    Atomic.util.Dialog.error("Changing Group Manager Failed", data.message, "fa-exclamation");
+                } else {
+                    $.log("changed group manager");
+                }
+            }
+        );
+    }
+    
     function getLabel(item) {
-        var name = item.name().replace(/^wiki\./, "");
+        var name = item.label();
         if (item.description()) {
             return name + ' (' + item.description() + ')';
         } else {
@@ -107,17 +126,18 @@ Atomic.users = (function () {
     
     function addUser(model) {
         var group = model.selectedGroup().name();
+        var label = model.selectedGroup().label();
         var user = model.addUser();
         if (user) {
             $.log("Adding user %s to group %s", model.addUser(), group);
-            $.getJSON("modules/users.xql", { mode: "add-user", id: model.addUser(), group: group},
+            $.getJSON("modules/users.xql", { mode: "add-user", id: escape(model.addUser()), group: group},
                 function(data) {
                     if (data.status == "notfound") {
                         Atomic.util.Dialog.confirm("User Not Found", "User " + user + " does not exist. Create it?", function() {
                             model.newUser.reset(user);
                         });
                     } else {
-                        Atomic.users.loadGroups(group);
+                        Atomic.users.loadGroups(label);
                         model.addUser("");
                     }
                 }
@@ -129,13 +149,46 @@ Atomic.users = (function () {
     
     function removeUser(item) {
         var group = viewModel.selectedGroup().name();
+        var label = viewModel.selectedGroup().label();
         $.log("Removing user %s from group %s", item.id(), group);
         $.getJSON("modules/users.xql", { mode: "remove-user", id: item.id(), group: group},
             function(data) {
-                Atomic.users.loadGroups(group);
+                Atomic.users.loadGroups(label);
                 model.addUser("");
             }
         );
+    }
+    
+    function renameGroup(model) {
+        var name = model.selectedGroup().label();
+        $.getJSON("modules/users.xql", { mode: "rename-group", name: name, group: model.selectedGroup().name() },
+            function(data) {
+                if (data.status == "error") {
+                    Atomic.util.Dialog.error("Renaming Group Failed", data.message, "fa-exclamation");
+                } else {
+                    Atomic.users.loadGroups(name);
+                }
+            }
+        );
+    }
+    
+    function deleteGroup(model) {
+        var name = model.selectedGroup().label();
+        if (name == "users") {
+            Atomic.util.Dialog.error("Delete Failed", "You cannot delete the users group", "fa-exclamation");
+            return;
+        }
+        Atomic.util.Dialog.confirm("Delete Group", "Do you really want to delete group " + name + "?", function() {
+            $.getJSON("modules/users.xql", { mode: "delete-group", group: model.selectedGroup().name() },
+                function(data) {
+                    if (data.status == "error") {
+                        Atomic.util.Dialog.error("Deleting Group Failed", data.message, "fa-exclamation");
+                    } else {
+                        Atomic.users.loadGroups(name);
+                    }
+                }
+            );
+        });
     }
     
     return {
@@ -143,26 +196,23 @@ Atomic.users = (function () {
         createGroup: createGroup,
         getLabel: getLabel,
         addUser: addUser,
-        removeUser: removeUser
+        removeUser: removeUser,
+        renameGroup: renameGroup,
+        deleteGroup: deleteGroup,
+        setManager: setManager
     };
 })();
 
 $(document).ready(function() {
-    var users = new Bloodhound({
-        datumTokenizer: function(d) {
-            return Bloodhound.tokenizers.whitespace(d.value);
-        },
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        local: [],
-        remote: 'modules/users.xql?mode=users&q=%QUERY'
-    });
      
-    users.initialize();
-     
-    $('.typeahead').typeahead(null, {
-      name: 'users',
-      displayKey: 'value',
-      source: users.ttAdapter()
+    $('.typeahead').typeahead({
+        items: 30,
+        minLength: 2,
+        source: function(query, callback) {
+            $.getJSON("modules/users.xql?mode=users&q=" + query, function(data) {
+                callback(data || []);
+            });
+        }
     });
     
     Atomic.users.loadGroups();

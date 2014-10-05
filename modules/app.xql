@@ -2,6 +2,8 @@ xquery version "3.0";
 
 module namespace app="http://exist-db.org/xquery/app";
 
+
+import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace atomic="http://atomic.exist-db.org/xquery/atomic" at "atomic.xql";
 import module namespace templates="http://exist-db.org/xquery/templates";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
@@ -17,6 +19,9 @@ declare namespace html="http://www.w3.org/1999/xhtml";
 declare variable $app:months := ('January', 'February', 'March', 'April', 'May', 'June', 'July', 
     'August', 'September', 'October', 'November', 'December');
 
+declare variable $app:baseURL := $config:exist-home || request:get-attribute("$exist:prefix") || "/" || 
+    substring-after($config:app-root, repo:get-root());
+    
 declare function app:feed($node as node(), $model as map(*)) {
     let $feed := request:get-attribute("feed")
     return
@@ -169,6 +174,32 @@ function app:create-entry($node as node(), $model as map(*), $title as xs:string
         </atom:entry>
     return
         map { "entry" := $entry, "count" := 1 }
+};
+
+declare
+    %templates:wrap
+function app:breadcrumbs($node as node(), $model as map(*)) {
+    let $path := substring-after(document-uri(root($model("entry"))), $config:wiki-root)
+    let $steps := (reverse(app:breadcrumbs($path)), $model("entry"))
+    for $step in $steps
+    return
+        if ($step instance of element(atom:feed)) then
+            <li><a href="{config:feed-url($step)}">{$step/atom:title/text()}</a></li>
+        else
+            <li>{$step/atom:title/text()}</li>
+};
+
+declare function app:breadcrumbs($path as xs:string) {
+    let $path := replace($path, "^(.*)/[^/]+/?$", "$1")
+    let $feed := xmldb:xcollection($config:wiki-root || $path)/atom:feed
+    let $log := console:log("wiki", ($config:wiki-root || $path, $feed))
+    return (
+        $feed,
+        if (contains($path, "/")) then
+            app:breadcrumbs($path)
+        else
+            ()
+    )
 };
 
 declare function app:set-form-action($node as node(), $model as map(*)) {
@@ -628,7 +659,7 @@ declare function app:check-access($node as node(), $model as map(*)) {
                 if ($collection and xmldb:collection-available($collection)) then
                     let $feed := xmldb:xcollection($collection)//atom:feed
                     return
-                        if (sm:has-access(xs:anyURI(document-uri(root($feed))), "w")) then
+                        if ($feed and sm:has-access(xs:anyURI(document-uri(root($feed))), "w")) then
                             templates:process($node/*[2], $model)
                         else
                             templates:process($node/*[1], $model)

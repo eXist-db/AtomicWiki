@@ -26,7 +26,14 @@ declare function local:mkcol($collection, $path) {
     local:mkcol-recursive($collection, tokenize($path, "/"))
 };
 
+declare function local:setuid($path as xs:anyURI) {
+    sm:chown($path, "admin"),
+    sm:chgrp($path, "dba"),
+    sm:chmod($path, "rwsr-xr-x")
+};
+
 anno:create-collection(),
+local:setuid(xs:anyURI($target || "/modules/users.xql")),
 local:mkcol("/db", "resources/commons"),
 sm:chgrp(xs:anyURI("/db/resources"), $config:default-group),
 sm:chgrp(xs:anyURI("/db/resources/commons"), $config:default-group),

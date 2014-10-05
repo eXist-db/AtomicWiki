@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html>
     <head>
-        <title>Atomic Wiki</title>
+        <title data-template="theme:title">Atomic Wiki</title>
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="shortcut icon" href="$shared/resources/images/exist_icon_16x16.ico"/>
-        <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
+        <link rel="stylesheet" type="text/css" href="theme/resources/css/wiki.css"/>
+        <link rel="stylesheet" type="text/css" data-template="theme:css"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/gallery.css"/>
         <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
@@ -15,6 +16,7 @@
         <div class="app:feed">
             <div class="app:entries?count=5 entries">
                 <div class="entry">
+                    <ol class="breadcrumb" data-template="app:breadcrumbs"/>
                     <div class="entryhead">
                         <div class="app:can-edit">
                             <div class="edit-toolbar btn-group">

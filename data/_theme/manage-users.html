@@ -4,17 +4,32 @@
         <title>Atomic Wiki</title>
         <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
         <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" type="text/css" href="theme/resources/css/exist.css"/>
+        <link rel="stylesheet" type="text/css" href="theme/resources/css/wiki.css"/>
+        <link rel="stylesheet" type="text/css" data-template="theme:css"/>
         <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
         <link href="theme/resources/css/manage-users.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="templates:surround?with=templates/page.html&amp;at=content&amp;using=grey-top">
         <div class="col-md-12">
             <form class="form form-horizontal" action="." method="POST">
-                <div class="form-group">
-                    <label class="control-label col-md-3" for="groups">Groups:</label>
+                <div class="form-group group-select">
+                    <label class="control-label col-md-2" for="groups">Groups:</label>
                     <div class="col-md-8">
                         <select name="groups" class="form-control" data-bind="value: selectedGroup, options: group, optionsText: Atomic.users.getLabel"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="current-group">Selected Group:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" data-bind="value: selectedGroup().label"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12 col-md-offset-2">
+                        <button class="btn btn-default" type="button" data-bind="click: Atomic.users.renameGroup">
+                            <i class="fa fa-pencil"/> Rename</button>
+                        <button class="btn btn-default" type="button" data-bind="click: Atomic.users.deleteGroup">
+                            <i class="fa fa-trash-o"/> Delete</button>
                     </div>
                 </div>
                 <div class="row group-toolbar">
@@ -38,6 +53,7 @@
                         <tr>
                             <th>User ID</th>
                             <th>Name</th>
+                            <th>Manager</th>
                             <th/>
                         </tr>
                     </thead>
@@ -45,6 +61,9 @@
                         <tr>
                             <td data-bind="text: id" class="col-md-3"/>
                             <td data-bind="text: name" class="col-md-4"/>
+                            <td class="col-md-1">
+                                <input type="checkbox" data-bind="checked: manager, event: {change: Atomic.users.setManager}"/>
+                            </td>
                             <td class="col-md-1">
                                 <a href="" class="btn btn-default" data-bind="click: Atomic.users.removeUser">
                                     <i class="fa fa-trash-o"/>
@@ -104,7 +123,7 @@
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery-ui.custom.min.js"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery.dynatree.min.js"/>
-        <script type="text/javascript" src="resources/scripts/jquery/typeahead.bundle.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery/bootstrap3-typeahead.min.js"/>
         <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
         <script type="text/javascript" src="resources/scripts/knockout-3.2.0.js"/>
         <script type="text/javascript" src="resources/scripts/knockout.mapping-2.4.1.js"/>

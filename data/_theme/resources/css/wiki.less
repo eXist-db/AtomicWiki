@@ -1,5 +1,5 @@
-@charset "utf-8";
-/* CSS Document */
+
+@import "theme.less";
 
 @import url('bootstrap.min.css');
 @import url('bootstrap-theme.min.css');
@@ -34,12 +34,12 @@ body {
     height: 100%;
   }
   #header {
-    background: #f3f3f3 url(../images/header.gif) top right no-repeat;
+    background: #f3f3f3 url(@headerImage) top right no-repeat;
     height: 120px;
     width: 100%;
   }
   #header a#logo {
-    background-image: url(../images/existdb.png);
+    background-image: url(@logo);
     background-repeat: no-repeat;
     background-position: 50% 80%;
     display: block;
@@ -61,15 +61,6 @@ body {
 }
 #content {
   min-height: 600px;
-}
-#sourceforge {
-  background: url(../images/sourceforge.gif) no-repeat 50%;
-  width: 130px;
-  height: 30px;
-  display: block;
-  margin: 30px auto;
-  text-indent: -999em;
-  overflow: hidden;
 }
 #footer {
   clear: both;
@@ -119,7 +110,7 @@ body {
 .navbar .menu > li > a {
   color: #FFF;
   text-align: center;
-  font: 1.2em/1em "QuicksandBook", "Arial", Helvetica, sans-serif;
+  font: 1.2em/1em @headingsFont;
   padding: 18px 0;
   text-shadow: none;
 }
@@ -247,8 +238,8 @@ body {
 
 p { padding: 0 0 5px 0; }
 
-h1 { font-size: 1.5em; padding: 0px 0 5px; margin: 0; font-weight: bold; "QuicksandBook", "Arial", Helvetica, sans-serif; }
-h2 { font-size: 1.2em; padding: 10px 0; font-weight: bold; font-family: "QuicksandBook", "Arial", Helvetica, sans-serif; letter-spacing: 1px; }
+h1 { font-size: 1.5em; padding: 0px 0 5px; margin: 0; font-weight: bold; font-family: @headingsFont; }
+h2 { font-size: 1.2em; padding: 10px 0; font-weight: bold; font-family: @headingsFont; letter-spacing: 1px; }
 h3 { font-size: 1.2em; padding: 10px 0 5px; margin: 0 0 5px; font-weight: bold; }
 h4 { font-size: 1.1em; padding: 10px 0; font-weight: bold; }
 h5 { font-size: 1.0em; padding: 10px 0; font-weight: bold; }
@@ -269,8 +260,13 @@ blockquote p { padding: 0 0 10px; }
 .hi { background: #FFED3D; }
 
 /* --------------------------------------- Wiki styles ------------------------------------ */
+.breadcrumb {
+    padding-left: 0;
+    margin-bottom: 10px;
+}
+
 .error {
-    font-family: "Ubuntu Mono", "Consolas", monospace;
+    font-family: @codeFont;
     font-size: 112%;
     white-space: pre-wrap;
     width: 100%;
@@ -302,7 +298,7 @@ blockquote p { padding: 0 0 10px; }
 .entry .entrytitle {
     font-size: 38px;
     font-weight: normal;
-    font-family: "QuicksandBook", Arial, Helvetica, sans-serif;
+    font-family: @headingsFont;
     font-variant: normal;
     letter-spacing: -1px;
     margin: 0 0 4px 0;
@@ -343,19 +339,19 @@ blockquote p { padding: 0 0 10px; }
 }
 
 #content .content, #content .content p, #content .content li {
-    font: 19px/28px Georgia, "Times New Roman", Times, serif;
+    font: 19px/28px @textFont;
     color: #555;
 }
 
 .content h1 {
-    font-family: "QuicksandBook", "Arial", Helvetica, sans-serif;
+    font-family: @headingsFont;
     font-size: 1.75em;
     font-weight: bold;
     margin: .8em 0 0 0;
 }
 
 .content h2 {
-    font-family: "QuicksandBook", "Arial", Helvetica, sans-serif;
+    font-family: @headingsFont;
     font-size: 1.33em;
     font-weight: bold;
     margin: .3em 0 0;
@@ -458,7 +454,7 @@ div.alert {
 }
 
 .code {
-    font-family: "Ubuntu Mono", "Menlo", "Consolas", monospace;
+    font-family: @codeFont;
     font-size: 1em;
     /*background: #555555 url(../images/noise.png);*/
     margin: 16px 8px;
@@ -700,7 +696,7 @@ table.permissions td {
 }
 
 .result {
-    font-family: "Ubuntu Mono", "Consolas", monospace;
+    font-family: @codeFont;
     font-size: 112%;
     white-space: pre-wrap;
     width: 100%;

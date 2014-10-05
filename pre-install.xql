@@ -46,6 +46,6 @@ local:create-group($config:users-group, "Group containing all wiki users"),
 if (sm:user-exists($config:default-user[1])) then (
     sm:add-group-member($config:default-group, $config:default-user[1]),
     sm:add-group-member($config:users-group, $config:default-user[1]),
-    sm:add-group-member("dba", $config:default-user[1])
+    sm:add-group-member($config:admin-group, $config:default-user[1])
 ) else
     sm:create-account($config:default-user[1], $config:default-user[2], $config:default-group, ($config:admin-group, "dba"))

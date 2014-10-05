@@ -2,12 +2,13 @@ xquery version "3.0";
 
 module namespace gallery="http://exist-db.org/apps/wiki/gallery";
 
-
 import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace dbutil="http://exist-db.org/xquery/dbutil" at "xmldb:exist:///db/apps/shared-resources/content/dbutils.xql";
 import module namespace templates="http://exist-db.org/xquery/templates";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "themes.xql";
+import module namespace atomic="http://atomic.exist-db.org/xquery/atomic" at "atomic.xql";
+
 
 declare namespace vra="http://www.vraweb.org/vracore4.htm";
 declare namespace atom="http://www.w3.org/2005/Atom";
@@ -68,7 +69,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
 
                     let $contentSrc := $entry/atom:content/@src
                     let $contentEntry := collection($config:wiki-root)/atom:entry[atom:id = $contentSrc]
-                    let $contentHtml := doc(util:collection-name($contentEntry) || "/" || $contentEntry/atom:content/@src)/*/*
+                    let $contentHtml := atomic:get-content($contentEntry/atom:content, false())
                     return
                         <li>
                         {
@@ -238,8 +239,11 @@ declare function gallery:build-gallery-edit-menu($node as node(), $model as map(
         let $theme := substring-before($theme, "/_theme")
         let $galleries :=
             for $feed in collection($theme)/atom:feed
-            where ends-with(util:collection-name($feed), "_galleries")
-        return
+            where 
+                ends-with(util:collection-name($feed), "_galleries")
+                and
+                sm:has-access(document-uri(root($feed)), "w")
+            return
                 $feed/atom:title
         return
             <li class="dropdown">
@@ -375,7 +379,7 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
     let $description := collection($config:wiki-root)/atom:entry[atom:id = $src]
     let $html := 
         if ($description/atom:content/@src) then
-            doc(util:collection-name($description) || "/" || $description/atom:content/@src)/*
+            atomic:get-content($description/atom:content, false())
         else()        
     let $entryId := data($description/atom:content/@src)
     
@@ -437,7 +441,8 @@ declare
                     collection($filterCollection)//vra:vra/vra:work[ft:query(.//*, $query)]
             else if($query) then (
                 gallery:local-images(),
-                collection('/db/resources/commons')//vra:vra/vra:work[ft:query(.//*, $query)]
+                collection('/db/resources/commons')//vra:vra/vra:work[ft:query(.//*, $query)],
+                collection('/db/resources/users')//vra:vra/vra:work[ft:query(.//*, $query)]
             )
             else
                 $cached
@@ -450,16 +455,19 @@ declare
         )
     else
         (
-            map {
+            let $output := map {
                 "result" := 
                     if ($filterCollection eq "all") then (
                         gallery:local-images(),
-                        collection('/db/resources/commons')//vra:vra/vra:work
+                        collection('/db/resources/commons')//vra:vra/vra:work,
+                        collection('/db/resources/users')//vra:vra/vra:work
                     ) else if ($filterCollection eq "local") then
                         gallery:local-images()
                     else
                         collection($filterCollection)//vra:vra/vra:work
             }
+            return
+                $output
         )
 };
 
@@ -546,12 +554,9 @@ function gallery:pagination-next($node as node(), $model as map(*), $start as xs
             ()
 };
 
-declare
-    %templates:wrap
-    function gallery:result-image($node as node(), $model as map(*)) {    
-        let $entry := $model("entry")    
-        let $image := ($entry//vra:relationSet/vra:relation[@pref='true'] | $entry//vra:relationSet/vra:relation[not(@pref)])[1]
-        
+declare function gallery:result-image($node as node(), $model as map(*)) {    
+        let $entry := $model("entry")
+        for $image in $entry//vra:relationSet/vra:relation[not(@relids) or starts-with(@relids, "i_")]
         let $serverPath := $config:image-server
         let $serverPort := $config:image-server-port
         let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
@@ -565,20 +570,43 @@ declare
                 $imageURL
             else
                 $config:base-url || substring-after($image/@href, $config:wiki-root)
+        let $title := 
+            ($entry//vra:titleSet/vra:title[@pref='true'],$entry//vra:titleSet/vra:title[not(@pref) or @pref='false'])[1]/text()
         return 
-            (
-                <a href="#" class="add-image"> </a>,  
-                <img src="{$imageURL}{$imageOption}" class="relatedImage" title="{$entry//vra:titleSet/vra:title[@pref='true']/text()}"/>,                                       
+            <li class="ui-widget-content">
+                <a href="#" class="add-image"> </a>
+                <img src="{$imageURL}{$imageOption}" class="relatedImage" title="{$title}"/>
                 <div style="display:none">                    
                     <div class="image-id">{data($image/@relids)}</div>
-                    <div class="image-title">{$entry//vra:titleSet/vra:title[@pref='true']/text()}</div>
+                    <div class="image-title">{$title}</div>
                     <div class="image-work-record">{$entry/@id}</div>
                     <div class="image-url">{string($href)}</div>
                     <div class="image-url-rel">{substring-after($image/@href, $config:wiki-root)}</div>
                 </div>
-            )
+            </li>
     };
     
+declare 
+    %templates:wrap
+function gallery:get-ziziphus-collections1($node as node(), $model as map(*)) {
+(:        let $workRecords := distinct-values(collection('/db/resources/commons')//vra:vra/vra:work/@refid):)
+(:        for $workRecord in $workRecords:)
+(:        return :)
+(:            <option value="{$workRecord}">{collection('/db/resources/commons')//vra:vra/vra:work[@refid=$workRecord][1]/@source/string()}</option>:)
+    let $collections :=
+        for $root in (xs:anyURI("/db/resources/commons"), xs:anyURI("/db/resources/users"))
+        return
+            dbutil:scan-collections($root, function($collection) {
+                if (not(matches($collection, ".*/VRA_images/?$")) and sm:has-access($collection, "rx")) then
+                    $collection
+                else
+                    ()
+            })
+    for $collection in $collections
+    return
+        <option value="{$collection}">{replace($collection, ".*/([^/]+)$", "$1")}</option>
+};
+
 declare 
     %templates:wrap
 function gallery:get-ziziphus-collections($node as node(), $model as map(*)) {
@@ -587,14 +615,12 @@ function gallery:get-ziziphus-collections($node as node(), $model as map(*)) {
 (:        return :)
 (:            <option value="{$workRecord}">{collection('/db/resources/commons')//vra:vra/vra:work[@refid=$workRecord][1]/@source/string()}</option>:)
     let $collections :=
-        dbutil:scan-collections(xs:anyURI("/db/resources/commons"), function($collection) {
-            if (not(matches($collection, ".*/VRA_images/?$")) and sm:has-access($collection, "rx")) then
-                $collection
-            else
-                ()
-        })
+        distinct-values(
+            for $work in (collection("/db/resources/commons"), collection("/db/resources/users"))//vra:vra/vra:work
+            return
+                util:collection-name($work)
+        )
     for $collection in $collections
     return
         <option value="{$collection}">{replace($collection, ".*/([^/]+)$", "$1")}</option>
 };
-

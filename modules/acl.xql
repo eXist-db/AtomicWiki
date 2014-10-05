@@ -11,6 +11,17 @@ declare %private function acl:set-perm($value as item()?, $flag as xs:string) {
     if ($value) then $flag else "-"
 };
 
+declare %private function acl:clear-aces($path as xs:anyURI, $permissions as document-node()) {
+    for $ace in $permissions//sm:ace
+    order by xs:int($ace/@index) descending
+    return
+        try {
+            sm:remove-ace($path, $ace/@index)
+        } catch * {
+            console:log("Failed to remove ace: " || $ace/@index)
+        }
+};
+
 declare function acl:change-permissions($path as xs:string) {
     let $private := request:get-parameter("perm-private", ())
     let $public-read := request:get-parameter("perm-public-read", ())
@@ -19,23 +30,21 @@ declare function acl:change-permissions($path as xs:string) {
     let $group-read := request:get-parameter("perm-group-read", ())
     let $group-write := request:get-parameter("perm-group-write", ())
     let $group-perms := acl:set-perm($group-read or $group-write, "r") || acl:set-perm($group-write, "w")
-    let $reg-perms := "r-"
-    let $permissions := sm:get-permissions(xs:anyURI($path))
+    let $reg-perms := "--"
     return (
         (: Change main group :)
         (: Need to switch to the user who created the group :)
         sm:chgrp($path, $config:default-group),
-        for $ace in $permissions//sm:ace
+        let $permissions := sm:get-permissions(xs:anyURI($path))
         return
-            sm:remove-ace($path, $ace/@index),
-(:        if ($permissions//sm:ace[@who = $config:users-group]) then:)
-(:            ():)
-(:        else:)
-(:            sm:add-group-ace($path, $config:users-group, true(), "rw-"),:)
+            acl:clear-aces($path, $permissions),
+        (: admin group members can always write :)
+        sm:add-group-ace($path, $config:admin-group, true(), "rw"),
         if ($private) then
             sm:chmod($path, "rw-------")
         else
             sm:chmod($path, "rw-" || $reg-perms || "-" || $public-perms),
+        console:log("group: " || $group || "; " || $group-perms),
         if ($group != "" and $group != $config:default-group and $group-perms != "--") then
             sm:add-group-ace($path, $group, true(), $group-perms)
         else
@@ -44,21 +53,26 @@ declare function acl:change-permissions($path as xs:string) {
 };
 
 declare function acl:change-collection-permissions($path as xs:string) {
-    sm:chmod($path, "rwxrwxr-x"),
+    sm:chmod($path, "rwxr-xr-x"),
     sm:chgrp($path, $config:default-group),
     let $group := request:get-parameter("perm-group", ())
     let $group-read := request:get-parameter("perm-group-read", ())
     let $group-write := request:get-parameter("perm-group-write", ())
     let $group-perms := acl:set-perm($group-read or $group-write, "r") || acl:set-perm($group-write, "w")
-    return
+    return (
         if ($group != "" and $group != $config:default-group and $group-perms != "--") then
             sm:add-group-ace($path, $group, true(), $group-perms)
         else
-            ()
+            (),
+        sm:add-group-ace($path, $config:admin-group, true(), "rw")
+    )
 };
 
 declare function acl:get-user-name() {
-    let $user := xmldb:get-current-user()
+    acl:get-user-name(xmldb:get-current-user())
+};
+
+declare function acl:get-user-name($user) {
     let $first :=
         sm:get-account-metadata($user, xs:anyURI("http://axschema.org/namePerson/first"))
     return
@@ -72,13 +86,26 @@ declare function acl:get-user-name() {
                     $user
 };
 
-declare function acl:if-admin-user($node as node(), $model as map(*)) {
+declare 
+    %templates:default("allow-manager", "false")
+function acl:if-admin-user($node as node(), $model as map(*), $allow-manager as xs:boolean) {
     let $user := xmldb:get-current-user()
+    let $groups := sm:get-user-groups($user)
+    let $isManager :=
+        if ($allow-manager) then
+            some $group in $groups satisfies
+                try {
+                    $user = sm:get-group-managers($group)
+                } catch * {
+                    ()
+                }
+        else
+            false()
     return
-        if (sm:is-dba($user)) then
+        if (sm:is-dba($user) or $config:admin-group = $groups or $isManager) then
             element { node-name($node) } {
                 $node/@*,
-                templates:process($node/*, $model)
+                templates:process($node/node(), $model)
             }
         else
             ()
@@ -87,6 +114,7 @@ declare function acl:if-admin-user($node as node(), $model as map(*)) {
 declare 
     %templates:default("modelItem", "entry")
 function acl:show-permissions($node as node(), $model as map(*), $modelItem as xs:string?) {
+    let $log := console:log("current user: " || xmldb:get-current-user())
     let $doc := document-uri(root($model($modelItem)))
     return
         if (doc-available($doc)) then
@@ -94,9 +122,11 @@ function acl:show-permissions($node as node(), $model as map(*), $modelItem as x
             let $owner := $permissions//@owner/string()
             return
                 if ($owner != xmldb:get-current-user()) then
-                    <tr>
-                        <td>Only the user who created an article is allowed to change permissions.</td>
-                    </tr>
+                    <p>
+                        Only the user who created an article is allowed to change permissions.
+                        Please contact the creator (<strong>{$owner}</strong>) or an administrator.
+                        { console:log("doc: " || $doc) }
+                    </p>
                 else
                     let $processed := templates:copy-node($node, map:new(($model, map { "permissions" := $permissions })))
                     return
@@ -147,15 +177,6 @@ declare
     %templates:wrap
 function acl:group-select($node as node(), $model as map(*)) {
     <option value="">none</option>,
-    <option value="{$config:default-group}">
-    {
-        if (matches($model("permissions")//sm:permission/@mode, "^...rw?")) then
-            attribute selected { "selected" }
-        else
-            ()
-    }
-    All registered users
-    </option>,
     let $currentGroup := $model("permissions")//sm:ace[starts-with(@who, "wiki.")][@target = "GROUP"][@access_type="ALLOWED"][1]/@who
     for $group in sm:find-groups-by-groupname("wiki.")
     return
@@ -167,5 +188,17 @@ function acl:group-select($node as node(), $model as map(*)) {
                 ()
         }
         { substring-after($group, "wiki.") }
+        </option>
+};
+
+declare
+    %templates:wrap
+function acl:domains($node as node(), $model as map(*)) {
+    <option value="">Local</option>,
+    for $domain at $pos in $config:wiki-config/configuration/users/domain
+    return
+        <option value="{$domain/string()}">
+        {if ($pos = 1) then attribute selected { "selected" } else ()}
+        {$domain/@name/string()}
         </option>
 };

@@ -3,8 +3,29 @@ xquery version "3.0";
 module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
+import module namespace templates="http://exist-db.org/xquery/templates";
 
 declare variable $theme:feed-collection := "_theme";
+
+declare variable $theme:config := 
+    let $feed := request:get-attribute("feed")
+    let $themeColl := theme:theme-for-feed(util:collection-name($feed))
+    return
+        doc($themeColl || "/theme.xml")/theme;
+
+declare
+    %templates:wrap
+function theme:title($node as node(), $model as map(*)) {
+    $theme:config/title/node()
+};
+
+declare
+    %templates:wrap
+function theme:css($node as node(), $model as map(*)) {
+    for $css in $theme:config/css
+    return
+        <link rel="stylesheet" type="text/css" href="theme/{$css}"/>
+};
 
 declare function theme:parent-collection($collection as xs:string) as xs:string? {
     if (matches($collection, "^/db/?$")) then
