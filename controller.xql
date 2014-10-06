@@ -128,13 +128,16 @@ try {
                 <forward url="{$exist:controller}/modules/images.xql"/>
             </dispatch>
             
-        else if ($exist:resource = "ImageSelector.html") then 
-             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                {login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)}
-                <view>
-                    <forward url="{$exist:controller}/modules/view.xql"/>
-                </view>
-            </dispatch>
+        else if ($exist:resource = "ImageSelector.html") then
+            let $login := login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)
+            let $url := local:get-url($root)
+            return
+                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                    <forward url="{$url}"/>
+                    <view>
+                        <forward url="{$exist:controller}/modules/view.xql"/>
+                    </view>
+                </dispatch>
         
         else if (ends-with($exist:resource, ".xql")) then
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">

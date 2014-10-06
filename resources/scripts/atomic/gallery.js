@@ -114,7 +114,7 @@ function loadImages(start, max) {
     // are creating collections for wiki sections
     $.ajax({
         type: "POST",
-        url: "/exist/apps/wiki/data/_theme/ImageSelector.html",
+        url: "ImageSelector.html",
         data:data,
         complete: function() {
             $.log("updating gallery completed");
