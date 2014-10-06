@@ -441,7 +441,7 @@ declare
                     collection($filterCollection)//vra:vra/vra:work[ft:query(.//*, $query)]
             else if($query) then (
                 gallery:local-images(),
-                collection('/db/resources/commons')//vra:vra/vra:work[ft:query(.//*, $query)],
+                collection('/db/resoces/commons')//vra:vra/vra:work[ft:query(.//*, $query)],
                 collection('/db/resources/users')//vra:vra/vra:work[ft:query(.//*, $query)]
             )
             else
@@ -472,29 +472,32 @@ declare
 };
 
 declare function gallery:local-images() {
-    dbutil:scan(xs:anyURI($config:wiki-root), function($collection, $resource) {
-        if (not(contains($collection, "_theme")) and $resource and util:is-binary-doc($resource)) then
-            let $mime := xmldb:get-mime-type($resource)
-            return
-                if ($mime = ("image/jpeg", "image/png")) then
-                    let $uuid := util:uuid()
-                    let $vra :=
-                        <work xmlns="http://www.vraweb.org/vracore4.htm" id="w_{$uuid}" source="local">
-                            <titleSet>
-                                <display/>
-                                <title type="generalView">{$resource}</title>
-                            </titleSet>
-                            <relationSet>
-                                <relation type="imageIs" href="{$resource}">general view</relation> 
-                            </relationSet>
-                        </work>
-                    return
-                        $vra
-                else
-                    ()
-        else
-            ()
-    })
+    let $feed := request:get-attribute("feed")
+    let $path := if ($feed) then util:collection-name($feed) else $config:wiki-root
+    return
+        dbutil:scan(xs:anyURI($path), function($collection, $resource) {
+            if (not(contains($collection, "_theme")) and $resource and util:is-binary-doc($resource)) then
+                let $mime := xmldb:get-mime-type($resource)
+                return
+                    if ($mime = ("image/jpeg", "image/png")) then
+                        let $uuid := util:uuid()
+                        let $vra :=
+                            <work xmlns="http://www.vraweb.org/vracore4.htm" id="w_{$uuid}" source="local">
+                                <titleSet>
+                                    <display/>
+                                    <title type="generalView">{$resource}</title>
+                                </titleSet>
+                                <relationSet>
+                                    <relation type="imageIs" href="{$resource}">general view</relation> 
+                                </relationSet>
+                            </work>
+                        return
+                            $vra
+                    else
+                        ()
+            else
+                ()
+        })
 };
 
 declare

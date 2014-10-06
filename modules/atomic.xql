@@ -2,7 +2,7 @@ xquery version "3.0";
 
 module namespace atomic="http://atomic.exist-db.org/xquery/atomic";
 
-import module namespace md="http://exist-db.org/xquery/markdown" at "xmldb:exist:///db/apps/markdown/content/markdown.xql";
+import module namespace md="http://exist-db.org/xquery/markdown";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
 declare namespace atom="http://www.w3.org/2005/Atom";

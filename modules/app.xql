@@ -192,7 +192,6 @@ function app:breadcrumbs($node as node(), $model as map(*)) {
 declare function app:breadcrumbs($path as xs:string) {
     let $path := replace($path, "^(.*)/[^/]+/?$", "$1")
     let $feed := xmldb:xcollection($config:wiki-root || $path)/atom:feed
-    let $log := console:log("wiki", ($config:wiki-root || $path, $feed))
     return (
         $feed,
         if (contains($path, "/")) then
