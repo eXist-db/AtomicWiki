@@ -33,12 +33,17 @@ Atomic.sitemap = (function () {
             autoFocus: true,
             keyboard: false,
             onActivate: function(node) {
-                if (node.data.isFolder) {
-                    $(".btn-create-feed,.btn-edit-feed,.btn-new-html,.btn-new-markdown", container).removeAttr("disabled");
-                    $(".btn-create-entry,.btn-edit-entry,.btn-delete-entry", container).attr("disabled", "disabled");
+                console.log("activate %o", node);
+                if (node.data.isFolder && node.data.canWrite) {
+                    $(".btn-create-feed,.btn-edit-feed,.btn-new-html,.btn-new-markdown,.btn-delete-entry", container).removeAttr("disabled");
+                    $(".btn-edit-entry", container).attr("disabled", "disabled");
                 } else {
                     $(".btn-create-feed,.btn-edit-feed,.btn-new-html,.btn-new-markdown", container).attr("disabled", "disabled");
-                    $(".btn-create-entry,.btn-edit-entry,.btn-delete-entry", container).removeAttr("disabled");
+                    if (node.data.canWrite) {
+                        $(".btn-edit-entry,.btn-delete-entry", container).removeAttr("disabled");
+                    } else {
+                        $(".btn-edit-entry,.btn-delete-entry", container).attr("disabled", "disabled");
+                    }
                 }
             },
             onPostInit: function() {
@@ -129,15 +134,25 @@ Atomic.sitemap = (function () {
         .click(function(ev) {
             ev.preventDefault();
             var current = sitemap.dynatree("getActiveNode");
-            if (current && !current.data.isFolder) {
-                Atomic.util.Dialog.confirm("Delete Article?", "This will delete the current article. Are you sure?",
-                    function () {
-                        $.ajax({
-                            url: "?action=delete&id=" + current.data.key,
-                            type: "GET"
-                        });
+            console.log("Delete %o", current);
+            if (current) {
+                var func = function () {
+                    var params;
+                    if (current.data.isFolder) {
+                        params = "collection=" + current.data.collection;
+                    } else {
+                        params = "id=" + current.data.key;
                     }
-                );
+                    $.ajax({
+                        url: "?action=delete&" + params,
+                        type: "GET"
+                    });
+                };
+                if (current.data.isFolder) {
+                    Atomic.util.Dialog.confirm("Delete Feed?", "This will delete the current feed. Are you sure?", func);
+                } else {
+                    Atomic.util.Dialog.confirm("Delete Entry?", "This will delete the current entry. Are you sure?", func);
+                }
             }
         });
         initialized = true;

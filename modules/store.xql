@@ -1,10 +1,10 @@
 xquery version "3.0";
 
-import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace cleanup="http://atomic.exist-db.org/xquery/cleanup" at "cleanup.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace acl="http://atomic.exist-db.org/xquery/atomic/acl" at "acl.xql";
 import module namespace atomic="http://atomic.exist-db.org/xquery/atomic" at "atomic.xql";
+import module namespace md="http://exist-db.org/xquery/markdown";
 
 declare namespace store="http://atomic.exist-db.org/xquery/store";
 declare namespace atom="http://www.w3.org/2005/Atom";
@@ -21,7 +21,6 @@ declare function store:store-resource($collection, $name, $content, $mediaType) 
             collection($config:wiki-root)//atom:feed[atom:id = $content/atom:id]
         else
             ()
-    let $log := console:log($content)
     let $delete-if-exists := 
         for $item in $found 
         return
@@ -33,7 +32,6 @@ declare function store:store-resource($collection, $name, $content, $mediaType) 
         if ($owner != xmldb:get-current-user()) then
             ()
         else (
-            console:log($stored || " current user: " || xmldb:get-current-user() || "; owner: " || $owner),
             acl:change-permissions($stored)
         )
     return $permissions
@@ -195,7 +193,6 @@ declare function store:gallery($gallery as node()) {
     
     let $atomResource := $gallery/@name || ".atom"
     let $coll4 := store:create-collection(replace($collection1, '/_galleries', '') || "/_galleries")
-    let $log := console:log(("Creating Gallery: " || $atomResource || " at " || $coll4))
     let $stored := store:store-resource($coll4, $atomResource, $feed, "application/atom+xml")
     return
         <result status="ok"/>
@@ -303,10 +300,18 @@ declare function store:article() {
                                 "text/x-markdown"
                             default return
                                 "text/html"
-                    let $stored := 
-                        store:store-resource($dataColl, $docName, $contentData, $mediaType)
-                    return
+                    let $stored := store:store-resource($dataColl, $docName, $contentData, $mediaType)
+                    let $content :=
                         <atom:content type="{$contentType}" src="{$docName}"/>
+                    return (
+                        $content,
+                        if ($contentType = "markdown") then
+                            let $htmlData := <div>{md:parse($contentData, $atomic:MD_CONFIG)}</div>
+                            return
+                                store:store-resource($dataColl, $filename || ".html", $htmlData, "text/html")
+                        else
+                            ()
+                    )[1]
                 else
                     <atom:content type="{$contentType}">{ $contentData }</atom:content>
             }
@@ -412,14 +417,23 @@ declare function store:delete-article($article as element(atom:entry)) {
     xmldb:remove(util:collection-name($article), util:document-name($article))
 };
 
+declare function store:delete-feed($collection as xs:string) {
+    xmldb:remove($collection)
+};
+
 declare function store:delete-article() {
     let $id := request:get-parameter("id", ())
-    let $article := collection($config:wiki-root)//atom:entry[atom:id = $id]
+    let $collection := request:get-parameter("collection", ())
     return
-        if ($article) then
-            store:delete-article($article)
-        else
-            error($store:ERROR, "Article with id " || $id || " not found.")
+        if ($collection) then
+            store:delete-feed($collection)
+        else 
+            let $article := collection($config:wiki-root)//atom:entry[atom:id = $id]
+            return
+                if ($article) then
+                    store:delete-article($article)
+                else
+                    error($store:ERROR, "Article with id " || $id || " not found.")
 };
 
 declare function store:validate() {
@@ -436,7 +450,7 @@ let $action := request:get-parameter("action", "store")
 let $id := request:get-parameter("entryId", ())
 let $type := request:get-parameter("ctype", "html")
 return
-(:    try {:)
+    try {
         if (request:get-parameter("validate", ())) then
             store:validate()
         else
@@ -455,6 +469,6 @@ return
                         store:collection()
                 default return
                     ()
-(:    } catch * {:)
-(:        <result><error>{$err:description}</error></result>:)
-(:    }:)
+    } catch * {
+        <result><error>{$err:description}</error></result>
+    }

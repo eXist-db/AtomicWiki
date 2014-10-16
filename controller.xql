@@ -1,6 +1,5 @@
 xquery version "3.0";
 
-import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "modules/config.xqm";
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "modules/themes.xql";
 import module namespace login="http://exist-db.org/xquery/login" at "modules/login.xql";
@@ -98,7 +97,7 @@ try {
                 <forward url="{$exist:controller}/data/_theme/code-edit.html"/>
             </dispatch>
         
-        else if ($exist:resource = "edit-feed.html") then
+        else if ($exist:resource = ("edit-feed.html", "manage-users.html", "search.html", "ImageSelector.html")) then
             let $user := login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)
             let $url := local:get-url($root)
             return
@@ -109,35 +108,11 @@ try {
                         <forward url="{$exist:controller}/modules/view.xql"></forward>
                     </view>
                 </dispatch>
-                
-        else if ($exist:resource = "manage-users.html") then (
-            login:set-user("org.exist.wiki.login", (), false(), local:check-user#1),
-            let $url := local:get-url($root)
-            return
-                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                    <forward url="{$url}"></forward>
-                    <view>
-                        <forward url="{$exist:controller}/modules/view.xql">
-                            <set-header name="Cache-Control" value="no-cache"/>
-                        </forward>
-                    </view>
-                </dispatch>
             
-        ) else if ($exist:resource = "images.xql") then
+        else if ($exist:resource = "images.xql") then
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward url="{$exist:controller}/modules/images.xql"/>
             </dispatch>
-            
-        else if ($exist:resource = "ImageSelector.html") then
-            let $login := login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)
-            let $url := local:get-url($root)
-            return
-                <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                    <forward url="{$url}"/>
-                    <view>
-                        <forward url="{$exist:controller}/modules/view.xql"/>
-                    </view>
-                </dispatch>
         
         else if (ends-with($exist:resource, ".xql")) then
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -337,7 +312,7 @@ try {
                     </forward>
                 </dispatch>
         
-        else if (matches($exist:resource, "\.(png|jpg|jpeg|gif|pdf)$", "i")) then
+        else if (matches($exist:resource, "\.(png|jpg|jpeg|gif|pdf|svg)$", "i")) then
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward url="{$exist:controller}/data/{$exist:path}"/>
             </dispatch>
@@ -351,7 +326,6 @@ try {
     return
         $action
 } catch * {
-    console:log("Error: " || $err:description),
     login:set-user("org.exist.wiki.login", (), false(), local:check-user#1),
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <cache-control cache="no"/>
