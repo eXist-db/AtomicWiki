@@ -13,7 +13,7 @@ declare function local:real-user() {
 };
 
 declare function local:check-group($groups as xs:string*) {
-    some $group in $groups satisfies
+    every $group in $groups satisfies
         starts-with($group, "wiki.")
 };
 
