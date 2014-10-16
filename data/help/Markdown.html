@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div>
+    <p>Markdown support in the wiki is based on a parser <a href="https://github.com/wolfgangmm/exist-markdown">written in XQuery</a>. It extends the <a href="http://daringfireball.net/projects/markdown/syntax">original markdown</a> proposal with fenced code blocks and tables. These are additional features found in <a href="https://help.github.com/articles/github-flavored-markdown">Github flavored markdown</a>.</p>
+    <h1>Paragraphs</h1>
+    <p>Paragraphs are separated from following blocks by a blank line. A single line break does <strong>not</strong> start a new paragraph.</p>
+    <h1>Headings</h1>
+    <p>A heading starts with one or more hash signs (#) and extends to the end of the line.</p>
+    <h1>Bold, emphasis and underline</h1>
+    <p>To <em>emphasis</em> a span of text, place a single * or _ around it. Use double ** or __ for stronger emphasis. For example, **bold** will render: <strong>bold</strong>.</p>
+    <h1>Code</h1>
+    <h2>Inline</h2>
+    <p>To format inline code snippets, surround them with a single backtick, e.g. `1 +1`, which renders as <code>1+1</code>. Use two backticks to allow one backtick inside: ```ls``` becomes <code>`ls</code>`.</p>
+    <h2>Code Blocks</h2>
+    <p>A triple backtick ``` on a line starts a code block, which should be closed by another ``` on a single line. Following the opening ``` one may indicate the syntax to be used for highlighting, e.g.</p>
+    <pre class="ext:code?lang=&#xD;">```xquery
+for $i in 1 to 10
+return
+    <li>{$i * 2}</li>
+```
+</pre>
+    <p>This will be rendered as follows:</p>
+    <pre class="ext:code?lang=xquery&#xD;">for $i in 1 to 10
+return
+    <li>{$i * 2}</li>
+    </pre>
+    <h1>Lists</h1>
+    <h2>Simple list</h2>
+    <p>For an unordered list, start each item on a line with a *:</p>
+    <pre class="ext:code?lang=markdown&#xD;">* Buy milk
+* Drink it
+* Be happy
+</pre>
+    <p>becomes formatted as:</p>
+    <ul>
+        <li>Buy milk
+</li>
+        <li>Drink it
+</li>
+        <li>Be happy
+</li>
+    </ul>
+    <p>For an ordered list, each item should start with a number followed by a period (1.):</p>
+    <ol>
+        <li>First item
+</li>
+        <li>Second item
+</li>
+        <li>Third item
+</li>
+    </ol>
+    <h2>Nested list:</h2>
+    <p>Nested lists are created by adding tabs in front of the nested list items:</p>
+    <ol>
+        <li>One
+</li>
+        <li>Two
+<ul>
+                <li>A nested list item
+</li>
+                <li>in an unordered list.
+</li>
+            </ul>
+        </li>
+        <li>Three
+</li>
+        <li>Four
+</li>
+    </ol>
+    <h1>Links</h1>
+    <p>Links can be specified directly or by reference. For example, [this link][1] references a link definition given at the end of the document:</p>
+    <pre class="ext:code?lang=&#xD;">[1]: http://exist-db.org "eXist-db homepage"
+</pre>
+    <p>A direct link is written as</p>
+    <pre class="ext:code?lang=&#xD;">[link text](url "optional alt text")
+</pre>
+    <p>Here's a live example of both link types in action:</p>
+    <p>This <a href="http://exist-db.org" title="eXist-db homepage">link</a> references a link definition given at the end of the document! And here's a direct link to the eXist <a href="http://exist-db.org/exist/apps/docs" title="eXist-db Documentation">documentation</a>.</p>
+    <p>Please note that the () characters need to be escaped within a link.</p>
+    <h2>Absolute and relative links</h2>
+    <p>Every link which does not contain a protocol and host part (http://...) is considered to point to a resource within the wiki space. Relative paths are relative to the current feed, absolute paths are resolved starting at the root feed of the wiki. For example, <code>/help/Markdown</code> references the article with id <em>Markdown</em> inside the <em>help</em> feed.</p>
+    <h1>Images</h1>
+    <p>The syntax for images is similiar to the one for links:</p>
+    <pre class="ext:code?lang=markdown&#xD;">![eXist-db Logo](http://exist-db.org/exist/apps/homepage/resources/img/existdb.gif)
+</pre>
+    <p>inserts the eXistdb Logo:</p>
+    <p>
+        <img src="http://exist-db.org/exist/apps/homepage/resources/img/existdb.gif" alt="eXist-db Logo"/>
+    </p>
+    <p>You can also use a reference at the end of the document to specify the source link of the image. This works in the same way as for hyperlinks:</p>
+    <p>
+        <img src="http://exist-db.org/exist/apps/homepage/resources/img/book-cover.gif" alt="eXist Book" title="eXist Book"/>.</p>
+    <h1>Tables</h1>
+    <p>A full table with headers is formatted as follows:</p>
+    <pre class="ext:code?lang=&#xD;">| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | <strong>centered</strong>  |   $12 |
+| zebra stripes | are neat      |    $1 |
+</pre>
+    <p>This will render as:</p>
+    <table class="table table-bordered">
+        <thead>
+            <th>Tables</th>
+            <th>Are</th>
+            <th>Cool</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="left">col 3 is</td>
+                <td class="center">right-aligned</td>
+                <td class="right">$1600</td>
+            </tr>
+            <tr>
+                <td class="left">col 2 is</td>
+                <td class="center">
+                    <strong>centered</strong>
+                </td>
+                <td class="right">$12</td>
+            </tr>
+            <tr>
+                <td class="left">zebra stripes</td>
+                <td class="center">are neat</td>
+                <td class="right">$1</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>You can also create a simple table without header:</p>
+    <pre class="ext:code?lang=&#xD;">simple table | column1 | column2
+</pre>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td class="">simple table</td>
+                <td class="">column1</td>
+                <td class="">column2</td>
+            </tr>
+        </tbody>
+    </table>
+    <h1>Inline HTML and blocks</h1>
+    <p>You may inline HTML inside a block. For example, we can turn the following <span style="color: red">span of text into red</span>.</p>
+    <p>HTML block-level elements are also supported, but please note that they <strong>must</strong> start and end on a new line, and there should not be any whitespace between the start of the line and the opening/closing element. Anything between the start and end HTML tag will be rendered as HTML. For example, we may use an HTML figure element to include an image:</p>
+    <pre class="ext:code?lang=xml&#xD;">&lt;figure style="float: right"&gt;
+    &lt;img src="/_galleries/london.jpg" width="200"/&gt;
+    <figcaption>An HTML figure</figcaption>
+&lt;/figure&gt;
+</pre>
+    <p>The rendered output is shown below:</p>
+    <figure>
+        <img src="/_galleries/london.jpg" width="200"/>
+        <figcaption>
+            <p>An HTML figure</p>
+        </figcaption>
+    </figure>
+    <p>Contrary to other markdown implementations, text inside HTML blocks will be parsed for markdown markup. You can thus mix HTML and markdown freely, as long as the closing element starts on a separate line with no whitespace in front.</p>
+</div>

@@ -9,6 +9,7 @@ import module namespace app="http://exist-db.org/xquery/app" at "app.xql";
 import module namespace ext="http://atomic.exist-db.org/xquery/extensions" at "extensions.xql";
 import module namespace menu="http://exist-db.org/apps/atomic/menu" at "menu.xql";
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "themes.xql";
+import module namespace search="http://atomic.exist-db.org/xquery/atomic/search" at "search.xql";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 

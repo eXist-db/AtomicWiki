@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <theme>
     <title>Atomic Wiki</title>
+    <!-- Include additional css below using one or more css elements: -->
+    <!--
+    <css>resources/css/theme.css</css>
+    -->
 </theme>

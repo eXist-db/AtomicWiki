@@ -6,6 +6,8 @@
         <link rel="shortcut icon" href="$shared/resources/images/exist_icon_16x16.ico"/>
         <link rel="stylesheet" type="text/css" href="theme/resources/css/wiki.css"/>
         <link rel="stylesheet" type="text/css" data-template="theme:css"/>
+        <link rel="stylesheet" type="text/css" href="theme/resources/css/gallery.css"/>
+        <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
         <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
         <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
@@ -37,6 +39,9 @@
                                 <ul class="menu nav navbar-nav" data-template="site:expand-links">
                                     <li class="menu:site-menu"/>
                                 </ul>
+                                <form class="navbar-form navbar-right form-group" role="search" action="search.html" method="GET">
+                                    <input type="text" name="q" class="form-control" placeholder="Search"/>
+                                </form>
                                 <div class="app:login">
                                     <ul class="nav navbar-nav navbar-right">
                                         <li>

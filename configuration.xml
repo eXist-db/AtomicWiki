@@ -6,14 +6,22 @@
         Relative paths will be resolved relative to the app root.
     -->
     <root>data</root>
-    <!--
-    	If a user element is present, only database users listed in an allow element can
-    	log into the wiki.
-    -->
-    <!--users>
+    <users>
+        <!-- 
+            Additional user domains, e.g. in an LDAP realm can be configured
+            here. This requires the corresponding user realm to be set up properly in eXist.
+        -->
+        <!--domain name="AD">ad.my-domain.org</domain-->
+        <!--
+        	Only database users listed in an allow element can
+        	log into the wiki. This restriction is disabled if no
+        	allow element is present.
+        -->
+        <!--
         <allow user="editor"/>
         <allow user="admin"/>
-    </users-->
+        -->
+    </users>
     <slideshows-enabled>true</slideshows-enabled>
     <!-- 
         Append the following domain to all login names (except admin).

@@ -2,24 +2,11 @@ xquery version "3.0";
 
 module namespace acl="http://atomic.exist-db.org/xquery/atomic/acl";
 
-
-import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace templates="http://exist-db.org/xquery/templates";
 
 declare %private function acl:set-perm($value as item()?, $flag as xs:string) {
     if ($value) then $flag else "-"
-};
-
-declare %private function acl:clear-aces($path as xs:anyURI, $permissions as document-node()) {
-    for $ace in $permissions//sm:ace
-    order by xs:int($ace/@index) descending
-    return
-        try {
-            sm:remove-ace($path, $ace/@index)
-        } catch * {
-            console:log("Failed to remove ace: " || $ace/@index)
-        }
 };
 
 declare function acl:change-permissions($path as xs:string) {
@@ -35,16 +22,13 @@ declare function acl:change-permissions($path as xs:string) {
         (: Change main group :)
         (: Need to switch to the user who created the group :)
         sm:chgrp($path, $config:default-group),
-        let $permissions := sm:get-permissions(xs:anyURI($path))
-        return
-            acl:clear-aces($path, $permissions),
-        (: admin group members can always write :)
-        sm:add-group-ace($path, $config:admin-group, true(), "rw"),
+        sm:clear-acl($path),
         if ($private) then
             sm:chmod($path, "rw-------")
         else
             sm:chmod($path, "rw-" || $reg-perms || "-" || $public-perms),
-        console:log("group: " || $group || "; " || $group-perms),
+        (: admin group members can always write :)
+        sm:add-group-ace($path, $config:admin-group, true(), "rw"),
         if ($group != "" and $group != $config:default-group and $group-perms != "--") then
             sm:add-group-ace($path, $group, true(), $group-perms)
         else
@@ -114,7 +98,6 @@ function acl:if-admin-user($node as node(), $model as map(*), $allow-manager as 
 declare 
     %templates:default("modelItem", "entry")
 function acl:show-permissions($node as node(), $model as map(*), $modelItem as xs:string?) {
-    let $log := console:log("current user: " || xmldb:get-current-user())
     let $doc := document-uri(root($model($modelItem)))
     return
         if (doc-available($doc)) then
@@ -125,7 +108,6 @@ function acl:show-permissions($node as node(), $model as map(*), $modelItem as x
                     <p>
                         Only the user who created an article is allowed to change permissions.
                         Please contact the creator (<strong>{$owner}</strong>) or an administrator.
-                        { console:log("doc: " || $doc) }
                     </p>
                 else
                     let $processed := templates:copy-node($node, map:new(($model, map { "permissions" := $permissions })))
@@ -143,7 +125,7 @@ declare %private function acl:process-permissions($node as node(), $permissions 
                     case "perm-private" return
                         ends-with($permissions/@mode, "------") and
                         (
-                            empty($permissions//sm:ace) or
+                            empty($permissions//sm:ace[@who != $config:admin-group]) or
                             matches(
                                 $permissions//sm:ace[starts-with(@who, "wiki.")][@target = "GROUP"][@access_type="ALLOWED"][1]/@mode,
                                 "-..$"
@@ -155,7 +137,7 @@ declare %private function acl:process-permissions($node as node(), $permissions 
                         matches(
                             $permissions//sm:ace[starts-with(@who, "wiki.")][@target = "GROUP"][@access_type="ALLOWED"][1]/@mode,
                             "r..$"
-                        ) or matches($permissions/@mode, "^...r")
+                        )
                     case "perm-group-write" return
                         matches(
                             $permissions//sm:ace[starts-with(@who, "wiki.")][@target = "GROUP"][@access_type="ALLOWED"][1]/@mode,

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <collection xmlns="http://exist-db.org/collection-config/1.0">
-    <index xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3">
-        <fulltext default="none" attributes="no"/>
+    <index xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:html="http://www.w3.org/1999/xhtml">
+        <fulltext default="none" attributes="false"/>
         <lucene>
+            <text match="/div"/>
+            <text qname="article"/>
+            <text qname="html:article"/>
+            <text match="/html:div"/>
+            <text qname="atom:title"/>
         </lucene>
     </index>
 </collection>

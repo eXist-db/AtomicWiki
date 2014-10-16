@@ -1,259 +1,244 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html>
-    <head>
-        <title data-template="theme:title">Atomic Wiki</title>
-        <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <link rel="shortcut icon" href="$shared/resources/images/exist_icon_16x16.ico"/>
-        <link rel="stylesheet" type="text/css" href="theme/resources/css/wiki.css"/>
-        <link rel="stylesheet" type="text/css" data-template="theme:css"/>
-        <link rel="stylesheet" type="text/css" href="theme/resources/css/gallery.css"/>
-        <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
-        <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
-        <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
-    </head>
-    <body data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content" data-template-using="grey-top">
-        <div class="app:feed">
-            <div class="app:entries?count=5 entries">
-                <div class="entry">
-                    <ol class="breadcrumb" data-template="app:breadcrumbs"/>
-                    <div class="entryhead">
-                        <div class="app:can-edit">
-                            <div class="edit-toolbar btn-group">
-                                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span class="fa fa-wrench"/> Actions <span class="caret"/>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="app:edit-link?action=edit">
-                                            <i class="fa fa-edit"/> Edit</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="app:action-button?action=delete" id="delete-article">
-                                            <i class="fa fa-trash-o"/> Delete</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="app:edit-source" id="view-source">
-                                            <i class="fa fa-code"/> Source</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <h3 class="app:title entrytitle"/>
-                        <div class="author-date">
-                            by <span class="app:author"/> at <span class="app:publication-date-full"/>
-                        </div>
-                    </div>
-                    <div class="app:content content annotatable"/>
-                </div>
-                <footer>
-                    <ul class="pager">
-                        <li class="next">
-                            <a data-template="app:next-page">Older posts <i class="fa fa-chevron-right"/>
-                            </a>
-                        </li>
-                        <li class="previous">
-                            <a data-template="app:previous-page">
-                                <i class="fa fa-chevron-left"/> Newer posts</a>
-                        </li>
-                    </ul>
-                </footer>
-            </div>
-            <div class="modal" id="menu-dialog">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true" class="fa fa-times"/>
-                                <span class="sr-only">Close</span>
+<div data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="app:feed">
+        <div class="app:entries?count=5 entries">
+            <div class="entry">
+                <ol class="breadcrumb" data-template="app:breadcrumbs"/>
+                <div class="entryhead">
+                    <div class="app:can-edit">
+                        <div class="edit-toolbar btn-group">
+                            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="fa fa-wrench"/> Actions <span class="caret"/>
                             </button>
-                            <h3>Edit Menu</h3>
-                        </div>
-                        <div class="modal-body">
-                            <p>Drag entries from the left into the right tree to create menu item</p>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="sitemap-tree"/>
-                                </div>
-                                <div class="col-md-6">
-                                    <form class="form form-inline">
-                                        <input class="form-control" type="text" name="title" placeholder="Add new heading"/>
-                                        <span class="btn-group">
-                                            <a href="#" class="btn btn-default add-heading">
-                                                <i class="fa fa-plus"/>
-                                            </a>
-                                            <a href="#" class="btn btn-default remove-heading">
-                                                <i class="fa fa-minus"/>
-                                            </a>
-                                            <a href="#" class="btn btn-default apply-change">
-                                                <i class="fa fa-check"/>
-                                            </a>
-                                        </span>
-                                        <input type="hidden" name="feed" class="app:feed-path"/>
-                                        <input type="hidden" name="uuid" class="app:feed-id"/>
-                                    </form>
-                                    <div class="menu-tree"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <a class="btn btn-primary apply-button">
-                                <i class="fa fa-check"/> Apply
-                            </a>
-                            <a class="btn-default btn close-button" data-dismiss="modal">
-                                <i class="fa fa-times"/> Cancel
-                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="app:edit-link?action=edit">
+                                        <i class="fa fa-edit"/> Edit</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="app:action-button?action=delete" id="delete-article">
+                                        <i class="fa fa-trash-o"/> Delete</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="app:edit-source" id="view-source">
+                                        <i class="fa fa-code"/> Source</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
+                    <h3 class="app:title entrytitle"/>
+                    <div class="author-date">
+                        by <span class="app:author"/> at <span class="app:publication-date-full"/>
+                    </div>
                 </div>
+                <div class="app:content content annotatable"/>
             </div>
+            <footer>
+                <ul class="pager">
+                    <li class="next">
+                        <a data-template="app:next-page">Older posts <i class="fa fa-chevron-right"/>
+                        </a>
+                    </li>
+                    <li class="previous">
+                        <a data-template="app:previous-page">
+                            <i class="fa fa-chevron-left"/> Newer posts</a>
+                    </li>
+                </ul>
+            </footer>
         </div>
-        <!--div class="modal fade" id="sitemap-dialog">
-            <div class="modal-dialog">
+        <div class="modal" id="menu-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
                             <span aria-hidden="true" class="fa fa-times"/>
                             <span class="sr-only">Close</span>
                         </button>
-                        <h3>Sitemap</h3>
+                        <h3>Edit Menu</h3>
                     </div>
                     <div class="modal-body">
-                        <p>Double click on section or article to navigate to it.</p>
-                        <div class="sitemap"/>
+                        <p>Drag entries from the left into the right tree to create menu item</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="sitemap-tree"/>
+                            </div>
+                            <div class="col-md-6">
+                                <form class="form form-inline">
+                                    <input class="form-control" type="text" name="title" placeholder="Add new heading"/>
+                                    <span class="btn-group">
+                                        <a href="#" class="btn btn-default add-heading">
+                                            <i class="fa fa-plus"/>
+                                        </a>
+                                        <a href="#" class="btn btn-default remove-heading">
+                                            <i class="fa fa-minus"/>
+                                        </a>
+                                        <a href="#" class="btn btn-default apply-change">
+                                            <i class="fa fa-check"/>
+                                        </a>
+                                    </span>
+                                    <input type="hidden" name="feed" class="app:feed-path"/>
+                                    <input type="hidden" name="uuid" class="app:feed-id"/>
+                                </form>
+                                <div class="menu-tree"/>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <a class="btn-primary btn close-button" data-dismiss="modal">
-                            <i class="fa fa-times"/> Close
-                </a>
-                    </div>
-                </div>
-            </div>
-        </div-->
-        <div class="modal fade" id="annotationDialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <a class="close" data-dismiss="modal">
-                            <i class="icon-remove"/>
+                        <a class="btn btn-primary apply-button">
+                            <i class="fa fa-check"/> Apply
                         </a>
-                        <h3>Add Annotation</h3>
-                    </div>
-                    <div class="modal-body">
-                        <div class="annotations"/>
-                        <form class="editor-form">
-                            <div id="annotation-editor-toolbar" style="display: none;" class="header wysihtml5-toolbar">
-                                <ul>
-                                    <li class="dropdown">
-                                        <a class="btn dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-                                            <i class="icon-font"/>&#160;
-                                    <span class="current-font">Normal</span>
-                                            <b class="caret"/>
-                                        </a>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li>
-                                                <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="p">Normal</a>
-                                            </li>
-                                            <li>
-                                                <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">Heading 1</a>
-                                            </li>
-                                            <li>
-                                                <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h2">Heading 2</a>
-                                            </li>
-                                            <li>
-                                                <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h3">Heading 3</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="btn-group">
-                                        <a data-wysihtml5-command="bold" class="btn">
-                                            <i class="icon-bold"/>
-                                        </a>
-                                        <a data-wysihtml5-command="italic" class="btn">
-                                            <i class="icon-italic"/>
-                                        </a>
-                                        <a data-wysihtml5-command="underline" class="btn">
-                                            <i class="icon-underline"/>
-                                        </a>
-                                        <a data-wysihtml5-command="formatInline" data-wysihtml5-command-value="code" class="btn" title="Code">
-                                            <i class="icon-barcode"/>
-                                        </a>
-                                    </li>
-                                    <li class="btn-group">
-                                        <a class="btn" data-wysihtml5-command="justifyLeft" title="Align Left">
-                                            <i class="icon-align-left"/>
-                                        </a>
-                                        <a class="btn" data-wysihtml5-command="justifyRight" title="Align Right">
-                                            <i class="icon-align-right"/>
-                                        </a>
-                                        <a class="btn" data-wysihtml5-command="justifyCenter" title="Center">
-                                            <i class="icon-align-center"/>
-                                        </a>
-                                        <a class="btn" data-wysihtml5-command="justifyFull" title="Justify">
-                                            <i class="icon-align-justify"/>
-                                        </a>
-                                    </li>
-                                    <li class="btn-group">
-                                        <a class="btn" data-wysihtml5-command="insertUnorderedList" title="Insert/Toggle Unordered List">
-                                            <i class="icon-list"/>
-                                        </a>
-                                        <a class="btn" data-wysihtml5-command="insertOrderedList" title="Insert/Toggle Ordered List">
-                                            <i class="icon-th-list"/>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="editor">
-                                <textarea id="annotation-editor" name="text" placeholder="Enter your comment"/>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <a class="btn-primary btn ok-button">
-                            <i class="fa fa-check"/> OK
-                </a>
-                        <a class="btn btn cancel-button">
+                        <a class="btn-default btn close-button" data-dismiss="modal">
                             <i class="fa fa-times"/> Cancel
-                </a>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="annotation-popup"/>
-        <script type="text/javascript" src="resources/scripts/jquery/jquery-ui.custom.min.js"/>
-        <script type="text/javascript" src="resources/scripts/jquery/jquery.dynatree.min.js"/>
-        <script type="text/javascript" src="$shared/resources/scripts/loadsource.js"/>
-        <script type="text/javascript" src="$shared/resources/scripts/ace/ace.js"/>
-        <script type="text/javascript" src="$shared/resources/scripts/ace/mode-javascript.js"/>
-        <script type="text/javascript" src="$shared/resources/scripts/ace/mode-text.js"/>
-        <script type="text/javascript" src="$shared/resources/scripts/ace/mode-xquery.js"/>
-        <script type="text/javascript" src="$shared/resources/scripts/ace/mode-xml.js"/>
-        <script type="text/javascript" src="$shared/resources/scripts/ace/theme-clouds.js"/>
-        <script type="text/javascript" src="$shared/resources/scripts/ace/theme-tomorrow_night.js"/>
-        <script type="text/javascript" src="resources/scripts/atomic/highlight.js"/>
-        <script type="text/javascript" src="resources/scripts/rangy-core.js"/>
-        <script type="text/javascript" src="resources/scripts/jquery.color.js"/>
-        <script type="text/javascript" src="resources/scripts/wysihtml5/wysihtml5-0.4.0pre.min.js"/>
-        <script src="resources/scripts/wysihtml5/simple.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/annotations/util.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/annotations/editor.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/annotations/annotate.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
-        <script src="resources/scripts/atomic/manage.js" type="text/javascript" charset="utf-8"/>
-        <script type="text/javascript" src="resources/scripts/annotations/images.js"/>
-        <script type="text/javascript" src="resources/scripts/galleria/galleria-1.2.9.js"/>
-        <script type="text/javascript" src="resources/scripts/gallery_new.js"/>
-        <script type="text/javascript">
-        $(document).ready(function() {
-            $(".code").highlight({ theme: "clouds" });
-            // var editor = new Annotations.edit.Editor();
-            // var anno = new Annotations.Annotate(editor);
-            /*$(".annotate").each(function() {
-                var imageAnno = new Annotations.image.ImageAnnotation(this, editor);
-                imageAnno.viewer.addEventListener("mouseover", anno, anno.view);
-                imageAnno.viewer.addEventListener("mouseout", anno, anno.hide);
-            });*/
-        });
-        </script>
-    </body>
-</html>
+    </div>
+    <!--div class="modal fade" id="sitemap-dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true" class="fa fa-times"/>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h3>Sitemap</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Double click on section or article to navigate to it.</p>
+                    <div class="sitemap"/>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn-primary btn close-button" data-dismiss="modal">
+                        <i class="fa fa-times"/> Close
+            </a>
+                </div>
+            </div>
+        </div>
+    </div-->
+    <div class="modal fade" id="annotationDialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">
+                        <i class="icon-remove"/>
+                    </a>
+                    <h3>Add Annotation</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="annotations"/>
+                    <form class="editor-form">
+                        <div id="annotation-editor-toolbar" style="display: none;" class="header wysihtml5-toolbar">
+                            <ul>
+                                <li class="dropdown">
+                                    <a class="btn dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+                                        <i class="icon-font"/>&#160;
+                                <span class="current-font">Normal</span>
+                                        <b class="caret"/>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="p">Normal</a>
+                                        </li>
+                                        <li>
+                                            <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">Heading 1</a>
+                                        </li>
+                                        <li>
+                                            <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h2">Heading 2</a>
+                                        </li>
+                                        <li>
+                                            <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h3">Heading 3</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="btn-group">
+                                    <a data-wysihtml5-command="bold" class="btn">
+                                        <i class="icon-bold"/>
+                                    </a>
+                                    <a data-wysihtml5-command="italic" class="btn">
+                                        <i class="icon-italic"/>
+                                    </a>
+                                    <a data-wysihtml5-command="underline" class="btn">
+                                        <i class="icon-underline"/>
+                                    </a>
+                                    <a data-wysihtml5-command="formatInline" data-wysihtml5-command-value="code" class="btn" title="Code">
+                                        <i class="icon-barcode"/>
+                                    </a>
+                                </li>
+                                <li class="btn-group">
+                                    <a class="btn" data-wysihtml5-command="justifyLeft" title="Align Left">
+                                        <i class="icon-align-left"/>
+                                    </a>
+                                    <a class="btn" data-wysihtml5-command="justifyRight" title="Align Right">
+                                        <i class="icon-align-right"/>
+                                    </a>
+                                    <a class="btn" data-wysihtml5-command="justifyCenter" title="Center">
+                                        <i class="icon-align-center"/>
+                                    </a>
+                                    <a class="btn" data-wysihtml5-command="justifyFull" title="Justify">
+                                        <i class="icon-align-justify"/>
+                                    </a>
+                                </li>
+                                <li class="btn-group">
+                                    <a class="btn" data-wysihtml5-command="insertUnorderedList" title="Insert/Toggle Unordered List">
+                                        <i class="icon-list"/>
+                                    </a>
+                                    <a class="btn" data-wysihtml5-command="insertOrderedList" title="Insert/Toggle Ordered List">
+                                        <i class="icon-th-list"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="editor">
+                            <textarea id="annotation-editor" name="text" placeholder="Enter your comment"/>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn-primary btn ok-button">
+                        <i class="fa fa-check"/> OK
+            </a>
+                    <a class="btn btn cancel-button">
+                        <i class="fa fa-times"/> Cancel
+            </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="annotation-popup"/>
+    <script type="text/javascript" src="resources/scripts/jquery/jquery-ui.custom.min.js"/>
+    <script type="text/javascript" src="resources/scripts/jquery/jquery.dynatree.min.js"/>
+    <script type="text/javascript" src="$shared/resources/scripts/loadsource.js"/>
+    <script type="text/javascript" src="$shared/resources/scripts/ace/ace.js"/>
+    <script type="text/javascript" src="$shared/resources/scripts/ace/mode-javascript.js"/>
+    <script type="text/javascript" src="$shared/resources/scripts/ace/mode-text.js"/>
+    <script type="text/javascript" src="$shared/resources/scripts/ace/mode-xquery.js"/>
+    <script type="text/javascript" src="$shared/resources/scripts/ace/mode-xml.js"/>
+    <script type="text/javascript" src="$shared/resources/scripts/ace/theme-clouds.js"/>
+    <script type="text/javascript" src="$shared/resources/scripts/ace/theme-tomorrow_night.js"/>
+    <script type="text/javascript" src="resources/scripts/atomic/highlight.js"/>
+    <script type="text/javascript" src="resources/scripts/rangy-core.js"/>
+    <script type="text/javascript" src="resources/scripts/jquery.color.js"/>
+    <script type="text/javascript" src="resources/scripts/wysihtml5/wysihtml5-0.4.0pre.min.js"/>
+    <script src="resources/scripts/wysihtml5/simple.js" type="text/javascript" charset="utf-8"/>
+    <script src="resources/scripts/annotations/util.js" type="text/javascript" charset="utf-8"/>
+    <script src="resources/scripts/annotations/editor.js" type="text/javascript" charset="utf-8"/>
+    <script src="resources/scripts/annotations/annotate.js" type="text/javascript" charset="utf-8"/>
+    <script src="resources/scripts/atomic/manage.js" type="text/javascript" charset="utf-8"/>
+    <script type="text/javascript" src="resources/scripts/annotations/images.js"/>
+    <script type="text/javascript" src="resources/scripts/galleria/galleria-1.2.9.js"/>
+    <script type="text/javascript" src="resources/scripts/gallery_new.js"/>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $(".code").highlight({ theme: "clouds" });
+        // var editor = new Annotations.edit.Editor();
+        // var anno = new Annotations.Annotate(editor);
+        /*$(".annotate").each(function() {
+            var imageAnno = new Annotations.image.ImageAnnotation(this, editor);
+            imageAnno.viewer.addEventListener("mouseover", anno, anno.view);
+            imageAnno.viewer.addEventListener("mouseout", anno, anno.hide);
+        });*/
+    });
+    </script>
+</div>
