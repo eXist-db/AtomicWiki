@@ -12,6 +12,11 @@ declare function local:real-user() {
     sm:id()//sm:real/sm:username
 };
 
+declare function local:check-group($groups as xs:string*) {
+    some $group in $groups satisfies
+        starts-with($group, "wiki.")
+};
+
 declare function local:find-users() {
     let $query := request:get-parameter("q", ())
     let $users :=
@@ -100,7 +105,7 @@ declare function local:add-user-to-group() {
             false()
         }
     return
-        if ($exists) then (
+        if ($exists and local:check-group($group)) then (
             let $groups := sm:get-user-groups($id)
             return (
                 if ($config:users-group != $groups) then
@@ -124,7 +129,10 @@ declare function local:remove-user() {
     let $id := request:get-parameter("id", ())
     let $group := request:get-parameter("group", ())
     return
-        sm:remove-group-member($group, $id)
+        if (local:check-group($group)) then
+            sm:remove-group-member($group, $id)
+        else
+            <error status="badrequest" message="Group {$group} is not a wiki group"/>
 };
 
 declare function local:edit-user() {
@@ -133,9 +141,12 @@ declare function local:edit-user() {
     let $name := request:get-parameter("name", ())
     let $group := request:get-parameter("group", ())
     return
-        <ok status="ok">
-        {sm:create-account($id, $password, $config:default-group, distinct-values(("wiki.users", $group)), $name, "")}
-        </ok>
+        if (local:check-group($group)) then
+            <ok status="ok">
+            {sm:create-account($id, $password, $config:default-group, distinct-values(("wiki.users", $group)), $name, "")}
+            </ok>
+        else
+            <error status="badrequest" message="Group {$group} is not a wiki group"/>
 };
 
 declare function local:rename-group() {
@@ -145,25 +156,52 @@ declare function local:rename-group() {
     let $managers := sm:get-group-managers($group)
     let $description := (sm:get-group-metadata($group, xs:anyURI("http://exist-db.org/security/description")), "")[1]
     return
-        <ok status="ok">
-        {
-            $members ! sm:remove-group-member($group, .),
-            sm:remove-group($group),
-            sm:create-group($name, $managers, $description)
-        }
-        </ok>
+        if (local:check-group($group)) then
+            <ok status="ok">
+            {
+                $members ! sm:remove-group-member($group, .),
+                sm:remove-group($group),
+                sm:create-group($name, $managers, $description)
+            }
+            </ok>
+        else
+            <error status="badrequest" message="Group {$group} is not a wiki group"/>
 };
 
 declare function local:delete-group() {
     let $group := request:get-parameter("group", ())
     let $members := sm:get-group-members($group)
     return
-        <ok status="ok">
-        {
-            $members ! sm:remove-group-member($group, .),
-            sm:remove-group($group)
-        }
-        </ok>
+        if (local:check-group($group)) then
+            <ok status="ok">
+            {
+                $members ! sm:remove-group-member($group, .),
+                sm:remove-group($group)
+            }
+            </ok>
+        else
+            <error status="badrequest" message="Group {$group} is not a wiki group"/>
+};
+
+declare function local:set-manager() {
+    let $id := request:get-parameter("id", ())
+    let $group := request:get-parameter("group", ())
+    let $set := xs:boolean(request:get-parameter("set", false()))
+    let $managers := sm:get-group-managers($group)
+    return
+        if (local:check-group($group)) then
+            <ok status="ok">
+            {
+                if ($set and not($id = $managers)) then
+                    sm:add-group-manager($group, $id)
+                else if ($id = $managers) then
+                    sm:remove-group-manager($group, $id)
+                else
+                    ()
+            }
+            </ok>
+        else
+            <error status="badrequest" message="Group {$group} is not a wiki group"/>
 };
 
 declare function local:check-user($action as function(*)) {
@@ -181,24 +219,6 @@ declare function local:check-user($action as function(*)) {
             $action()
         else
             <error status="access-denied" message="You are not allowed to edit users"/>
-};
-
-declare function local:set-manager() {
-    let $id := request:get-parameter("id", ())
-    let $group := request:get-parameter("group", ())
-    let $set := xs:boolean(request:get-parameter("set", false()))
-    let $managers := sm:get-group-managers($group)
-    return
-        <ok status="ok">
-        {
-            if ($set and not($id = $managers)) then
-                sm:add-group-manager($group, $id)
-            else if ($id = $managers) then
-                sm:remove-group-manager($group, $id)
-            else
-                ()
-        }
-        </ok>
 };
 
 local:check-user(function() {
