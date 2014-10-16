@@ -8,6 +8,10 @@ declare namespace json="http://www.json.org";
 declare option output:method "json";
 declare option output:media-type "application/json";
 
+declare function local:real-user() {
+    sm:id()//sm:real/sm:username
+};
+
 declare function local:find-users() {
     let $query := request:get-parameter("q", ())
     let $users :=
@@ -24,7 +28,7 @@ declare function local:find-users() {
 };
 
 declare function local:groups() {
-    let $user := request:get-attribute("org.exist.wiki.login.user")
+    let $user := local:real-user()
     let $admins := sm:get-group-members($config:admin-group)
     let $groups := sm:list-groups()[starts-with(., "wiki.")]
     let $groups := 
@@ -163,7 +167,7 @@ declare function local:delete-group() {
 };
 
 declare function local:check-user($action as function(*)) {
-    let $user := request:get-attribute("org.exist.wiki.login.user")
+    let $user := local:real-user()
     let $groups := sm:get-user-groups($user)
     let $isManager :=
         some $group in $groups satisfies
