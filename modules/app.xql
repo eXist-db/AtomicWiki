@@ -380,18 +380,23 @@ declare function app:action-button($node as node(), $model as map(*), $action as
 };
 
 declare function app:edit-source($node as node(), $model as map(*)) {
-    let $href := $model("entry")//atom:content/@src
-    let $source := 
-        if ($href) then
-            util:collection-name($model("entry")) || "/" || $href
-        else
-            document-uri(root($model("entry")))
-    let $eXideLink := templates:link-to-app("http://exist-db.org/apps/eXide", "index.html")
+    let $user := xmldb:get-current-user()
     return
-        <a class="eXide-open" href="{$eXideLink}" target="eXide" data-exide-open="{$source}"
-                title="Opens the code in eXide in new tab or existing tab if it is already open.">
-        { $node/node() }
-        </a>
+    if ($user = sm:get-group-members($config:admin-group)) then
+        let $href := $model("entry")//atom:content/@src
+        let $source := 
+            if ($href) then
+                util:collection-name($model("entry")) || "/" || $href
+            else
+                document-uri(root($model("entry")))
+        let $eXideLink := templates:link-to-app("http://exist-db.org/apps/eXide", "index.html")
+        return
+            <a class="eXide-open" href="{$eXideLink}" target="eXide" data-exide-open="{$source}"
+                    title="Opens the code in eXide in new tab or existing tab if it is already open.">
+            { $node/node() }
+            </a>
+    else
+        ()
 };
 
 declare function app:posted-link($node as node(), $model as map(*)) {
