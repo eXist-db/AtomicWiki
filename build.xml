@@ -25,13 +25,8 @@
                 <include name="data/help/**"/>
                 <include name="data/util/**"/>
                 <include name="data/feed.atom"/>
-                <include name="data/AtomicWikiWelcome.html"/>
-                <include name="data/AtomicWikiWelcome.atom"/>
-                <include name="data/WikiIntro.html"/>
-                <include name="data/WikiIntro.atom"/>
-                <include name="data/Markdown.atom"/>
-                <include name="data/Markdown.md"/>
-                <include name="data/AtomicWikiWelcome.atom"/>
+                <include name="data/Welcome.html"/>
+                <include name="data/Welcome.atom"/>
                 <include name="data/*.png"/>
                 <exclude name=".git*"/>
             </fileset>
