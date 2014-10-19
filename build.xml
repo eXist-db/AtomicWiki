@@ -25,7 +25,7 @@
                 <include name="data/help/**"/>
                 <include name="data/util/**"/>
                 <include name="data/feed.atom"/>
-                <include name="data/Welcome.html"/>
+                <include name="data/Welcome.md"/>
                 <include name="data/Welcome.atom"/>
                 <include name="data/*.png"/>
                 <exclude name=".git*"/>
