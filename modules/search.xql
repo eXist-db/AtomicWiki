@@ -97,7 +97,8 @@ function search:date($node as node(), $model as map(*)) {
 declare function search:kwic($node as node(), $model as map(*)) {
     let $config :=
 		<config width="{$search:CHARS_SUMMARY}" table="no"/>
-    let $matches := kwic:get-matches($model("results"))
+	for $result in $model("results")
+    let $matches := kwic:get-matches($result)
     for $ancestor in ($matches/ancestor::*:p | $matches/ancestor::*:h1 | $matches/ancestor::*:h2 |
         $matches/ancestor::*:h3 | $matches/ancestor::*:h4 | $matches/ancestor::*:div)
     return
