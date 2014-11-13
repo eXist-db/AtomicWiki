@@ -48,6 +48,11 @@
                                             <a href="#loginDialog" data-toggle="modal">
                                                 <span class="fa fa-sign-in"/> Login</a>
                                         </li>
+                                        <li>
+                                            <a class="atom-link navbar-right" data-template="app:atom-link" href="#">
+                                                <span class="fa fa-rss-square fa-lg"/>
+                                            </a>
+                                        </li>
                                     </ul>
                                     <ul class="nav navbar-nav navbar-right feed-toolbar">
                                         <li class="dropdown">
@@ -92,10 +97,23 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li>
-                                            <a href=".?logout=logout" class="navbar-right app:posted-link">
-                                                <span class="fa fa-sign-out"/> Logout <span class="app:user">user</span>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                <span class="fa fa-user"/> User <span id="user" class="app:user">user</span>
+                                                <span class="caret"/>
                                             </a>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a href=".?logout=logout" data-template="app:posted-link">
+                                                        <i class="fa fa-sign-out"/> Logout
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="change-user.html">
+                                                        <i class="fa fa-key"/> Change Password
+                                                    </a>
+                                                </li>
+                                            </ul>
                                         </li>
                                         <li>
                                             <a class="atom-link navbar-right" data-template="app:atom-link" href="#">

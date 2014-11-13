@@ -221,26 +221,43 @@ declare function local:check-user($action as function(*)) {
             <error status="access-denied" message="You are not allowed to edit users"/>
 };
 
-local:check-user(function() {
-    let $mode := request:get-parameter("mode", ())
+declare function local:change-password() {
+    let $user := local:real-user()
+    let $pass := request:get-parameter("password", ())
+    let $log := console:log("wiki", "Changing password for user " || $user || " to " || $pass)
     return
-        switch ($mode)
-            case "create-group" return
-                local:create-group()
-            case "delete-group" return
-                local:delete-group()
-            case "rename-group" return
-                local:rename-group()
-            case "set-manager" return
-                local:set-manager()
-            case "add-user" return
-                local:add-user-to-group()
-            case "edit-user" return
-                local:edit-user()
-            case "remove-user" return
-                local:remove-user()
-            case "groups" return
-                local:groups()
-            default return
-                local:find-users()
-})
+        try {
+            <ok status="ok">{
+                sm:passwd($user, $pass)
+            }</ok>
+        } catch * {
+            <error status="access-denied" message="{$err:message}"/>
+        }
+};
+
+let $mode := request:get-parameter("mode", ())
+return
+    if ($mode = "change-password") then
+        local:change-password()
+    else
+        local:check-user(function() {
+            switch ($mode)
+                case "create-group" return
+                    local:create-group()
+                case "delete-group" return
+                    local:delete-group()
+                case "rename-group" return
+                    local:rename-group()
+                case "set-manager" return
+                    local:set-manager()
+                case "add-user" return
+                    local:add-user-to-group()
+                case "edit-user" return
+                    local:edit-user()
+                case "remove-user" return
+                    local:remove-user()
+                case "groups" return
+                    local:groups()
+                default return
+                    local:find-users()
+        })

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+    <head>
+        <title>Atomic Wiki</title>
+        <link rel="shortcut icon" href="theme/resources/images/favicon.ico"/>
+        <link href="resources/scripts/prettify/prettify.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" type="text/css" href="theme/resources/css/wiki.css"/>
+        <link rel="stylesheet" type="text/css" data-template="theme:css"/>
+        <link href="resources/scripts/jquery/ui.dynatree.css" rel="stylesheet" type="text/css"/>
+        <link href="theme/resources/css/manage-users.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body class="templates:surround?with=templates/page.html&amp;at=content&amp;using=grey-top">
+        <div class="col-md-12">
+            <form name="change-pass" class="form form-horizontal" action="." method="POST">
+                <div class="form-group has-feedback" data-bind="css: { 'has-error': $data.password1() == '' }">
+                    <label class="control-label col-md-3" for="password1">Password</label>
+                    <div class="col-md-8">
+                        <input name="password1" type="password" data-bind="value: password1" class="form-control"/>
+                        <span class="glyphicon form-control-feedback" data-bind="css: { 'glyphicon-remove': $data.password1() == '' }"/>
+                    </div>
+                </div>
+                <div class="form-group has-feedback" data-bind="css: { 'has-error': $data.password1() != $data.password2() }">
+                    <label class="control-label col-md-3" for="password2">Repeat Password</label>
+                    <div class="col-md-8">
+                        <input name="password2" type="password" data-bind="value: password2" class="form-control"/>
+                        <span class="glyphicon form-control-feedback" data-bind="css: { 'glyphicon-remove': $data.password1() != $data.password2() }"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-8 col-md-offset-3">
+                        <button class="btn btn-primary" type="button" data-bind="click: $data.save">Apply</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-8 col-md-offset-3">
+                        <div id="message" class="alert alert-success" style="display: none">
+                            Password changed! Page closes in 2 seconds...
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="logout" value="true"/>
+            </form>
+        </div>
+        <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery/jquery-ui.custom.min.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery/jquery.dynatree.min.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery/bootstrap3-typeahead.min.js"/>
+        <script type="text/javascript" src="resources/scripts/bootstrap.min.js"/>
+        <script type="text/javascript" src="resources/scripts/knockout-3.2.0.js"/>
+        <script type="text/javascript" src="resources/scripts/knockout.mapping-2.4.1.js"/>
+        <script src="resources/scripts/atomic/common.js" type="text/javascript" charset="utf-8"/>
+        <script src="resources/scripts/atomic/manage.js" type="text/javascript" charset="utf-8"/>
+        <script type="text/javascript">
+            var viewModel = {
+                user: $("#user").text(),
+                password1: ko.observable(""),
+                password2: ko.observable(""),
+                save: function(model) {
+                    console.dir(model);
+                    $.ajax({
+                        url: "modules/users.xql",
+                        type: "POST",
+                        data: {
+                            mode: "change-password",
+                            password: model.password1()
+                        },
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.status == "error") {
+                                Atomic.util.Dialog.error("Changing password failed", data.message, "fa-exclamation");
+                            } else {
+                                console.log("ALL OK");
+                                $("#message").show();
+                                setTimeout(function() {
+                                    $("form[name='change-pass']").submit();
+                                }, 2000);
+                            }
+                        }
+                    });
+                }
+            };
+            ko.applyBindings(viewModel);
+        </script>
+    </body>
+</html>

@@ -147,6 +147,7 @@ Atomic.sitemap = (function () {
                         url: "?action=delete&" + params,
                         type: "GET"
                     });
+                    refresh();
                 };
                 if (current.data.isFolder) {
                     Atomic.util.Dialog.confirm("Delete Feed?", "This will delete the current feed. Are you sure?", func);
