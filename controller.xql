@@ -1,5 +1,7 @@
 xquery version "3.0";
 
+
+import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "modules/config.xqm";
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "modules/themes.xql";
 import module namespace login="http://exist-db.org/xquery/login" at "modules/login.xql";
@@ -32,12 +34,15 @@ declare function local:extract-feed($path as xs:string) {
 };
 
 declare function local:check-user($user as xs:string) {
-    let $users := $config:wiki-config/configuration/users/user
-    return
-        if ($users) then
-            ($users/allow/@user = $user) 
-        else
-            true()
+    if ($config:users-group = xmldb:get-user-groups($user)) then
+        let $users := $config:wiki-config/configuration/users/user
+        return
+            if ($users) then
+                ($users/allow/@user = $user) 
+            else
+                true()
+    else
+        false()
 };
 
 declare function local:default-view($template, $relPath) {
@@ -97,7 +102,7 @@ try {
                 <forward url="{$exist:controller}/data/_theme/code-edit.html"/>
             </dispatch>
         
-        else if ($exist:resource = ("edit-feed.html", "manage-users.html", "search.html", "ImageSelector.html")) then
+        else if ($exist:resource = ("edit-feed.html", "manage-users.html", "change-user.html", "search.html", "ImageSelector.html")) then
             let $user := login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)
             let $url := local:get-url($root)
             return
@@ -109,11 +114,6 @@ try {
                     </view>
                 </dispatch>
             
-        else if ($exist:resource = "images.xql") then
-            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                <forward url="{$exist:controller}/modules/images.xql"/>
-            </dispatch>
-        
         else if (ends-with($exist:resource, ".xql")) then
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward url="{$exist:controller}/modules/{$exist:resource}">
@@ -152,7 +152,7 @@ try {
             (: The feed XML will be saved to a request attribute :)
             let $setAttr := request:set-attribute("feed", $feed)
             let $action := request:get-parameter("action", "view")
-    	    let $template := if ($feed) then theme:resolve(util:collection-name($feed), "feed.html", $root, $exist:controller) else ()
+            let $template := if ($feed) then theme:resolve(util:collection-name($feed), "feed.html", $root, $exist:controller) else ()
             return
                 if ($feed) then
                     if ($loggedIn) then
@@ -314,9 +314,12 @@ try {
         
         else if (matches($exist:resource, "\.(png|jpg|jpeg|gif|pdf|svg)$", "i")) then
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                <forward url="{$exist:controller}/data/{$exist:path}"/>
+                {login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)}
+                <forward url="{$exist:controller}/modules/images.xql">
+                    <add-parameter name="image" value="{$config:wiki-root}/{$exist:path}"/>
+                </forward>
             </dispatch>
-            
+        
         else
             (: everything else is passed through :)
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
