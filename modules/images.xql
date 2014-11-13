@@ -4,14 +4,19 @@ import module namespace image="http://exist-db.org/xquery/image" at "java:org.ex
 
 let $collection := request:get-parameter("collection", ())
 let $image := request:get-parameter("image", ())
-let $height := request:get-parameter("height", 128)
+let $size := (request:get-parameter("height", ()), request:get-parameter("width", ()), request:get-parameter("size", ()))[1]
 return
     if ($image) then
         if (util:binary-doc-available($image)) then
             let $data := util:binary-doc($image)
             return
                 try {
-                    response:stream-binary(image:scale($data, $height, "image/png"), "image/png", ())
+                    if (exists($size)) then
+                        response:stream-binary(image:scale($data, $size, "image/png"), "image/png", ())
+                    else
+                        let $mime := xmldb:get-mime-type($image)
+                        return
+                            response:stream-binary($data, $mime, ())
                 } catch * {
                     response:set-status-code(404)
                 }
