@@ -12,11 +12,15 @@ $(document).ready(function() {
     $(window).on("unload", function() {
         var collection = $("#edit-form input[name='collection']").val();
         var resource = $("#edit-form input[name='resource']").val();
-        alert("Unlock document: " + collection + "/" + resource);
-        $.get("modules/store.xql", {
-            action: "unlock",
-            collection: collection,
-            resource: resource
+        $.ajax({
+            type: "GET",
+            url: "modules/store.xql",
+            data: {
+                action: "unlock",
+                collection: collection,
+                resource: resource
+            },
+            async: false
         });
     });
     
