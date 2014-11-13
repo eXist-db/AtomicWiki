@@ -636,7 +636,7 @@ function app:attachments($node as node(), $model as map(*)) {
             <td>
             {
                 if (starts-with($mime, "image")) then
-                    <img src="modules/images.xql?image={$collection}/{$resource}&amp;size=64"/>
+                    <img src="modules/images.xql?image={$collection}/{$resource}&amp;width=64"/>
                 else
                     ()
             }
@@ -675,6 +675,7 @@ declare function app:check-access($node as node(), $model as map(*)) {
 
 declare function app:user($node as node(), $model as map(*)) {
     element { node-name($node) } {
+        $node/@*,
         let $user := request:get-attribute("org.exist.wiki.login.user")
         return
             acl:get-user-name()

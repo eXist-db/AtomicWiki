@@ -562,7 +562,7 @@ declare function gallery:result-image($node as node(), $model as map(*)) {
         for $image in $entry//vra:relationSet/vra:relation[not(@relids) or starts-with(@relids, "i_")]
         let $serverPath := $config:image-server
         let $serverPort := $config:image-server-port
-        let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
+        let $imageOption := "width=100&amp;height=100&amp;crop_type=middle"
         let $imageURL :=  
             if ($image/@relids) then
                 $serverPath || ":" || $serverPort || "/images/service/download_uuid/" || $image/@relids
@@ -578,7 +578,7 @@ declare function gallery:result-image($node as node(), $model as map(*)) {
         return 
             <li class="ui-widget-content">
                 <a href="#" class="add-image"> </a>
-                <img src="{$imageURL}{$imageOption}" class="relatedImage" title="{$title}"/>
+                <img src="{$imageURL}{if (contains($imageURL, '?')) then '&amp;' || $imageOption else '?' || $imageOption}" class="relatedImage" title="{$title}"/>
                 <div style="display:none">                    
                     <div class="image-id">{data($image/@relids)}</div>
                     <div class="image-title">{$title}</div>
