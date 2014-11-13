@@ -35,7 +35,7 @@ Atomic.users = (function () {
                 data: data,
                 dataType: "json",
                 success: function(data) {
-                    if (data.status == "error") {
+                    if (data.status != "ok") {
                         Atomic.util.Dialog.error("Saving User Failed", data.message, "fa-exclamation");
                     } else {
                         model.newUser.reset("");
@@ -53,7 +53,7 @@ Atomic.users = (function () {
             dataType: "json",
             timeout: 10000,
             success: function(data) {
-                if (data.status == "access-denied") {
+                if (data.status && data.status != "ok") {
                     Atomic.util.Dialog.error("Retrieving Groups Failed", data.message, "fa-exclamation");
                     return;
                 }
@@ -91,7 +91,7 @@ Atomic.users = (function () {
             data: { mode: "create-group", id: name, description: description },
             dataType: "json",
             success: function(data) {
-                if (data.status == "error") {
+                if (data.status != "ok") {
                     Atomic.util.Dialog.error("Group Creation Failed", data.message, "fa-exclamation");
                 } else {
                     model.newGroup.name("");
@@ -104,9 +104,10 @@ Atomic.users = (function () {
     
     function setManager(user) {
         var group = viewModel.selectedGroup().name();
+        $.log("setting manager for group %s to %s", group, user.id());
         $.getJSON("modules/users.xql", { mode: "set-manager", id: user.id(), group: group, set: !user.manager()},
             function(data) {
-                if (data.status == "error") {
+                if (data.status != "ok") {
                     Atomic.util.Dialog.error("Changing Group Manager Failed", data.message, "fa-exclamation");
                 } else {
                     $.log("changed group manager");
@@ -163,7 +164,7 @@ Atomic.users = (function () {
         var name = model.selectedGroup().label();
         $.getJSON("modules/users.xql", { mode: "rename-group", name: name, group: model.selectedGroup().name() },
             function(data) {
-                if (data.status == "error") {
+                if (data.status != "ok") {
                     Atomic.util.Dialog.error("Renaming Group Failed", data.message, "fa-exclamation");
                 } else {
                     Atomic.users.loadGroups(name);
@@ -181,7 +182,7 @@ Atomic.users = (function () {
         Atomic.util.Dialog.confirm("Delete Group", "Do you really want to delete group " + name + "?", function() {
             $.getJSON("modules/users.xql", { mode: "delete-group", group: model.selectedGroup().name() },
                 function(data) {
-                    if (data.status == "error") {
+                    if (data.status != "ok") {
                         Atomic.util.Dialog.error("Deleting Group Failed", data.message, "fa-exclamation");
                     } else {
                         Atomic.users.loadGroups(name);
