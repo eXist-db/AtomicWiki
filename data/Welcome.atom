@@ -5,11 +5,14 @@
     <wiki:editor xmlns:wiki="http://exist-db.org/xquery/wiki">markdown</wiki:editor>
     <wiki:is-index xmlns:wiki="http://exist-db.org/xquery/wiki">true</wiki:is-index>
     <atom:published>2014-10-06T14:00:05.117+02:00</atom:published>
-    <atom:updated>2014-10-09T21:26:30.47+02:00</atom:updated>
+    <atom:updated>2014-11-14T22:54:50.308+01:00</atom:updated>
     <atom:author>
         <atom:name>wolf</atom:name>
         <wiki:display xmlns:wiki="http://exist-db.org/xquery/wiki">Wolfgang</wiki:display>
     </atom:author>
     <atom:title>Welcome to Atomic Wiki</atom:title>
+    <atom:category term="article"/>
+    <atom:category term="help"/>
+    <atom:category term="wiki"/>
     <atom:content type="markdown" src="Welcome.md"/>
 </atom:entry>
