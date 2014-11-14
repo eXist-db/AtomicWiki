@@ -20,7 +20,10 @@ return
                 } catch * {
                     response:set-status-code(404)
                 }
-        else
+        else if (doc-available($image)) then (
+            response:set-header("Content-Type", xmldb:get-mime-type($image)),
+            doc($image)/*
+        ) else
             response:set-status-code(404)
     else
         <ul>
