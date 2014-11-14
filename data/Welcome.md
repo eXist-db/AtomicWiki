@@ -1,4 +1,6 @@
-If you just installed the wiki from the eXist-db repository, you should be able to log in as user "editor" with password "editor". This is the default wiki admin user.
+If you just installed the wiki from the eXist-db repository, you should be able to log in as user "editor" with password "editor". This is the default wiki admin user. 
+
+Please refer to the [Getting Started](help/GettingStarted) document for an overview.
 
 <div class="row">
     <div class="col-md-4">
