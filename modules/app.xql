@@ -235,6 +235,14 @@ declare function app:title($node as node(), $model as map(*)) {
         }
 };
 
+declare
+    %templates:wrap
+function app:tags($node as node(), $model as map(*)) {
+    for $tag in $model("entry")/atom:category[@term]
+    return
+        <span class="label label-primary">{$tag/@term/string()}</span>
+};
+
 declare function app:author($node as node(), $model as map(*)) {
     let $author :=
         if (map:contains($model, "entry")) then
