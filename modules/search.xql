@@ -37,20 +37,15 @@ function search:query($node as node()*, $model as map(*), $q as xs:string?, $fie
 declare
     %templates:wrap
 function search:results($node as node(), $model as map(*)) {
-    let $entries :=
-		for $matches in $model("results")
-		let $entry := search:entry-id($matches)
-		group by $id := $entry/atom:id
+    if (empty($model("results"))) then
+        <p class="alert alert-warning">Nothing found.</p>
+    else
+        for $match in $model("results")
+		group by $id := replace(document-uri(root($match)), "^(.*/[^/]*)\.[^\.]*", "$1")
 		return
-		    map:new((map { "results" := $matches, "id" := $id, "entry" := $entry }, $model))
-    return
-        if (empty($entries)) then
-            <p class="alert alert-warning">Nothing found.</p>
-        else
-            for $entry in $entries
-            order by xs:dateTime($entry("entry")/atom:published) descending
-            return
-                templates:process($node/*, $entry)
+		    let $entry := doc($id || ".atom")/atom:entry
+		    return
+		        templates:process($node/*, map:new((map { "results-by-entry" := $match, "id" := $entry/atom:id, "entry" := $entry }, $model)))
 };
 
 declare function search:entry-id($node as node()) {
@@ -66,13 +61,12 @@ declare function search:entry-id($node as node()) {
 declare
     %templates:wrap
 function search:result-count($node as node(), $model as map(*)) {
-    count($model("results"))
+    count($model("results-by-entry"))
 };
 
 declare
     %templates:wrap
 function search:get-entry($node as node(), $model as map(*)) {
-    console:log("wiki", (document-uri(root($model("current"))), " ", $model("current"))),
     let $entry := collection($config:wiki-root)//atom:entry[atom:id = $model("id")]
     return
         map {
@@ -86,21 +80,14 @@ function search:title($node as node(), $model as map(*)) {
     <a href="{config:entry-url-from-entry($model('entry'))}">{$model("entry")/atom:title/text()}</a>
 };
 
-declare
-    %templates:wrap
-function search:date($node as node(), $model as map(*)) {
-    let $date := xs:dateTime($model("entry")/atom:published)
-    return
-        format-dateTime($date, "[MNn] [D], [Y] [H01]:[m01]")
-};
-
 declare function search:kwic($node as node(), $model as map(*)) {
     let $config :=
 		<config width="{$search:CHARS_SUMMARY}" table="no"/>
-	for $result in $model("results")
+	for $result in $model("results-by-entry")
     let $matches := kwic:get-matches($result)
-    for $ancestor in ($matches/ancestor::*:p | $matches/ancestor::*:h1 | $matches/ancestor::*:h2 |
-        $matches/ancestor::*:h3 | $matches/ancestor::*:h4 | $matches/ancestor::*:div)
+(:    let $log := console:log("wiki", "Matches: " || count($matches)):)
+    for $ancestor in ($matches/ancestor::*:p, $matches/ancestor::*:h1, $matches/ancestor::*:h2,
+        $matches/ancestor::*:h3, $matches/ancestor::*:h4, $matches/ancestor::*:div)[1]
     return
         kwic:get-summary($ancestor, ($ancestor//exist:match)[1], $config) 
 };
@@ -110,19 +97,31 @@ declare %public function search:do-query($context as node()*, $query as xs:strin
         if (count($context) > 1) then
             switch ($field)
                 case "title" return
-                    $context//atom:title[ft:query(., $query)]
-                default return
+                    $context//atom:entry/atom:title[ft:query(., $query)]
+                case "tags" return
+                    $context//atom:entry/atom:category[ft:query(@term, $query)]
+                case "text" return
                     $context/div[ft:query(., $query)] | $context/html:div[ft:query(., $query)] |
                     $context/article[ft:query(., $query)] | $context/html:article[ft:query(., $query)]
+                default return
+                    $context/div[ft:query(., $query)] | $context/html:div[ft:query(., $query)] |
+                    $context/article[ft:query(., $query)] | $context/html:article[ft:query(., $query)] |
+                    $context//atom:entry/atom:title[ft:query(., $query)] |
+                    $context//atom:entry/atom:category[ft:query(@term, $query)]
         else
             switch ($field)
                 case "title" return
-                    $context[.//atom:title[ft:query(., $query)]]
-                default return
+                    $context[.//atom:entry/atom:title[ft:query(., $query)]]
+                case "tags" return
+                    $context[.//atom:category[ft:query(@term, $query)]]
+                case "text" return
                     $context[*[ft:query(., $query)]]
-    let $log := console:log("wiki", "Found " || count($hits) || "hits")
+                default return
+                    $context[*[ft:query(., $query)]] |
+                    $context[.//atom:entry/atom:category[ft:query(@term, $query)]] |
+                    $context[.//atom:entry/atom:title[ft:query(., $query)]]
     for $hit in $hits
-    where not(contains(document-uri(root($hit)), "_theme/"))
+    where not(matches(document-uri(root($hit)), "_theme/|_galleries/"))
     return
         $hit
 };

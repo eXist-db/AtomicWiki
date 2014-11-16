@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div class="search" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
-    <div data-template="search:query" class="content">
+    <div data-template="search:query">
         <div data-template="search:results">
-            <div class="panel panel-default">
-                <div class="panel-heading" data-template="search:get-entry">
-                    <h3 data-template="search:title"/>
-                    <p>By <span data-template="app:author"/>
-                    </p>
-                    <p>
-                        <i class="fa fa-calendar"/>
-                        <span data-template="search:date"/>
-                    </p>
+            <div class="panel panel-default entry">
+                <div class="panel-heading entryhead" data-template="search:get-entry">
+                    <h3 class="entrytitle" data-template="search:title"/>
+                    <div class="author-date">
+                        by <span class="app:author"/> at <span class="app:publication-date-full"/>
+                        <br/>
+                        <span class="tags" data-template="app:tags"/>
+                    </div>
                 </div>
                 <div class="panel-body">
                     <p data-template="search:kwic"/>
