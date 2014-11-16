@@ -170,6 +170,8 @@ Atomic.util.Dialog = (function () {
             title = title || "Error";
             header.html(title);
             body.html(msg);
+            cancelCallback = null;
+            okCallback = null;
             if (iconClass) {
                 icon.attr("class", "fa fa-4x " + iconClass);
             } else {
