@@ -51,7 +51,7 @@ declare function local:groups() {
             for $group in $groups
             order by $group
             return
-                <group name="{$group}" label="{substring-after($group, 'wiki.')}">
+                <group name="{$group}" label="{substring-after($group, 'wiki.')}" json:array="true">
                     <description>{sm:get-group-metadata($group, xs:anyURI("http://exist-db.org/security/description"))}</description>
                     {
                         let $managers := sm:get-group-managers($group)
@@ -84,9 +84,12 @@ declare function local:create-group() {
     let $id := request:get-parameter("id", ())
     let $id := if (starts-with($id, "wiki.")) then $id else "wiki." || $id
     let $description := request:get-parameter("description", "")
+    let $user := local:real-user()
     let $managers := xmldb:get-users($config:admin-group)
     return
-        if (sm:group-exists($id)) then
+        if (not($user = $managers)) then
+            <error status="access-denied" message="You are not allowed to create new groups"/>
+        else if (sm:group-exists($id)) then
             <error status="error" message="Group {$id} already exists"/>
         else
             <ok status="ok">
@@ -161,7 +164,8 @@ declare function local:rename-group() {
             {
                 $members ! sm:remove-group-member($group, .),
                 sm:remove-group($group),
-                sm:create-group($name, $managers, $description)
+                sm:create-group($name, $managers, $description),
+                $members ! sm:add-group-member($name, .)
             }
             </ok>
         else
@@ -171,8 +175,12 @@ declare function local:rename-group() {
 declare function local:delete-group() {
     let $group := request:get-parameter("group", ())
     let $members := sm:get-group-members($group)
+    let $user := local:real-user()
+    let $managers := xmldb:get-users($config:admin-group)
     return
-        if (local:check-group($group)) then
+        if (not($user = $managers)) then
+            <error status="access-denied" message="You are not allowed to delete groups"/>
+        else if (local:check-group($group)) then
             <ok status="ok">
             {
                 $members ! sm:remove-group-member($group, .),

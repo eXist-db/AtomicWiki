@@ -155,7 +155,7 @@ Atomic.users = (function () {
         $.getJSON("modules/users.xql", { mode: "remove-user", id: item.id(), group: group},
             function(data) {
                 Atomic.users.loadGroups(label);
-                model.addUser("");
+                viewModel.addUser("");
             }
         );
     }
@@ -185,7 +185,7 @@ Atomic.users = (function () {
                     if (data.status != "ok") {
                         Atomic.util.Dialog.error("Deleting Group Failed", data.message, "fa-exclamation");
                     } else {
-                        Atomic.users.loadGroups(name);
+                        Atomic.users.loadGroups();
                     }
                 }
             );
