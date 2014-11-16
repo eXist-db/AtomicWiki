@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div>
+    <p>To log into the wiki and change contents, an eXist-db user needs to be a member of the group <code>wiki.users</code>. Other users won't be able to log in - even if they have a valid database account.</p>
+    <p>Only the creator of a resource can change it's visibility to other users.</p>
+    <p>Read and write access to a resource can be restricted to:</p>
+    <ul>
+        <li>author/owner
+</li>
+        <li>specific groups
+</li>
+    </ul>
+    <p>Members of the special group <code>wiki-admin</code> can read/write any resource, ignoring any specific settings. By default the sole member of <code>wiki-admin</code> is the user <code>editor</code>.</p>
+    <h1>Changing Permissions</h1>
+    <figure class="wysiwyg-float-right">
+        <img src="/help/permissions.png"/>
+        <figcaption>
+            <p>Permissions Panel in Editor</p>
+        </figcaption>
+    </figure>
+    <p>To change permissions, click on the "Permissions" link in either the feed settings popup or one of the editors. By default, a newly created feed or entry is <em>private</em>, i.e. only visible to the creator. Disabling the "private" checkbox reveals two other settings, which allow you to set:</p>
+    <ol>
+        <li>read and write access for a specific group of users
+</li>
+        <li>make the resource readable for anyone, including users which are not logged in.
+</li>
+    </ol>
+    <p>By default, only one group is defined: <code>users</code>. It includes <em>all authenticated wiki users</em>. Granting read/write access to group <em>users</em> essentially means that every valid user of the wiki should be able to see and/or modifiy the resource.</p>
+    <h1>Managing Groups and Users</h1>
+    <figure class="wysiwyg-float-right">
+        <img src="/help/groupmanager.png"/>
+        <figcaption>
+            <p>Group Manager Screen</p>
+        </figcaption>
+    </figure>
+    <p>To manage groups and users in the wiki, you <strong>must</strong> be a member of the special group <code>wiki-admin</code> (<em>editor</em>) or an assigned <strong>group manager</strong> of one of the groups.</p>
+    <p>If above requirements are met, an entry <em>Manage Users</em> will be shown in the <em>Admin</em> dropdown menu. Clicking on it leads to the group editor, which can be used to</p>
+    <ul>
+        <li>create new groups
+</li>
+        <li>add/remove users from groups
+</li>
+        <li>create new users 
+</li>
+    </ul>
+    <p>On a fresh install, only one group, <code>users</code>, with a member <code>editor</code> is available. To add another user, type its user name into the input box on the bottom right. If the user exists inside the database, it will be added to the currently selected group, otherwise a popup will ask you if you want to create a new user.</p>
+    <p>To create a new group, type its name into the input box on top of the table showing the current group's members and press the <code>+</code> button next to it. You may optionally also provide a description for the group.</p>
+    <p>After creating a new group, the group select should automatically switch to it and the table showing group members should become empty. You can now add new or existing users to the group.</p>
+    <p>All new or existing users added to a group automatically also become members of the global wiki group, <code>users</code>.</p>
+    <h1>Group Managers</h1>
+    <p>A group manager is entitled to add or remove users to or from a specific group without being an admin user. To make a user a manager for a group, simply check the <code>Manager</code> check box.</p>
+    <p>Group managers cannot delete or create new groups.</p>
+</div>
