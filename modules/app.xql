@@ -240,7 +240,9 @@ declare
 function app:tags($node as node(), $model as map(*)) {
     for $tag in $model("entry")/atom:category[@term]
     return
-        <span class="label label-primary">{$tag/@term/string()}</span>
+        <a href="search.html?field=tags&amp;q={$tag/@term/string()}">
+            <span class="label label-primary">{$tag/@term/string()}</span>
+        </a>
 };
 
 declare function app:author($node as node(), $model as map(*)) {

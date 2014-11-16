@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <collection xmlns="http://exist-db.org/collection-config/1.0">
-    <index xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:html="http://www.w3.org/1999/xhtml">
+    <index xmlns:html="http://www.w3.org/1999/xhtml" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xlink="http://www.w3.org/1999/xlink">
         <fulltext default="none" attributes="false"/>
         <lucene>
             <text match="/div"/>
@@ -8,6 +8,7 @@
             <text qname="html:article"/>
             <text match="/html:div"/>
             <text qname="atom:title"/>
+            <text qname="@term"/>
         </lucene>
     </index>
 </collection>
