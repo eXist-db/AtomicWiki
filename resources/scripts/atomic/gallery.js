@@ -37,7 +37,7 @@ $(document).ready(function() {
     });
 
 
-    $("#gallery").on("click", ".add-image", function(event){        
+    $("#gallery").on("click", ".add-image", function(event){       
         event.preventDefault();
         addImage();
     }); 
@@ -176,8 +176,8 @@ function addImage(){
     var liTemplate = $("#li-template").clone()
     
     var imageTitle = $(".ui-selected .image-title").html();
-    var imageURL = $(".ui-selected .image-url").html();
-    
+    var imageURL = $(".ui-selected .image-url").html().replace("!150,150", "full");
+
     var imageId = Atomic.util.uuid();
     
     liTemplate.attr("id", imageId);    
@@ -261,7 +261,7 @@ function showSitemap(imageEntryId) {
         if(node && node.data.key && node.data.title){
             $.ajax({
                 type: "GET",
-                url: "modules/util.xql",
+                url: "../modules/util.xql",
                 data: { "action": "feedURL" , "title": node.data.title, "description": node.data.key },
                 complete: function(data) {
                     console.log("complete: returned data: ",data);
