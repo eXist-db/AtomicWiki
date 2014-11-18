@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div>
+    <template id="perm-group-template">
+        <tr class="perm-detail">
+            <td>Group:</td>
+            <td>
+                <select name="perm-group" data-template="acl:group-select"/>
+            </td>
+            <td>
+                <input class="perm-group-read" type="checkbox" name="perm-group-read"/> read</td>
+            <td>
+                <input class="perm-group-write" type="checkbox" name="perm-group-write"/> write</td>
+            <td>
+                <button>
+                    <img src="resources/images/add.png"/>
+                </button>
+            </td>
+            <td>
+                <button>
+                    <img src="resources/images/delete.png"/>
+                </button>
+            </td>
+        </tr>
+    </template>
     <table class="permissions" data-template="acl:show-permissions">
         <tr>
             <td colspan="4">
@@ -15,6 +37,16 @@
                 <input class="perm-group-read" type="checkbox" name="perm-group-read"/> read</td>
             <td>
                 <input class="perm-group-write" type="checkbox" name="perm-group-write"/> write</td>
+            <td>
+                <button>
+                    <img src="resources/images/add.png"/>
+                </button>
+            </td>
+            <td>
+                <button>
+                    <img src="resources/images/delete.png"/>
+                </button>
+            </td>
         </tr>
         <tr class="perm-detail">
             <td>Everyone:</td>
