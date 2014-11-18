@@ -11,9 +11,9 @@ declare namespace wiki="http://exist-db.org/xquery/wiki";
 declare option exist:serialize "method=json media-type=text/javascript";
 
 let $action := request:get-parameter("action", "feedURL")
-let $id := request:get-parameter("title", ())
+let $id := request:get-parameter("description", ())
 let $wiki-id := request:get-parameter("wiki-id", "0b35c8c1-f4ad-4db4-90cf-3cf8160cf4e3")
-let $entry := collection($config:wiki-root)//atom:entry[atom:id = $wiki-id]
+let $entry := collection($config:wiki-root)//atom:entry[atom:id = $id]
 let $entryURL := config:feed-url-from-entry($entry) || $entry/wiki:id
 return
     <div>               
