@@ -542,7 +542,9 @@ Atomic.editor.AddVideoLink = (function () {
             ev.preventDefault();
             self.dialog.modal("hide");
             if (self.callback) {
-                self.callback(select.val(), self.dialog.find("input[name='id']").val());
+                var id = self.dialog.find("input[name='id']").val();
+                id = id.replace(/\/$/, "");
+                self.callback(select.val(), id);
             }
         });
     };
@@ -789,11 +791,25 @@ Atomic.editor.ImageLink = (function () {
                     if (fields[i].value && fields[i].value != "")
                         data[fields[i].name] = fields[i].value;
                 }
+
+                var url = data.url;                
+                if (data.width && data.height) {
+                    url = url.replace("!150,150", data.width + "," + data.height);
+                }
+                if (data.width) {
+                    url = url.replace("!150,150", data.width + ",");
+                }
+                if (data.height) {
+                    url = url.replace("!150,150", "," + data.height);
+                
+                }  
+                data.url = url;
+                
                 self.onSelect(data);
             }
         });
         
-        this.dialog.on("click", ".add-image", function(event){        
+        this.dialog.on("click", ".add-image", function(event){
             event.preventDefault();
             
             var imageTitle = $(".ui-selected .image-title").html();
