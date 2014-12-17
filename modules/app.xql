@@ -257,7 +257,9 @@ declare function app:author($node as node(), $model as map(*)) {
         else
             $model("feed")/atom:author/wiki:display/string()
     return
-        if (exists($display)) then $display else $author
+        <a href="search.html?field=author&amp;q={$author}">
+        { if (exists($display)) then $display else $author }
+        </a>
 };
 
 declare function app:id($node as node(), $model as map(*)) {

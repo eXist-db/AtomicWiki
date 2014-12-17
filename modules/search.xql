@@ -103,11 +103,14 @@ declare %public function search:do-query($context as node()*, $query as xs:strin
                 case "text" return
                     $context/div[ft:query(., $query)] | $context/html:div[ft:query(., $query)] |
                     $context/article[ft:query(., $query)] | $context/html:article[ft:query(., $query)]
+                case "author" return
+                    $context//atom:entry/atom:author/atom:name[ft:query(., $query)]
                 default return
                     $context/div[ft:query(., $query)] | $context/html:div[ft:query(., $query)] |
                     $context/article[ft:query(., $query)] | $context/html:article[ft:query(., $query)] |
                     $context//atom:entry/atom:title[ft:query(., $query)] |
-                    $context//atom:entry/atom:category[ft:query(@term, $query)]
+                    $context//atom:entry/atom:category[ft:query(@term, $query)] |
+                    $context//atom:entry/atom:author/atom:name[ft:query(., $query)]
         else
             switch ($field)
                 case "title" return
@@ -116,10 +119,13 @@ declare %public function search:do-query($context as node()*, $query as xs:strin
                     $context[.//atom:category[ft:query(@term, $query)]]
                 case "text" return
                     $context[*[ft:query(., $query)]]
+                case "author" return
+                    $context[.//atom:entry/atom:author/atom:name[ft:query(., $query)]]
                 default return
                     $context[*[ft:query(., $query)]] |
                     $context[.//atom:entry/atom:category[ft:query(@term, $query)]] |
-                    $context[.//atom:entry/atom:title[ft:query(., $query)]]
+                    $context[.//atom:entry/atom:title[ft:query(., $query)]] |
+                    $context[.//atom:entry/atom:author/atom:name[ft:query(., $query)]]
     for $hit in $hits
     where not(matches(document-uri(root($hit)), "_theme/|_galleries/"))
     return
