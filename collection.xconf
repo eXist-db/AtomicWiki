@@ -9,6 +9,7 @@
             <text match="/html:div"/>
             <text qname="atom:title"/>
             <text qname="@term"/>
+            <text qname="atom:name"/>
         </lucene>
     </index>
 </collection>
