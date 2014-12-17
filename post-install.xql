@@ -49,7 +49,7 @@ declare function local:fix-permissions() {
                 sm:add-group-ace($path, $config:users-group, true(), "r-"),
                 sm:add-group-ace($path, $config:admin-group, true(), "rw")
             ) else (
-                sm:add-group-ace($path, $config:users-group, true(), "r-x"),
+                sm:add-group-ace($path, $config:users-group, true(), "rwx"),
                 sm:add-group-ace($path, $config:admin-group, true(), "rwx")
             )
         )

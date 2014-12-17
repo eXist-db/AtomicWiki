@@ -407,7 +407,6 @@ declare function store:delete-content($collection as xs:string, $src as xs:strin
 };
 
 declare function store:delete-article($article as element(atom:entry)) {
-    util:log("WARN", ("Deleting article: ", $article)),
     let $src := $article/atom:content/@src
     return
         if ($src) then
