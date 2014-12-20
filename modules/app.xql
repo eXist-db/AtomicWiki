@@ -360,6 +360,18 @@ function app:can-edit($node as node(), $model as map(*)) {
         ()
 };
 
+declare
+    %templates:wrap
+function app:can-edit-feed($node as node(), $model as map(*)) {
+    if ($model("feed") and sm:has-access(xs:anyURI(document-uri(root($model("feed")))), "w")) then
+        element { node-name($node) } {
+            $node/@*,
+            templates:process($node/node(), $model)
+        }
+    else
+        ()
+};
+
 declare function app:edit-link($node as node(), $model as map(*), $action as xs:string) {
     let $lockedBy := $model('entry')/wiki:lock/@user
     return
