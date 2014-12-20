@@ -44,6 +44,7 @@ declare function acl:change-collection-permissions($path as xs:string) {
     let $group-write := request:get-parameter("perm-group-write", ())
     let $group-perms := acl:set-perm($group-read or $group-write, "r") || acl:set-perm($group-write, "w")
     return (
+        sm:clear-acl($path),
         if ($group != "" and $group != $config:default-group and $group-perms != "--") then
             sm:add-group-ace($path, $group, true(), $group-perms)
         else
