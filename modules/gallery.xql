@@ -8,7 +8,7 @@ import module namespace templates="http://exist-db.org/xquery/templates";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "themes.xql";
 import module namespace atomic="http://atomic.exist-db.org/xquery/atomic" at "atomic.xql";
-import module namespace image-link-generator="http://hra.uni-heidelberg.de/ns/tamboti/modules/display/image-link-generator" at "/db/apps/tamboti/modules/display/image-link-generator.xqm";
+import module namespace image-link-generator="http://atomic.exist-db.org/xquery/atomic/image-link-generator" at "display/image-link-generator.xqm";
 
 
 declare namespace vra="http://www.vraweb.org/vracore4.htm";
