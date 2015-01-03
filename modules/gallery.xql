@@ -442,7 +442,7 @@ declare
                     collection($filterCollection)//vra:vra/vra:work[ft:query(.//*, $query)]
             else if($query) then (
                 gallery:local-images(),
-                collection('/db/resoces/commons')//vra:vra/vra:work[ft:query(.//*, $query)],
+                collection('/db/resources/commons')//vra:vra/vra:work[ft:query(.//*, $query)],
                 collection('/db/resources/users')//vra:vra/vra:work[ft:query(.//*, $query)]
             )
             else
