@@ -6,16 +6,20 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
 dbutil:scan(xs:anyURI("/db/apps/wiki/data"), function($collection, $resource) {
     let $path := ($resource, $collection)[1]
     let $permissions := sm:get-permissions($path)
-    return
-        if ($permissions//sm:ace[@who = $config:admin-group]) then
-            ()
+    return (
+        sm:chown($path, $config:default-editor),
+        sm:chgrp($path, $config:default-group),
+        if ($resource) then
+            sm:chmod($path, "rw----r--")
         else
+            sm:chmod($path, "rwx---r-x"),
+        sm:clear-acl($path),
+        if ($resource) then (
+            sm:add-group-ace($path, $config:users-group, true(), "r-"),
             sm:add-group-ace($path, $config:admin-group, true(), "rw")
+        ) else (
+            sm:add-group-ace($path, $config:users-group, true(), "r-x"),
+            sm:add-group-ace($path, $config:admin-group, true(), "rwx")
+        )
+    )
 })
-
-(:sm:chmod(xs:anyURI("/db/apps/wiki/modules/users.xql"), "rwsr-xr-x"):)
-(:sm:remove-group-member("dba", "editor"):)
-(:sm:user-exists("cdanner@ad.uni-heidelberg.de"):)
-(:sm:user-exists("sabine.neumann@ad.uni-heidelberg.de"):)
-(:sm:find-users-by-username("sabine.neumann@ad.uni-heidelberg.de"):)
-
