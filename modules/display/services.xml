@@ -1,0 +1,56 @@
+<!-- ToDo: authentication node without any use at the moment--><!--
+Define image services for fetching external image binaries.
+How to use:
+
+- image links are generated to embed in the theme like this:
+	let $image-href := image-link-generator:generate-href($image-uuid, "tamboti-thumbnail")
+
+- image-link-generator is resolving the service definition:
+	<element-query>: 	which elements of vra image-record is needed for external call?
+						<element-query key="1">@id</element-query> leads to xpath $vra-image-record/@id, replacing [1] in <url> with the result
+
+- protocol-like prefixes in the @href attribute in the vra image-record are used to switch to a defined service:
+	<image id="i_0006b9a9-c4bd-5cc5-81d2-1fdfc8c78ba0" href="external-service://image-filename.tif">
+
+	generates image url according to service "external-service" defined in this file:
+		<service>
+	        <image-service name="external-service">
+	            <uri type="get" name="tamboti-thumbnail">
+	                <authentication/>
+	                <url>http://some.external.url/image-call.xql?uuid=[1]&width=40&height=40</url>
+	                <element-query key="1">@id</element-query>
+	            </uri>
+			</image-service>
+		</service>	
+
+- if no prefix is found in @href element, image-service "local" is used.
+
+- use modules/administration/add-image-service-to-collection.xq to manually add prefixes to a collection 
+
+ -->
+<services>
+    <service>
+        <image-service name="local">
+            <uri type="get" name="tamboti-thumbnail">
+                <authentication/>
+                <url>/exist/rest/db/apps/wiki/modules/display/image-view.xql?uuid=[1]&amp;width=40&amp;height=40</url>
+                <element-query key="1">@id</element-query>
+            </uri>
+            <uri type="get" name="tamboti-size150">
+                <authentication/>
+                <url>/exist/rest/db/apps/wiki/modules/display/image-view.xql?uuid=[1]&amp;width=150</url>
+                <element-query key="1">@id</element-query>
+            </uri>
+            <uri type="get" name="tamboti-size1000">
+                <authentication/>
+                <url>/exist/apps/wiki/modules/display/image-view.xql?uuid=[1]&amp;width=1000</url>
+                <element-query key="1">@id</element-query>
+            </uri>
+            <uri type="get" name="tamboti-full">
+                <authentication/>
+                <url>/exist/rest/db/apps/wiki/modules/display/image-view.xql?uuid=[1]</url>
+                <element-query key="1">@id</element-query>
+            </uri>
+        </image-service>
+    </service>
+</services>

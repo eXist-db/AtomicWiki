@@ -112,6 +112,15 @@ Atomic.app = (function () {
                     table.find(".perm-private").attr("checked", false);
                 }
             });
+            
+            $("table.permissions" ).on("click", "td:nth-child(5) button", function() {
+                $('table.permissions tr.perm-detail:last').before($('#perm-group-template').html());
+                return false;                
+            });
+            $("table.permissions" ).on("click", "td:nth-child(6) button", function() {
+                $(this).parent().parent().remove();
+                return false;
+            });            
         },
         
         unlock: function() {
@@ -170,8 +179,6 @@ Atomic.util.Dialog = (function () {
             title = title || "Error";
             header.html(title);
             body.html(msg);
-            cancelCallback = null;
-            okCallback = null;
             if (iconClass) {
                 icon.attr("class", "fa fa-4x " + iconClass);
             } else {
