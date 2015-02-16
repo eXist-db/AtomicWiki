@@ -8,6 +8,7 @@ import module namespace templates="http://exist-db.org/xquery/templates";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme" at "themes.xql";
 import module namespace atomic="http://atomic.exist-db.org/xquery/atomic" at "atomic.xql";
+import module namespace image-link-generator="http://atomic.exist-db.org/xquery/atomic/image-link-generator" at "display/image-link-generator.xqm";
 
 
 declare namespace vra="http://www.vraweb.org/vracore4.htm";
@@ -133,7 +134,7 @@ declare function gallery:add-video($node as node(), $model as map(*)) {
     <div>
         <select class="form-control" name="video">
             <option value="Pandora1">Pandora 1: insert the whole URL</option>
-            <option value="Pandora2">Pandora 2: for http://129.206.36.128:8000</option>
+            <option value="Pandora2">Pandora 2: for http://vad.uni-hd.de</option>
             <option value="youTube">YouTube</option>
             <option value="vimeo">Vimeo</option>
         </select> 
@@ -150,11 +151,11 @@ declare function gallery:select-video($node as node(), $model as map(*), $videot
     switch ($videotyp)
     case "Pandora1" return
         <div>
-            <iframe width = "700" height="400" src="{$id}?embeded=true" frameborder="1" webkitAllowFullScreen="true" mozallowfullscreen="true" allowFullScreen="true" >Pandora video</iframe>
+            <iframe width="854" height="480" src="{$id}/player#embed" webkitAllowFullScreen="true" mozallowfullscreen="true" allowFullScreen="true">Pandora video</iframe>
         </div>
     case "Pandora2" return
         <div>
-            <iframe width = "640" height="360" src="http://129.206.36.128:8000/{$id}?embeded=true" frameborder="1">Pandora video</iframe>
+            <iframe width="854" height="480" src="http://kjc-sv030.kjc.uni-heidelberg.de/{$id}/player#embed">Pandora video</iframe>
         </div>
     case "youTube" return
         <div>
@@ -441,7 +442,7 @@ declare
                     collection($filterCollection)//vra:vra/vra:work[ft:query(.//*, $query)]
             else if($query) then (
                 gallery:local-images(),
-                collection('/db/resoces/commons')//vra:vra/vra:work[ft:query(.//*, $query)],
+                collection('/db/resources/commons')//vra:vra/vra:work[ft:query(.//*, $query)],
                 collection('/db/resources/users')//vra:vra/vra:work[ft:query(.//*, $query)]
             )
             else
@@ -562,12 +563,17 @@ declare function gallery:result-image($node as node(), $model as map(*)) {
         for $image in $entry//vra:relationSet/vra:relation[not(@relids) or starts-with(@relids, "i_")]
         let $serverPath := $config:image-server
         let $serverPort := $config:image-server-port
-        let $imageOption := "width=100&amp;height=100&amp;crop_type=middle"
+        let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
         let $imageURL :=  
             if ($image/@relids) then
                 $serverPath || ":" || $serverPort || "/images/service/download_uuid/" || $image/@relids
             else
                 "modules/images.xql?image=" || $image/@href
+        let $imageURL :=  
+            if ($image/@relids) then
+                image-link-generator:generate-href($image/@relids, 'tamboti-size150')
+            else
+                image-link-generator:generate-href($image/@href, 'tamboti-size150')
         let $href :=
             if ($image/@relids) then
                 $imageURL
@@ -578,13 +584,13 @@ declare function gallery:result-image($node as node(), $model as map(*)) {
         return 
             <li class="ui-widget-content">
                 <a href="#" class="add-image"> </a>
-                <img src="{$imageURL}{if (contains($imageURL, '?')) then '&amp;' || $imageOption else '?' || $imageOption}" class="relatedImage" title="{$title}"/>
+                <img src="{$imageURL}" class="relatedImage" title="{$title}"/>
                 <div style="display:none">                    
                     <div class="image-id">{data($image/@relids)}</div>
                     <div class="image-title">{$title}</div>
                     <div class="image-work-record">{$entry/@id}</div>
-                    <div class="image-url">{string($href)}</div>
-                    <div class="image-url-rel">{substring-after($image/@href, $config:wiki-root)}</div>
+                    <div class="image-url">{$imageURL}</div>
+                    <div class="image-url-rel">{$imageURL}</div>
                 </div>
             </li>
     };
