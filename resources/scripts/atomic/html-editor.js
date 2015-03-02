@@ -45,6 +45,25 @@ $(document).ready(function() {
         }
     }
     
+    function generateGroupPermissionsDescriptor() {
+        var groupPermissionsContainer = $("table.permissions");
+        var groupPermissionsDescriptor = "";
+        $("tr.perm-detail:not(:last)", groupPermissionsContainer).each(function(index) {
+            var $this = $(this);
+            var groupName = $("select[name = 'perm-group']", $this).val();
+            var read = $("input.perm-group-read", $this).is(":checked") ? "r" : "-";
+            var write = $("input.perm-group-write", $this).is(":checked") ? "w" : "-";
+            var groupPermissionDescriptor = read + write;
+            if (groupName !== "" && groupPermissionDescriptor !== "") {
+                var permission = groupName + " " + groupPermissionDescriptor;
+                groupPermissionsDescriptor += permission + ",";
+            }
+        });
+        groupPermissionsDescriptor = groupPermissionsDescriptor.replace(/,$/, "");
+        
+        return groupPermissionsDescriptor;
+    }
+    
     
     $("#summary-editor-tab").click(function (e) {
         e.preventDefault();
@@ -67,10 +86,13 @@ $(document).ready(function() {
             contentEditor.deactivate();
         }
         updateForm();
+        var groupPermissions = generateGroupPermissionsDescriptor();
         $("input[name='action']", form).val("store");
+        $("input[name='groupPermissions']", form).val(groupPermissions);
         form.submit();
         return false;
     });
+    
     $("#edit-form-save").click(function (ev) {
         ev.preventDefault();
         
@@ -80,7 +102,9 @@ $(document).ready(function() {
             contentEditor.deactivate();
         }
         updateForm();
+        var groupPermissions = generateGroupPermissionsDescriptor();
         $("input[name='action']", form).val("store");
+        $("input[name='groupPermissions']", form).val(groupPermissions);
         var data = form.serialize() + "&unlock=false";
         $.ajax({
             type: "POST",
