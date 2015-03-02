@@ -92,6 +92,8 @@ declare variable $config:wiki-root :=
 declare variable $config:wiki-data :=
     substring-after($config:wiki-root, $config:app-root);
     
+declare variable $config:data := "/resources";
+    
 declare variable $config:items-per-page := 
     let $itemsPerPage := $config:wiki-config/configuration/items-per-page/string()
     return
