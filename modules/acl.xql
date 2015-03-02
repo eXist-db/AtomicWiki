@@ -13,10 +13,9 @@ declare function acl:change-permissions($path as xs:string) {
     let $private := request:get-parameter("perm-private", ())
     let $public-read := request:get-parameter("perm-public-read", ())
     let $public-perms := if ($public-read) then "r--" else "---"
-    let $group := request:get-parameter("perm-group", ())
-    let $group-read := request:get-parameter("perm-group-read", ())
-    let $group-write := request:get-parameter("perm-group-write", ())
-    let $group-perms := acl:set-perm($group-read or $group-write, "r") || acl:set-perm($group-write, "w")
+    let $group-permissions := request:get-parameter("groupPermissions", ())
+    let $log := util:log("INFO", "group-permissions = " || $group-permissions)
+
     let $reg-perms := "--"
     return (
         (: Change main group :)
@@ -29,10 +28,20 @@ declare function acl:change-permissions($path as xs:string) {
             sm:chmod($path, "rw-" || $reg-perms || "-" || $public-perms),
         (: admin group members can always write :)
         sm:add-group-ace($path, $config:admin-group, true(), "rw"),
-        if ($group != "" and $group != $config:default-group and $group-perms != "--") then
-            sm:add-group-ace($path, $group, true(), $group-perms)
-        else
-            ()
+        
+        util:log("INFO", $group-permissions),
+        util:log("INFO", "tokenize: " || count(tokenize($group-permissions, ",")))
+        ,
+        for $group-permission in tokenize($group-permissions, ",")
+            let $group := substring-before($group-permission, " ")
+            let $group-perms := substring-after($group-permission, " ")
+            let $log := util:log("INFO", $group)
+            let $log := util:log("INFO", $group-perms)
+            return
+                if ($group != $config:default-group) then
+                    sm:add-group-ace($path, $group, true(), $group-perms)
+                else
+                    ()
     )
 };
 
@@ -118,6 +127,86 @@ function acl:show-permissions($node as node(), $model as map(*), $modelItem as x
             templates:copy-node($node, $model)
 };
 
+declare function acl:show-group-permissions($node as node(), $model as map(*)) as item()* {
+    let $permissions := map:get($model, "permissions")
+    let $aces := $permissions//sm:ace[starts-with(@who, "wiki.")][@target = "GROUP"][@access_type="ALLOWED"]
+
+    return
+        if (count($aces) > 0)
+        then
+            for $ace in $aces
+                let $current-group := $ace/@who        
+                let $groups :=
+                    (
+                        <option value="">none</option>,
+                        for $group in sm:find-groups-by-groupname("wiki.")
+                        return
+                            <option value="{$group}">
+                            {
+                                if ($group = $current-group) then
+                                    attribute selected { "selected" }
+                                else
+                                    ()
+                            }
+                            {substring-after($group, "wiki.")}
+                            </option>
+                    )
+                
+                let $read := matches($ace/@mode, "r..$")
+                let $write := matches($ace/@mode, ".w.$") or matches($permissions/@mode, "^....w.*")
+            
+            return
+                <tr class="perm-detail">
+                    <td>Group:</td>
+                    <td>
+                        <select name="perm-group">{$groups}</select>
+                    </td>
+                    <td>
+                        <input class="perm-group-read" type="checkbox" name="perm-group-read" data-read="{$read}"/> read</td>
+                    <td>
+                        <input class="perm-group-write" type="checkbox" name="perm-group-write" data-write="{$write}"/> write</td>
+                    <td>
+                        <button>
+                            <img src="resources/images/add.png"/>
+                        </button>
+                    </td>
+                    <td>
+                        <button>
+                            <img src="resources/images/delete.png"/>
+                        </button>
+                    </td>
+                </tr>
+        else
+            let $groups :=
+                (
+                    <option value="">none</option>,
+                    for $group in sm:find-groups-by-groupname("wiki.")
+                    return
+                        <option value="{$group}">{substring-after($group, "wiki.")}</option>
+                )
+            return
+                <tr class="perm-detail">
+                    <td>Group:</td>
+                    <td>
+                        <select name="perm-group">{$groups}</select>
+                    </td>
+                    <td>
+                        <input class="perm-group-read" type="checkbox" name="perm-group-read" data-read="false"/> read</td>
+                    <td>
+                        <input class="perm-group-write" type="checkbox" name="perm-group-write" data-write="false"/> write</td>
+                    <td>
+                        <button>
+                            <img src="resources/images/add.png"/>
+                        </button>
+                    </td>
+                    <td>
+                        <button>
+                            <img src="resources/images/delete.png"/>
+                        </button>
+                    </td>
+                </tr>             
+};
+
 declare %private function acl:process-permissions($node as node(), $permissions as element(), $path as xs:anyURI) {
     typeswitch ($node)
         case element(input) return
@@ -132,18 +221,9 @@ declare %private function acl:process-permissions($node as node(), $permissions 
                                 "-..$"
                             )
                         )
-                    case "perm-public-read" return
-                        matches($permissions/@mode, "r..$")
-                    case "perm-group-read" return
-                        matches(
-                            $permissions//sm:ace[starts-with(@who, "wiki.")][@target = "GROUP"][@access_type="ALLOWED"][1]/@mode,
-                            "r..$"
-                        )
-                    case "perm-group-write" return
-                        matches(
-                            $permissions//sm:ace[starts-with(@who, "wiki.")][@target = "GROUP"][@access_type="ALLOWED"][1]/@mode,
-                            ".w.$"
-                        ) or matches($permissions/@mode, "^....w.*")
+                    case "perm-public-read" return matches($permissions/@mode, "r..$")
+                    case "perm-group-read" return $node/@data-read = 'true'
+                    case "perm-group-write" return $node/@data-write = 'true'
                     default return
                         false()
             return
