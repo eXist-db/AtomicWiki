@@ -2,3 +2,4 @@
 java/classes
 atomic-wiki.iml
 resources/tmp
+/build
