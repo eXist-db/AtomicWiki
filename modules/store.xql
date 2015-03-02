@@ -449,6 +449,7 @@ declare function store:validate() {
 let $action := request:get-parameter("action", "store")
 let $id := request:get-parameter("entryId", ())
 let $type := request:get-parameter("ctype", "html")
+
 return
     try {
         if (request:get-parameter("validate", ())) then
