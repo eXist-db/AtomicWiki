@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <div>
     <template id="perm-group-template">
         <tr class="perm-detail">
@@ -28,7 +27,7 @@
                 <input class="perm-private" type="checkbox" name="perm-private" checked="checked" title="Uncheck for more access control options"/> Private
             </td>
         </tr>
-        <tr class="perm-detail">
+        <tr class="perm-detail" data-template="acl:show-group-permissions">
             <td>Group:</td>
             <td>
                 <select name="perm-group" data-template="acl:group-select"/>
