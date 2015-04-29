@@ -129,6 +129,13 @@ Atomic.users = (function () {
         var group = model.selectedGroup().name();
         var label = model.selectedGroup().label();
         var user = model.addUser();
+        $.each($("ul.typeahead.dropdown-menu li"), function(index) {
+            var suggestedUsername = $(this).text();
+            if (suggestedUsername.indexOf(user + "@") === 0) {
+                Atomic.util.Dialog.error("Adding User Failed", "<p>The user you want to add exists already in domain '" + suggestedUsername.substring(suggestedUsername.indexOf("@") + 1) + "'.</p>", "fa-exclamation");
+                return;
+            }
+        });        
         if (user) {
             $.log("Adding user %s to group %s", model.addUser(), group);
             $.getJSON("modules/users.xql", { mode: "add-user", id: escape(model.addUser()), group: group},
