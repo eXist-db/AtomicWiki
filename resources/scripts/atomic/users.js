@@ -84,6 +84,10 @@ Atomic.users = (function () {
     
     function createGroup(model) {
         var name = model.newGroup.name();
+        if (name.indexOf(" ") > 0) {
+            Atomic.util.Dialog.error("Group Creation Failed", "<p>The group name should not contain spaces.</p>", "fa-exclamation");
+            return;
+        }          
         var description = model.newGroup.description();
         $.ajax({
             url: "modules/users.xql",
