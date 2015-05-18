@@ -14,7 +14,6 @@ declare function acl:change-permissions($path as xs:string) {
     let $public-read := request:get-parameter("perm-public-read", ())
     let $public-perms := if ($public-read) then "r--" else "---"
     let $group-permissions := request:get-parameter("groupPermissions", ())
-    let $log := util:log("INFO", "group-permissions = " || $group-permissions)
 
     let $reg-perms := "--"
     return (
@@ -28,10 +27,6 @@ declare function acl:change-permissions($path as xs:string) {
             sm:chmod($path, "rw-" || $reg-perms || "-" || $public-perms),
         (: admin group members can always write :)
         sm:add-group-ace($path, $config:admin-group, true(), "rw"),
-        
-        util:log("INFO", $group-permissions),
-        util:log("INFO", "tokenize: " || count(tokenize($group-permissions, ",")))
-        ,
         for $group-permission in tokenize($group-permissions, ",")
             let $group := substring-before($group-permission, " ")
             let $group-perms := substring-after($group-permission, " ")
