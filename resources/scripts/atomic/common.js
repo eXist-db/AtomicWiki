@@ -248,6 +248,25 @@ Atomic.Form = (function () {
     };
 }());
 
+Atomic.utils = {};
+Atomic.utils.generateGroupPermissionsDescriptor = function() {
+    var groupPermissionsContainer = $("table.permissions");
+    var groupPermissionsDescriptor = "";
+    $("tr.perm-detail:not(:last)", groupPermissionsContainer).each(function(index) {
+        var $this = $(this);
+        var groupName = $("select[name = 'perm-group']", $this).val();
+        var read = $("input.perm-group-read", $this).is(":checked") ? "r" : "-";
+        var write = $("input.perm-group-write", $this).is(":checked") ? "w" : "-";
+        var groupPermissionDescriptor = read + write;
+        if (groupName !== "" && groupPermissionDescriptor !== "") {
+            var permission = groupName + " " + groupPermissionDescriptor;
+            groupPermissionsDescriptor += permission + ",";
+        }
+    });
+    groupPermissionsDescriptor = groupPermissionsDescriptor.replace(/,$/, "");
+    
+    return groupPermissionsDescriptor;
+};
 
 /* extend String object with encodeHTML function, if not exist */
 if (!String.prototype.encodeHTML) {
