@@ -79,6 +79,7 @@ Atomic.sitemap = (function () {
                 var collection = collectionInput.val() + "/" + url.val();
                 collectionInput.val(collection);
             }
+            $("input[name='groupPermissions']", form).val(Atomic.utils.generateGroupPermissionsDescriptor());
             var data = form.serialize();
             $.ajax({
                 url: "modules/store.xql",
