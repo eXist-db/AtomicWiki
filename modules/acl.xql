@@ -9,56 +9,55 @@ declare %private function acl:set-perm($value as item()?, $flag as xs:string) {
     if ($value) then $flag else "-"
 };
 
+declare function acl:add-group-aces($path as xs:string) {
+    (
+        sm:clear-acl($path)
+        ,
+        util:log("INFO", sm:get-permissions($path))
+        ,
+        for $group-permission in tokenize(request:get-parameter("groupPermissions", ()), ",")
+            let $group := substring-before($group-permission, " ")
+            let $group-perms := substring-after($group-permission, " ")
+            let $log := util:log("INFO", $group)
+            let $log := util:log("INFO", $group-perms)
+            let $log := util:log("INFO", ($group != $config:default-group and $group-perms != "--"))
+            return
+                if ($group != $config:default-group and $group-perms != "--")
+                then sm:add-group-ace($path, $group, true(), $group-perms)
+                else ()
+        ,
+        sm:add-group-ace($path, $config:admin-group, true(), "rw")
+        ,
+        util:log("INFO", sm:get-permissions($path))
+    )
+};
+
 declare function acl:change-permissions($path as xs:string) {
     let $private := request:get-parameter("perm-private", ())
     let $public-read := request:get-parameter("perm-public-read", ())
     let $public-perms := if ($public-read) then "r--" else "---"
-    let $group-permissions := request:get-parameter("groupPermissions", ())
-    let $log := util:log("INFO", "group-permissions = " || $group-permissions)
 
     let $reg-perms := "--"
     return (
         (: Change main group :)
         (: Need to switch to the user who created the group :)
-        sm:chgrp($path, $config:default-group),
-        sm:clear-acl($path),
-        if ($private) then
-            sm:chmod($path, "rw-------")
-        else
-            sm:chmod($path, "rw-" || $reg-perms || "-" || $public-perms),
-        (: admin group members can always write :)
-        sm:add-group-ace($path, $config:admin-group, true(), "rw"),
-        
-        util:log("INFO", $group-permissions),
-        util:log("INFO", "tokenize: " || count(tokenize($group-permissions, ",")))
+        sm:chgrp($path, $config:default-group)
         ,
-        for $group-permission in tokenize($group-permissions, ",")
-            let $group := substring-before($group-permission, " ")
-            let $group-perms := substring-after($group-permission, " ")
-            let $log := util:log("INFO", $group)
-            let $log := util:log("INFO", $group-perms)
-            return
-                if ($group != $config:default-group) then
-                    sm:add-group-ace($path, $group, true(), $group-perms)
-                else
-                    ()
+        if ($private)
+        then sm:chmod($path, "rw-------")
+        else sm:chmod($path, "rw-" || $reg-perms || "-" || $public-perms)
+        ,
+        acl:add-group-aces($path)
     )
 };
 
 declare function acl:change-collection-permissions($path as xs:string) {
-    sm:chmod($path, "rwxr-xr-x"),
-    sm:chgrp($path, $config:default-group),
-    let $group := request:get-parameter("perm-group", ())
-    let $group-read := request:get-parameter("perm-group-read", ())
-    let $group-write := request:get-parameter("perm-group-write", ())
-    let $group-perms := acl:set-perm($group-read or $group-write, "r") || acl:set-perm($group-write, "w")
-    return (
-        sm:clear-acl($path),
-        if ($group != "" and $group != $config:default-group and $group-perms != "--") then
-            sm:add-group-ace($path, $group, true(), $group-perms)
-        else
-            (),
-        sm:add-group-ace($path, $config:admin-group, true(), "rw")
+    (
+        sm:chmod($path, "rwxr-xr-x")
+        ,
+        sm:chgrp($path, $config:default-group)
+        ,
+        acl:add-group-aces($path)
     )
 };
 
