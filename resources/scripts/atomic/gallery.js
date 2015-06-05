@@ -79,7 +79,7 @@ $(document).ready(function() {
     });
     loadImages();
     $("#query-images").click(function (ev) {   
-        console.debug("clicke on load images button!")
+        console.debug("clicked on load images button!")
         loadImages(1)
     });
     
