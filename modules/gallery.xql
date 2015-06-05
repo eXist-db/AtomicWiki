@@ -613,7 +613,7 @@ function gallery:get-ziziphus-collections1($node as node(), $model as map(*)) {
             })
     for $collection in $collections
     return
-        <option value="{$collection}">{replace($collection, ".*/([^/]+)$", "$1")}</option>
+        <option value="{$collection}">{xmldb:decode(replace($collection, ".*/([^/]+)$", "$1"))}</option>
 };
 
 declare 
@@ -631,5 +631,5 @@ function gallery:get-ziziphus-collections($node as node(), $model as map(*)) {
         )
     for $collection in $collections
     return
-        <option value="{$collection}">{replace($collection, ".*/([^/]+)$", "$1")}</option>
+        <option value="{$collection}">{xmldb:decode(replace($collection, ".*/([^/]+)$", "$1"))}</option>
 };
