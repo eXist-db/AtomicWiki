@@ -177,6 +177,7 @@ function addImage(){
     
     var imageTitle = $(".ui-selected .image-title").html();
     var imageURL = $(".ui-selected .image-url").html().replace("!150,150", "full");
+    imageURL = imageURL.replace("?width=150", "");
 
     var imageId = Atomic.util.uuid();
     
