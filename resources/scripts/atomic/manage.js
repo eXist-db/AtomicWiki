@@ -74,14 +74,16 @@ Atomic.sitemap = (function () {
             ev.preventDefault();
             var form = dialog.find(".modal-body form");
             var url = form.find("input[name = 'url']").val();
-            if (url.indexOf(' ') >= 0) {
-                alert("Creating feed failed.  The feed's name should not contain spaces.");
-                return;
-            }
-            if (url.length > 0) {
-                var collectionInput = form.find("input[name = 'collection']");
-                var collection = collectionInput.val() + "/" + url;
-                collectionInput.val(collection);
+            if (url != undefined) {
+                if (url.indexOf(' ') >= 0) {
+                    alert("Creating feed failed.  The feed's name should not contain spaces.");
+                    return;
+                }
+                if (url.length > 0) {
+                    var collectionInput = form.find("input[name = 'collection']");
+                    var collection = collectionInput.val() + "/" + url;
+                    collectionInput.val(collection);
+                }                
             }
             $("input[name='groupPermissions']", form).val(Atomic.utils.generateGroupPermissionsDescriptor());
             var data = form.serialize();
