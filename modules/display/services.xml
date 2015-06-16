@@ -33,22 +33,22 @@ How to use:
         <image-service name="local">
             <uri type="get" name="tamboti-thumbnail">
                 <authentication/>
-                <url>/exist/apps/wiki/modules/display/image-view.xql?uuid=[1]&amp;width=40&amp;height=40</url>
+                <url>/exist/rest/db/apps/wiki/modules/display/image-view.xql?uuid=[1]&amp;width=40&amp;height=40</url>
                 <element-query key="1">@id</element-query>
             </uri>
             <uri type="get" name="tamboti-size150">
                 <authentication/>
-                <url>/exist/apps/wiki/modules/display/image-view.xql?uuid=[1]&amp;width=150</url>
+                <url>/exist/rest/db/apps/wiki/modules/display/image-view.xql?uuid=[1]&amp;width=150</url>
                 <element-query key="1">@id</element-query>
             </uri>
             <uri type="get" name="tamboti-size1000">
                 <authentication/>
-                <url>/exist/apps/wiki/modules/display/image-view.xql?uuid=[1]&amp;width=1000</url>
+                <url>/exist/rest/db/apps/wiki/modules/display/image-view.xql?uuid=[1]&amp;width=1000</url>
                 <element-query key="1">@id</element-query>
             </uri>
             <uri type="get" name="tamboti-full">
                 <authentication/>
-                <url>/exist/apps/wiki/modules/display/image-view.xql?uuid=[1]</url>
+                <url>/exist/rest/db/apps/wiki/modules/display/image-view.xql?uuid=[1]</url>
                 <element-query key="1">@id</element-query>
             </uri>
         </image-service>
