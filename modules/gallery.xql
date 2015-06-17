@@ -630,6 +630,8 @@ function gallery:get-ziziphus-collections($node as node(), $model as map(*)) {
                 util:collection-name($work)
         )
     for $collection in $collections
+    order by $collection
     return
-        <option value="{$collection}">{xmldb:decode(replace($collection, ".*/([^/]+)$", "$1"))}</option>
+        <option value="{$collection}">{xmldb:decode(substring-after($collection, "/db"))}</option>
+        (: <option value="{$collection}">{xmldb:decode(replace($collection, ".*/([^/]+)$", "$1"))}</option> :)
 };
