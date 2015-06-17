@@ -95,12 +95,36 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a href="#permissions" data-toggle="collapse">Permissions</a>
-                                    </h4>
-                                    <div class="panel-collapse collapse" id="permissions">
+                            <template id="perm-group-template">
+                                <tr class="perm-detail">
+                                    <td>Group:</td>
+                                    <td>
+                                        <select name="perm-group" data-template="acl:group-select"/>
+                                    </td>
+                                    <td>
+                                        <input class="perm-group-read" type="checkbox" name="perm-group-read"/> read</td>
+                                    <td>
+                                        <input class="perm-group-write" type="checkbox" name="perm-group-write"/> write</td>
+                                    <td>
+                                        <button>
+                                            <img src="resources/images/add.png"/>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <img src="resources/images/delete.png"/>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                            <div class="panel-group" id="html-edit-gallery-permissions-accordion">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <a data-toggle="collapse" data-target="#html-edit-gallery-permissions-accordion-collapseOne" data-parent="#html-edit-gallery-permissions-accordion" href="#html-edit-gallery-permissions-accordion-collapseOne">
+                                            <i class="fa fa-lock"/> Permissions
+                                        </a>
+                                    </div>                                
+                                    <div class="panel-collapse collapse" id="html-edit-gallery-permissions-accordion-collapseOne">
                                         <div class="panel-body">
                                             <table class="permissions acl:show-permissions?modelItem=feed">
                                                 <tr>
@@ -108,7 +132,7 @@
                                                         <input class="perm-private" type="checkbox" name="perm-private" checked="checked" title="Uncheck for more access control options"/> Private
                                                     </td>
                                                 </tr>
-                                                <tr class="perm-detail">
+                                                <tr class="perm-detail" data-template="acl:show-group-permissions">
                                                     <td>Group:</td>
                                                     <td>
                                                         <select name="perm-group" data-template="acl:group-select"/>
@@ -128,7 +152,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                </div>
+                                </div>                             
                             </div>
                             <div class="gallery:edit-gallery-items"/>
                             <input type="hidden" name="ctype" value="html"/>
