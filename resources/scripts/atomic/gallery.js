@@ -44,6 +44,7 @@ $(document).ready(function() {
     
     $("body").on("click", "#edit-form-save", function (e){                
         console.log("clicked #edit-form-save");
+        $("input[name='groupPermissions']", form).val(Atomic.utils.generateGroupPermissionsDescriptor());
         e.preventDefault();
         saveGallery();    
     });
@@ -51,6 +52,7 @@ $(document).ready(function() {
     $("#edit-form-saveAndClose").click(function(ev) {
         $("input[name='action']", form).val("store");
         $("input[name='ctype']", form).val("gallery");
+        $("input[name='groupPermissions']", form).val(Atomic.utils.generateGroupPermissionsDescriptor());
         updateForm();
         form.submit();
         return false;
