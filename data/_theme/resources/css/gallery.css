@@ -62,7 +62,6 @@
     right: 3px;    
     top: 180px;
     z-index: 1;
-    
 }
 
 #toggleGallerySwitch {
@@ -89,7 +88,7 @@
     display: block;
     font-size: 0.9em;    
     right: 0;
-    width: 630px;
+    width: 640px;
     z-index:5;
     float:left;
 }
@@ -143,10 +142,8 @@
     display:block;
     margin:0;
     padding:0;
-    overflow: auto;    
 }
-#gallery-selection { 
-    
+#gallery-selection {
     list-style-type: none; 
     margin: 0; 
     padding: 0;
@@ -213,6 +210,8 @@
 #imageSelector #thumbs {
     padding-left: 9px;
     background:whitesmoke;
+    height: 700px;
+    overflow: auto;
 }
 
 #imageSelector #thumbs .ui-widget-content {
