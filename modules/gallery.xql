@@ -16,9 +16,9 @@ declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace wiki="http://exist-db.org/xquery/wiki";
 declare namespace html="http://www.w3.org/1999/xhtml";
 
-declare variable $gallery:IMAGE_BIG := "?width=1024";
-declare variable $gallery:IMAGE_THUMB := "?width=100&amp;height=100&amp;crop_type=middle";
-declare variable $gallery:IMAGE_THUMB_LARGE := "?width=256&amp;height=256&amp;crop_type=middle";
+declare variable $gallery:IMAGE_BIG := "&amp;width=1024";
+declare variable $gallery:IMAGE_THUMB := "&amp;size=tamboti-size150";
+declare variable $gallery:IMAGE_THUMB_LARGE := "&amp;width=256&amp;height=256&amp;crop_type=middle";
 
 declare function gallery:show-catalog($node as node(), $model as map(*)) {
     let $gallery-id := $node/@id
@@ -48,6 +48,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                     let $hrefSrc := $entry/atom:link[starts-with(@type, "image")]/@href/string()
                     (: replace image-server base URI :)
                     let $href := replace($hrefSrc, $config:image-server || "/", $config:image-server || ":" || $config:image-server-port || "/")
+                    let $href := $hrefSrc
                     let $vraMetaID := $entry/atom:link[starts-with(@type, "vra")]/@href/string()
                     let $vraCol := collection("/db/apps//_galleries/vra_entries/$vraMetaID")//vra
                     let $vraMetaImageAgentName := $vraCol//image//agent/name/text()
@@ -433,42 +434,44 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
 declare 
     %templates:wrap
     function gallery:search($node as node(), $model as map(*), $filterCollection as xs:string?, $query as xs:string?, $cached as item()*) {
-    if ($query or $cached) then
-        let $result := 
-            if ($query and $filterCollection and not($filterCollection eq "all")) then
-                if ($filterCollection = "local") then
-                    gallery:local-images()
-                else
-                    collection($filterCollection)//vra:vra/vra:work[ft:query(.//*, $query)]
-            else if($query) then (
-                gallery:local-images(),
-                collection($config:data || '/commons')//vra:vra/vra:work[ft:query(.//*, $query)],
-                collection('/db/resources/users')//vra:vra/vra:work[ft:query(.//*, $query)]
-            )
-            else
-                $cached
-        return (
-            map {
-                "result" := $result,
-                "query" := $query
-            },
-            session:set-attribute("cached", $result)
-        )
-    else
-        (
-            let $output := map {
-                "result" := 
-                    if ($filterCollection eq "all") then (
+        system:as-user("admin", "",
+            if ($query or $cached) then
+                let $result := 
+                    if ($query and $filterCollection and not($filterCollection eq "all")) then
+                        if ($filterCollection = "local") then
+                            gallery:local-images()
+                        else
+                            collection($filterCollection)//vra:vra/vra:work[ft:query(.//*, $query)]
+                    else if($query) then (
                         gallery:local-images(),
-                        collection('/db/resources/commons')//vra:vra/vra:work,
-                        collection('/db/resources/users')//vra:vra/vra:work
-                    ) else if ($filterCollection eq "local") then
-                        gallery:local-images()
+                        collection($config:data || '/commons')//vra:vra/vra:work[ft:query(.//*, $query)],
+                        collection($config:data || '/users')//vra:vra/vra:work[ft:query(.//*, $query)]
+                    )
                     else
-                        collection($filterCollection)//vra:vra/vra:work
-            }
-            return
-                $output
+                        $cached
+                return (
+                    map {
+                        "result" := $result,
+                        "query" := $query
+                    },
+                    session:set-attribute("cached", $result)
+                )
+            else
+                (
+                    let $output := map {
+                        "result" := 
+                            if ($filterCollection eq "all") then (
+                                gallery:local-images(),
+                                collection('/db/resources/commons')//vra:vra/vra:work,
+                                collection('/db/resources/users')//vra:vra/vra:work
+                            ) else if ($filterCollection eq "local") then
+                                gallery:local-images()
+                            else
+                                collection($filterCollection)//vra:vra/vra:work
+                    }
+                    return
+                        $output
+                )
         )
 };
 
@@ -574,6 +577,7 @@ declare function gallery:result-image($node as node(), $model as map(*)) {
                 image-link-generator:generate-href($image/@relids, 'tamboti-size150')
             else
                 image-link-generator:generate-href($image/@href, 'tamboti-size150')
+        let $log := util:log("INFO", $imageURL)
         let $href :=
             if ($image/@relids) then
                 $imageURL
