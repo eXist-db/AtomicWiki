@@ -1,7 +1,7 @@
 (:
  :  RESTful Annotations for XQuery (RESTXQ) in plain XQuery. Temporary solution until
  :  the Java implementation is available.
- : 
+ :
  :  Copyright (C) 2012 Wolfgang Meier
  :  http://existsolutions.com
  :
@@ -26,20 +26,20 @@ xquery version "3.0";
 
 (:~
  : An implementation of RESTful Annotations for XQuery (RESTXQ) in plain
- : XQuery. Most of this code is standard XQuery 3.0 with map extension, 
- : except for the function used to inspect a function signature and the 
+ : XQuery. Most of this code is standard XQuery 3.0 with map extension,
+ : except for the function used to inspect a function signature and the
  : calls to the HTTP request module.
- : 
+ :
  : This started as a temporary solution until the Java implementation was
- : available, but I now use it as a quick fallback when I don't want to or 
+ : available, but I now use it as a quick fallback when I don't want to or
  : cannot enable the restxq trigger.
- : 
+ :
  : @author Wolfgang Meier <wolfgang@existsolutions.com>
  :)
 module namespace restxq="http://exist-db.org/xquery/restxq";
 
 declare variable $restxq:NAMESPACE := "http://exquery.org/ns/restxq";
-(: 
+(:
  : Define a second namespace for the annotations which can be used in cases
  : where annotations would conflict with the Java restxq.
  :)
@@ -58,15 +58,15 @@ declare variable $restxq:OUTPUT_METHOD := QName($restxq:OUTPUT_NAMESPACE, "metho
 
 declare variable $restxq:ERROR_IF_AMBIGUOUS := false();
 
-(:~ 
+(:~
  : Main entry point: takes a sequence of functions and tries to match them
  : against the current HTTP request by inspecting their %rest annotations.
- : 
+ :
  : @param $path-info the HTTP request path to compare with in %restxq:path. If empty,
  : we'll use the value returned by request:get-path-info(), i.e. any extra path
  : information in the URL after the path leading to the called XQuery. If you call
  : restxq from a controller.xql, you probably want to pass $exist:path as $path-info.
- : 
+ :
  : @param $functions the sequence of function items to inspect, usually obtained
  : by calling util:list-functions on a module URI.
  :)
@@ -119,7 +119,7 @@ declare %private function restxq:function-by-annotation($functions as function(*
     return
         (: More than one function found: throw an error :)
         if (count($matchingFunctions) > 1 and $restxq:ERROR_IF_AMBIGUOUS) then
-            error($restxq:AMBIGUOUS, "More than one function matches the request: " || 
+            error($restxq:AMBIGUOUS, "More than one function matches the request: " ||
                 string-join(for $f in $matchingFunctions return function-name($f("function")), ", "))
         else
             (: If there are multiple matching functions, choose the one with the larger
@@ -134,7 +134,7 @@ declare %private function restxq:function-by-annotation($functions as function(*
                 $callback($f("function"), $f("meta"), $f("params"))
 };
 
-(:~ 
+(:~
  : Process the given %rest annotation. Returns the empty sequence if the annotation
  : is constraining and does not match the current HTTP request, or a map of parameters
  : otherwise.
@@ -268,7 +268,7 @@ declare %private function restxq:match-path($params as map(*), $input as xs:stri
     return
         if (matches($input, $regex)) then
             let $groupsRegex := "^" || replace($template, "\{\$([^\}]+)\}", "(.*)") || "$"
-            let $groups := subsequence(text:groups($input, $groupsRegex), 2)
+            let $groups := analyze-string($input, $groupsRegex)//fn:group/string()
             let $analyzed := analyze-string($template, "\{\$[^\}]+\}")
             return
                 map:new((
