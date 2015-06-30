@@ -38,7 +38,7 @@ How to use:
             </uri>
             <uri type="get" name="tamboti-size150">
                 <authentication/>
-                <url>/exist/rest/db/apps/wiki/modules/display/image-view.xql?uuid=[1]&amp;width=150</url>
+                <url>/exist/rest/db/apps/wiki/modules/display/image-view.xql?uuid=[1]&amp;size=tamboti-size150</url>
                 <element-query key="1">@id</element-query>
             </uri>
             <uri type="get" name="tamboti-size1000">
