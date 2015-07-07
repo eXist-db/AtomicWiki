@@ -38,12 +38,13 @@ declare function atomic:process-img($node as element()) {
     let $src := $node/@src
     let $resolved :=
         if (contains($src, "/rest/db/apps/"))
-        then $src
+        then $src || "&amp;size=tamboti-size150"
         else
             if (starts-with($src, "/")) then
                 $config:base-url || $src
             else
                 $src
+    
     return
         element { node-name($node) } {
             $node/@* except ($node/@alt, $node/@src, $node/@class),
