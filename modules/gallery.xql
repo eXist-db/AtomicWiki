@@ -17,7 +17,6 @@ declare namespace wiki="http://exist-db.org/xquery/wiki";
 declare namespace html="http://www.w3.org/1999/xhtml";
 
 declare variable $gallery:IMAGE_BIG := "&amp;width=1024";
-declare variable $gallery:IMAGE_THUMB := "&amp;size=tamboti-size150";
 declare variable $gallery:IMAGE_THUMB_LARGE := "&amp;width=256&amp;height=256&amp;crop_type=middle";
 
 declare function gallery:show-catalog($node as node(), $model as map(*)) {
@@ -56,7 +55,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                         if (matches($href, "^(/|\w+:)")) then
                             map {
                                     "src" := $href,
-                                    "src_thumb" := $href || $gallery:IMAGE_THUMB,
+                                    "src_thumb" := $href || $config:IMAGE_THUMBNAIL,
                                     "src_big" := $href || $gallery:IMAGE_BIG
                             }
                         else

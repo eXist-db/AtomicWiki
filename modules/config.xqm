@@ -270,3 +270,5 @@ declare function config:app-info($node as node(), $model as map(*)) {
             }
         </table>
 };
+
+declare variable $config:IMAGE_THUMBNAIL := "&amp;size=tamboti-size150";
