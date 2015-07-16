@@ -57,6 +57,13 @@ $(document).ready(function() {
         form.submit();
         return false;
     }); 
+    
+    
+    $("#edit-form-cancel").click(function(ev) {
+        history.back(-1);
+        return true;
+    });
+        
     $(".delete-button").click(function(ev) {
         //ev.preventDefault();
         console.log("clicked delete-button");
