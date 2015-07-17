@@ -10,6 +10,11 @@ $(document).ready(function() {
         $(this).parent().addClass('open');
         $(this).parent().find("ul").parent().find("li.dropdown").addClass('open');
     });
+    
+    $(".accordion-container").accordion({
+      collapsible: true,
+      active: false
+    });     
 });
 
 var Atomic = Atomic || {};
