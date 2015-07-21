@@ -66,6 +66,31 @@ Atomic.users = (function () {
                     };
                     viewModel.addUser = ko.observable();
                     viewModel.newUser = new User();
+                    viewModel.headers =
+                        [
+                            {title: 'User ID', sortPropertyName: 'id', ascending: true},
+                            {title: 'Name', sortPropertyName: 'name', ascending: true},
+                            {title: 'Manager', sortPropertyName: 'manager', ascending: true},
+                            {title: '', sortPropertyName: 'actions', ascending: true}
+                    ];
+                    viewModel.activeSort = viewModel.headers[0]; //set the default sort
+                    viewModel.sort =
+                        function(header, event) {
+                            if (viewModel.activeSort === header) {
+                                header.ascending = !header.ascending; //toggle the direction of the sort
+                            } else {
+                                viewModel.activeSort = header; //first click, remember it
+                            }
+                            
+                            var prop = viewModel.activeSort.sortPropertyName;
+                            var ascSort = function(a,b) {var aProp = a[prop]().toLowerCase(); var bProp = b[prop]().toLowerCase(); return aProp < bProp ? -1 : aProp > bProp ? 1 : aProp == bProp ? 0 : 0; };
+                            var descSort = function(a,b) {var aProp = a[prop]().toLowerCase(); var bProp = b[prop]().toLowerCase(); return aProp > bProp ? -1 : aProp < bProp ? 1 : aProp == bProp ? 0 : 0; };
+                            
+                            var sortFunc = viewModel.activeSort.ascending ? ascSort : descSort;
+                            
+                            viewModel.selectedGroup().user.sort(sortFunc);
+                    };
+                    
                     ko.applyBindings(viewModel);
                 } else {
                     ko.mapping.fromJS(data, viewModel);
@@ -84,10 +109,6 @@ Atomic.users = (function () {
     
     function createGroup(model) {
         var name = model.newGroup.name();
-        if (name.indexOf(" ") > -1) {
-            Atomic.util.Dialog.error("Group Creation Failed", "<p>The group name should not contain spaces.</p>", "fa-exclamation");
-            return;
-        }          
         var description = model.newGroup.description();
         $.ajax({
             url: "modules/users.xql",
@@ -133,13 +154,6 @@ Atomic.users = (function () {
         var group = model.selectedGroup().name();
         var label = model.selectedGroup().label();
         var user = model.addUser();
-        $.each($("ul.typeahead.dropdown-menu li"), function(index) {
-            var suggestedUsername = $(this).text();
-            if (suggestedUsername.indexOf(user + "@") === 0) {
-                Atomic.util.Dialog.error("Adding User Failed", "<p>The user you want to add exists already in domain '" + suggestedUsername.substring(suggestedUsername.indexOf("@") + 1) + "'.</p>", "fa-exclamation");
-                return;
-            }
-        });        
         if (user) {
             $.log("Adding user %s to group %s", model.addUser(), group);
             $.getJSON("modules/users.xql", { mode: "add-user", id: escape(model.addUser()), group: group},
