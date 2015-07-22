@@ -50,7 +50,11 @@
                 <table class="table table-bordered table-striped users">
                     <thead>
                         <tr data-bind="foreach: headers">
-                            <th data-bind="click: $parent.sort, text: title" />
+                            <th data-bind="click: $parent.sort">
+                                <span data-bind="text: title"/>
+                                <span data-bind="if: arrowDown"> v </span>
+                                <span data-bind="if: arrowUp"> ^ </span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: selectedGroup().user">

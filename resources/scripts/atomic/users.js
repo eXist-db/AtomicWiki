@@ -68,29 +68,35 @@ Atomic.users = (function () {
                     viewModel.newUser = new User();
                     viewModel.headers =
                         [
-                            {title: 'User ID', sortPropertyName: 'id', ascending: true},
-                            {title: 'Name', sortPropertyName: 'name', ascending: true},
-                            {title: 'Manager', sortPropertyName: 'manager', ascending: true},
-                            {title: '', sortPropertyName: 'actions', ascending: true}
+                            {title: 'User ID', sortPropertyName: 'id', ascending:  'true', arrowDown: ko.observable(false), arrowUp: ko.observable(true)},
+                            {title: 'Name', sortPropertyName: 'name', ascending: 'true', arrowDown: ko.observable(false), arrowUp: ko.observable(false)},
+                            {title: 'Manager', sortPropertyName: 'manager', ascending: 'true', arrowDown: ko.observable(false), arrowUp: ko.observable(false)},
+                            {title: '', sortPropertyName: 'actions', ascending: 'true', arrowDown: ko.observable(false), arrowUp: ko.observable(false)}
                     ];
-                    viewModel.activeSort = viewModel.headers[0]; //set the default sort
+                    viewModel.activeSort = viewModel.headers[0];
                     viewModel.sort =
                         function(header, event) {
                             if (viewModel.activeSort === header) {
-                                header.ascending = !header.ascending; //toggle the direction of the sort
+                                header.ascending = !header.ascending;
+                                header.arrowDown(!header.arrowDown());
+                                header.arrowUp(!header.arrowUp());
                             } else {
-                                viewModel.activeSort = header; //first click, remember it
+                                viewModel.activeSort.arrowDown(false);
+                                viewModel.activeSort.arrowUp(false);
+                                viewModel.activeSort = header;
+                                viewModel.activeSort.ascending = true;
+                                header.arrowDown(true);
                             }
-                            
+
                             var prop = viewModel.activeSort.sortPropertyName;
                             var ascSort = function(a,b) {var aProp = a[prop]().toLowerCase(); var bProp = b[prop]().toLowerCase(); return aProp < bProp ? -1 : aProp > bProp ? 1 : aProp == bProp ? 0 : 0; };
                             var descSort = function(a,b) {var aProp = a[prop]().toLowerCase(); var bProp = b[prop]().toLowerCase(); return aProp > bProp ? -1 : aProp < bProp ? 1 : aProp == bProp ? 0 : 0; };
                             
                             var sortFunc = viewModel.activeSort.ascending ? ascSort : descSort;
-                            
+
                             viewModel.selectedGroup().user.sort(sortFunc);
                     };
-                    
+
                     ko.applyBindings(viewModel);
                 } else {
                     ko.mapping.fromJS(data, viewModel);
