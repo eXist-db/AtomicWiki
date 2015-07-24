@@ -216,6 +216,7 @@ try {
                                 let $setAttr := request:set-attribute("feed", if ($gallery) then $galleryFeed else ())
                                 let $setAttr := request:set-attribute("galleryName", $gallery)
                                 let $setAttr := request:set-attribute("collection", util:collection-name($feed))
+                                let $setAttr := request:set-attribute("action", $action)
                                 return
                                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                                         <forward url="{$exist:controller}/modules/store.xql">
