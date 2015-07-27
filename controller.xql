@@ -28,7 +28,7 @@ declare variable $local:error-handler :=
     first is the collection, second the article (if specified)
 :)
 declare function local:extract-feed($path as xs:string) {
-    for $cmp in subsequence(text:groups($path, '^/?(.*)/([^/]*)$'), 2)
+    for $cmp in (replace($path, '^/?(.*)/([^/]*)$', '$1'), replace($path, '^/?(.*)/([^/]*)$', '$2'))
     return
         xmldb:decode-uri($cmp)
 };
