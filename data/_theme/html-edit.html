@@ -54,22 +54,17 @@
                                     <div class="checkbox">
                                         <label>
                                             <input type="checkbox" class="app:edit-use-index" name="is-index"/>
-                                            Check to use this page as the index page for the section
+                                            Check to use this page as the index page for the feed
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <a data-toggle="collapse" href="#permissions">
-                                        <i class="fa fa-lock"/> Permissions</a>
-                                </div>
-                                <div id="permissions" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <div class="templates:include?path=templates/permissions.html"/>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="accordion-container">
+                              <h3><i class="fa fa-lock"/> Permissions</h3>
+                              <div>
+                                <div class="templates:include?path=templates/permissions.html"/>
+                              </div>
+                            </div> 
                             <fieldset id="content">
                                 <ul class="nav nav-tabs">
                                     <li class="active">
@@ -622,7 +617,7 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript" src="$shared/resources/scripts/jquery/jquery-1.7.1.min.js"/>
+        <script type="text/javascript" src="resources/scripts/jquery/jquery-1.11.3.min.js"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery-ui.min.js"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery.fileupload.js"/>
         <script type="text/javascript" src="resources/scripts/jquery/jquery.dynatree.min.js"/>

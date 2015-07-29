@@ -44,6 +44,7 @@ $(document).ready(function() {
     
     $("body").on("click", "#edit-form-save", function (e){                
         console.log("clicked #edit-form-save");
+        $("input[name='groupPermissions']", form).val(Atomic.utils.generateGroupPermissionsDescriptor());
         e.preventDefault();
         saveGallery();    
     });
@@ -51,10 +52,18 @@ $(document).ready(function() {
     $("#edit-form-saveAndClose").click(function(ev) {
         $("input[name='action']", form).val("store");
         $("input[name='ctype']", form).val("gallery");
+        $("input[name='groupPermissions']", form).val(Atomic.utils.generateGroupPermissionsDescriptor());
         updateForm();
         form.submit();
         return false;
     }); 
+    
+    
+    $("#edit-form-cancel").click(function(ev) {
+        history.back(-1);
+        return true;
+    });
+        
     $(".delete-button").click(function(ev) {
         //ev.preventDefault();
         console.log("clicked delete-button");
@@ -79,7 +88,7 @@ $(document).ready(function() {
     });
     loadImages();
     $("#query-images").click(function (ev) {   
-        console.debug("clicke on load images button!")
+        console.debug("clicked on load images button!")
         loadImages(1)
     });
     
@@ -177,13 +186,14 @@ function addImage(){
     
     var imageTitle = $(".ui-selected .image-title").html();
     var imageURL = $(".ui-selected .image-url").html().replace("!150,150", "full");
+    imageURL = imageURL.replace("&amp;size=tamboti-size150", "");
 
     var imageId = Atomic.util.uuid();
     
     liTemplate.attr("id", imageId);    
     liTemplate.find(".thumb").attr("href",imageURL);
     liTemplate.find(".img-thumbnail").attr("alt",imageTitle);
-    liTemplate.find(".img-thumbnail").attr("src",imageURL + "?width=256&amp;height=256&amp;crop_type=middle");
+    liTemplate.find(".img-thumbnail").attr("src",imageURL + "&size=tamboti-size150");
     
     liTemplate.find(".image-title").html(imageTitle); 
     liTemplate.find(".image-desc span").attr("id", imageId + "-content");

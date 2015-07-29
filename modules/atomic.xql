@@ -37,10 +37,14 @@ declare function atomic:process-links($node as node()?) {
 declare function atomic:process-img($node as element()) {
     let $src := $node/@src
     let $resolved :=
-        if (starts-with($src, "/")) then
-            $config:base-url || $src
+        if (contains($src, "/rest/db/apps/"))
+        then $src || $config:IMAGE_THUMBNAIL
         else
-            $src
+            if (starts-with($src, "/")) then
+                $config:base-url || $src
+            else
+                $src
+    
     return
         element { node-name($node) } {
             $node/@* except ($node/@alt, $node/@src, $node/@class),

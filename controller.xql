@@ -28,7 +28,7 @@ declare variable $local:error-handler :=
     first is the collection, second the article (if specified)
 :)
 declare function local:extract-feed($path as xs:string) {
-    for $cmp in subsequence(text:groups($path, '^/?(.*)/([^/]*)$'), 2)
+    for $cmp in (replace($path, '^/?(.*)/([^/]*)$', '$1'), replace($path, '^/?(.*)/([^/]*)$', '$2'))
     return
         xmldb:decode-uri($cmp)
 };
@@ -216,6 +216,7 @@ try {
                                 let $setAttr := request:set-attribute("feed", if ($gallery) then $galleryFeed else ())
                                 let $setAttr := request:set-attribute("galleryName", $gallery)
                                 let $setAttr := request:set-attribute("collection", util:collection-name($feed))
+                                let $setAttr := request:set-attribute("action", $action)
                                 return
                                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                                         <forward url="{$exist:controller}/modules/store.xql">
