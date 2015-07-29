@@ -111,6 +111,16 @@ declare function app:entry($node as node(), $model as map(*), $feed as xs:string
         map { "entry" := $entryData, "count" := 1 }
 };
 
+declare function app:gallery-title($node as node(), $model as map(*)) {
+    let $action := request:get-parameter("action", ())
+    
+    return
+        switch ($action)
+            case "addgallery" return <h1>New Slideshow</h1>
+            case "editgallery" return <h1>Edit Slideshow</h1>
+            default return ()
+};
+
 declare function app:get-or-create-entry($node as node(), $model as map(*), $lock as xs:string?) {
     let $feed := $model("feed")
     let $id := request:get-parameter("id", ())
