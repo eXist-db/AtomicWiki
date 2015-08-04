@@ -38,7 +38,7 @@ declare function atomic:process-img($node as element()) {
     let $src := $node/@src
     let $resolved :=
         if (contains($src, "/rest/db/apps/"))
-        then $src || $config:IMAGE_THUMBNAIL
+        then $src
         else
             if (starts-with($src, "/")) then
                 $config:base-url || $src
