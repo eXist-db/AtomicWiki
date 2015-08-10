@@ -824,7 +824,7 @@ Atomic.editor.ImageLink = (function () {
             if (/^\//.test(imageURL) && useRelativeURLs) {
                 imageURL = $(".ui-selected .image-url-rel").html();
             }
-            imageURL = imageURL.replace("&amp;width=150", "");            
+            imageURL = imageURL.replace("&amp;size=tamboti-size150", "");
             console.log("Image added: %s: %s", imageURL, imageTitle);
             
             $("#image-dialog input[name='url']").val(imageURL);
