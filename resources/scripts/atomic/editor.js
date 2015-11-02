@@ -322,7 +322,7 @@ Atomic.editor.Editor = (function () {
             if(addMusic){
                 addMusic.show(function(musictyp, id) {
                 editor.composer.commands.exec("insertHTML", 
-                    "<div class='gallery:select-music?musictyp=" + musictyp + " music-placeholder' id='" + id + "'> You selected audiotyp: " + musictyp + " with the name: " + id + "  </div><p></p>");
+                    "<div class='gallery:select-music?musictyp=" + musictyp + " music-placeholder' id='" + id + "'> You selected audiotype: " + musictyp + " with the name: " + id + "  </div><p></p>");
                 });
                 return false;
             }
