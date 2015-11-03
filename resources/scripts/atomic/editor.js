@@ -320,9 +320,9 @@ Atomic.editor.Editor = (function () {
         
         toolbar.find('a[data-wysihtml5-command="insertMusic"]').click(function(ev) {
             if(addMusic){
-                addMusic.show(function(musictyp, id) {
+                addMusic.show(function(musictype, id, width, height) {
                 editor.composer.commands.exec("insertHTML", 
-                    "<div class='gallery:select-music?musictyp=" + musictyp + " music-placeholder' id='" + id + "'> You selected audiotype: " + musictyp + " with the name: " + id + "  </div><p></p>");
+                    "<div class='gallery:select-music?musictyp=" + musictype + " music-placeholder' id='" + id + "' data-width='" + width + "' data-height='" + height + "'> You selected audiotype: " + musictype + " with the name: " + id + "  </div><p></p>");
                 });
                 return false;
             }

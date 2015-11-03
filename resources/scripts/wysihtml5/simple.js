@@ -38,6 +38,7 @@ var wysihtml5ParserRules = {
         "gallery:add-music": 1,
         "gallery:add-music music-placeholder": 1,
         "gallery:select-music?musictyp=musicLocal": 1,
+        "gallery:select-music?musictyp=soundcloud": 1,
         "gallery:select-music?musictyp=musicUrl": 1,
         "gallery:select-music?musictyp=ogg": 1,
         "music-placeholder": 1
@@ -55,7 +56,9 @@ var wysihtml5ParserRules = {
     },
     div:    {
         "check_attributes": {
-            id: "id"
+            id: "id",
+           "data-width": "numbers",
+           "data-height": "numbers"
         }
     },
     span:   {},

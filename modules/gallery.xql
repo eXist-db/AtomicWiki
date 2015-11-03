@@ -175,14 +175,24 @@ declare function gallery:add-music($node as node(), $model as map(*)) {
     <div class="form-group">
         <select class="col-md-6 form-control" name="music">
             <option value="musicLocal">local</option>
+            <option value="soundcloud">Soundcloud</option>
         </select>
         <input class="col-md-6 form-control" type="text" name="id" placeholder="File Name or URL of music-title" required="required"/>
+        <div style="float: left; margin-top: 10px;">
+            <label class="col-md-2" for="width">Width</label>
+            <input id="width" class="col-md-3" type="number" name="width" value="450"/>
+            <label class="col-md-2" for="height">Height</label>
+            <input id="height" class="col-md-3" type="number" name="height" value="450"/>
+        </div>
     </div>
 };
 
 declare function gallery:select-music($node as node(), $model as map(*), $musictyp as xs:string?) {
     let $collection := $config:base-url || substring-after(util:collection-name($model("feed")), $config:app-root)
     let $id := $node/@id
+    let $width := $node/@data-width
+    let $height := $node/@data-height
+    
     return
         
     switch ($musictyp)
@@ -193,6 +203,9 @@ declare function gallery:select-music($node as node(), $model as map(*), $musict
             </audio>
             
         </div>
+    case "soundcloud" return
+        <iframe width="{$width}" height="{$height}" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url={$id}&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>
+        
 (:    case "musicUrl" return:)
 (:        <div>:)
 (:            <audio src="http://www.youtube.com/embed/{$id}?rel=0" controls="">:)
@@ -433,7 +446,7 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
 declare 
     %templates:wrap
     function gallery:search($node as node(), $model as map(*), $filterCollection as xs:string?, $query as xs:string?, $cached as item()*) {
-        system:as-user("admin", "",
+        system:as-user("admin", "Wars4Spass2$s",
             if ($query or $cached) then
                 let $result := 
                     if ($query and $filterCollection and not($filterCollection eq "all")) then
@@ -576,7 +589,6 @@ declare function gallery:result-image($node as node(), $model as map(*)) {
                 image-link-generator:generate-href($image/@relids, 'tamboti-size150')
             else
                 image-link-generator:generate-href($image/@href, 'tamboti-size150')
-        let $log := util:log("INFO", $imageURL)
         let $href :=
             if ($image/@relids) then
                 $imageURL

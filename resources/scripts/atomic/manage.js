@@ -584,7 +584,8 @@ Atomic.editor.AddMusicLink = (function () {
             ev.preventDefault();
             self.dialog.modal("hide");
             if (self.callback) {
-                self.callback(select.val(), self.dialog.find("input[name='id']").val());
+                var dialog = self.dialog;
+                self.callback(select.val(), dialog.find("input[name = 'id']").val(), dialog.find("input[name = 'width']").val(), dialog.find("input[name = 'height']").val());
             }
         });
     };
