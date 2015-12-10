@@ -13,8 +13,10 @@ $(document).ready(function() {
     
     $(".accordion-container").accordion({
       collapsible: true,
-      active: false
-    });     
+      active: false,
+      autoHeight: false,
+      clearStyle: true
+    });    
 });
 
 var Atomic = Atomic || {};
