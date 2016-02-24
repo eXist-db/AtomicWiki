@@ -10,7 +10,7 @@
         <atom:name>wolf</atom:name>
         <wiki:display xmlns:wiki="http://exist-db.org/xquery/wiki">Wolfgang</wiki:display>
     </atom:author>
-    <atom:title>Welcome to Atomic Wiki</atom:title>
+    <atom:title>About Atomic Wiki</atom:title>
     <atom:category term="article"/>
     <atom:category term="help"/>
     <atom:category term="wiki"/>
