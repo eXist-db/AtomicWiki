@@ -239,7 +239,7 @@ declare function local:change-password() {
                 sm:passwd($user, $pass)
             }</ok>
         } catch * {
-            <error status="access-denied" message="{$err:message}"/>
+            <error status="access-denied" message="{$err:description}"/>
         }
 };
 
