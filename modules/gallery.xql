@@ -561,8 +561,10 @@ function gallery:pagination-next($node as node(), $model as map(*), $start as xs
 };
 
 declare function gallery:result-image($node as node(), $model as map(*)) {    
+        console:log($model?entry),
         let $entry := $model("entry")
-        for $image in $entry//vra:relationSet/vra:relation[not(@relids) or starts-with(@relids, "i_")]
+        (: for $image in $entry//vra:relationSet/vra:relation[not(@relids) or starts-with(@relids, "i_")] :)
+        for $image in $entry//vra:relationSet/vra:relation
         let $serverPath := $config:image-server
         let $serverPort := $config:image-server-port
         let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
@@ -571,12 +573,11 @@ declare function gallery:result-image($node as node(), $model as map(*)) {
                 $serverPath || ":" || $serverPort || "/images/service/download_uuid/" || $image/@relids
             else
                 "modules/images.xql?image=" || $image/@href
-        let $imageURL :=  
+        (: let $imageURL :=  
             if ($image/@relids) then
                 image-link-generator:generate-href($image/@relids, 'tamboti-size150')
             else
-                image-link-generator:generate-href($image/@href, 'tamboti-size150')
-        let $log := util:log("INFO", $imageURL)
+                image-link-generator:generate-href($image/@href, 'tamboti-size150') :)
         let $href :=
             if ($image/@relids) then
                 $imageURL
