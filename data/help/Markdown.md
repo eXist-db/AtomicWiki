@@ -41,7 +41,7 @@ return
 
 # Lists
 
-## Simple list
+## Simple List
 
 For an unordered list, start each item on a line with a \*:
 
@@ -62,7 +62,7 @@ For an ordered list, each item should start with a number followed by a period (
 2. Second item
 3. Third item
 
-## Nested list:
+## Nested List
 
 Nested lists are created by adding tabs in front of the nested list items:
 
@@ -72,6 +72,18 @@ Nested lists are created by adding tabs in front of the nested list items:
     * in an unordered list.
 1. Three
 1. Four
+
+## Task List
+
+```markdown
+\* [x] write documentation
+\* [ ] create tests
+```
+
+becomes
+
+* [x] write documentation
+* [ ] create tests
 
 # Links
 
@@ -140,6 +152,17 @@ simple table | column1 | column2
 ```
 
 simple table | column1 | column2
+
+# Quotes
+
+Quote paragraphs by prefixing them with a `> `:
+
+> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+> incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+> nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+> eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
+> in culpa qui officia deserunt mollit anim id est laborum.
 
 # Inline HTML and blocks
 
