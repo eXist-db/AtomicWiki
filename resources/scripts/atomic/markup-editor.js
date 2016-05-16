@@ -213,29 +213,29 @@ Atomic.Editor = (function () {
         });
         this.container.on("paste", function(event) {
             var items = event.originalEvent.clipboardData.items;
-            console.log(JSON.stringify(items)); // will give you the mime types
-            var blob = items[0].getAsFile();
-            var reader = new FileReader();
-            reader.onload = function(event)
-            {
-                var dataURL = event.target.result;
-                console.log(dataURL);
-                var collection = $("input[name='collection']").val();
-                $.ajax({
-        		    type: "POST",
-        		    url: "modules/upload-image.xql",
-        		    data: {
-                        data: dataURL,
-                        collection: collection
-                    },
-        		    success: function (data) {
-                        if (data.name) {
-                            $this.markup("![untitled image](" + data.name + ")");
-                        }
-        		    }
-                });
-            }; // data url
-            reader.readAsDataURL(blob);
+            if (items[0].type.indexOf("image") != -1) {
+                var blob = items[0].getAsFile();
+                var reader = new FileReader();
+                reader.onload = function(event)
+                {
+                    var dataURL = event.target.result;
+                    var collection = $("input[name='collection']").val();
+                    $.ajax({
+            		    type: "POST",
+            		    url: "modules/upload-image.xql",
+            		    data: {
+                            data: dataURL,
+                            collection: collection
+                        },
+            		    success: function (data) {
+                            if (data.name) {
+                                $this.markup("![untitled image](" + data.name + ")");
+                            }
+            		    }
+                    });
+                }; // data url
+                reader.readAsDataURL(blob);
+            }
         });
     };
     
