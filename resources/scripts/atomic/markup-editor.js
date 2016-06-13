@@ -56,6 +56,7 @@ $(document).ready(function() {
     
     $("#edit-form-saveAndClose").click(function(ev) {
         var name = $("input[name='name']").val();
+        $("input[name='groupPermissions']", form).val(Atomic.utils.generateGroupPermissionsDescriptor());
         save(function() {
             $.log("Data stored. Switching to %s", name);
             window.location = name;
@@ -64,6 +65,7 @@ $(document).ready(function() {
     });
     $("#edit-form-save").click(function (ev) {
         ev.preventDefault();
+        $("input[name='groupPermissions']", form).val(Atomic.utils.generateGroupPermissionsDescriptor());
         save();
     });
 
