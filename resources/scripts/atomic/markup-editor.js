@@ -21,6 +21,7 @@ $(document).ready(function() {
     var form = $("#edit-form");
     
     function save(onSuccess) {
+        $("input[name='groupPermissions']", form).val(Atomic.utils.generateGroupPermissionsDescriptor());
         $("input[name='action']", form).val("store");
         summaryEditor.update();
         contentEditor.update();
@@ -55,8 +56,8 @@ $(document).ready(function() {
     });
     
     $("#edit-form-saveAndClose").click(function(ev) {
-        var name = $("input[name='name']").val();
         $("input[name='groupPermissions']", form).val(Atomic.utils.generateGroupPermissionsDescriptor());
+        var name = $("input[name='sname']").val();
         save(function() {
             $.log("Data stored. Switching to %s", name);
             window.location = name;
@@ -65,7 +66,6 @@ $(document).ready(function() {
     });
     $("#edit-form-save").click(function (ev) {
         ev.preventDefault();
-        $("input[name='groupPermissions']", form).val(Atomic.utils.generateGroupPermissionsDescriptor());
         save();
     });
 
@@ -210,6 +210,32 @@ Atomic.Editor = (function () {
                     }
                 }
             });
+        });
+        this.container.on("paste", function(event) {
+            var items = event.originalEvent.clipboardData.items;
+            if (items[0].type.indexOf("image") != -1) {
+                var blob = items[0].getAsFile();
+                var reader = new FileReader();
+                reader.onload = function(event)
+                {
+                    var dataURL = event.target.result;
+                    var collection = $("input[name='collection']").val();
+                    $.ajax({
+            		    type: "POST",
+            		    url: "modules/upload-image.xql",
+            		    data: {
+                            data: dataURL,
+                            collection: collection
+                        },
+            		    success: function (data) {
+                            if (data.name) {
+                                $this.markup("![untitled image](" + data.name + ")");
+                            }
+            		    }
+                    });
+                }; // data url
+                reader.readAsDataURL(blob);
+            }
         });
     };
     
