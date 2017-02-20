@@ -446,7 +446,7 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
 declare 
     %templates:wrap
     function gallery:search($node as node(), $model as map(*), $filterCollection as xs:string?, $query as xs:string?, $cached as item()*) {
-        system:as-user("admin", "Wars4Spass2$s",
+        system:as-user("admin", "",
             if ($query or $cached) then
                 let $result := 
                     if ($query and $filterCollection and not($filterCollection eq "all")) then
@@ -580,26 +580,24 @@ declare function gallery:result-image($node as node(), $model as map(*)) {
         let $serverPort := $config:image-server-port
         let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
         let $imageURL :=  
-            if ($image/@relids) then
-                $serverPath || ":" || $serverPort || "/images/service/download_uuid/" || $image/@relids
-            else
-                "modules/images.xql?image=" || $image/@href
+            if ($image/@relids)
+                then $serverPath || ":" || $serverPort || "/images/service/download_uuid/" || $image/@relids
+                else "modules/images.xql?image=" || $image/@href
         let $imageURL :=  
             if ($image/@relids) then
                 image-link-generator:generate-href($image/@relids, 'tamboti-size150')
             else
                 image-link-generator:generate-href($image/@href, 'tamboti-size150')
         let $href :=
-            if ($image/@relids) then
-                $imageURL
-            else
-                $config:base-url || substring-after($image/@href, $config:wiki-root)
-        let $title := 
-            ($entry//vra:titleSet/vra:title[@pref='true'],$entry//vra:titleSet/vra:title[not(@pref) or @pref='false'])[1]/text()
+            if ($image/@relids)
+            then $imageURL
+            else $config:base-url || substring-after($image/@href, $config:wiki-root)
+        let $title := ($entry//vra:titleSet/vra:title[@pref='true'], $entry//vra:titleSet/vra:title[not(@pref) or @pref='false'])[1]/text()
+            
         return 
             <li class="ui-widget-content">
                 <a href="#" class="add-image"> </a>
-                <img src="{$imageURL}" class="relatedImage" title="{$title}"/>
+                <img src="{$imageURL}" class="relatedImage" title="{$title}" width="150px" />
                 <div style="display:none">                    
                     <div class="image-id">{data($image/@relids)}</div>
                     <div class="image-title">{$title}</div>
