@@ -830,11 +830,20 @@ Atomic.editor.ImageLink = (function () {
             
             $("#image-dialog input[name='url']").val(imageURL);
             $("#image-dialog input[name='title']").val(imageTitle);
-        }); 
+        });
+        
         this.dialog.find("#query-images").click(function (ev) {   
             console.debug("clicke on load images button!");
             self.loadImages(1);
         });
+        
+        this.dialog.on("keydown", "#query", function (event) {
+            if (event.keyCode == 13) {
+                console.debug("click on load images button!");
+                self.loadImages(1);
+                return false;
+            }
+        });         
         this.loadImages();
     };
     

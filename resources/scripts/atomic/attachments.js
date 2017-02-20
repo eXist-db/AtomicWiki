@@ -16,6 +16,7 @@ Atomic.editor.Attachments = (function () {
         $(container).find("input[name=collection]").val(collection);
         $(container).fileupload({
             sequentialUploads: true,
+            pasteZone: container,
             dataType: "json",
             add: function(e, data) {
                 var rows = "";
