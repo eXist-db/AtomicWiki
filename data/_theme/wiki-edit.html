@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <html>
     <head>
         <title>Atomic Wiki</title>
@@ -48,6 +47,28 @@
                                         <span class="help-block">First sign just a letter, at least three characters required. No spaces.</span>
                                     </div>
                                 </div>
+                                <template id="perm-group-template">
+                                    <tr class="perm-detail">
+                                        <td>Group:</td>
+                                        <td>
+                                            <select name="perm-group" data-template="acl:group-select"/>
+                                        </td>
+                                        <td>
+                                            <input class="perm-group-read" type="checkbox" name="perm-group-read"/> read</td>
+                                        <td>
+                                            <input class="perm-group-write" type="checkbox" name="perm-group-write"/> write</td>
+                                        <td>
+                                            <button>
+                                                <img src="resources/images/add.png"/>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button>
+                                                <img src="resources/images/delete.png"/>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </template>                                
                                 <div class="form-group">
                                     <label for="category" class="control-label col-md-2">Tags</label>
                                     <div class="col-md-9">
@@ -60,7 +81,7 @@
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" class="app:edit-use-index" name="is-index"/>
-                                                Check to use this page as the index page for the feed
+                                                Check to use this page as the index page for the section
                                             </label>
                                         </div>
                                     </div>
@@ -74,17 +95,12 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <a data-toggle="collapse" href="#permissions">
-                                            <i class="fa fa-lock"/> Permissions</a>
-                                    </div>
-                                    <div id="permissions" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <div class="templates:include?path=templates/permissions.html"/>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div class="accordion-container">
+                                  <h3><i class="fa fa-lock"/> Permissions</h3>
+                                  <div>
+                                    <div class="templates:include?path=templates/permissions.html"/>
+                                  </div>
+                                </div> 
                                 <fieldset>
                                     <ul class="nav nav-tabs">
                                         <li class="active">

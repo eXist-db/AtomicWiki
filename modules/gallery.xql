@@ -175,14 +175,24 @@ declare function gallery:add-music($node as node(), $model as map(*)) {
     <div class="form-group">
         <select class="col-md-6 form-control" name="music">
             <option value="musicLocal">local</option>
+            <option value="soundcloud">Soundcloud</option>
         </select>
         <input class="col-md-6 form-control" type="text" name="id" placeholder="File Name or URL of music-title" required="required"/>
+        <div style="float: left; margin-top: 10px;">
+            <label class="col-md-2" for="width">Width</label>
+            <input id="width" class="col-md-3" type="number" name="width" value="450"/>
+            <label class="col-md-2" for="height">Height</label>
+            <input id="height" class="col-md-3" type="number" name="height" value="450"/>
+        </div>
     </div>
 };
 
 declare function gallery:select-music($node as node(), $model as map(*), $musictyp as xs:string?) {
     let $collection := $config:base-url || substring-after(util:collection-name($model("feed")), $config:app-root)
     let $id := $node/@id
+    let $width := $node/@data-width
+    let $height := $node/@data-height
+    
     return
         
     switch ($musictyp)
@@ -193,6 +203,9 @@ declare function gallery:select-music($node as node(), $model as map(*), $musict
             </audio>
             
         </div>
+    case "soundcloud" return
+        <iframe width="{$width}" height="{$height}" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url={$id}&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>
+        
 (:    case "musicUrl" return:)
 (:        <div>:)
 (:            <audio src="http://www.youtube.com/embed/{$id}?rel=0" controls="">:)
@@ -561,34 +574,30 @@ function gallery:pagination-next($node as node(), $model as map(*), $start as xs
 };
 
 declare function gallery:result-image($node as node(), $model as map(*)) {    
-        console:log($model?entry),
         let $entry := $model("entry")
-        (: for $image in $entry//vra:relationSet/vra:relation[not(@relids) or starts-with(@relids, "i_")] :)
-        for $image in $entry//vra:relationSet/vra:relation
+        for $image in $entry//vra:relationSet/vra:relation[not(@relids) or starts-with(@relids, "i_")]
         let $serverPath := $config:image-server
         let $serverPort := $config:image-server-port
         let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
         let $imageURL :=  
-            if ($image/@relids) then
-                $serverPath || ":" || $serverPort || "/images/service/download_uuid/" || $image/@relids
-            else
-                "modules/images.xql?image=" || $image/@href
-        (: let $imageURL :=  
+            if ($image/@relids)
+                then $serverPath || ":" || $serverPort || "/images/service/download_uuid/" || $image/@relids
+                else "modules/images.xql?image=" || $image/@href
+        let $imageURL :=  
             if ($image/@relids) then
                 image-link-generator:generate-href($image/@relids, 'tamboti-size150')
             else
-                image-link-generator:generate-href($image/@href, 'tamboti-size150') :)
+                image-link-generator:generate-href($image/@href, 'tamboti-size150')
         let $href :=
-            if ($image/@relids) then
-                $imageURL
-            else
-                $config:base-url || substring-after($image/@href, $config:wiki-root)
-        let $title := 
-            ($entry//vra:titleSet/vra:title[@pref='true'],$entry//vra:titleSet/vra:title[not(@pref) or @pref='false'])[1]/text()
+            if ($image/@relids)
+            then $imageURL
+            else $config:base-url || substring-after($image/@href, $config:wiki-root)
+        let $title := ($entry//vra:titleSet/vra:title[@pref='true'], $entry//vra:titleSet/vra:title[not(@pref) or @pref='false'])[1]/text()
+            
         return 
             <li class="ui-widget-content">
                 <a href="#" class="add-image"> </a>
-                <img src="{$imageURL}" class="relatedImage" title="{$title}"/>
+                <img src="{$imageURL}" class="relatedImage" title="{$title}" width="150px" />
                 <div style="display:none">                    
                     <div class="image-id">{data($image/@relids)}</div>
                     <div class="image-title">{$title}</div>
