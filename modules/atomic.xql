@@ -44,7 +44,7 @@ declare function atomic:process-img($node as element()) {
                 $config:base-url || $src
             else
                 $src
-    
+
     return
         element { node-name($node) } {
             $node/@* except ($node/@alt, $node/@src, $node/@class),
@@ -101,7 +101,7 @@ declare function atomic:get-content($content as element(atom:content)?, $eval as
                         xs:anyURI($path)
                     case "markdown" return
                         let $text := util:binary-to-string(util:binary-doc($path))
-                        let $parsed := md:parse($text, $atomic:MD_CONFIG)
+                        let $parsed := md:parse($text, ($md:HTML-CONFIG, $atomic:MD_CONFIG))
                         return
                             <div>{$parsed}</div>
                     default return
@@ -111,7 +111,7 @@ declare function atomic:get-content($content as element(atom:content)?, $eval as
                 case "html" case "xhtml" return
                     $content/*
                 case "markdown" return
-                    <div>{md:parse($content/string(), $atomic:MD_CONFIG)}</div>
+                    <div>{md:parse($content/string(), ($md:HTML-CONFIG, $atomic:MD_CONFIG))}</div>
                 default return
                     $content/node()
     return
