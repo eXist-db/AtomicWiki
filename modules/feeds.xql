@@ -13,7 +13,7 @@ declare function local:get-content($entry as element(atom:entry)) {
             <atom:content type="{if ($content/@type = 'markdown') then 'html' else 'xhtml'}">
             { atomic:fix-xhtml-namespace(atomic:get-content($content, true())) }
             </atom:content>,
-            <atom:link type="blog" href="{util:collection-name($entry)}"/>
+            <atom:link type="blog" href="{config:feed-url-from-entry($entry)}"/>
             
         }
 };
