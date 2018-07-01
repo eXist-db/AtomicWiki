@@ -59,7 +59,7 @@ return
             (:let $data := request:get-parameter("data", ""):)
             let $data := request:get-data()
             return
-                (:local:store($feed, util:parse($data)/*):)
+                (:local:store($feed, parse-xml($data)/*):)
                 local:store($feed, $data/*)
         default return
             let $feedParam := request:get-parameter("feed", "")
