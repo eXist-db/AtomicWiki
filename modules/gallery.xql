@@ -54,18 +54,18 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                     let $src :=
                         if (matches($href, "^(/|\w+:)")) then
                             map {
-                                    "src" := $href,
-                                    "src_thumb" := $href || $config:IMAGE_THUMBNAIL,
-                                    "src_big" := $href || $gallery:IMAGE_BIG
+                                    "src": $href,
+                                    "src_thumb": $href || $config:IMAGE_THUMBNAIL,
+                                    "src_big": $href || $gallery:IMAGE_BIG
                             }
                         else
                             let $pic_src := substring-after($config:wiki-data, "/") || "/_galleries/" || $href
                             let $pic_src := "_galleries/" || $href
                             return
                             map {
-                                    "src" := $pic_src,
-                                    "src_thumb" := $pic_src,
-                                    "src_big" := $pic_src
+                                    "src": $pic_src,
+                                    "src_thumb": $pic_src,
+                                    "src_big": $pic_src
                             }
 
                     let $contentSrc := $entry/atom:content/@src
@@ -450,15 +450,15 @@ declare
                         $cached
                 return (
                     map {
-                        "result" := $result,
-                        "query" := $query
+                        "result": $result,
+                        "query": $query
                     },
                     session:set-attribute("cached", $result)
                 )
             else
                 (
                     let $output := map {
-                        "result" := 
+                        "result": 
                             if ($filterCollection eq "all") then (
                                 gallery:local-images(),
                                 collection('/db/resources/commons')//vra:vra/vra:work,
@@ -521,7 +521,7 @@ function gallery:search-result($node as node(), $model as map(*), $start as xs:i
     let $filteredResult := subsequence($model("result"), $start, $max)
     for $entry at $index in $filteredResult
     return
-        templates:process($node/node(), map:new(($model, map {"entry" := $entry, "index" := ($start + $index -1)})))            
+        templates:process($node/node(), map:new(($model, map {"entry": $entry, "index": ($start + $index -1)})))            
 };
 
 declare 

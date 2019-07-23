@@ -112,9 +112,9 @@ declare %private function restxq:function-by-annotation($functions as function(*
                         ()
                     else
                         map {
-                            "function" := $function,
-                            "meta" := $meta,
-                            "params" := $params
+                            "function": $function,
+                            "meta": $meta,
+                            "params": $params
                         }
     return
         (: More than one function found: throw an error :)

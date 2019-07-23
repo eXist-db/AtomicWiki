@@ -28,7 +28,7 @@ function search:query($node as node()*, $model as map(*), $q as xs:string?, $fie
 		let $hits := search:do-query(collection($config:wiki-root), $q, $field)
 		return
 		    map {
-		        "results" := $hits
+		        "results": $hits
 		    }
 	else
 		()
@@ -45,7 +45,7 @@ function search:results($node as node(), $model as map(*)) {
 		return
 		    let $entry := doc($id || ".atom")/atom:entry
 		    return
-		        templates:process($node/*, map:new((map { "results-by-entry" := $match, "id" := $entry/atom:id, "entry" := $entry }, $model)))
+		        templates:process($node/*, map:new((map { "results-by-entry": $match, "id": $entry/atom:id, "entry": $entry }, $model)))
 };
 
 declare function search:entry-id($node as node()) {
@@ -70,7 +70,7 @@ function search:get-entry($node as node(), $model as map(*)) {
     let $entry := collection($config:wiki-root)//atom:entry[atom:id = $model("id")]
     return
         map {
-            "entry" := $entry
+            "entry": $entry
         }
 };
 

@@ -10,7 +10,7 @@ declare namespace html="http://www.w3.org/1999/xhtml";
 declare namespace wiki="http://exist-db.org/xquery/wiki";
 
 declare variable $atomic:MD_CONFIG := map {
-    "code-block" := function($language as xs:string, $code as xs:string) {
+    "code-block": function($language as xs:string, $code as xs:string) {
         <pre class="ext:code?lang={$language}">{$code}</pre>
     }
 };

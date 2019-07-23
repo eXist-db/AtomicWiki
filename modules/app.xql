@@ -25,7 +25,7 @@ declare variable $app:baseURL := $config:exist-home || request:get-attribute("$e
 declare function app:feed($node as node(), $model as map(*)) {
     let $feed := request:get-attribute("feed")
     return
-        map { "feed" := $feed }
+        map { "feed": $feed }
 };
 
 declare function app:feed-path($node as node(), $model as map(*)) {
@@ -56,7 +56,7 @@ declare function app:get-or-create-feed($node as node(), $model as map(*), $crea
         else
             atomic:create-feed()
     return
-        map { "feed" := $data, "entry" := $data, "is-new" := string(not($isNew)) }
+        map { "feed": $data, "entry": $data, "is-new": string(not($isNew)) }
 };
 
 declare
@@ -79,8 +79,8 @@ function app:entries($node as node(), $model as map(*), $count as xs:string?, $i
             return (
                 for $entry in subsequence($entries, $start, $count)
                 return
-                    templates:process($node/*[1], map:new(($model, map { "entry" := $entry, "count" := count($entries) }))),
-                templates:process($node/*[2], map:new(($model, map { "count" := count($entries), "perPage" := $count })))
+                    templates:process($node/*[1], map:new(($model, map { "entry": $entry, "count": count($entries) }))),
+                templates:process($node/*[2], map:new(($model, map { "count": count($entries), "perPage": $count })))
             )
 };
 
@@ -108,7 +108,7 @@ declare function app:entry($node as node(), $model as map(*), $feed as xs:string
     let $collection := concat($config:wiki-root, "/", $feed)
     for $entryData in collection($collection)/atom:entry[wiki:id = $entry]
     return
-        map { "entry" := $entryData, "count" := 1 }
+        map { "entry": $entryData, "count": 1 }
 };
 
 declare function app:gallery-title($node as node(), $model as map(*)) {
@@ -138,9 +138,9 @@ declare function app:get-or-create-entry($node as node(), $model as map(*), $loc
                             <p>The document is currently being edited by another user.</p>
                         </div>
                     else
-                        templates:process($node/node(), map:new(($model, map { "entry" := $entry })))
+                        templates:process($node/node(), map:new(($model, map { "entry": $entry })))
             else
-                templates:process($node/node(), map:new(($model, map { "entry" := atomic:create-entry() })))
+                templates:process($node/node(), map:new(($model, map { "entry": atomic:create-entry() })))
         }
 };
 
@@ -183,7 +183,7 @@ function app:create-entry($node as node(), $model as map(*), $title as xs:string
             }
         </atom:entry>
     return
-        map { "entry" := $entry, "count" := 1 }
+        map { "entry": $entry, "count": 1 }
 };
 
 declare

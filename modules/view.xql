@@ -23,8 +23,8 @@ let $lookup := function($functionName as xs:string, $arity as xs:int) {
     }
 }
 let $config := map {
-    $templates:CONFIG_APP_ROOT := request:get-attribute("templating.root"),
-    $templates:CONFIG_STOP_ON_ERROR := true()
+    $templates:CONFIG_APP_ROOT : request:get-attribute("templating.root"),
+    $templates:CONFIG_STOP_ON_ERROR : true()
 }
 let $content := request:get-data()
 return
