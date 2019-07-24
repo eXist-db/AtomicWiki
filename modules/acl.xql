@@ -119,7 +119,7 @@ function acl:show-permissions($node as node(), $model as map(*), $modelItem as x
                         Please contact the creator (<strong>{$owner}</strong>) or an administrator.
                     </p>
                 else
-                    let $processed := templates:copy-node($node, map:new(($model, map { "permissions": $permissions })))
+                    let $processed := templates:copy-node($node, map:merge(($model, map { "permissions": $permissions })))
                     return
                         acl:process-permissions($processed, $permissions/*, $doc)
         else

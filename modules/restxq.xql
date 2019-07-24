@@ -188,7 +188,7 @@ declare %private function restxq:post($anno as element(annotation), $method as x
                     if ($var) then
                         let $accessor := function() { request:get-data() }
                         return
-                            map:new(($params, map:entry($var, $accessor)))
+                            map:merge(($params, map:entry($var, $accessor)))
                     else
                         $params
 };
@@ -232,7 +232,7 @@ declare %private function restxq:query-param($anno as element(annotation), $para
     let $default := if ($anno/value[3]) then $anno/value[3]/string() else ()
     let $param := request:get-parameter($paramName, $default)
     return
-        map:new(($params, map:entry($var, $param)))
+        map:merge(($params, map:entry($var, $param)))
 };
 
 (:~
@@ -243,7 +243,7 @@ declare %private function restxq:header-param($anno as element(annotation), $par
     let $var := restxq:extract-variable($anno/value[2]/string())
     let $header := request:get-header($headerName)
     return
-        map:new(($params, map:entry($var, $header)))
+        map:merge(($params, map:entry($var, $header)))
 };
 
 (:~
@@ -271,7 +271,7 @@ declare %private function restxq:match-path($params as map(*), $input as xs:stri
             let $groups := (replace($input, $groupsRegex, '$1'), replace($input, $groupsRegex, '$2'))
             let $analyzed := analyze-string($template, "\{\$[^\}]+\}")
             return
-                map:new((
+                map:merge((
                     $params,
                     map-pairs(function($group, $varExpr) {
                         let $var := replace($varExpr, "\{\$([^\}]+)\}", "$1")

@@ -45,7 +45,7 @@ function search:results($node as node(), $model as map(*)) {
 		return
 		    let $entry := doc($id || ".atom")/atom:entry
 		    return
-		        templates:process($node/*, map:new((map { "results-by-entry": $match, "id": $entry/atom:id, "entry": $entry }, $model)))
+		        templates:process($node/*, map:merge((map { "results-by-entry": $match, "id": $entry/atom:id, "entry": $entry }, $model)))
 };
 
 declare function search:entry-id($node as node()) {

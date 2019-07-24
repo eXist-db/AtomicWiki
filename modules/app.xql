@@ -79,8 +79,8 @@ function app:entries($node as node(), $model as map(*), $count as xs:string?, $i
             return (
                 for $entry in subsequence($entries, $start, $count)
                 return
-                    templates:process($node/*[1], map:new(($model, map { "entry": $entry, "count": count($entries) }))),
-                templates:process($node/*[2], map:new(($model, map { "count": count($entries), "perPage": $count })))
+                    templates:process($node/*[1], map:merge(($model, map { "entry": $entry, "count": count($entries) }))),
+                templates:process($node/*[2], map:merge(($model, map { "count": count($entries), "perPage": $count })))
             )
 };
 
@@ -138,9 +138,9 @@ declare function app:get-or-create-entry($node as node(), $model as map(*), $loc
                             <p>The document is currently being edited by another user.</p>
                         </div>
                     else
-                        templates:process($node/node(), map:new(($model, map { "entry": $entry })))
+                        templates:process($node/node(), map:merge(($model, map { "entry": $entry })))
             else
-                templates:process($node/node(), map:new(($model, map { "entry": atomic:create-entry() })))
+                templates:process($node/node(), map:merge(($model, map { "entry": atomic:create-entry() })))
         }
 };
 

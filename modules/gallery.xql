@@ -521,7 +521,7 @@ function gallery:search-result($node as node(), $model as map(*), $start as xs:i
     let $filteredResult := subsequence($model("result"), $start, $max)
     for $entry at $index in $filteredResult
     return
-        templates:process($node/node(), map:new(($model, map {"entry": $entry, "index": ($start + $index -1)})))            
+        templates:process($node/node(), map:merge(($model, map {"entry": $entry, "index": ($start + $index -1)})))            
 };
 
 declare 
