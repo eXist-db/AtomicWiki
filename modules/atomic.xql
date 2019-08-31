@@ -10,7 +10,7 @@ declare namespace html="http://www.w3.org/1999/xhtml";
 declare namespace wiki="http://exist-db.org/xquery/wiki";
 
 declare variable $atomic:MD_CONFIG := map {
-    "code-block" := function($language as xs:string, $code as xs:string) {
+    "code-block" : function($language as xs:string, $code as xs:string) {
         <pre class="ext:code?lang={$language}">{$code}</pre>
     }
 };
@@ -74,7 +74,7 @@ declare function atomic:create-feed() as element(atom:feed) {
         <atom:id>{util:uuid()}</atom:id>
         <atom:updated>{ current-dateTime() }</atom:updated>
         <atom:title></atom:title>
-        <atom:author><atom:name>{ xmldb:get-current-user() }</atom:name></atom:author>
+        <atom:author><atom:name>{ sm:id()//sm:real/sm:username/string() }</atom:name></atom:author>
         <category scheme="http://exist-db.org/NS/wiki/type/" term="wiki"/>
     </atom:feed>
 };
@@ -83,7 +83,7 @@ declare function atomic:create-entry() as element(atom:entry) {
     <atom:entry>
         <atom:id>{util:uuid()}</atom:id>
         <atom:published>{ current-dateTime() }</atom:published>
-        <atom:author><atom:name>{ xmldb:get-current-user() }</atom:name></atom:author>
+        <atom:author><atom:name>{ sm:id()//sm:real/sm:username/string() }</atom:name></atom:author>
         <atom:title></atom:title>
     </atom:entry>
 };
@@ -148,20 +148,20 @@ declare function atomic:get-source($content as element(atom:content)?) as item()
 declare function atomic:lock-for-user($feed as element(atom:entry)) {
     let $lock := $feed/wiki:lock/@user
     return
-        if ($lock and not($lock = xmldb:get-current-user())) then
+        if ($lock and not($lock = sm:id()//sm:real/sm:username/string())) then
             $lock/string()
         else
             let $addLock :=
                 element { node-name($feed) } {
                     $feed/@*, $feed/node(),
-                    <wiki:lock user="{xmldb:get-current-user()}"/>
+                    <wiki:lock user="{sm:id()//sm:real/sm:username/string()}"/>
                 }
             let $store := xmldb:store(util:collection-name($feed), util:document-name($feed), $addLock)
             return
                 ()
 };
 
-declare function atomic:unlock-for-user() as empty() {
+declare function atomic:unlock-for-user() as empty-sequence() {
     let $collection := request:get-parameter("collection", ())
     let $resource := request:get-parameter("resource", ())
     let $unlocked :=

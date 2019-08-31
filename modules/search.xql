@@ -19,16 +19,16 @@ declare variable $search:CHARS_KWIC := 60;
 (:~
     Templating function: process the query.
 :)
-declare 
+declare
     %templates:wrap
-    %templates:default("field", "all") 
+    %templates:default("field", "all")
     %templates:default("view", "summary")
 function search:query($node as node()*, $model as map(*), $q as xs:string?, $field as xs:string, $view as xs:string) {
 	if ($q) then
 		let $hits := search:do-query(collection($config:wiki-root), $q, $field)
 		return
 		    map {
-		        "results" := $hits
+		        "results" : $hits
 		    }
 	else
 		()
@@ -45,7 +45,7 @@ function search:results($node as node(), $model as map(*)) {
 		return
 		    let $entry := doc($id || ".atom")/atom:entry
 		    return
-		        templates:process($node/*, map:new((map { "results-by-entry" := $match, "id" := $entry/atom:id, "entry" := $entry }, $model)))
+		        templates:process($node/*, map:merge((map { "results-by-entry" : $match, "id" : $entry/atom:id, "entry" : $entry }, $model)))
 };
 
 declare function search:entry-id($node as node()) {
@@ -70,7 +70,7 @@ function search:get-entry($node as node(), $model as map(*)) {
     let $entry := collection($config:wiki-root)//atom:entry[atom:id = $model("id")]
     return
         map {
-            "entry" := $entry
+            "entry" : $entry
         }
 };
 
@@ -89,7 +89,7 @@ declare function search:kwic($node as node(), $model as map(*)) {
     for $ancestor in ($matches/ancestor::*:p, $matches/ancestor::*:h1, $matches/ancestor::*:h2,
         $matches/ancestor::*:h3, $matches/ancestor::*:h4, $matches/ancestor::*:div)[1]
     return
-        kwic:get-summary($ancestor, ($ancestor//exist:match)[1], $config) 
+        kwic:get-summary($ancestor, ($ancestor//exist:match)[1], $config)
 };
 
 declare %public function search:do-query($context as node()*, $query as xs:string, $field as xs:string) {

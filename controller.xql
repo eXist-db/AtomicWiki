@@ -34,11 +34,11 @@ declare function local:extract-feed($path as xs:string) {
 };
 
 declare function local:check-user($user as xs:string) {
-    if ($config:users-group = xmldb:get-user-groups($user)) then
+    if ($config:users-group = sm:get-user-groups($user)) then
         let $users := $config:wiki-config/configuration/users/user
         return
             if ($users) then
-                ($users/allow/@user = $user) 
+                ($users/allow/@user = $user)
             else
                 true()
     else
@@ -65,9 +65,9 @@ declare function local:get-url($root as xs:string) {
     let $editCollection := request:get-parameter("collection", ())
     let $relPath := local:extract-feed($exist:path)
     (: Try to determine the feed collection, either by looking at the URL or a parameter 'collection' :)
-    let $feed := 
+    let $feed :=
         if ($editCollection) then
-            xmldb:xcollection($editCollection)/atom:feed 
+            xmldb:xcollection($editCollection)/atom:feed
         else
             config:resolve-feed($relPath[1])
     (: The feed XML will be saved to a request attribute :)
@@ -87,7 +87,7 @@ try {
             return
                 restxq:process($path, util:list-functions("http://exist-db.org/annotations"))
         )
-        
+
         (: preview edited articles :)
         else if (ends-with($exist:resource, "preview.html")) then
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -96,12 +96,12 @@ try {
                     <forward url="{$exist:controller}/modules/view.xql"/>
                 </view>
             </dispatch>
-        
+
         else if ($exist:resource = "code-edit.html") then
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward url="{$exist:controller}/data/_theme/code-edit.html"/>
             </dispatch>
-        
+
         else if ($exist:resource = ("edit-feed.html", "manage-users.html", "change-user.html", "search.html", "ImageSelector.html")) then
             let $user := login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)
             let $url := local:get-url($root)
@@ -113,14 +113,14 @@ try {
                         <forward url="{$exist:controller}/modules/view.xql"></forward>
                     </view>
                 </dispatch>
-            
+
         else if (ends-with($exist:resource, ".xql")) then
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward url="{$exist:controller}/modules/{$exist:resource}">
                 { login:set-user("org.exist.wiki.login", (), false(), local:check-user#1) }
                 </forward>
             </dispatch>
-        
+
         (: If URL starts with /atom, return the raw atom feed data :)
         else if (starts-with($exist:path, "/atom/")) then
             let $relPath := local:extract-feed(substring-after($exist:path, "/atom/"))
@@ -132,11 +132,11 @@ try {
                     { login:set-user("org.exist.wiki.login", (), false(), local:check-user#1) }
                     </forward>
                 </dispatch>
-        
-        else if (ends-with($exist:resource, ".less")) then 
+
+        else if (ends-with($exist:resource, ".less")) then
              <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             </dispatch>
-            
+
         (: URL addresses a collection or article :)
         else if (matches($exist:path, ".*/[^\./]*/?$")) then
             let $user := login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)
@@ -144,9 +144,9 @@ try {
             let $editCollection := request:get-parameter("collection", ())
             let $relPath := local:extract-feed($exist:path)
             (: Try to determine the feed collection, either by looking at the URL or a parameter 'collection' :)
-            let $feed := 
+            let $feed :=
                 if ($editCollection) then
-                    xmldb:xcollection($editCollection)/atom:feed 
+                    xmldb:xcollection($editCollection)/atom:feed
                 else
                     config:resolve-feed($relPath[1])
             (: The feed XML will be saved to a request attribute :)
@@ -176,7 +176,7 @@ try {
                                 let $id := request:get-parameter("id", ())
                                 let $entry := config:get-entries($feed, $id, $relPath[2])[1]
                                 let $editorParam := request:get-parameter("editor", ())
-                                let $editor := 
+                                let $editor :=
                                     if ($editorParam) then
                                         $editorParam
                                     else if ($entry/atom:content/@type) then
@@ -207,11 +207,11 @@ try {
                                 let $template :="html-edit-gallery.html"
                                 let $gallery := request:get-parameter("gallery", ())
                                 let $feedCol := request:get-parameter("collection", "/db/apps/wiki/data" ) || "/_galleries"
-                                let $galleryFeed := 
-                                    if ($gallery) then 
+                                let $galleryFeed :=
+                                    if ($gallery) then
                                         let $foo := $feedCol || '/' || $gallery || ".atom"
                                         return doc($foo)
-                                    else 
+                                    else
                                         $feed
                                 let $setAttr := request:set-attribute("feed", if ($gallery) then $galleryFeed else ())
                                 let $setAttr := request:set-attribute("galleryName", $gallery)
@@ -229,7 +229,7 @@ try {
                                             </forward>
                                         </view>
                                         { $local:error-handler }
-                                    </dispatch>                            
+                                    </dispatch>
                             case "editfeed" return
                                 <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                                     <forward url="{theme:resolve(util:collection-name($feed), 'unknown-feed.html', $root, $exist:controller)}">
@@ -285,7 +285,7 @@ try {
                                 </view>
                                 { $local:error-handler }
                             </dispatch>
-        
+
         else if (contains($exist:path, "/theme/")) then
             let $feedURL := substring-before($exist:path, "theme/")
             let $resourcePath := substring-after($exist:path, "/theme/")
@@ -297,12 +297,12 @@ try {
                         <cache-control cache="yes"/>
                     </forward>
                 </dispatch>
-        
+
         else if (contains($exist:path, "/$shared/")) then
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward url="/shared-resources/{substring-after($exist:path, '/$shared/')}"/>
             </dispatch>
-        
+
         else if (contains($exist:path, "/resources/")) then
             let $path := substring-after($exist:path, "/resources/")
             return
@@ -312,7 +312,7 @@ try {
                         <cache-control cache="yes"/>
                     </forward>
                 </dispatch>
-        
+
         else if (matches($exist:resource, "\.(png|jpg|jpeg|gif|pdf|svg)$", "i")) then
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 {login:set-user("org.exist.wiki.login", (), false(), local:check-user#1)}
@@ -320,7 +320,7 @@ try {
                     <add-parameter name="image" value="{$config:wiki-root}/{$exist:path}"/>
                 </forward>
             </dispatch>
-        
+
         else
             (: everything else is passed through :)
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">

@@ -16,20 +16,20 @@ declare variable $store:ERROR := xs:QName("store:error");
 
 
 declare function store:store-resource($collection, $name, $content, $mediaType) {
-    let $found := 
-        if ($content instance of element(atom:entry)) then 
+    let $found :=
+        if ($content instance of element(atom:entry)) then
             collection($config:wiki-root)//atom:feed[atom:id = $content/atom:id]
         else
             ()
-    let $delete-if-exists := 
-        for $item in $found 
+    let $delete-if-exists :=
+        for $item in $found
         return
             xmldb:remove(util:collection-name($item), util:document-name($item))
     let $stored := xmldb:store($collection, $name, $content, $mediaType)
-    
+
     let $owner := sm:get-permissions(xs:anyURI($stored))//@owner
-    let $permissions :=                    
-        if ($owner != xmldb:get-current-user()) then
+    let $permissions :=
+        if ($owner != sm:id()//sm:real/sm:username/string()) then
             ()
         else (
             acl:change-permissions($stored)
@@ -121,7 +121,7 @@ declare function store:process-html($content as xs:string?) {
         ()
 };
 
-(: 
+(:
  <gallery title="galleryTitle" subtitle="gallerySubtitle">
      <config>
         <height>200px</heigth>
@@ -136,8 +136,8 @@ declare function store:parse-gallery() {
     let $title := request:get-parameter("title", ())
     let $name := request:get-parameter("sname", ())
     let $content := util:parse-html(request:get-parameter("content", ()))
-    let $id := request:get-parameter("galleryId", util:uuid()) 
-    let $result := 
+    let $id := request:get-parameter("galleryId", util:uuid())
+    let $result :=
         <gallery title="{$title}" name="{$name}" id="{$id}">
             <config>
                 <width>{request:get-parameter("width", ())}</width>
@@ -149,9 +149,9 @@ declare function store:parse-gallery() {
             </config>
         {
             for $entry in $content/HTML/BODY/li
-            return 
-                <entry title="{$entry//h3[@class='image-title']/text()}" ctype="html" 
-                    imageLink="{$entry//*[contains(@class, 'gallery-item-image')]/a/@href}" 
+            return
+                <entry title="{$entry//h3[@class='image-title']/text()}" ctype="html"
+                    imageLink="{$entry//*[contains(@class, 'gallery-item-image')]/a/@href}"
                     imageId="{$entry//*[contains(@class, 'gallery-item-image')]/a/@data-image-id}"
                     contentLink="{$entry//*[@class='image-desc']//span/@data-description}">
                 </entry>
@@ -163,8 +163,8 @@ declare function store:parse-gallery() {
 
 declare function store:gallery($gallery as node()) {
     let $collection1 := request:get-parameter("gallery-coll", "/db/apps/wiki/data")
-    let $user := xmldb:get-current-user()
-    let $feed := 
+    let $user := sm:id()//sm:real/sm:username/string()
+    let $feed :=
      <atom:feed>
         <atom:id>{data($gallery/@id)}</atom:id>
         <atom:updated>{current-dateTime()}</atom:updated>
@@ -172,7 +172,7 @@ declare function store:gallery($gallery as node()) {
         <atom:author>
             <atom:name>{ $user }</atom:name>
             <wiki:display>
-            { 
+            {
                 acl:get-user-name()
             }
             </wiki:display>
@@ -182,7 +182,7 @@ declare function store:gallery($gallery as node()) {
             (: do not copy if empty :)
             for $entry in $gallery/config/*
                 return <wiki:config xmlns:wiki="http://exist-db.org/xquery/wiki" key="{local-name($entry)}" value="{$entry/text()}" />,
-            for $entry in $gallery/entry 
+            for $entry in $gallery/entry
                 let $gallery := store:gallery-entry($entry)
                 let $log := if (false()) then
                     util:log("ERROR", "GALLERY: " || $gallery)
@@ -190,7 +190,7 @@ declare function store:gallery($gallery as node()) {
                 return $gallery
         }
      </atom:feed>
-    
+
     let $atomResource := $gallery/@name || ".atom"
     let $coll4 := store:create-collection(replace($collection1, '/_galleries', '') || "/_galleries")
     let $stored := store:store-resource($coll4, $atomResource, $feed, "application/atom+xml")
@@ -207,7 +207,7 @@ declare function store:gallery-entry($entry as node()) {
             <atom:published>{current-dateTime()}</atom:published>
             <atom:updated>{current-dateTime()}</atom:updated>
             <atom:author>
-                <atom:name>{xmldb:get-current-user()}</atom:name>
+                <atom:name>{sm:id()//sm:real/sm:username/string()}</atom:name>
             </atom:author>
             <atom:title>{data($entry/@title)}</atom:title>
             <atom:link type="image/jpeg" href="{data($entry/@imageLink)}"/>
@@ -226,7 +226,7 @@ declare function store:article() {
     let $categories := request:get-parameter("category", ())
     let $content := request:get-parameter("content", ())
     let $summary := request:get-parameter("summary", ())
-    let $author := request:get-parameter("author", xmldb:get-current-user())
+    let $author := request:get-parameter("author", sm:id()//sm:real/sm:username/string())
     let $collection := request:get-parameter("collection", ())
     let $resource := request:get-parameter("resource", ())
     let $storeSeparate := request:get-parameter("external", ())
@@ -257,16 +257,16 @@ declare function store:article() {
             <atom:author>
                 <atom:name>{ $author }</atom:name>
                 {
-                    if (xmldb:get-current-user() = $author) then
+                    if (sm:id()//sm:real/sm:username/string() = $author) then
                         <wiki:display>
-                        { 
+                        {
                             acl:get-user-name()
                         }
                         </wiki:display>
                     else
                         $old/atom:author/wiki:display
                 }
-                
+
             </atom:author>
             <atom:title>{$title}</atom:title>
             {
@@ -292,7 +292,7 @@ declare function store:article() {
                             default return
                                 ".html"
                     let $docName := $filename || $extension
-                    let $mediaType := 
+                    let $mediaType :=
                         switch ($contentType)
                             case "xquery" return
                                 "application/xquery"
@@ -306,7 +306,7 @@ declare function store:article() {
                     return (
                         $content,
                         if ($contentType = "markdown") then
-                            let $htmlData := <div>{md:parse($contentData, $atomic:MD_CONFIG)}</div>
+                            let $htmlData := <div>{md:parse($contentData, ($md:HTML-CONFIG, $atomic:MD_CONFIG))}</div>
                             return
                                 store:store-resource($dataColl, $filename || ".html", $htmlData, "text/html")
                         else
@@ -317,7 +317,7 @@ declare function store:article() {
             }
             {
                 if (request:get-parameter("unlock", "true") = "false") then
-                    <wiki:lock user="{xmldb:get-current-user()}"/>
+                    <wiki:lock user="{sm:id()//sm:real/sm:username/string()}"/>
                 else
                     ()
             }
@@ -331,7 +331,7 @@ declare function store:article() {
 
 declare function store:mkcol-recursive($parent as xs:string, $components as xs:string*) {
     if (exists($components)) then
-        let $path := concat($parent, "/", $components[1])
+        let $path := replace($parent || "/" || $components[1], "//", "/")
         let $collection := collection($path)
         return
             if ($collection) then
@@ -365,7 +365,7 @@ declare function store:collection() {
     let $published := request:get-parameter("published", current-dateTime())
     let $title := request:get-parameter("title", ())
     let $subTitle := request:get-parameter("subtitle", ())
-    let $author := request:get-parameter("author", xmldb:get-current-user())
+    let $author := request:get-parameter("author", sm:id()//sm:real/sm:username/string())
     let $collectionPath := request:get-parameter("collection", ())
     let $collection := store:get-or-create-collection($collectionPath)
     let $template := request:get-parameter("template", ())
@@ -380,7 +380,7 @@ declare function store:collection() {
                 else
                     ()
             }
-            <atom:author><atom:name>{ xmldb:get-current-user() }</atom:name></atom:author>
+            <atom:author><atom:name>{ sm:id()//sm:real/sm:username/string() }</atom:name></atom:author>
             {
                 if ($template) then
                     <atom:category scheme="http://atomic.exist-db.org/template" term="{$template}"/>
@@ -392,7 +392,7 @@ declare function store:collection() {
         xmldb:store($collectionPath, "feed.atom", $data, "application/atom+xml")
     let $owner := sm:get-permissions($stored)//sm:permission/@owner/string()
     let $perms :=
-        if ($owner = xmldb:get-current-user()) then (
+        if ($owner = sm:id()//sm:real/sm:username/string()) then (
             acl:change-permissions($stored),
             acl:change-collection-permissions($collectionPath)
         ) else
@@ -427,7 +427,7 @@ declare function store:delete-article() {
     return
         if ($collection) then
             store:delete-feed($collection)
-        else 
+        else
             let $article := collection($config:wiki-root)//atom:entry[atom:id = $id]
             return
                 if ($article) then
@@ -460,12 +460,12 @@ return
                 case "delete" return
                     store:delete-article()
                 case "store" return
-                    if ($id) then 
+                    if ($id) then
                         if ($type eq 'gallery') then
-                            store:gallery(store:parse-gallery())                        
+                            store:gallery(store:parse-gallery())
                         else
                             store:article()
-                    else 
+                    else
                         store:collection()
                 default return
                     ()

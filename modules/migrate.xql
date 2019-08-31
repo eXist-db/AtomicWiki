@@ -32,7 +32,7 @@ declare function atom:transform($node as node()) {
             return
                 <xhtml:a href="{$href}">{$text}</xhtml:a>
         case element(wiki:macro) return
-            let $params := 
+            let $params :=
                 string-join(
                     for $param in $node//wiki:param return concat($param/@name, "=", $param/@value),
                     "&amp;"
@@ -95,7 +95,7 @@ declare function atom:copy-binaries($source as xs:string, $target as xs:string) 
     for $resource in xmldb:get-child-resources($source)
     where util:is-binary-doc(concat($source, "/", $resource))
     return (
-        xmldb:copy($source, $target, $resource),
+        xmldb:copy-resource($source, $resource, $target, $resource),
         let $path := concat($target, "/", $resource)
         return (
             sm:chown($path, $config:default-user[1]),

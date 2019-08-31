@@ -27,7 +27,7 @@ declare function local:find-users() {
     return
         <users>
         {
-            map(function($user) { <json:value json:array="true">{$user}</json:value> }, $users)
+            for-each($users, function($user) { <json:value json:array="true">{$user}</json:value> })
         }
         </users>
 };
@@ -36,7 +36,7 @@ declare function local:groups() {
     let $user := local:real-user()
     let $admins := sm:get-group-members($config:admin-group)
     let $groups := sm:list-groups()[starts-with(., "wiki.")]
-    let $groups := 
+    let $groups :=
         if ($user = $admins) then
             $groups
         else
@@ -55,7 +55,7 @@ declare function local:groups() {
                     <description>{sm:get-group-metadata($group, xs:anyURI("http://exist-db.org/security/description"))}</description>
                     {
                         let $managers := sm:get-group-managers($group)
-                        for $user in xmldb:get-users($group)
+                        for $user in sm:get-group-members($group)
                         return
                             <user json:array="true">
                                 <id>{$user}</id>
@@ -85,7 +85,7 @@ declare function local:create-group() {
     let $id := if (starts-with($id, "wiki.")) then $id else "wiki." || $id
     let $description := request:get-parameter("description", "")
     let $user := local:real-user()
-    let $managers := xmldb:get-users($config:admin-group)
+    let $managers := sm:get-group-members($config:admin-group)
     return
         if (not($user = $managers)) then
             <error status="access-denied" message="You are not allowed to create new groups"/>
@@ -176,7 +176,7 @@ declare function local:delete-group() {
     let $group := request:get-parameter("group", ())
     let $members := sm:get-group-members($group)
     let $user := local:real-user()
-    let $managers := xmldb:get-users($config:admin-group)
+    let $managers := sm:get-group-members($config:admin-group)
     return
         if (not($user = $managers)) then
             <error status="access-denied" message="You are not allowed to delete groups"/>

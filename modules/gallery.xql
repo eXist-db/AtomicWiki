@@ -21,7 +21,7 @@ declare variable $gallery:IMAGE_THUMB_LARGE := "&amp;width=256&amp;height=256&am
 
 declare function gallery:show-catalog($node as node(), $model as map(*)) {
     let $gallery-id := $node/@id
-    return 
+    return
         if (empty($gallery-id)) then
             ()
         else
@@ -31,7 +31,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                 let $theme := theme:theme-for-feed(util:collection-name($model("feed")))
                 let $theme := substring-before($theme, "/_theme")
                 let $gal_col := collection($theme)/atom:feed[atom:id=$gallery-id]
-                
+
                 let $conf_autoplay := $gal_col/wiki:config[@key="autoplay"]/@value/string()
                 let $conf_intervall := $gal_col/wiki:config[@key="intervall"]/@value/string()
                 let $conf_width := $gal_col/wiki:config[@key="width"]/@value/string()
@@ -41,7 +41,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                 <div class="gallery-images" style="display:none">
                     <ul>
                     {
-            
+
                     let $entries := $gal_col/atom:entry
                     for $entry at $pos in $entries
                     let $hrefSrc := $entry/atom:link[starts-with(@type, "image")]/@href/string()
@@ -54,18 +54,18 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                     let $src :=
                         if (matches($href, "^(/|\w+:)")) then
                             map {
-                                    "src" := $href,
-                                    "src_thumb" := $href || $config:IMAGE_THUMBNAIL,
-                                    "src_big" := $href || $gallery:IMAGE_BIG
+                                    "src" : $href,
+                                    "src_thumb" : $href || $config:IMAGE_THUMBNAIL,
+                                    "src_big" : $href || $gallery:IMAGE_BIG
                             }
                         else
                             let $pic_src := substring-after($config:wiki-data, "/") || "/_galleries/" || $href
                             let $pic_src := "_galleries/" || $href
                             return
                             map {
-                                    "src" := $pic_src,
-                                    "src_thumb" := $pic_src,
-                                    "src_big" := $pic_src
+                                    "src" : $pic_src,
+                                    "src_thumb" : $pic_src,
+                                    "src_big" : $pic_src
                             }
 
                     let $contentSrc := $entry/atom:content/@src
@@ -80,7 +80,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                                 ()
                         }
                             <a href="{$src("src")}"><img data-big="{$src("src_big")}" src="{$src("src_thumb")}" /></a>
-    
+
                             <!--a href="{$src}"><img data-big="{$src}" src="{$src}" /></a-->
                             {
                             if ($contentHtml)
@@ -90,7 +90,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                                <!-- <ul><h3>Meta Daten:</h3>
                                     <li>vra-ID:{$vraMetaID}</li>
                                     <li>agent: {$vraMetaImageAgentName}</li>
-                                    
+
                                 </ul> -->
                             </span>
                             else
@@ -104,7 +104,7 @@ declare function gallery:show-catalog($node as node(), $model as map(*)) {
                     <span data-name="conf_width" data-value="{$conf_width}" style="display: none;"></span>
                     <span data-name="conf_height" data-value="{$conf_height}" style="display: none;"></span>
                     <span data-name="conf_align" data-value="{$conf_align}" style="display: none;"></span>
-                
+
                 </div>
                 }
             </div>
@@ -137,17 +137,17 @@ declare function gallery:add-video($node as node(), $model as map(*)) {
             <option value="Pandora2">Pandora 2: for http://vad.uni-hd.de</option>
             <option value="youTube">YouTube</option>
             <option value="vimeo">Vimeo</option>
-        </select> 
+        </select>
         <input class="form-control" type="text" name="id" placeholder="Name or ID of video!" required="required"/>
     </div>
-    
+
 };
 
 declare function gallery:select-video($node as node(), $model as map(*), $videotyp as xs:string?) {
     let $id := $node/@id
-    
+
     return
-        
+
     switch ($videotyp)
     case "Pandora1" return
         <div>
@@ -165,12 +165,12 @@ declare function gallery:select-video($node as node(), $model as map(*), $videot
         <div>
             <iframe width="640" height="360" src="http://player.vimeo.com/video/{$id}" frameborder="1" >vimeo video</iframe>
         </div>
-        
-    default return 
+
+    default return
 
         <h1>You selected nothing</h1>
 };
-    
+
 declare function gallery:add-music($node as node(), $model as map(*)) {
     <div class="form-group">
         <select class="col-md-6 form-control" name="music">
@@ -184,14 +184,14 @@ declare function gallery:select-music($node as node(), $model as map(*), $musict
     let $collection := $config:base-url || substring-after(util:collection-name($model("feed")), $config:app-root)
     let $id := $node/@id
     return
-        
+
     switch ($musictyp)
     case "musicLocal" return
         <div>
             <audio src="{$collection}/{$id}" controls="">
                 <embed src="{$collection}/{$id}" width="100" height="50" />
             </audio>
-            
+
         </div>
 (:    case "musicUrl" return:)
 (:        <div>:)
@@ -206,11 +206,11 @@ declare function gallery:select-music($node as node(), $model as map(*), $musict
 (:        <div>:)
 (:            <audio controls=""> <source src=""type="audio/ogg"/>Your browser does not support ogg audio format</audio>:)
 (:        </div>:)
-        
-    default return 
+
+    default return
 
         <h1>You selected nothing</h1>
-                      
+
 };
 
 
@@ -240,7 +240,7 @@ declare function gallery:build-gallery-edit-menu($node as node(), $model as map(
         let $theme := substring-before($theme, "/_theme")
         let $galleries :=
             for $feed in collection($theme)/atom:feed
-            where 
+            where
                 ends-with(util:collection-name($feed), "_galleries")
                 and
                 sm:has-access(document-uri(root($feed)), "w")
@@ -258,7 +258,7 @@ declare function gallery:build-gallery-edit-menu($node as node(), $model as map(
                         <li>
                         <a href="?action=editgallery&amp;collection={$galleryCol}&amp;gallery={$feedname}"><i class="icon-plus"/>{" ",$gallery/text()," "}</a>
                         </li>
-                    }  
+                    }
                 </ul>
             </li>
     else
@@ -268,25 +268,25 @@ declare function gallery:build-gallery-edit-menu($node as node(), $model as map(
 
 declare
     %templates:wrap function gallery:gallery-width($node as node(), $model as map(*)) {
-    
+
     attribute value { request:get-attribute("feed")/atom:feed/wiki:config[@key="width"]/@value/string() }
 };
 
 declare
     %templates:wrap function gallery:gallery-height($node as node(), $model as map(*)) {
-    
+
     attribute value { request:get-attribute("feed")/atom:feed/wiki:config[@key="height"]/@value/string() }
 };
 
 declare
     %templates:wrap function gallery:gallery-align($node as node(), $model as map(*)) {
-    
+
     attribute value { request:get-attribute("feed")/atom:feed/wiki:config[@key="align"]/@value/string() }
 };
 
 declare
     %templates:wrap function gallery:gallery-intervall($node as node(), $model as map(*)) {
-    
+
     attribute value { request:get-attribute("feed")/atom:feed/wiki:config[@key="intervall"]/@value/string() }
 };
 
@@ -300,40 +300,40 @@ declare
             ()
 };
 
-declare 
-    %templates:wrap function gallery:gallery-title($node as node(), $model as map(*)) {    
+declare
+    %templates:wrap function gallery:gallery-title($node as node(), $model as map(*)) {
 
     attribute value { request:get-attribute("feed")/atom:feed/atom:title }
 };
 
-declare 
+declare
     %templates:wrap function gallery:gallery-id($node as node(), $model as map(*)) {
     let $id := request:get-attribute("feed")/atom:feed/atom:id
-    return 
+    return
         if ( $id ) then
             attribute value { $id }
-        else 
+        else
         attribute value { util:uuid() }
 };
 
-declare 
+declare
     %templates:wrap function gallery:gallery-subtitle($node as node(), $model as map(*)) {
-        
+
     attribute value { request:get-attribute("galleryName") }
 };
 
-declare 
+declare
     %templates:wrap function gallery:edit-gallery-items($node as node(), $model as map(*)) {
         let $entries := request:get-attribute("feed")
-        
+
         let $imageList :=
             for $entry in $entries/atom:feed/atom:entry
-            return 
+            return
                 gallery:feed-to-html-image(
-                    $entries/atom:feed/atom:id, 
-                    data($entry/atom:link[1]/@href), 
-                    $entry/atom:id, 
-                    $entry/atom:title/text(), 
+                    $entries/atom:feed/atom:id,
+                    data($entry/atom:link[1]/@href),
+                    $entry/atom:id,
+                    $entry/atom:title/text(),
                     $entry/atom:content/@src
                 )
         return
@@ -353,11 +353,11 @@ declare
                             <div class="col-md-10 gallery-item-caption">
                                 <h3 class="image-title"></h3>
                                 <div class="image-desc">
-                                    <p class="wiki-link">Image description taken from entry: 
-                                            <span id="" data-url="" data-description=""></span>                                                
-                                    </p>                        
+                                    <p class="wiki-link">Image description taken from entry:
+                                            <span id="" data-url="" data-description=""></span>
+                                    </p>
                                 </div>
-                                
+
                                 <input type="hidden" id="formURL"> </input>
                                 <div class="gallery-item-controls pull-right">
                                     <a class="btn btn-default btn-pencil connect-edit" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i></a>
@@ -374,33 +374,33 @@ declare
 };
 
 
-declare %private function gallery:feed-to-html-image($feedId as xs:string, $imageURL as xs:string, $id as xs:string, $title as xs:string?, $src as item()*) {    
+declare %private function gallery:feed-to-html-image($feedId as xs:string, $imageURL as xs:string, $id as xs:string, $title as xs:string?, $src as item()*) {
     (: replace image-server base URI :)
     let $imageURL := replace($imageURL, $config:image-server || "/", $config:image-server || ":" || $config:image-server-port || "/")
     let $description := collection($config:wiki-root)/atom:entry[atom:id = $src]
-    let $html := 
+    let $html :=
         if ($description/atom:content/@src) then
             atomic:get-content($description/atom:content, false())
-        else()        
+        else()
     let $entryId := data($description/atom:content/@src)
-    
-    let $feedURL := if(string-length($src) gt 0) 
-                    then (                        
+
+    let $feedURL := if(string-length($src) gt 0)
+                    then (
                         let $feedEntry := collection($config:wiki-root)//atom:entry[atom:id = $src]
-                        return 
+                        return
                             if ($feedEntry) then
                                 config:feed-url-from-entry($feedEntry) || $feedEntry/wiki:id
                             else
                                 ()
                     )
                     else()
-    
+
     return
         <li id="{$id}" class="container gallery-item-row img-rounded">
             <div class="row">
                 <div class="col-md-2 gallery-item-image">
                     <a class="thumb" target="blank_" href="{$imageURL}" data-image-id="{$id}">
-                        <img alt="{$title}" class="img-thumbnail"  
+                        <img alt="{$title}" class="img-thumbnail"
                              src="{$imageURL}{$gallery:IMAGE_THUMB_LARGE}"
                              data-src="{$imageURL}"/>
                     </a>
@@ -408,18 +408,18 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
                 <div class="col-md-10 gallery-item-caption">
                     <h3 class="image-title">{$title}</h3>
                     <div class="image-desc">
-                        <p class="wiki-link">Image description taken from entry: <span id="{$id}-content" data-url="{$feedURL}" data-description="{$src}">{$description/atom:title/text()}</span></p>                        
+                        <p class="wiki-link">Image description taken from entry: <span id="{$id}-content" data-url="{$feedURL}" data-description="{$src}">{$description/atom:title/text()}</span></p>
                     </div>
-                    <div class="gallery-item-controls pull-right">                
+                    <div class="gallery-item-controls pull-right">
                         {
                             if($entryId)
                             then (
                                 <a class="btn btn-pencil btn-default" onclick="openWikiArticle('{$id}')"><i class="glyphicon glyphicon-pencil"></i></a>
                             )else (
                                 <a class="btn btn-default btn-pencil" onclick="openWikiArticle('{$id}')" disabled="disabled"><i class="glyphicon glyphicon-pencil"></i></a>
-                            )                            
+                            )
                         }
-                        
+
                         <a class="btn btn-default btn-edit" onclick="showSitemap('{$id}')"><i class="glyphicon glyphicon-share-alt"></i></a>
                         <a class="btn btn-default btn-remove" onclick="removeItem('{$id}')"><i class="glyphicon glyphicon-remove"></i></a>
                         <a class="btn btn-default btn-arrow-up" onclick="moveUp('{$id}')"><i class="glyphicon glyphicon-arrow-up"></i></a>
@@ -430,12 +430,12 @@ declare %private function gallery:feed-to-html-image($feedId as xs:string, $imag
         </li>
 };
 
-declare 
+declare
     %templates:wrap
     function gallery:search($node as node(), $model as map(*), $filterCollection as xs:string?, $query as xs:string?, $cached as item()*) {
         system:as-user("admin", "",
             if ($query or $cached) then
-                let $result := 
+                let $result :=
                     if ($query and $filterCollection and not($filterCollection eq "all")) then
                         if ($filterCollection = "local") then
                             gallery:local-images()
@@ -450,15 +450,15 @@ declare
                         $cached
                 return (
                     map {
-                        "result" := $result,
-                        "query" := $query
+                        "result" : $result,
+                        "query" : $query
                     },
                     session:set-attribute("cached", $result)
                 )
             else
                 (
                     let $output := map {
-                        "result" := 
+                        "result" :
                             if ($filterCollection eq "all") then (
                                 gallery:local-images(),
                                 collection('/db/resources/commons')//vra:vra/vra:work,
@@ -491,7 +491,7 @@ declare function gallery:local-images() {
                                     <title type="generalView">{$resource}</title>
                                 </titleSet>
                                 <relationSet>
-                                    <relation type="imageIs" href="{$resource}">general view</relation> 
+                                    <relation type="imageIs" href="{$resource}">general view</relation>
                                 </relationSet>
                             </work>
                         return
@@ -521,10 +521,10 @@ function gallery:search-result($node as node(), $model as map(*), $start as xs:i
     let $filteredResult := subsequence($model("result"), $start, $max)
     for $entry at $index in $filteredResult
     return
-        templates:process($node/node(), map:new(($model, map {"entry" := $entry, "index" := ($start + $index -1)})))            
+        templates:process($node/node(), map:merge(($model, map {"entry" : $entry, "index" : ($start + $index -1)})))
 };
 
-declare 
+declare
     %templates:default("start", 1)
     %templates:default("max", 8)
 function gallery:pagination-previous($node as node(), $model as map(*), $start as xs:integer, $max as xs:integer) {
@@ -542,7 +542,7 @@ function gallery:pagination-previous($node as node(), $model as map(*), $start a
             ()
 };
 
-declare 
+declare
     %templates:default("start", 1)
     %templates:default("max", 8)
 function gallery:pagination-next($node as node(), $model as map(*), $start as xs:integer, $max as xs:integer) {
@@ -560,7 +560,7 @@ function gallery:pagination-next($node as node(), $model as map(*), $start as xs
             ()
 };
 
-declare function gallery:result-image($node as node(), $model as map(*)) {    
+declare function gallery:result-image($node as node(), $model as map(*)) {
         console:log($model?entry),
         let $entry := $model("entry")
         (: for $image in $entry//vra:relationSet/vra:relation[not(@relids) or starts-with(@relids, "i_")] :)
@@ -568,12 +568,12 @@ declare function gallery:result-image($node as node(), $model as map(*)) {
         let $serverPath := $config:image-server
         let $serverPort := $config:image-server-port
         let $imageOption := "?width=100&amp;height=100&amp;crop_type=middle"
-        let $imageURL :=  
+        let $imageURL :=
             if ($image/@relids) then
                 $serverPath || ":" || $serverPort || "/images/service/download_uuid/" || $image/@relids
             else
                 "modules/images.xql?image=" || $image/@href
-        (: let $imageURL :=  
+        (: let $imageURL :=
             if ($image/@relids) then
                 image-link-generator:generate-href($image/@relids, 'tamboti-size150')
             else
@@ -583,13 +583,13 @@ declare function gallery:result-image($node as node(), $model as map(*)) {
                 $imageURL
             else
                 $config:base-url || substring-after($image/@href, $config:wiki-root)
-        let $title := 
+        let $title :=
             ($entry//vra:titleSet/vra:title[@pref='true'],$entry//vra:titleSet/vra:title[not(@pref) or @pref='false'])[1]/text()
-        return 
+        return
             <li class="ui-widget-content">
                 <a href="#" class="add-image"> </a>
                 <img src="{$imageURL}" class="relatedImage" title="{$title}"/>
-                <div style="display:none">                    
+                <div style="display:none">
                     <div class="image-id">{data($image/@relids)}</div>
                     <div class="image-title">{$title}</div>
                     <div class="image-work-record">{$entry/@id}</div>
@@ -598,8 +598,8 @@ declare function gallery:result-image($node as node(), $model as map(*)) {
                 </div>
             </li>
     };
-    
-declare 
+
+declare
     %templates:wrap
 function gallery:get-ziziphus-collections1($node as node(), $model as map(*)) {
 (:        let $workRecords := distinct-values(collection('/db/resources/commons')//vra:vra/vra:work/@refid):)
@@ -620,7 +620,7 @@ function gallery:get-ziziphus-collections1($node as node(), $model as map(*)) {
         <option value="{$collection}">{xmldb:decode(replace($collection, ".*/([^/]+)$", "$1"))}</option>
 };
 
-declare 
+declare
     %templates:wrap
 function gallery:get-ziziphus-collections($node as node(), $model as map(*)) {
 (:        let $workRecords := distinct-values(collection('/db/resources/commons')//vra:vra/vra:work/@refid):)

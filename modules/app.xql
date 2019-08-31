@@ -2,12 +2,9 @@ xquery version "3.0";
 
 module namespace app="http://exist-db.org/xquery/app";
 
-
-import module namespace console="http://exist-db.org/xquery/console" at "java:org.exist.console.xquery.ConsoleModule";
 import module namespace atomic="http://atomic.exist-db.org/xquery/atomic" at "atomic.xql";
 import module namespace templates="http://exist-db.org/xquery/templates";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
-import module namespace date="http://exist-db.org/xquery/datetime" at "java:org.exist.xquery.modules.datetime.DateTimeModule";
 import module namespace html2wiki="http://atomic.exist-db.org/xquery/html2wiki" at "html2wiki.xql";
 import module namespace acl="http://atomic.exist-db.org/xquery/atomic/acl" at "acl.xql";
 
@@ -16,16 +13,16 @@ declare namespace wiki="http://exist-db.org/xquery/wiki";
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace html="http://www.w3.org/1999/xhtml";
 
-declare variable $app:months := ('January', 'February', 'March', 'April', 'May', 'June', 'July', 
+declare variable $app:months := ('January', 'February', 'March', 'April', 'May', 'June', 'July',
     'August', 'September', 'October', 'November', 'December');
 
-declare variable $app:baseURL := $config:exist-home || request:get-attribute("$exist:prefix") || "/" || 
+declare variable $app:baseURL := $config:exist-home || request:get-attribute("$exist:prefix") || "/" ||
     substring-after($config:app-root, repo:get-root());
-    
+
 declare function app:feed($node as node(), $model as map(*)) {
     let $feed := request:get-attribute("feed")
     return
-        map { "feed" := $feed }
+        map { "feed" : $feed }
 };
 
 declare function app:feed-path($node as node(), $model as map(*)) {
@@ -56,7 +53,7 @@ declare function app:get-or-create-feed($node as node(), $model as map(*), $crea
         else
             atomic:create-feed()
     return
-        map { "feed" := $data, "entry" := $data, "is-new" := string(not($isNew)) }
+        map { "feed" : $data, "entry" : $data, "is-new" : string(not($isNew)) }
 };
 
 declare
@@ -79,8 +76,8 @@ function app:entries($node as node(), $model as map(*), $count as xs:string?, $i
             return (
                 for $entry in subsequence($entries, $start, $count)
                 return
-                    templates:process($node/*[1], map:new(($model, map { "entry" := $entry, "count" := count($entries) }))),
-                templates:process($node/*[2], map:new(($model, map { "count" := count($entries), "perPage" := $count })))
+                    templates:process($node/*[1], map:merge(($model, map { "entry" : $entry, "count" : count($entries) }))),
+                templates:process($node/*[2], map:merge(($model, map { "count" : count($entries), "perPage" : $count })))
             )
 };
 
@@ -108,12 +105,12 @@ declare function app:entry($node as node(), $model as map(*), $feed as xs:string
     let $collection := concat($config:wiki-root, "/", $feed)
     for $entryData in collection($collection)/atom:entry[wiki:id = $entry]
     return
-        map { "entry" := $entryData, "count" := 1 }
+        map { "entry" : $entryData, "count" : 1 }
 };
 
 declare function app:gallery-title($node as node(), $model as map(*)) {
     let $action := request:get-parameter("action", ())
-    
+
     return
         switch ($action)
             case "addgallery" return <h1>New Slideshow</h1>
@@ -138,9 +135,9 @@ declare function app:get-or-create-entry($node as node(), $model as map(*), $loc
                             <p>The document is currently being edited by another user.</p>
                         </div>
                     else
-                        templates:process($node/node(), map:new(($model, map { "entry" := $entry })))
+                        templates:process($node/node(), map:merge(($model, map { "entry" : $entry })))
             else
-                templates:process($node/node(), map:new(($model, map { "entry" := atomic:create-entry() })))
+                templates:process($node/node(), map:merge(($model, map { "entry" : atomic:create-entry() })))
         }
 };
 
@@ -157,7 +154,7 @@ function app:create-entry($node as node(), $model as map(*), $title as xs:string
             <atom:author>
                 <atom:name>{ $author }</atom:name>
                 <wiki:display>
-                { 
+                {
                     acl:get-user-name()
                 }
                 </wiki:display>
@@ -170,7 +167,7 @@ function app:create-entry($node as node(), $model as map(*), $title as xs:string
                     ()
             }
             {
-                let $mediaType := 
+                let $mediaType :=
                     switch ($ctype)
                         case "xquery" return
                             "application/xquery"
@@ -183,7 +180,7 @@ function app:create-entry($node as node(), $model as map(*), $title as xs:string
             }
         </atom:entry>
     return
-        map { "entry" := $entry, "count" := 1 }
+        map { "entry" : $entry, "count" : 1 }
 };
 
 declare
@@ -280,27 +277,27 @@ declare function app:id($node as node(), $model as map(*)) {
 };
 
 declare function app:publication-date-full($node as node(), $model as map(*)) {
-    let $date := 
+    let $date :=
         if (map:contains($model, "entry")) then
             xs:dateTime($model("entry")/atom:published)
         else
             xs:dateTime($model("feed")/atom:published)
     return
-        datetime:format-dateTime($date, "yyyy/MM/dd 'at' HH:mm:ss z")
+        format-dateTime($date, "[Y0001]/[M01]/[D01] at [H01]:[m01]:[s01] z")
 };
 
 declare function app:updated-date-full($node as node(), $model as map(*)) {
-    let $date := 
+    let $date :=
         if (map:contains($model, "entry")) then
             xs:dateTime($model("entry")/atom:updated)
         else
             xs:dateTime($model("feed")/atom:updated)
     return
-        datetime:format-dateTime($date, "yyyy/MM/dd 'at' HH:mm:ss z")
+        format-dateTime($date, "[Y0001]/[M01]/[D01] at [H01]:[m01]:[s01] z")
 };
 
 declare function app:publication-date($node as node(), $model as map(*)) {
-    let $date := 
+    let $date :=
         if (map:contains($model, "entry")) then
             xs:dateTime($model("entry")/atom:published)
         else
@@ -385,7 +382,7 @@ function app:can-edit-feed($node as node(), $model as map(*)) {
 declare function app:edit-link($node as node(), $model as map(*), $action as xs:string) {
     let $lockedBy := $model('entry')/wiki:lock/@user
     return
-        if ($lockedBy and not($lockedBy = xmldb:get-current-user())) then
+        if ($lockedBy and not($lockedBy = sm:id()//sm:real/sm:username/string())) then
             <span><i class="icon-lock"></i> Locked by {$lockedBy/string()}</span>
         else
             <a href="{$model('entry')/wiki:id}?action=edit">{ $node/@*[local-name(.) != 'href'], $node/node() }</a>
@@ -394,7 +391,7 @@ declare function app:edit-link($node as node(), $model as map(*), $action as xs:
 declare function app:action-button($node as node(), $model as map(*), $action as xs:string?) {
     let $lockedBy := $model('entry')/wiki:lock/@user
     return
-        if ($lockedBy and not($lockedBy = xmldb:get-current-user())) then
+        if ($lockedBy and not($lockedBy = sm:id()//sm:real/sm:username/string())) then
     (:            <span><i class="icon-lock"></i> Locked by {$lockedBy/string()}</span>:)
             ()
         else
@@ -414,11 +411,11 @@ declare function app:action-button($node as node(), $model as map(*), $action as
 };
 
 declare function app:edit-source($node as node(), $model as map(*)) {
-    let $user := xmldb:get-current-user()
+    let $user := sm:id()//sm:real/sm:username/string()
     return
     if ($user = sm:get-group-members($config:admin-group)) then
         let $href := $model("entry")//atom:content/@src
-        let $source := 
+        let $source :=
             if ($href) then
                 util:collection-name($model("entry")) || "/" || $href
             else
@@ -510,7 +507,7 @@ declare function app:edit-content-type($node as node(), $model as map(*)) {
         }
 };
 
-declare 
+declare
     %templates:default("mode", "markup")
 function app:edit-content($node as node(), $model as map(*), $mode as xs:string) {
     let $contentElem := $model("entry")/atom:content
@@ -531,8 +528,8 @@ function app:edit-content($node as node(), $model as map(*), $mode as xs:string)
         }
 };
 
-declare 
-    %templates:default("mode", "markup") 
+declare
+    %templates:default("mode", "markup")
 function app:edit-summary($node as node(), $model as map(*), $mode as xs:string) {
     let $summary := $model("entry")/atom:summary
     let $summaryContent := $summary/*
@@ -622,7 +619,7 @@ declare function app:edit-role($node as node(), $model as map(*)) {
 declare function app:edit-collection($node as node(), $model as map(*)) {
     let $collection := request:get-attribute("collection")
     let $feed :=
-        if ($collection) then 
+        if ($collection) then
             $collection
         else
             util:collection-name(request:get-attribute("feed"))
@@ -657,7 +654,7 @@ declare function app:edit-editor($node as node(), $model as map(*)) {
         }
 };
 
-declare 
+declare
     %templates:wrap
 function app:attachments($node as node(), $model as map(*)) {
     let $collection := util:collection-name($model("feed"))
@@ -726,7 +723,7 @@ declare function app:section-menu($node as node(), $model as map(*)) {
     if ($model("feed")) then
         let $collection := util:collection-name($model("feed"))
         let $toc := xmldb:xcollection($collection)/atom:entry[wiki:role = "toc"][1]
-        let $root := 
+        let $root :=
             if ($toc) then
                 $toc
             else
@@ -777,4 +774,3 @@ declare function app:ajax($node as node(), $model as map(*), $href as xs:anyURI)
     return
         <a id="{$id}" href="{$href}" class="load-async">{ $node/node() }</a>
 };
-

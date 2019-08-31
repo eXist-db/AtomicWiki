@@ -23,8 +23,8 @@ declare
     %rest:form-param("bottom", "{$bottom}")
     %rest:form-param("right", "{$right}")
     %output:method("json")
-function anno:store($target as xs:string?, $body as xs:string, $start as xs:string?, $startOffset as xs:integer?, 
-    $end as xs:string?, $endOffset as xs:integer?, 
+function anno:store($target as xs:string?, $body as xs:string, $start as xs:string?, $startOffset as xs:integer?,
+    $end as xs:string?, $endOffset as xs:integer?,
     $top as xs:integer?, $left as xs:integer?, $bottom as xs:integer?, $right as xs:integer?) {
     let $collection := anno:create-collection()
     let $uuid := util:uuid()
@@ -42,7 +42,7 @@ function anno:store($target as xs:string?, $body as xs:string, $start as xs:stri
                     </target>
             }
             <annotation>
-                <user>{xmldb:get-current-user()}</user>
+                <user>{sm:id()//sm:real/sm:username/string()}</user>
                 <created>{current-dateTime()}</created>
                 <content>{anno:parse-body($body)}</content>
             </annotation>
@@ -67,7 +67,7 @@ function anno:retrieve($id as xs:string) {
             <li class="annotation">
                 <h4>
                     {format-dateTime($annotation/created, "[h]:[m01]:[s01] on [FNn], [D1o] [MNn]")}
-                    by {$annotation/user/string()}    
+                    by {$annotation/user/string()}
                 </h4>
                 <div class="annotation-body">{$annotation/content/node()}</div>
             </li>
@@ -84,7 +84,7 @@ function anno:update($id as xs:string, $body as xs:string) {
     for $annotations in collection($anno:COLLECTION)/annotations[@id = $id]
     let $annotation :=
         <annotation>
-            <user>{xmldb:get-current-user()}</user>
+            <user>{sm:id()//sm:real/sm:username/string()}</user>
             <created>{current-dateTime()}</created>
             <content>{anno:parse-body($body)}</content>
         </annotation>
@@ -111,7 +111,7 @@ declare
     %output:media-type("application/json")
     %output:method("json")
 function anno:list($target as xs:string, $top as xs:integer?, $left as xs:integer?, $bottom as xs:integer?, $right as xs:integer?) {
-    let $annotations := 
+    let $annotations :=
         if ($top) then
             collection($anno:COLLECTION)/annotations/target[@id = $target][area/@top = $top][area/@bottom = $bottom]
                 [area/@left = $left][area/@right = $right]/..

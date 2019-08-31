@@ -62,7 +62,7 @@ declare function acl:change-collection-permissions($path as xs:string) {
 };
 
 declare function acl:get-user-name() {
-    acl:get-user-name(xmldb:get-current-user())
+    acl:get-user-name(sm:id()//sm:real/sm:username/string())
 };
 
 declare function acl:get-user-name($user) {
@@ -79,10 +79,10 @@ declare function acl:get-user-name($user) {
                     $user
 };
 
-declare 
+declare
     %templates:default("allow-manager", "false")
 function acl:if-admin-user($node as node(), $model as map(*), $allow-manager as xs:boolean) {
-    let $user := xmldb:get-current-user()
+    let $user := sm:id()//sm:real/sm:username/string()
     let $groups := sm:get-user-groups($user)
     let $isManager :=
         if ($allow-manager) then
@@ -104,7 +104,7 @@ function acl:if-admin-user($node as node(), $model as map(*), $allow-manager as 
             ()
 };
 
-declare 
+declare
     %templates:default("modelItem", "entry")
 function acl:show-permissions($node as node(), $model as map(*), $modelItem as xs:string?) {
     let $doc := document-uri(root($model($modelItem)))
@@ -113,13 +113,13 @@ function acl:show-permissions($node as node(), $model as map(*), $modelItem as x
             let $permissions := sm:get-permissions($doc)
             let $owner := $permissions//@owner/string()
             return
-                if ($owner != xmldb:get-current-user()) then
+                if ($owner != sm:id()//sm:real/sm:username/string()) then
                     <p>
                         Only the user who created an article is allowed to change permissions.
                         Please contact the creator (<strong>{$owner}</strong>) or an administrator.
                     </p>
                 else
-                    let $processed := templates:copy-node($node, map:new(($model, map { "permissions" := $permissions })))
+                    let $processed := templates:copy-node($node, map:merge(($model, map { "permissions" : $permissions })))
                     return
                         acl:process-permissions($processed, $permissions/*, $doc)
         else
@@ -134,7 +134,7 @@ declare function acl:show-group-permissions($node as node(), $model as map(*)) a
         if (count($aces) > 0)
         then
             for $ace in $aces
-                let $current-group := $ace/@who        
+                let $current-group := $ace/@who
                 let $groups :=
                     (
                         <option value="">none</option>,
@@ -150,10 +150,10 @@ declare function acl:show-group-permissions($node as node(), $model as map(*)) a
                             {substring-after($group, "wiki.")}
                             </option>
                     )
-                
+
                 let $read := matches($ace/@mode, "r..$")
                 let $write := matches($ace/@mode, ".w.$") or matches($permissions/@mode, "^....w.*")
-            
+
             return
                 <tr class="perm-detail">
                     <td>Group:</td>
@@ -203,7 +203,7 @@ declare function acl:show-group-permissions($node as node(), $model as map(*)) a
                             <img src="resources/images/delete.png"/>
                         </button>
                     </td>
-                </tr>             
+                </tr>
 };
 
 declare %private function acl:process-permissions($node as node(), $permissions as element(), $path as xs:anyURI) {
