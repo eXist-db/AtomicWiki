@@ -283,7 +283,7 @@ declare function app:publication-date-full($node as node(), $model as map(*)) {
         else
             xs:dateTime($model("feed")/atom:published)
     return
-        format-dateTime($date, "[Y0001]/[M01]/[D01] at [H01]:[m01]:[s01] z")
+        format-dateTime($date, "[Y0001]/[M01]/[D01] at [H01]:[m01]:[s01] [Z]")
 };
 
 declare function app:updated-date-full($node as node(), $model as map(*)) {
@@ -293,7 +293,7 @@ declare function app:updated-date-full($node as node(), $model as map(*)) {
         else
             xs:dateTime($model("feed")/atom:updated)
     return
-        format-dateTime($date, "[Y0001]/[M01]/[D01] at [H01]:[m01]:[s01] z")
+        format-dateTime($date, "[Y0001]/[M01]/[D01] at [H01]:[m01]:[s01] [Z]")
 };
 
 declare function app:publication-date($node as node(), $model as map(*)) {

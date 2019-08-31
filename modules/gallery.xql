@@ -237,7 +237,7 @@ declare function gallery:build-gallery-edit-menu($node as node(), $model as map(
     if ($config:slideshows-enabled = "true")
     then
         let $theme := theme:theme-for-feed(util:collection-name($model("feed")))
-        let $theme := substring-before($theme, "/_theme")
+        let $theme := replace(substring-before($theme, "/_theme"), "//", "/")
         let $galleries :=
             for $feed in collection($theme)/atom:feed
             where
