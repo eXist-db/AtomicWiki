@@ -1,5 +1,4 @@
-.idea
-java/classes
-atomic-wiki.iml
-resources/tmp
-/build
+target/
+
+.idea/
+*.iml

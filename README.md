@@ -27,21 +27,22 @@ This version of AtomicWiki is a complete rewrite of the older code base. It is u
 Download
 --------
 
-You can [https://github.com/wolfgangmm/AtomicWiki/downloads](download) a zip containing a ready-to-install application 
+You can [https://github.com/exist-db/AtomicWiki/downloads](download) a zip containing a ready-to-install application 
 package plus additional libraries required by eXist. Unzip the downloaded archive and proceed with installing jars.
 
-Installing jars
----------------
-You need to copy two .jar files into your eXist-db installation:
 
-* WikiModelV2.jar
-* atomicwiki-0.1.jar
+## Compilation
 
-Copy them to
+* Requirements: Java 8, Apache Maven 3.3+, Git.
 
-	EXIST_HOME/lib/user
+If you want to create an EXPath Package for the app, you can run:
 
-You'll need to restart eXist-db afterwards so it can pick up the jars. This only needs to be done **once**.
+```bash
+$ mvn package
+```
+
+There will be a `.xar` file in the `target/` sub-folder.
+
 
 Uploading the package
 ---------------------
@@ -52,29 +53,4 @@ file for upload, then click "Upload Package". After installation has finished, y
 inside the database) should be accessible at:
 
      http://localhost:8080/exist/apps/wiki/
-   
-Building
---------
 
-AtomicWiki is distributed as a .xar package which can be deployed into an existing eXist-db instance through eXist's
-application repository.
-
-To build AtomicWiki from scratch,
-you should first get eXist-db from SVN and build it (build.sh/build.bat). Next, clone eXide into a directory, e.g.:
-
-     git clone git://github.com/wolfgangmm/AtomicWiki.git AtomicWiki
-     cd AtomicWiki
-     git submodule update --init --recursive
-
-Edit the file build.properties and change the property exist.dir to point to the root of your eXist installation (eXist-db > 2.0). This is required to compile the Java modules for parsing wiki markup.
-
-Next, call ant on the build.xml file in AtomicWiki:
-
-      ant
-
-You should now find a .xar and a .jar file in the build directory:
-     
-* build/atomicwiki-0.1.xar
-* build/atomicwiki-0.1.jar
-
-Install the jar plus any jar found in java/lib into eXist as described above, then upload the .xar package.

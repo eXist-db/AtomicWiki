@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://expath.org/ns/pkg" name="${package-name}" abbrev="${package-abbrev}" version="${project.version}"
+    spec="1.0">
+    <title>${package-title}</title>
+    <author>Wolfgang Meier</author>
+    <author>Denis Richter</author>
+    <author>Sabine Meier</author>
+    <author>Maciek Jerominek</author>
+    <author>Lars Windauer</author>
+    <author>Robert Netzschwitz</author>
+    <website>${project.url}</website>
+    <license>GNU Lesser General Public License, version 2.1</license>
+    <copyright>true</copyright>
+
+    <type>application</type>
+
+    <status>stable</status>
+
+    <tag>${project.artifactId}</tag>
+    <tag>application</tag>
+    <category id="apps">Applications</category>
+
+    <dependency processor="http://exist-db.org" semver-min="${exist.version}"/>
+    <dependency package="http://exist-db.org/apps/shared"/>
+    <dependency package="http://exist-db.org/apps/markdown" semver-min="0.2"/>
+
+    <target>${package-abbrev}</target>
+    <permissions user="editor" password="editor" group="biblio.users" mode="0664"/>
+
+    <prepare>pre-install.xq</prepare>
+    <finish>post-install.xq</finish>
+
+    <!-- includes everything in src/main/xar-resources, README.md, and LICENSE -->
+    <fileSets>
+        <fileSet>
+            <directory>${basedir}</directory>
+            <includes>
+                <include>README.md</include>
+                <include>LICENSE</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/src/main/xar-resources</directory>
+        </fileSet>
+    </fileSets>
+
+</package>
