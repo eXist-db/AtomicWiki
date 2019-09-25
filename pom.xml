@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.exist-db</groupId>
         <artifactId>exist-apps-parent</artifactId>
-        <version>1.8</version>
+        <version>1.9.0</version>
         <relativePath/>
     </parent>
 
@@ -186,7 +186,7 @@
     <repositories>
         <repository>
             <id>exist</id>
-            <url>http://repo.exist-db.org/repository/exist-db</url>
+            <url>http://repo.exist-db.org/repository/exist-db/</url>
         </repository>
     </repositories>
 
