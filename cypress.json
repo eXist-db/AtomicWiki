@@ -1,0 +1,12 @@
+{
+  "baseUrl": "http://localhost:8080/exist/apps",
+  "fileServerFolder": "src/main/xar-resources",
+  "ignoreTestFiles": "src/test/cypress/integration/examples/*.js",
+  "fixturesFolder": "src/test/cypress/fixtures",
+  "integrationFolder": "src/test/cypress/integration",
+  "pluginsFile": "src/test/cypress/plugins/index.js",
+  "screenshotsFolder": "src/test/cypress/screenshots",
+  "supportFile": "src/test/cypress/support/index.js",
+  "videosFolder": "src/test/cypress/videos",
+  "projectId": "5u286j"
+}

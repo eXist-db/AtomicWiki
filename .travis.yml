@@ -1,0 +1,48 @@
+language: java
+
+dist: xenial
+addons:
+  apt:
+    packages:
+    - libgconf-2-4
+jdk:
+  - openjdk8
+  # - openjdk11
+
+services:
+  - docker
+
+env:
+  - img=existdb/existdb:latest
+  - img=existdb/existdb:release
+  # - img=existdb/existdb:4.7.1
+
+cache:
+  npm: true
+  directories:
+    - $HOME/.m2
+    - ~/.cache
+
+before_install:
+  - docker pull $img
+  - docker create  --name exist-ci -p 8080:8080 $img
+  - npm ci
+
+install:
+  - mvn clean package -DskipTests -q
+
+before_script:
+  - docker cp ./target/atomic-wiki-*.xar exist-ci:exist/autodeploy
+  - docker start exist-ci
+  # exist needs time
+  - sleep 30
+
+script:
+  - mvn test
+  - npm run cypress -- --record
+
+after_success:
+  - docker ps
+
+notifications:
+  slack: exist-db:IXzUdqA0n11cnxaDz43ZQgdX
