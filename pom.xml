@@ -62,12 +62,12 @@
         </dependency>
 
         <!-- test dependencies -->
-        <dependency>
+        <!-- <dependency>
             <groupId>org.exist-db</groupId>
             <artifactId>exist-testkit</artifactId>
             <version>${exist.version}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
