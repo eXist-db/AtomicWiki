@@ -40,6 +40,8 @@ inside the database) should be accessible at:
 
 
 ## Compilation
+*   Requirements: Java 8, Apache Maven 3.3+, Git.
+
 1.  Clone the repository to your system:
     ```bash
     $ git clone https://github.com/exist-db/AtomicWiki.git
@@ -47,21 +49,23 @@ inside the database) should be accessible at:
 
 2.  Build the documentation application:
     ```bash
-    $ cd documentation
+    $ cd AtomicWiki
     $ mvn clean package
     ```
     The compiled `.xar` file is located in the `/target` directory
 
 3.  Install this file via the Dashboard > Package Manager.
 
-## Compilation
+## Tests
+*   Requirements: Node >=10, npm.
 
-* Requirements: Java 8, Apache Maven 3.3+, Git.
-
-If you want to create an EXPath Package for the app, you can run:
+To run the integration tests. First install the cypress testrunner (only necessary on first run)
 
 ```bash
-$ mvn clean package
+npm i
 ```
 
-There will be a `.xar` file in the `target/` sub-folder.
+To execute the Tests:
+```bash
+npm run cypress
+```
