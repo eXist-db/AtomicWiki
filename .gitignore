@@ -1,5 +1,9 @@
 target/
-
+node_modules/
 .idea/
+
+src/test/cypress/videos/*
+src/test/cypress/screenshots/*
+
 *.iml
 .existdb.json

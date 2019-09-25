@@ -3,7 +3,7 @@
 # AtomicWiki
 
 
-AtomicWiki is a wiki engine, tightly integrated with the eXist-db native XML database (http://exist-db.org).
+AtomicWiki is a wiki engine, tightly integrated with the [eXist-db](https://exist-db.org) native XML database.
 
 ## Features
 

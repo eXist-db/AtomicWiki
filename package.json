@@ -1,0 +1,29 @@
+{
+  "name": "atomicwiki",
+  "version": "1.0.0-SNAPSHOT",
+  "description": "AtomicWiki is a wiki engine, tightly integrated with the eXist-db",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cypress": "cypress run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eXist-db/AtomicWiki.git"
+  },
+  "keywords": [
+    "eXist-db",
+    "wiki",
+    "xquery",
+    "xml",
+    "expath"
+  ],
+  "author": "eXist-db",
+  "license": "LGPL-2.1-only",
+  "bugs": {
+    "url": "https://github.com/eXist-db/AtomicWiki/issues"
+  },
+  "homepage": "https://github.com/eXist-db/AtomicWiki#readme",
+  "devDependencies": {
+    "cypress": "^3.4.1"
+  }
+}

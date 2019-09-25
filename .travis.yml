@@ -15,15 +15,18 @@ services:
 env:
   - img=existdb/existdb:latest
   - img=existdb/existdb:release
-  - img=existdb/existdb:4.7.1
+  # - img=existdb/existdb:4.7.1
 
 cache:
+  npm: true
   directories:
-  - $HOME/.m2
+    - $HOME/.m2
+    - ~/.cache
 
 before_install:
   - docker pull $img
   - docker create  --name exist-ci -p 8080:8080 $img
+  - npm ci
 
 install:
   - mvn clean package -DskipTests -q
@@ -36,7 +39,7 @@ before_script:
 
 script:
   - mvn test
-  # - npm run cypress -- --record
+  - npm run cypress -- --record
 
 after_success:
   - docker ps
