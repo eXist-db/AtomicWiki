@@ -29,13 +29,12 @@ install:
   - mvn clean package -DskipTests -q
 
 before_script:
-  - docker cp ./target/exist-documentation-*.xar exist-ci:exist/autodeploy
+  - docker cp ./target/atomic-wiki-*.xar exist-ci:exist/autodeploy
   - docker start exist-ci
   # exist needs time
   - sleep 30
 
 script:
-  # - mvn validate
   - mvn test
   # - npm run cypress -- --record
 

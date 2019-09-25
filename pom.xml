@@ -13,7 +13,7 @@
 
     <groupId>org.exist-db</groupId>
     <artifactId>atomic-wiki</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>AtomicWiki</name>
     <description>Wiki application for eXist-db</description>
@@ -49,38 +49,14 @@
         <project.build.target>1.8</project.build.target>
 
         <exist.version>5.0.0</exist.version>
+        <md.version>0.6</md.version>
+        <shared.version>0.8.4</shared.version>
 
         <!-- used in the EXPath Package Descriptor -->
         <package-name>http://exist-db.org/apps/wiki</package-name>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.exist-db</groupId>
-            <artifactId>exist-core</artifactId>
-            <version>${exist.version}</version>
-        </dependency>
-
-        <!-- test dependencies -->
-        <!-- <dependency>
-            <groupId>org.exist-db</groupId>
-            <artifactId>exist-testkit</artifactId>
-            <version>${exist.version}</version>
-            <scope>test</scope>
-        </dependency> -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.xmlunit</groupId>
-            <artifactId>xmlunit-core</artifactId>
-            <version>2.4.0</version>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
+    
 
     <reporting>
         <plugins>
