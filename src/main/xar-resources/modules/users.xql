@@ -35,16 +35,14 @@ declare function local:find-users() {
 declare function local:groups() {
     let $user := local:real-user()
     let $admins := sm:get-group-members($config:admin-group)
-    let $groups := sm:list-groups()[starts-with(., "wiki.")]
+    let $wiki-groups := sm:list-groups()[starts-with(., "wiki.")]
     let $groups :=
         if ($user = $admins) then
-            $groups
+            $wiki-groups
         else
-            filter(function($group) {
-                    $user = sm:get-group-managers($group)
-                },
-                $groups
-            )
+            filter($wiki-groups, function($group) {
+                $user = sm:get-group-managers($group)
+            })
     return
         <groups>
         {
