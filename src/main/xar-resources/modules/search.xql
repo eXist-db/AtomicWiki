@@ -8,7 +8,7 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
 
 import module namespace kwic="http://exist-db.org/xquery/kwic";
 
-import module namespace templates="http://exist-db.org/xquery/templates";
+import module namespace templates="http://exist-db.org/xquery/html-templating";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace html="http://www.w3.org/1999/xhtml";

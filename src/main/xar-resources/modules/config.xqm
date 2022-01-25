@@ -12,7 +12,7 @@ declare namespace wiki="http://exist-db.org/xquery/wiki";
 declare namespace repo="http://exist-db.org/xquery/repo";
 declare namespace expath="http://expath.org/ns/pkg";
 declare namespace atom="http://www.w3.org/2005/Atom";
-declare namespace templates="http://exist-db.org/xquery/templates";
+declare namespace templates="http://exist-db.org/xquery/html-templating";
 
 declare variable $config:default-user := ("editor", "editor");
 declare variable $config:default-group := "biblio.users";
