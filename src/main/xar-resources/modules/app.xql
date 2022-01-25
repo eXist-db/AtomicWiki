@@ -59,8 +59,8 @@ declare function app:get-or-create-feed($node as node(), $model as map(*), $crea
 declare
     %templates:wrap
     %templates:default("start", 1)
-function app:entries($node as node(), $model as map(*), $count as xs:string?, $id as xs:string?, $wiki-id as xs:string?,
-    $start as xs:int) {
+function app:entries($node as node(), $model as map(*), $count as xs:string?, $id as xs:string?, $wiki-id as xs:string?, $start as xs:int?) {
+    let $start := ($start, 0)[1]
     let $feed := $model("feed")
     let $allEntries := config:get-entries($feed, $id, $wiki-id)
     return
