@@ -2,7 +2,7 @@ xquery version "3.0";
 
 module namespace atomic="http://atomic.exist-db.org/xquery/atomic";
 
-import module namespace md="http://exist-db.org/xquery/markdown";
+import module namespace markdown="http://exist-db.org/xquery/markdown";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
@@ -101,7 +101,7 @@ declare function atomic:get-content($content as element(atom:content)?, $eval as
                         xs:anyURI($path)
                     case "markdown" return
                         let $text := util:binary-to-string(util:binary-doc($path))
-                        let $parsed := md:parse($text, ($md:HTML-CONFIG, $atomic:MD_CONFIG))
+                        let $parsed := markdown:parse($text)
                         return
                             <div>{$parsed}</div>
                     default return
@@ -111,7 +111,7 @@ declare function atomic:get-content($content as element(atom:content)?, $eval as
                 case "html" case "xhtml" return
                     $content/*
                 case "markdown" return
-                    <div>{md:parse($content/string(), ($md:HTML-CONFIG, $atomic:MD_CONFIG))}</div>
+                    <div>{markdown:parse($content/string())}</div>
                 default return
                     $content/node()
     return
