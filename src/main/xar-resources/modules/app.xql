@@ -3,7 +3,7 @@ xquery version "3.0";
 module namespace app="http://exist-db.org/xquery/app";
 
 import module namespace atomic="http://atomic.exist-db.org/xquery/atomic" at "atomic.xql";
-import module namespace templates="http://exist-db.org/xquery/templates";
+import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace html2wiki="http://atomic.exist-db.org/xquery/html2wiki" at "html2wiki.xql";
 import module namespace acl="http://atomic.exist-db.org/xquery/atomic/acl" at "acl.xql";
@@ -59,8 +59,8 @@ declare function app:get-or-create-feed($node as node(), $model as map(*), $crea
 declare
     %templates:wrap
     %templates:default("start", 1)
-function app:entries($node as node(), $model as map(*), $count as xs:string?, $id as xs:string?, $wiki-id as xs:string?,
-    $start as xs:int) {
+function app:entries($node as node(), $model as map(*), $count as xs:string?, $id as xs:string?, $wiki-id as xs:string?, $start as xs:int?) {
+    let $start := ($start, 0)[1]
     let $feed := $model("feed")
     let $allEntries := config:get-entries($feed, $id, $wiki-id)
     return
@@ -420,7 +420,7 @@ declare function app:edit-source($node as node(), $model as map(*)) {
                 util:collection-name($model("entry")) || "/" || $href
             else
                 document-uri(root($model("entry")))
-        let $eXideLink := templates:link-to-app("http://exist-db.org/apps/eXide", "index.html")
+        let $eXideLink := $model?eXide || "/index.html?open=" || $source
         return
             <a class="eXide-open" href="{$eXideLink}" target="eXide" data-exide-open="{$source}"
                     title="Opens the code in eXide in new tab or existing tab if it is already open.">

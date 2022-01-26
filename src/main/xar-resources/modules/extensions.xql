@@ -3,7 +3,7 @@ xquery version "3.0";
 module namespace ext="http://atomic.exist-db.org/xquery/extensions";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
-import module namespace templates="http://exist-db.org/xquery/templates";
+import module namespace templates="http://exist-db.org/xquery/html-templating";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
 
@@ -37,7 +37,7 @@ declare
 function ext:code($node as node(), $model as map(*), $lang as xs:string?, $edit as xs:string, $action as xs:string?) {
     let $syntax := $lang
     let $source := replace($node/string(), "^\s*(.*)\s*$", "$1")
-    let $eXideLink := templates:link-to-app("http://exist-db.org/apps/eXide", "index.html?snip=" || encode-for-uri($source))
+    let $eXideLink := $model?eXide || "/index.html?snip=" || encode-for-uri($source)
     return
         switch ($action)
             case "edit" return

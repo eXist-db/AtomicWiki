@@ -3,7 +3,7 @@ xquery version "3.0";
 module namespace theme="http://atomic.exist-db.org/xquery/atomic/theme";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
-import module namespace templates="http://exist-db.org/xquery/templates";
+import module namespace templates="http://exist-db.org/xquery/html-templating";
 
 declare variable $theme:feed-collection := "_theme";
 

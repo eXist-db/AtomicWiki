@@ -3,7 +3,7 @@ xquery version "3.0";
 module namespace acl="http://atomic.exist-db.org/xquery/atomic/acl";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
-import module namespace templates="http://exist-db.org/xquery/templates";
+import module namespace templates="http://exist-db.org/xquery/html-templating";
 
 declare %private function acl:set-perm($value as item()?, $flag as xs:string) {
     if ($value) then $flag else "-"
