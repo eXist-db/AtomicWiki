@@ -25,7 +25,7 @@
     <dependency package="http://exist-db.org/html-templating"/>
     <dependency package="http://exist-db.org/apps/markdown" semver-min="0.2"/>
 
-    <target>${package-abbrev}</target>
+    <target>wiki</target>
     <permissions user="editor" password="editor" group="biblio.users" mode="0664"/>
 
     <prepare>pre-install.xq</prepare>
