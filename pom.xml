@@ -12,7 +12,7 @@
 
     <groupId>org.exist-db</groupId>
     <artifactId>atomic-wiki</artifactId>
-    <version>0.9.0</version>
+    <version>0.9.1-SNAPSHOT</version>
 
     <name>AtomicWiki</name>
     <description>Wiki application for eXist-db</description>
@@ -35,7 +35,7 @@
         <url>https://github.com/exist-db/atomicwiki.git</url>
         <connection>scm:git:https://github.com/exist-db/atomicwiki.git</connection>
         <developerConnection>scm:git:https://github.com/exist-db/atomicwiki.git</developerConnection>
-      <tag>0.9.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <issueManagement>
