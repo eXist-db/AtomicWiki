@@ -1,0 +1,69 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  build:
+    name: Exist ${{ matrix.exist-version }} (JDK ${{ matrix.java-version }}) Build and Test
+    strategy:
+      fail-fast: false
+    #   release is 6.4.0, latest 7.0.0-Snapshot at time of creation
+      matrix:
+        java-version: ['8', '21']
+        exist-version: ['6.2.0', 'release', 'latest']
+        exclude:
+          - exist-version: 'latest'
+            java-version: '8'
+          - exist-version: '6.2.0'
+            java-version: '21'            
+          - exist-version: 'release'
+            java-version: '21'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          cache: maven
+          java-version: ${{ matrix.java-version }}
+      - name: Install Test Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bats
+    # Build
+      - name: Maven Build
+        run: mvn clean package -DskipTests
+
+      - name: set min templating version from pom
+        run: |
+          echo "TEMPLATING_VERSION=$(mvn help:evaluate -Dexpression=templating.version -q -DforceStdout)" >> $GITHUB_ENV
+          echo "MD_VERSION=$(mvn help:evaluate -Dexpression=markdown.version -q -DforceStdout)" >> $GITHUB_ENV
+
+      - name: Add expath dependencies
+        working-directory: target
+        run: |
+          wget http://exist-db.org/exist/apps/public-repo/public/templating-${{ env.TEMPLATING_VERSION }}.xar -O 001.xar
+          wget http://exist-db.org/exist/apps/public-repo/public/markdown-${{ env.MD_VERSION }}.xar -O 002.xar
+
+
+      # Install
+      - name: Start exist-ci containers
+        run: |
+          docker run -dit -p 8080:8080 -v ${{ github.workspace }}/target:/exist/autodeploy \
+          --name exist --rm --health-interval=1s --health-start-period=1s \
+          duncdrum/existdb:${{ matrix.exist-version }}
+      
+      - name: wait for install to finish
+        timeout-minutes: 5
+        run: |
+          while ! docker logs exist | grep -q "Server has started"; \
+          do sleep 6s; \
+          done
+
+    
+    # Test
+      - name: Verify
+        run: mvn verify
+      - name: Run smoke test
+        run: bats --tap src/test/bats/*.bats
+    #   - name: run e2e test
+    #     run: npx cypress run 

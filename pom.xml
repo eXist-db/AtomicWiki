@@ -48,7 +48,9 @@
         <project.build.source>1.8</project.build.source>
         <project.build.target>1.8</project.build.target>
 
-        <exist.version>5.3.0</exist.version>
+        <exist.version>6.2.0</exist.version>
+        <templating.version>1.2.1</templating.version>
+        <markdown.version>2.0.0</markdown.version>
 
         <!-- used in the EXPath Package Descriptor -->
         <package-name>http://exist-db.org/apps/wiki</package-name>

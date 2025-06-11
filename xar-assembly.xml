@@ -22,8 +22,8 @@
 
     <dependency processor="http://exist-db.org" semver-min="${exist.version}"/>
     <dependency package="http://exist-db.org/apps/shared"/>
-    <dependency package="http://exist-db.org/html-templating"/>
-    <dependency package="http://exist-db.org/apps/markdown" semver-min="0.7.1"/>
+    <dependency package="http://exist-db.org/html-templating" semver-min="${templating.version}"/>
+    <dependency package="http://exist-db.org/apps/markdown" semver-min="${markdown.version}"/>
 
     <target>wiki</target>
     <permissions user="editor" password="editor" group="biblio.users" mode="0664"/>
